@@ -7,5 +7,5 @@ keywords: activate, office, windows
 ---
 
 ### [链接1](http://kms.cangshui.net)
-### [链接2](http://top.landian.vip)
+### [链接2](http://otp.landian.vip)
 
