@@ -10,7 +10,7 @@ keywords: vim vundle
 - vim配置说到底就是配置vim自身的特性+安装插件。
 - vim自身特性的配置直接使用.vimrc就可以了。
 - 插件管理工具很多，自己选一个好用的就行，这里介绍的是Vundle。
----
+
 
 ### vundle安装
 - 创建文件夹，存放vundle源码和插件
