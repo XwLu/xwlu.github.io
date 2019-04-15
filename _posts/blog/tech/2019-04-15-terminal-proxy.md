@@ -1,9 +1,9 @@
 ---
 layout: post
-title: Vim Configuration
+title: Terminal Proxy
 categories: [blog]
-description: Vim 配置
-keywords: vim vundle
+description: Terminal 配置
+keywords: terminal proxy
 ---
 
 ## 终端fq
