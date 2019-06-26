@@ -161,26 +161,70 @@ overlap {
 ```
 ---
 
+## 文件结构和用途
+- ### common/math/line_segment
+  - 线段对象，由起点和终点构成，定义了该对象的一些距离求解操作
+- ### common/math/polygon
+  - 多边形对象，由多个corner构成，定义了该对象的一些距离求解操作
+
+- ### common/math/aabox
+  - AABox类，用于描述kdtree中每一个对象的位置，包含(min_x, min_y, max_x, max_y, _center, _length, _width)对象。
+  - 一般的kdtree都是用点(x,y,z)来表示某个目标(节点)的位置，但是道路这种元素是一个线段，所以不能缩成一个点来看，所以构建了aabox对象用来描述道路、路口的位置。
+
+- ### hdmap_common
+  - 将从地图文件中读取道路元素Object(lane, stop_sign, ...。元素的结构在protobuf文件中已经定义好)，解析为ObjectInfo类。
+    - protobuf文件中定义的Lane只是车道的结构体数据，而由Lane生成的LaneInfo类才是对车道进行数据操作和访问的对象。其他的同理。
+  - 构建模板类ObjectWithAABox
+    - 每个ObjectWithAABox类中存储了(aabox，*object, *geo_object, id)一共四个对象。每一个ObjectWithAABox对象就将用于生成一个KDTree Node。
+    - aabox: 代表了ObjectWithAABox的位置，在构建kdtree的时候，都是参考的aabox的(min_x, min_y, max_x, max_y)来确定该node在kdtree中的位置。
+      - 在apollo高精地图中，所有的道路元素的最小单位只有两种，line_segment和polygon，aabox可以由两个点或多个点来初始化，正好对应line_segment和polygon的初始化。
+    - *object: 指向某个ObjectInfo对象的指针，在kdtree中找到该节点之后就找到了对应的ObjectInfo，就可以获取相应的信息。
+    - *geo_object: 该节点的几何对象，其实就是LineSegment和Polygon两种。
+      - ObjectWithAABox自带DistanceToPoint方法，用于计算自身与某目标点的距离。具体到实现的时候，其实就是调用的geo_object->DistanceToPoint，而该方法在common/math文件夹中的line_segment.cpp和polygon.cpp里已经实现了。
+    - id: 感觉有点多余，感觉可以从object->id方法获取，既然我找到了该节点，就可以获取到object，也就能获取到其id了。而且apollo里面在构建polygon类型的kdtree node的时候直接全给0。在我自己移植的python代码中，id被舍弃了。
+
+- ### hdmap_impl
+  - 地图的从文件读进proto变量
+  - proto变量Object加载成ObjectInfo类
+  - 构建某个元素的KDTree
+    ```
+    BuildSegmentKDTree(const Table& table,
+                       const AABoxKDTreeParams& params,
+                       BoxTable* const box_table,
+                       std::unique_ptr<KDTree>* const kdtree)
+    ```
+    - table是object_info的集合
+    - params是事先定好的kdtree参数
+    - box_table是从table加载成的ObjectWithAABox的集合
+    - kdtree是对应的树的root节点
+  - GetObjectById
+  - GetObjects
+  - GetNearestObject(WithHeading)
+  - GetForwardNearestObject
+  - GetLocalMap
+
+---
+
 ## 代码框架
 
 - ### overlaps概念
-```
-LaneInfo.PostProcess->UpdateOverlaps:
-for overlap_id in overlap_ids:
-  overlap_ptr = GetOverlapById(overlap_id)
-  overlaps.emplace overlaps_back(overlap_ptr)
+  ```
+  LaneInfo.PostProcess->UpdateOverlaps:
+  for overlap_id in overlap_ids:
+    overlap_ptr = GetOverlapById(overlap_id)
+    overlaps.emplace overlaps_back(overlap_ptr)
   
-  for object in overlap_ptr->overlap().object():
-    object_id = object().id().id()
-    if object_id == lane.id().id()
-      continue
-    if (map_instance.GetSignalById(object_id) != nullptr) {
-      signals_.emplace_back(overlap_ptr);
-    }
-    if (map_instance.GetStopSignById(object_map_id) != nullptr) {
-      stop_signs_.emplace_back(overlap_ptr);
-    }
-    ......
-```
+    for object in overlap_ptr->overlap().object():
+      object_id = object().id().id()
+      if object_id == lane.id().id()
+        continue
+      if (map_instance.GetSignalById(object_id) != nullptr) {
+        signals_.emplace_back(overlap_ptr);
+      }
+      if (map_instance.GetStopSignById(object_map_id) != nullptr) {
+        stop_signs_.emplace_back(overlap_ptr);
+      }
+      ......
+  ```
 
 
