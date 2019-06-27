@@ -181,7 +181,7 @@ overlap {
     - *object: 指向某个ObjectInfo对象的指针，在kdtree中找到该节点之后就找到了对应的ObjectInfo，就可以获取相应的信息。
     - *geo_object: 该节点的几何对象，其实就是LineSegment和Polygon两种。
       - ObjectWithAABox自带DistanceToPoint方法，用于计算自身与某目标点的距离。具体到实现的时候，其实就是调用的geo_object->DistanceToPoint，而该方法在common/math文件夹中的line_segment.cpp和polygon.cpp里已经实现了。
-    - id: 感觉有点多余，感觉可以从object->id方法获取，既然我找到了该节点，就可以获取到object，也就能获取到其id了。而且apollo里面在构建polygon类型的kdtree node的时候直接全给0。在我自己移植的python代码中，id被舍弃了。
+    - id: 记录了该对象所对应的line segment在整条lane中的index，方便后面检索用。
 
 - ### hdmap_impl
   - 地图的从文件读进proto变量
