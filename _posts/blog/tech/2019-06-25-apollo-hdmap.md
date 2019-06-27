@@ -205,7 +205,11 @@ overlap {
 
 ---
 
-## 代码框架
+## 代码流程
+- ### 从地图文件读取地图内容到protobuf类型的变量
+- ### 从protobuf类型的变量生产对应的ObjectInfo。*注意在LaneInfo初始化的时候，会创建一个属于该lane的segments_tree用于快速搜索lane上的segments。*
+- ### 创建lane、stop_sign、junction等元素的kdtree，用于搜索附近的道路信息，这些tree是属于HDMap_Impl类的。
+- ### 调用HDMap_Impl的接口读取地图信息
 
 - ### overlaps概念
   ```
