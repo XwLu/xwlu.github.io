@@ -2,7 +2,7 @@
 layout: wiki
 title: Auto Startup
 categories: [wiki]
-description:设置ubuntu开机自启
+description:Auto Startup for Ubuntu
 keywords: ubuntu
 ---
 
