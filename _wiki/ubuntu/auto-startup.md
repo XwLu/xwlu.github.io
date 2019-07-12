@@ -2,7 +2,7 @@
 layout: wiki
 title: Auto Startup
 categories: [wiki]
-description:Auto Startup for Ubuntu
+description: Auto Startup for Ubuntu
 keywords: ubuntu
 ---
 
