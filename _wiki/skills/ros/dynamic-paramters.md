@@ -4,7 +4,7 @@ title: ROS Dynamic Parameters
 categories: [wiki]
 description: ROS Dynamic Parameters
 keywords: ros, dynamic parameters
---
+---
 
 ### 步骤：
 > catkin_create_pkg package_name rospy roscpp dynamic_reconfigure
