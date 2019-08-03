@@ -4,7 +4,7 @@ title: ROS Multi-Thread
 categories: [wiki]
 description: ROS Multi-Thread 
 keywords: ros, multi-thread
---
+---
 
 ## 单线程下的轮转
 ### 最简单的单线程spin的例子就是ros::spin()自己.
