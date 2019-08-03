@@ -4,7 +4,7 @@ title: ROS Service Generate
 categories: [wiki]
 description: ROS Service Generate
 keywords: ros, service generate
---
+---
 
 ## 注意add_dependency,同msg笔记
 ## srv中可以调用msg创建的消息类型
