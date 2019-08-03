@@ -4,7 +4,7 @@ title: ROS Message Generate
 categories: [wiki]
 description: ROS Message Generate
 keywords: ros, message generate
---
+---
 
 ## 注意点
 - 创建了自己的msg之后,第一次执行编译会提示No such file or directory
