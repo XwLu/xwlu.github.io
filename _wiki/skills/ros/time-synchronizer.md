@@ -13,13 +13,12 @@ keywords: ros, time synchronizer
 ```
 	#include <message_filters/subscriber.h>
 	#include <message_filters/time_synchronizer.h>
-	#include <sensor_msgs/Image.h>
-	#include <sensor_msgs/CameraInfo.h>
+	#include <message_filters/sync_policies/approximate_time.h>
  
 	using namespace sensor_msgs;
 	using namespace message_filters;
 
-	void callback(const ImageConstPtr& image, const CameraInfoConstPtr& cam_info)  //回调中包含多个消息
+	void callback(const sensor_msgs::NavSatFixConstPtr& fix, const tiggo_msgs::HeadingConstPtr& heading, const tiggo_msgs::ChassisInfoConstPtr& chassis)  //回调中包含多个消息
 	{
   		// Solve all of perception here...
 	}
@@ -28,10 +27,12 @@ keywords: ros, time synchronizer
 	{
   		ros::init(argc, argv, "vision_node");
   		ros::NodeHandle nh;
-  		message_filters::Subscriber<Image> image_sub(nh, "image", 1);             // topic1 输入
-  		message_filters::Subscriber<CameraInfo> info_sub(nh, "camera_info", 1);   // topic2 输入
-  		TimeSynchronizer<Image, CameraInfo> sync(image_sub, info_sub, 10);       // 同步
-  		sync.registerCallback(boost::bind(&callback, _1, _2));                   // 回调
+  		typedef message_filters::sync_policies::ApproximateTime<sensor_msgs::NavSatFix, tiggo_msgs::Heading, tiggo_msgs::ChassisInfo> MySyncPolicy;
+		message_filters::Subscriber<sensor_msgs::NavSatFix> sub_fix(pnh, "/strong/fix", 1);
+		message_filters::Subscriber<tiggo_msgs::Heading> sub_heading(pnh, "/strong/heading", 1);
+		message_filters::Subscriber<tiggo_msgs::ChassisInfo> sub_chassis(pnh, "/chassis_info", 1);
+		message_filters::Synchronizer<MySyncPolicy> sync(MySyncPolicy(10), sub_fix, sub_heading, sub_chassis);
+		sync.registerCallback(boost::bind(&callback, _1, _2, _3));
   		ros::spin();
   		return 0;
 	}
