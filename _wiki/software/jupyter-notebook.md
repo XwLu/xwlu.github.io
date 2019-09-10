@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: wiki
 title: Jupyter Notebook 笔记
 categories: [Software]
 description: Jupyter Notebook 的快捷键

@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: wiki
 title: Vim Configuration
 categories: [Linux]
 description: Vim 配置

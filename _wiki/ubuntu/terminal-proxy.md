@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: wiki
 title: Terminal Proxy
 categories: [Linux]
 description: Terminal 配置
