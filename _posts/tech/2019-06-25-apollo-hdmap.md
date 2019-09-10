@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Apollo HDMap
-categories: [HDMap]
+categories: [Robotics]
 description: 阅读apollo hdmap笔记
 keywords: apollo hdmap
 ---
