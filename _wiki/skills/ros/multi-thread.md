@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Multi-Thread 
-categories: [wiki]
+categories: [ROS]
 description: ROS Multi-Thread 
 keywords: ros, multi-thread
 ---

@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Multi-Thread Abstract
-categories: [wiki]
+categories: [Abstract]
 description: Multi-Thread Abstract
 keywords: multi-thread, abstract
 ---

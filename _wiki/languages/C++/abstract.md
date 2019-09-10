@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: C++ Info. Abstract
-categories: [wiki]
+categories: [Abstract]
 description: C++ Info. Abstract
 keywords: c++, abstract
 ---

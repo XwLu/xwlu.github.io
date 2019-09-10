@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Git 
-categories: [wiki]
+categories: [Git]
 description: Git commands
 keywords: git
 ---

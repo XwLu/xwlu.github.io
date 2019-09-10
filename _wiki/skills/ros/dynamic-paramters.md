@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Dynamic Parameters 
-categories: [wiki]
+categories: [ROS]
 description: ROS Dynamic Parameters
 keywords: ros, dynamic parameters
 ---

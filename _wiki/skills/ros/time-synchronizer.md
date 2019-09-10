@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Time Synchronizer 
-categories: [wiki]
+categories: [ROS]
 description: ROS Time Synchronizer 
 keywords: ros, time synchronizer
 ---

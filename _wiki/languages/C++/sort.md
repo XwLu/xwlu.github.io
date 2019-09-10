@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Sort 
-categories: [wiki]
+categories: [C++]
 description: Sort for C++
 keywords: sort, C++
 ---

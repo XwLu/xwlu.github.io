@@ -1,7 +1,7 @@
 ---
 layout: post
 title: GitPage主题搭建
-categories: [blog]
+categories: [Web]
 description: 总结一下搭建gitpage主题的过程
 keywords: gitpage, theme
 ---

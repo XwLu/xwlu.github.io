@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Serialport IO in Ubuntu
-categories: [wiki]
+categories: [Software]
 description: Serialport IO in Ubuntu
 keywords: serialport, Ubuntu
 ---

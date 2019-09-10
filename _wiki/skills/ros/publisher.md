@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Pulisher
-categories: [wiki]
+categories: [ROS]
 description: ROS Publisher
 keywords: ros, publisher
 ---

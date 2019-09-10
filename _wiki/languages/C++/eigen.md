@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Eigen 
-categories: [wiki]
+categories: [C++]
 description: Eigen for C++
 keywords: eigen, C++
 ---

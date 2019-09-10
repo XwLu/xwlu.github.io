@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Terminal Proxy
-categories: [blog]
+categories: [Linux]
 description: Terminal 配置
 keywords: terminal proxy
 ---

@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: File IO 
-categories: [wiki]
+categories: [C++]
 description: File IO for C++
 keywords: io, C++
 ---

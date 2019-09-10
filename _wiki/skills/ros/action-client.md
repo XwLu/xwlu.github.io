@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Action Client 
-categories: [wiki]
+categories: [ROS]
 description: ROS Action Client
 keywords: ros, action client
 ---

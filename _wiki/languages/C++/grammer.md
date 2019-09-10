@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Grammer 
-categories: [wiki]
+categories: [C++]
 description: Grammer for C++
 keywords: grammer, C++
 ---

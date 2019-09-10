@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Vim Configuration
-categories: [blog]
+categories: [Linux]
 description: Vim 配置
 keywords: vim vundle
 ---

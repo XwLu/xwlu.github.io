@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Launch 
-categories: [wiki]
+categories: [ROS]
 description: ROS Launch
 keywords: ros, launch
 ---

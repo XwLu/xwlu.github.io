@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Ubuntu Info. Abstract
-categories: [wiki]
+categories: [Abstract]
 description: Ubuntu Info. Abstract
 keywords: ubuntu, abstract
 ---

@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Action Gneerate 
-categories: [wiki]
+categories: [ROS]
 description: ROS Action Generate
 keywords: ros, action generate
 ---

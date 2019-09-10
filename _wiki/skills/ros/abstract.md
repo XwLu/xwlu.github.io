@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Info. Abstract
-categories: [wiki]
+categories: [Abstract]
 description: ROS Info. Abstract
 keywords: ros, abstract
 ---

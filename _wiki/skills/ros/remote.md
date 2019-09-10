@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Remote 
-categories: [wiki]
+categories: [ROS]
 description: ROS Remote 
 keywords: ros, remote
 ---

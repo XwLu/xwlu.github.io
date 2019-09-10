@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Introduction of python module included in pytorch
-categories: [wiki]
+categories: [DeepLearing]
 description: some word here
 keywords: pytorch
 ---

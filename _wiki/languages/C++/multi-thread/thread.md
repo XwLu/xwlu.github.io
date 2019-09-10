@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Thread 
-categories: [wiki]
+categories: [C++]
 description: Thread eor C++
 keywords: thread, C++
 ---

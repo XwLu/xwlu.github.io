@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Mutex 
-categories: [wiki]
+categories: [C++]
 description: Mutex for C++
 keywords: mutex, C++
 ---

@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: FQ Service
-categories: [wiki]
+categories: [VPN]
 description: SS服务器搭建教程
 keywords: ss, server, fq
 ---

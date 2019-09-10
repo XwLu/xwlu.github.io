@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Service Client 
-categories: [wiki]
+categories: [ROS]
 description: ROS Service Client
 keywords: ros, service client
 ---

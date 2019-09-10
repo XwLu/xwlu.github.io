@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Action Server 
-categories: [wiki]
+categories: [ROS]
 description: ROS Action Server
 keywords: ros, action server
 ---

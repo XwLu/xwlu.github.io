@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Subscirber
-categories: [wiki]
+categories: [ROS]
 description: ROS Subscriber
 keywords: ros, subscriber
 ---

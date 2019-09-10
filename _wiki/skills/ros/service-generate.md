@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Service Generate
-categories: [wiki]
+categories: [ROS]
 description: ROS Service Generate
 keywords: ros, service generate
 ---

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Jupyter Notebook 笔记
-categories: [blog]
+categories: [Software]
 description: Jupyter Notebook 的快捷键
 keywords: Jupyter
 ---

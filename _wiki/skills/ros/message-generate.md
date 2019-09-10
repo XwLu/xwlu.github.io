@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Message Generate
-categories: [wiki]
+categories: [ROS]
 description: ROS Message Generate
 keywords: ros, message generate
 ---

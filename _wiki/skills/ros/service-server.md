@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: ROS Service Server 
-categories: [wiki]
+categories: [ROS]
 description: ROS Service Server 
 keywords: ros, service server
 ---
