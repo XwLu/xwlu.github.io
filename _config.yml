@@ -104,8 +104,8 @@ gitment:
 gitalk:
     owner: xwlu
     repo: blog-comments
-    clientID: 8459d26e4a10635b4180
-    clientSecret: 56e8b10993e13417b81c6f4cfa2b1743ebce1f8c
+    clientID: 06d9d3ee34d66c0846ec
+    clientSecret: f7ad13e5de0c0913d4d18826536baa10867265db
 # 在使用其它评论组件时可点击显示 Disqus
 lazy_load_disqus : false
 
