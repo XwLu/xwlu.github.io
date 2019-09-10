@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: wiki
 title: PyQt笔记
 categories: [UI]
 description: PyQt笔记
@@ -26,6 +26,7 @@ class MyUI(QWidget):
         QWidget.__init__(self)
         # 数据成员
         self.buttons = {}
+        self.jump_to = None
         # 界面初始化
         self.layout = QVBoxLayout() # 从上到下竖直布局
         self.init_ui() # 初始化界面
@@ -96,6 +97,16 @@ class MyUI(QWidget):
         row = QHBoxLayout()  # 水平排布
 
         button = QPushButton()
+        button.setText("jump to")  # 按钮名称
+        button.setFixedSize(80, 30)
+        button.clicked.connect(self.on_jump_button)  # 按下后触发on_save_button函数
+        row.addWidget(button)  # 将该按钮添加到该行(row)
+
+        self.jump_to = QTextEdit(self)
+        self.jump_to.setFixedSize(80, 30)
+        row.addWidget(self.jump_to)
+
+        button = QPushButton()
         button.setText("save") # 按钮名称
         button.setFixedSize(80, 30)
         button.clicked.connect(self.on_save_button) # 按下后触发on_save_button函数
@@ -108,6 +119,9 @@ class MyUI(QWidget):
         row.addWidget(button) # 将该按钮添加到该行(row)
 
         self.layout.addLayout(row) # 将这一行控件添加到layout的竖直排布中去
+
+    def on_jump_button(self):
+        pass
 
     def on_save_button(self):
         if self.buttons['name']['luyifan'].isChecked():
