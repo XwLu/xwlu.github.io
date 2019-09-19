@@ -12,6 +12,8 @@ keywords: apollo, prediction
 ---
 
 ## 数据结构
+#### 最核心的数据结构就是unordered_map<Id, queue<Feature>> obstacles，存储了所有obtscale的固定长度的历史特征。
+
 - Feature
   - position
   - timestamp
