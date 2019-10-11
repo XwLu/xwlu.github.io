@@ -8,3 +8,4 @@ keywords: multi-thread, abstract
 
 ### [Mutex](https://xwlu.github.io/wiki/languages/C++/multi-thread/mutex/)
 ### [Thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/thread/)
+### [Async&Future](https://xwlu.github.io/wiki/languages/C++/multi-thread/async&future/)
