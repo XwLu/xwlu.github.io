@@ -6,7 +6,7 @@ description: wiki on path planning
 keywords: path-planning
 ---
 
-# [路径规划综述](https://xwlu.github.io/wiki/path-planning/common/)
+# [路径规划基础](https://xwlu.github.io/wiki/path-planning/common/)
 
 ---
 
@@ -18,3 +18,5 @@ keywords: path-planning
 
 # 基于采样的方法
 - ### [Probabilistic Road Map](https://xwlu.github.io/wiki/path-planning/prm/)
+- ### [Rapidly-exploring Random Tree](https://xwlu.github.io/wiki/path-planning/rrt/)
+- ### [Cross-entropy Motion Planning](https://xwlu.github.io/wiki/path-planning/cross-entropy-motion-planning/)
