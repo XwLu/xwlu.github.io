@@ -104,7 +104,7 @@ keywords: path-planing
   - 结构化好
   - 非直接索引
 
-- ### 体素地图(Voxel hashing)
+- ### 体素哈希地图(Voxel hashing)
   - 最稀疏
   - 结构化好
   - 非直接索引
@@ -113,10 +113,10 @@ keywords: path-planing
 - ### 点云地图(Point cloud map)
   - [PCL](http://pointclouds.org/)
 
-- ### TSDF地图(Truncated Signed Distance Functions map)
+- ### 截断的符号距离场地图(Truncated Signed Distance Functions map, TSDF)
   - [源码链接](https://github.com/personalrobotics/OpenChisel)
 
-- ### ESDF地图(Euclidean Signed Distance Functions map)
+- ### 欧几里得符号距离场地图(Euclidean Signed Distance Functions map, ESDF)
   - [VoxBlox](https://github.com/ethz-asl/voxblox)
   - [FIESTA](https://github.com/HKUST-Aerial-Robotics/FIESTA)
   - [TRR’s Local Map](https://github.com/HKUST-Aerial-Robotics/Teach-Repeat-Replan)

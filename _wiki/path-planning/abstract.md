@@ -7,3 +7,5 @@ keywords: path-planning
 ---
 
 # [路径规划综述](https://xwlu.github.io/wiki/path-planning/common/)
+# 基于搜索的方法
+- [Dijkstra and A*]()
