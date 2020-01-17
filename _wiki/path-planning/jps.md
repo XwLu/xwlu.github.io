@@ -32,6 +32,6 @@ keywords: JPS
 ## 优缺点
 - 大部分情况下效率比A*高很多
 - 某些情况下效率不如A*
-![bad-case](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/jps-bad-case.png)
+![bad-case](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/jps-bad-case.jpg)
 - 只能在uniform grid map中使用
 
