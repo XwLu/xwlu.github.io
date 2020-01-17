@@ -17,4 +17,4 @@ keywords: path-planning
 ---
 
 # 基于采样的方法
-- ### [Probabilistic Road Map]()
+- ### [Probabilistic Road Map](https://xwlu.github.io/wiki/path-planning/prm/)
