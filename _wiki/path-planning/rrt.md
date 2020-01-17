@@ -70,3 +70,22 @@ keywords: RRT, RRT*
 ![Rewire](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-rewire1.png)
 
 ![Rewire](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-rewire2.png)
+
+# Kinodynamic-RRT*
+- ## 核心
+  - 将Steer函数进行修改，符合车辆的运动学模型
+
+# AnyTime-RRT*
+- ## 核心
+  - Keep optimizing the leaf RRT tree when the robot executes the current trajectory Anytime Fashion
+  - 先快速构建一个RRT,获得一个可行解并记录其代价.之后算法会继续采样,但仅将有利于降低可行解代价的结点插入树中,从而逐渐获得较优的可行解
+- ## 优势
+  - 提高实时性
+
+# Informed RRT*
+- ## 核心
+  - 先快速构建一个RRT，获得一个可行路径。在可行路径的外包椭圆内继续采样点，构建新的，代价更低的路径
+  - 不断循环上一个步骤，通过缩小采样空间，提高了效率
+
+
+
