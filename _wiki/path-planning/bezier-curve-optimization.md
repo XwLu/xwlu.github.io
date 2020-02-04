@@ -28,6 +28,8 @@ keywords: bezier, optimization
 - ## Fixed time interval
   > Bezier曲线的时间<img src="https://latex.codecogs.com/gif.latex?t"/>永远定义在[0,1]区间内。
 
+---
+
 # 工作流程
 - ## 求解飞行走廊
   - 构建栅格地图（比较好的比如八叉树格式），存储和搜索效率较高。
@@ -39,3 +41,8 @@ keywords: bezier, optimization
   - 相邻两段轨迹的连接点处的状态连续性约束
   - 相邻两段轨迹的连接点需要处于对应的两个安全走廊的重叠区域内
   - 满足动力学（速度、加速度）约束，只要保证<img src="https://latex.codecogs.com/gif.latex?B_{j}(t)"/>的导数表达式<img src="https://latex.codecogs.com/gif.latex?B_{j}^{'}(t)"/>和<img src="https://latex.codecogs.com/gif.latex?B_{j}^{''}(t)"/>的控制点在<img src="https://latex.codecogs.com/gif.latex?Vel_{min}"/>、<img src="https://latex.codecogs.com/gif.latex?Vel_{max}"/>和<img src="https://latex.codecogs.com/gif.latex?Acc_{min}"/>、<img src="https://latex.codecogs.com/gif.latex?Acc_{max}"/>内。
+
+---
+
+# 扩展
+- ## 基于B-spline的多项式表达，Bezier是一种特殊的B-spline。B-spline自动分段，不需要人为将完整轨迹分为N段，从而避免段与段之间的连续性分析。
