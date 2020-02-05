@@ -42,8 +42,8 @@ keywords: reinforcement-learning, MDP
   - ### 值函数:某个状态所对应回报值的期望
 
 - ## 贝尔曼方程
-  - <img src="https://latex.codecogs.com/gif.latex?v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')"/>
   - 强化学习的核心
+  - <img src="https://latex.codecogs.com/gif.latex?v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')"/>
 
 - ## 策略
   - 状态值函数(<img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)"/>)：是从状态 s 开始，使用策略 π 得到的期望回报值
