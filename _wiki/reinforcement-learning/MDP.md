@@ -49,7 +49,7 @@ keywords: reinforcement-learning, MDP
   - 状态值函数(<img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)"/>)：是从状态 s 开始，使用策略 π 得到的期望回报值
   - 状态动作值函数(<img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)"/>)：是从状态 s 开始,执行动作 a，然后使用策略 π 得到的期望回报值
   - <img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)=\sum \pi (a|s)q_{\pi }(s,a)"/>
-  - <img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)=R(s,a)+\gamma \sum_{{s}'\in S}^{ }P_{s{s}'}^{a}v_{\pi }(s)"/>
+  - <img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)=R(s,a)+\gamma \sum_{s'\in S}^{ }P_{s{s}'}^{a}v_{\pi }(s)"/>
 
 - ## 知识点
   - 贝尔曼最优方程不是线性的
