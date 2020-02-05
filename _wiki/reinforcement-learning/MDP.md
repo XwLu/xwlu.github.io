@@ -42,7 +42,7 @@ keywords: reinforcement-learning, MDP
   - ### 值函数:某个状态所对应回报值的期望
 
 - ## 贝尔曼方程
-  - v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')
+  - <img src="https://latex.codecogs.com/gif.latex?v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')"/>
   - 强化学习的核心
 
 - ## 策略
