@@ -1,9 +1,9 @@
 ---
 layout: wiki
-title: Markov Decision Processes
+title: Dynamic Planning
 categories: [reinforcement-learning]
 description: wiki on Reinforcement Learning
-keywords: reinforcement-learning, MDP
+keywords: reinforcement-learning, dynamic-planning
 ---
 
 # 概念定义
@@ -36,6 +36,36 @@ keywords: reinforcement-learning, MDP
 
 # 策略迭代
 - ## 流程
-  - 策略评价(迭代k次，直到接近收敛为止) + 策略提升(提升1次)
+  - {策略评价(迭代k次，直到接近收敛为止) + 策略提升(提升1次)}; ...
+  - v1 → π1 → v2 → π2 → v3 → π3 → ...
 - ## 终止条件
   - 提升停止
+- ## 特点
+  - 有显式的策略
+  - 迭代过程中的值函数对应了某个具体的策略
+  - 效率较低
+  - 贝尔曼期望方程 + 贪婪策略提升
+
+# 值迭代
+- ## 流程
+  - 策略评价(迭代1次); ...
+  - v1 → v2 → v3 → ...
+- ## 特点
+  - 没有显式的策略
+  - 迭代过程中的值函数可能不对应任何策略
+  - 效率较高
+  - 贝尔曼期望方程
+
+# 扩展
+- ## 异步动态规划
+  - 以某种顺序单独考虑每一个状态
+  - 能够大大减少计算量
+  - 只要所有的状态都能被持续的选择到,收敛性能够保证
+  - ### 常用的三种形式
+    - 就地(In-Place)动态规划
+    - 优先清理
+    - 实时动态规划
+
+# 就地(In-Place)动态规划
+- 同步值迭代存储了两个版本的值函数，在计算<img src="https://latex.codecogs.com/gif.latex?v_{new}"/>的时候，使用了<img src="https://latex.codecogs.com/gif.latex?v_{old}"/>的复制版本，在整个更新过程中，<img src="https://latex.codecogs.com/gif.latex?v_{old}"/>是不变的，保持上一个循环的状态。
+- 就地(In-Place)动态规划只对一个值函数<img src="https://latex.codecogs.com/gif.latex?v_{new}"/>进行更新，因此，从左上角开始更新和从右下角开始更新，得到的结果是不一样的。
