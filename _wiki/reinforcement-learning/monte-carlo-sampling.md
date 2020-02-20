@@ -56,7 +56,7 @@ s1,s2,s1,s5 +1
 
 # 离策略的MC策略评价
 - 核心是利用重要性采样去加权回报值
-<img src="https://latex.codecogs.com/gif.latex?G_{t}^{\pi /\mu }=\prod_{k=t}^{T-1} \frac{\pi (A_{k}|S_{k}))}{\mu (A_{k}|S_{k})}G_{t}"/>
+- <img src="https://latex.codecogs.com/gif.latex?G_{t}^{\pi /\mu }=\prod_{k=t}^{T-1} \frac{\pi (A_{k}|S_{k}))}{\mu (A_{k}|S_{k})}G_{t}"/>
 - 使用重要性采样会显著增加方差, 可能到无限大
 
 # MC小结
@@ -69,8 +69,8 @@ s1,s2,s1,s5 +1
 
 # 增量式MC
 > 之前的蒙特卡洛算法需要采样大量轨迹之后再统一计算平均数，能不能在每一条轨迹之后都得到值函数的估计值呢?
-<img src="https://latex.codecogs.com/gif.latex?N(S_{t})=N(S_{t})+1"/>
-<img src="https://latex.codecogs.com/gif.latex?V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(G_{t}-V(S_{t}))"/>
+- <img src="https://latex.codecogs.com/gif.latex?N(S_{t})=N(S_{t})+1"/>
+- <img src="https://latex.codecogs.com/gif.latex?V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(G_{t}-V(S_{t}))"/>
 - 这里的<img src="https://latex.codecogs.com/gif.latex?N(S_{t})"/>可以认为是更新的步长
 - 很多时候，我们会把<img src="https://latex.codecogs.com/gif.latex?N(S_{t})"/>替换为一个常数<img src="https://latex.codecogs.com/gif.latex?\alpha "/>，好处如下：
   - 会逐渐遗忘过去的轨迹
@@ -87,32 +87,30 @@ s1,s2,s1,s5 +1
 > GLIE 蒙特卡洛优化能收敛到最优的 Q 函数
 
 # 增量式离策略每次拜访蒙特卡洛评价
-```
-1: repeat <img src="https://latex.codecogs.com/gif.latex?k=1,2,3,..."/>
-2:     使用策略<img src="https://latex.codecogs.com/gif.latex?\mu "/>采样第<img src="https://latex.codecogs.com/gif.latex?k"/>条轨迹，<img src="https://latex.codecogs.com/gif.latex?S_{1},A_{1},S_{2},A_{2},...,S_{T}"/>
-3:     <img src="https://latex.codecogs.com/gif.latex?G\leftarrow 0, W\leftarrow 1"/>
-4:     for <img src="https://latex.codecogs.com/gif.latex?t=T-1,T-2,...,0"/> do
-5:         <img src="https://latex.codecogs.com/gif.latex?G\leftarrow \gamma G+R_{t+1}"/>
-6:         <img src="https://latex.codecogs.com/gif.latex?C(S_{t},A_{t})\leftarrow C(S_{t},A_{t})+W"/>
-7:         <img src="https://latex.codecogs.com/gif.latex?Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\frac{W}{C(S_{t},A_{t})}[G-Q(S_{t},A_{t})]"/>
-8:         <img src="https://latex.codecogs.com/gif.latex?W\leftarrow W\frac{\pi (A_{t}|S_{t})}{\mu (A_{t}|S_{t})}"/>
-9:         if W=0, break
-10:    end for
-11: until 收敛
-```
+
+- 1: repeat <img src="https://latex.codecogs.com/gif.latex?k=1,2,3,..."/>
+- 2:     使用策略<img src="https://latex.codecogs.com/gif.latex?\mu "/>采样第<img src="https://latex.codecogs.com/gif.latex?k"/>条轨迹，<img src="https://latex.codecogs.com/gif.latex?S_{1},A_{1},S_{2},A_{2},...,S_{T}"/>
+- 3:     <img src="https://latex.codecogs.com/gif.latex?G\leftarrow 0, W\leftarrow 1"/>
+- 4:     for <img src="https://latex.codecogs.com/gif.latex?t=T-1,T-2,...,0"/> do
+- 5:         <img src="https://latex.codecogs.com/gif.latex?G\leftarrow \gamma G+R_{t+1}"/>
+- 6:         <img src="https://latex.codecogs.com/gif.latex?C(S_{t},A_{t})\leftarrow C(S_{t},A_{t})+W"/>
+- 7:         <img src="https://latex.codecogs.com/gif.latex?Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\frac{W}{C(S_{t},A_{t})}[G-Q(S_{t},A_{t})]"/>
+- 8:         <img src="https://latex.codecogs.com/gif.latex?W\leftarrow W\frac{\pi (A_{t}|S_{t})}{\mu (A_{t}|S_{t})}"/>
+- 9:         if W=0, break
+- 10:    end for
+- 11: until 收敛
 
 # 增量式离策略每次拜访蒙特卡洛优化
-```
-1: repeat <img src="https://latex.codecogs.com/gif.latex?k=1,2,3,..."/>
-2:     使用策略<img src="https://latex.codecogs.com/gif.latex?\mu "/>采样第<img src="https://latex.codecogs.com/gif.latex?k"/>条轨迹，<img src="https://latex.codecogs.com/gif.latex?S_{1},A_{1},S_{2},A_{2},...,S_{T}"/>
-3:     <img src="https://latex.codecogs.com/gif.latex?G\leftarrow 0, W\leftarrow 1"/>
-4:     for <img src="https://latex.codecogs.com/gif.latex?t=T-1,T-2,...,0"/> do
-5:         <img src="https://latex.codecogs.com/gif.latex?G\leftarrow \gamma G+R_{t+1}"/>
-6:         <img src="https://latex.codecogs.com/gif.latex?C(S_{t},A_{t})\leftarrow C(S_{t},A_{t})+W"/>
-7:         <img src="https://latex.codecogs.com/gif.latex?Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\frac{W}{C(S_{t},A_{t})}[G-Q(S_{t},A_{t})]"/>
-8:         <img src="https://latex.codecogs.com/gif.latex?\pi (S_{t})\leftarrow argmax_{a}Q(S_{t},a)"/>
-9:         if <img src="https://latex.codecogs.com/gif.latex?A_{t}\neq \pi (S_{t})"/>，则退出for循环
-10:       <img src="https://latex.codecogs.com/gif.latex?W\leftarrow W\frac{1}{\mu (A_{t}|S_{t})}"/>
-11:    end for
-12: until 收敛
-```
+
+- 1: repeat <img src="https://latex.codecogs.com/gif.latex?k=1,2,3,..."/>
+- 2:     使用策略<img src="https://latex.codecogs.com/gif.latex?\mu "/>采样第<img src="https://latex.codecogs.com/gif.latex?k"/>条轨迹，<img src="https://latex.codecogs.com/gif.latex?S_{1},A_{1},S_{2},A_{2},...,S_{T}"/>
+- 3:     <img src="https://latex.codecogs.com/gif.latex?G\leftarrow 0, W\leftarrow 1"/>
+- 4:     for <img src="https://latex.codecogs.com/gif.latex?t=T-1,T-2,...,0"/> do
+- 5:         <img src="https://latex.codecogs.com/gif.latex?G\leftarrow \gamma G+R_{t+1}"/>
+- 6:         <img src="https://latex.codecogs.com/gif.latex?C(S_{t},A_{t})\leftarrow C(S_{t},A_{t})+W"/>
+- 7:         <img src="https://latex.codecogs.com/gif.latex?Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\frac{W}{C(S_{t},A_{t})}[G-Q(S_{t},A_{t})]"/>
+- 8:         <img src="https://latex.codecogs.com/gif.latex?\pi (S_{t})\leftarrow argmax_{a}Q(S_{t},a)"/>
+- 9:         if <img src="https://latex.codecogs.com/gif.latex?A_{t}\neq \pi (S_{t})"/>，则退出for循环
+- 10:       <img src="https://latex.codecogs.com/gif.latex?W\leftarrow W\frac{1}{\mu (A_{t}|S_{t})}"/>
+- 11:    end for
+- 12: until 收敛
