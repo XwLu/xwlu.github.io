@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Source List Configuration
-categories: [wiki]
+categories: [Linux]
 description: source list file for ubuntu16.04
 keywords: source, ubuntu16.04
 ---

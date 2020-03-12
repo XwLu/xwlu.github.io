@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Ubuntu Info. Abstract
-categories: [wiki]
+categories: [Abstract]
 description: Ubuntu Info. Abstract
 keywords: ubuntu, abstract
 ---
@@ -12,3 +12,4 @@ keywords: ubuntu, abstract
 ### [串口调试](https://xwlu.github.io/wiki/ubuntu/serialport/)
 ### [国内源配置](https://xwlu.github.io/wiki/ubuntu/sources.list/)
 ### [墙外访问服务](https://xwlu.github.io/wiki/ubuntu/VPN/)
+### [终端过墙](https://xwlu.github.io/wiki/ubuntu/terminal-proxy/)

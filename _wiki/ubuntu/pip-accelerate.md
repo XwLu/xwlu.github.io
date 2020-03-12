@@ -1,7 +1,7 @@
 ---
 layout: wiki
 title: Pip accelerate
-categories: [wiki]
+categories: [Linux]
 description: Pip accelerate in ubuntu
 keywords: pip, accelerate
 ---
