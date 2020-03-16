@@ -17,3 +17,4 @@ keywords: reinforcement-learning
 - ## [蒙特卡洛](https://xwlu.github.io/wiki/reinforcement-learning/monte-carlo-sampling/)
 - ## [时间差分](https://xwlu.github.io/wiki/reinforcement-learning/temporal-difference/)
 - ## [多步自举](https://xwlu.github.io/wiki/reinforcement-learning/temporal-difference-lambda/)
+- ## [基于模型的强化学习](https://xwlu.github.io/wiki/reinforcement-learning/model-based-rl/)
