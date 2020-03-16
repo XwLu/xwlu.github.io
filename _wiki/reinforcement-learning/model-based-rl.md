@@ -83,7 +83,7 @@ keywords: reinforcement-learning, model-based
     - 再从S1开始搜索，搜到S3后，没有去S4(因为S4刚刚输了，UCB下降)，再选一个动作，到达S5
     - 结果“赢了”
     - 更新树策略路径上的每个节点的UCB
-  - ##### 后面的步骤依次类推
+  - #### 后面的步骤依次类推
   - ![MCTS-FLOW](../../images/wiki/rl/model-based/mcts-flow.png)
   
 
