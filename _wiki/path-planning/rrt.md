@@ -61,15 +61,15 @@ keywords: RRT, RRT*
 - ## 细节展示
 - ChooseParent，如图所示，x_new是由x_2生长出来的，但不是直接将x_2作为x_new的父，而是从一个固定的半径范围内选择到达x_new的总路程最短的节点作为父节点。
 
-![ChooseParent](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-choose-parent1.png)
+![ChooseParent](https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/rrt-choose-parent1.png)
 
-![ChooseParent](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-choose-parent2.png)
+![ChooseParent](https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/rrt-choose-parent2.png)
 
 - Tree.rewire()
 
-![Rewire](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-rewire1.png)
+![Rewire](https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/rrt-rewire1.png)
 
-![Rewire](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/path-planning/rrt-rewire2.png)
+![Rewire](https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/rrt-rewire2.png)
 
 # Kinodynamic-RRT*
 - ## 核心
