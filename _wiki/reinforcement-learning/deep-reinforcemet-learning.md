@@ -18,7 +18,7 @@ keywords: reinforcement-learning, DRL
     - Experience Replay
     - Target Network
   - ### 算法流程
-    - ![dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/dqn-flow.png?raw=true)
+    - ![dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dqn-flow.png?raw=true)
 ---
 - ## Double DQN
   - ### 核心思路
@@ -27,11 +27,11 @@ keywords: reinforcement-learning, DRL
       - <img src="https://latex.codecogs.com/gif.latex?r+\gamma Q^{B}({s}',argmax_{a}Q^{A}({s}',a))"/>
     - 其实只要把DQN的target network也变成独立更新的就行了
   - ### 算法流程
-    - ![double-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/double-dqn-flow.png?raw=true)
+    - ![double-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/double-dqn-flow.png?raw=true)
 ---
 - ## Dueling Network
   - ### 核心思路
-    - ![dueling-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/dueling-dqn.png?raw=true)
+    - ![dueling-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dueling-dqn.png?raw=true)
     - 用一个网络，分别学习V函数和A(优势)函数，最后相加得到Q函数
   - ### 优势
     - 对于很多状态，不需要估计每个动作的Q值，每来一个样本都可以更新一次V函数，V函数的学习机会比Q函数高很多，- 泛化性能好，当新的动作进来时，不需要重新学习V，只需要重新学习A
@@ -57,7 +57,7 @@ keywords: reinforcement-learning, DRL
       - <img src="https://latex.codecogs.com/gif.latex?p_{i}=\frac{1}{rank(i)}"/>，序号的倒数来表示权重，对噪声的敏感度下降。简单的说，即使TD误差有0.1的误差，但顺序上依然是排第二，这时，误差就没有影响了。
     - 重要性采样，消除Bias
   - ## 算法流程
-    - ![prioritized-exp-replay](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/prioritized-exp-replay.png?raw=true)
+    - ![prioritized-exp-replay](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/prioritized-exp-replay.png?raw=true)
 ---
 - ## Rainbow
   - ### 核心思想
@@ -70,6 +70,6 @@ keywords: reinforcement-learning, DRL
       - Distributional RL(A Distributional Perspective on Reinforcement Learning, 2017)
   - ### 效果
     - Rainbow的效果比所有的base line好
-    - ![Rainbow](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/rainbow.png?raw=true)
+    - ![Rainbow](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/rainbow.png?raw=true)
 
 # 基于策略的深度学习网络
