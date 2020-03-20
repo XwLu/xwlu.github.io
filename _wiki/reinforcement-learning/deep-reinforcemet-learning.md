@@ -50,7 +50,7 @@ keywords: reinforcement-learning, DRL
     - TD 误差对噪声敏感
     - TD 误差小的 transition 长时间不更新
     - 过分关注 TD 误差大的 transition 丧失了样本多样性 使用某种分布采样了 Experience, 会引入 Bias
-  - ## #解决方法
+  - ### 解决方法
     - 两种变体：
       - <img src="https://latex.codecogs.com/gif.latex?p_{i}=|\delta _{i}|+e"/>
       - 其中，<img src="https://latex.codecogs.com/gif.latex?\delta _{i}"/>表示TD误差，<img src="https://latex.codecogs.com/gif.latex?e"/>表示人为施加的噪声，通过这个噪声保证多样性
