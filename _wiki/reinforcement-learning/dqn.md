@@ -7,7 +7,6 @@ keywords: reinforcement-learning, DQN
 ---
 
 # 基于值函数的深度学习网络
----
 - ## DQN
   - 深度强化学习的鼻祖式工作
   - ### 解决了两个问题
@@ -19,7 +18,6 @@ keywords: reinforcement-learning, DQN
     - Target Network
   - ### 算法流程
     - ![dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dqn-flow.png?raw=true)
----
 - ## Double DQN
   - ### 核心思路
     - DQN中的TD目标值<img src="https://latex.codecogs.com/gif.latex?r+\gamma max_{a}Q({s}',a)"/>存在max操作，会引入一个正向偏差
@@ -28,7 +26,6 @@ keywords: reinforcement-learning, DQN
     - 其实只要把DQN的target network也变成独立更新的就行了
   - ### 算法流程
     - ![double-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/double-dqn-flow.png?raw=true)
----
 - ## Dueling Network
   - ### 核心思路
     - ![dueling-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dueling-dqn.png?raw=true)
@@ -36,7 +33,6 @@ keywords: reinforcement-learning, DQN
   - ### 优势
     - 对于很多状态，不需要估计每个动作的Q值，每来一个样本都可以更新一次V函数，V函数的学习机会比Q函数高很多，- 泛化性能好，当新的动作进来时，不需要重新学习V，只需要重新学习A
     - 减少了Q函数由于状态和动作维度差导致的噪声和突变
----
 - ## Prioritized Experience Replay
   - ### 核心思路
     - DQN是从memory中均匀的采样，有时候，我们希望更多的去采样对学习有帮助的片段，给不同的experience提供不同的权重
@@ -58,7 +54,6 @@ keywords: reinforcement-learning, DQN
     - 重要性采样，消除Bias
   - ## 算法流程
     - ![prioritized-exp-replay](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/prioritized-exp-replay.png?raw=true)
----
 - ## Rainbow
   - ### 核心思想
     - 将大量的前人的工作汇总实现，明确每一种改进所对应的效果，采用的工作有

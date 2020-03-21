@@ -81,7 +81,7 @@ keywords: reinforcement-learning, PG
     - 过去一直认为无模型情况下确定性策略梯度不存在
     - DPG证明了梯度存在，并建立了其与Q函数的关系
     - ![dpg-gradient](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dpg-gradient.png?raw=true)
----
+
 - ## DDPG
   - ### 核心思路
     - Continuous Control with Deep Reinforcement Learning (ICRL2016)
@@ -90,7 +90,7 @@ keywords: reinforcement-learning, PG
     - ![ddpg](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/ddpg.png?raw=true)
   - ### 算法流程
     - ![ddpg-flow](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/ddpg-flow.png?raw=true)
----
+
 - ## A3C
   - ### 论文来源
     - Asynchronous Methods for Deep Reinforcement Learning (ICML2016)
@@ -103,15 +103,15 @@ keywords: reinforcement-learning, PG
       - 不同线程使用了不同的探索策略，增加了探索量
   - ### 算法流程
     - ![a3c](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/a3c.png?raw=true)
----
+
 - ## A2C
   - ### 来源
     - OpenAI对A3C进行了改进，把**异步**变成了**同步**，等所有线程的动作执行完毕得到reward后一起拿来更新，可以用GPU完成该动作，效率高
     - 当batch_size较大时效果好
----
+
 # 策略梯度知识图谱
 - ![pg-graph](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/pg-graph.png?raw=true)
----
+
 # 扩展(其他策略梯度算法)
 - 自然梯度法：寻找策略更新最快的方向
 - 信赖域策略优化算法(TRPO)：研究了更新步长的选择，步长选择在策略梯度中非常重要，但实现非常复杂
