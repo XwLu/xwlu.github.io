@@ -17,7 +17,8 @@ keywords: reinforcement-learning
 - ## [蒙特卡洛](https://xwlu.github.io/wiki/reinforcement-learning/monte-carlo-sampling/)
 - ## [时间差分](https://xwlu.github.io/wiki/reinforcement-learning/temporal-difference/)
 - ## [多步自举](https://xwlu.github.io/wiki/reinforcement-learning/temporal-difference-lambda/)
-- ## [策略梯度](https://xwlu.github.io/wiki/reinforcement-learning/policy-gradient)
-- ## [深度强化学习](https://xwlu.github.io/wiki/reinforcement-learning/deep-reinforcemet-learning)
+- ## [基于策略梯度的强化学习](https://xwlu.github.io/wiki/reinforcement-learning/policy-gradient)
+- ## [DQN](https://xwlu.github.io/wiki/reinforcement-learning/dqn)
+- ## [基于信赖域的强化学习](https://xwlu.github.io/wiki/reinforcement-learning/trust-region-based-drl)
 
 # [基于模型的强化学习](https://xwlu.github.io/wiki/reinforcement-learning/model-based-rl/)

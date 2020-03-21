@@ -33,6 +33,9 @@ keywords: reinforcement-learning, PG
 # 策略退化
 - 模型的能力不够导致
 - 值函数估计不准导致
+---
+
+### 我们从经典的A2C算法入手讲解策略梯度算法
 
 # 优化目标
 - <img src="https://latex.codecogs.com/gif.latex?max_{\theta }U(\theta )=max\sum_{\tau }P(\tau |\theta )R(\tau )"/>
@@ -68,8 +71,48 @@ keywords: reinforcement-learning, PG
 - ![A2C](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/pg/a2c.png?raw=true)
 - A2C需要多进程来打破训练数据之间的相关性
 
+# 其他策略梯度算法简单介绍
+- ## 确定性梯度策略算法DPG
+  - ### 特性
+    - 直接采用确定性动作输出：<img src="https://latex.codecogs.com/gif.latex?a=\pi (s)"/>
+    - 可以用于高维和连续动作的情况
+    - 常规的策略梯度方法无法用到高维和连续动作空间
+  - ### 梯度求解
+    - 过去一直认为无模型情况下确定性策略梯度不存在
+    - DPG证明了梯度存在，并建立了其与Q函数的关系
+    - ![dpg-gradient](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dpg-gradient.png?raw=true)
+---
+- ## DDPG
+  - ### 核心思路
+    - Continuous Control with Deep Reinforcement Learning (ICRL2016)
+    - 结合了 DQN 和 DPG
+    - 利用随机过程产生探索性动作
+    - ![ddpg](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/ddpg.png?raw=true)
+  - ### 算法流程
+    - ![ddpg-flow](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/ddpg-flow.png?raw=true)
+---
+- ## A3C
+  - ### 论文来源
+    - Asynchronous Methods for Deep Reinforcement Learning (ICML2016)
+  - ### 问题提出
+    - Online 的算法和 DNN 结合后不稳定 (样本关联性)
+  - ### 解决方案
+    - 创建多个agent，在多个环境中执行异步学习构建batch(多线程)
+      - 来自不同环境的样本无相关性
+      - 不依赖于 GPU 和大型分布式系统
+      - 不同线程使用了不同的探索策略，增加了探索量
+  - ### 算法流程
+    - ![a3c](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/a3c.png?raw=true)
+---
+- ## A2C
+  - ### 来源
+    - OpenAI对A3C进行了改进，把**异步**变成了**同步**，等所有线程的动作执行完毕得到reward后一起拿来更新，可以用GPU完成该动作，效率高
+    - 当batch_size较大时效果好
+---
+# 策略梯度知识图谱
+- ![pg-graph](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/pg-graph.png?raw=true)
+---
 # 扩展(其他策略梯度算法)
 - 自然梯度法：寻找策略更新最快的方向
 - 信赖域策略优化算法(TRPO)：研究了更新步长的选择，步长选择在策略梯度中非常重要，但实现非常复杂
 - 近端策略优化(PPO)：对TRPO的改进，使实现非常简单，实际使用中，效果比较好甚至最好的方案
-- 确定性策略梯度算法(DPG)：输出是确定性动作，而不是概率

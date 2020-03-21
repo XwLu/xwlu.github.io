@@ -1,9 +1,9 @@
 ---
 layout: wiki
-title: Deep Reinforcement Learning
+title: Deep Q Learning
 categories: [reinforcement-learning]
 description: wiki on Reinforcement Learning
-keywords: reinforcement-learning, DRL
+keywords: reinforcement-learning, DQN
 ---
 
 # 基于值函数的深度学习网络
@@ -71,5 +71,3 @@ keywords: reinforcement-learning, DRL
   - ### 效果
     - Rainbow的效果比所有的base line好
     - ![Rainbow](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/rainbow.png?raw=true)
-
-# 基于策略的深度学习网络
