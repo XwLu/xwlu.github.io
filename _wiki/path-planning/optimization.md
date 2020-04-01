@@ -53,6 +53,7 @@ keywords: optimization
   - OOQP(可求解二次规划，非常快速，代码开源)
   - GLPK(可求解线性规划，非常快速，代码开源)
   - OSQP(百度Apollo用的二次规划求解器)
+  - [优化器大全](https://yalmip.github.io/allsolvers/)
 
 # 数值稳定性
 - ## Normalization

@@ -70,28 +70,63 @@ for (auto&it : var) {
 //ouput: 3.0 2.0 1.0
 ```
 
-### std::tuple
-- tuple是类似pair的模板
-- 每个pair都恰好有两个成员,tuple可以有任意数量的成员
-- 我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。
-- std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。
-- 生成方式多样
+### std::tuple & std::tie
+- #### tuple
+  - tuple是类似pair的模板
+  - 每个pair都恰好有两个成员,tuple可以有任意数量的成员
+  - 我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。
+  - std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。
+  - 生成方式多样
+  ```
+  auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
+  std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
+  std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
+  ```
+  - tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
+  ```
+  my_tuple2.swap (my_tuple1);
+  ```
+  - 函数模板 get<>() 可以返回 tuple 中的一个元素的**引用值**。
+  ```
+  auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
+  std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
+  ```
+  - 也可以用基于类型的 get<>() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
+  ```
+  auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
+  std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
+  ```
+- #### tie
+  - tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
+  ```
+  tuple<int,double,string> t3 = {1, 2.0, "3"};
+  int i; double d; string s;
+  tie(i, d, s) = t3;
+  tie(i, d, s) = {1, 2.0, "3"};//这一行会报错，因为tie只能解构tuple
+  ```
+
+### std::array
+- #### 定义
+- 定义时必须指定array的大小，因为大小是模板参数之一，不可忽略
+- 定义时不能使用变量指定大小
+- 可通过array构造新的array，可以使用{}构造
+- 不可使用数组构造
 ```
-auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
-std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
-std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
+array<int, 5> myarray = {1,2,3,4,5};
+array<int,5> otherarray = myarray;
 ```
-- tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
+- #### 访问
+- 可通过下标运算符[]对元素进行操作，还可以通过at/front/back进行操作
 ```
-my_tuple2.swap (my_tuple1);
+for (int i = 0; i < 5; i++){
+  cout << setw(10) << << myarray.at(i) << endl;
+}
 ```
-- 函数模板 get<>() 可以返回 tuple 中的一个元素的**引用值**。
+- 可以通过正向和反向迭代器对元素进行遍历
 ```
-auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
-std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
+for (auto it = myarray.begin(); it != myarray.end();++it){
+  cout << *it << endl;
+}
 ```
-- 也可以用基于类型的 get<>() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
-```
-auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
-std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
-```
+- #### 注意
+- 尽量使用at方法来访问元素，因为运算符\[\]不会对索引值进行检查，像myarray\[-1\]是不会报错的。使用at()，将在运行期间捕获非法索引的，默认将程序中断。

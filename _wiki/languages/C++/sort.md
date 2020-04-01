@@ -16,6 +16,20 @@ keywords: sort, C++
     sort(A.begin(), A.end(), f1);//降序排列
     sort(A.begin(), A.end(), f2);//升序排列
     sort(A.begin(), A.end(), \[\](const struct& A, const struct& B){return A.a < B.b;})
+
+    //cmp函数需要输入额外变量时
+    bool f3(Struct a, Struct b, double c){
+        if(a.y - b.y > c){
+            return a.x < b.x;
+        }else{
+            return a.x > b.x;
+        }
+    }
+    double c = 10;
+    sort(A.begin(), A.end(), std::bind(f3,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2,
+                                       c));
 ```
 #### list排序
 ```
