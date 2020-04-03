@@ -45,7 +45,7 @@ keywords: container, C++
 ```
 
 ### std::greater & std::loss
-- \#include<functional>
+- \#include\<functional\>
 - 排序准则
 ```
 int a[]={3,1,4,2,5};
@@ -55,8 +55,8 @@ sort(a ,a + len, less<int>());//内置类型的由小到大排序
 ```
 
 ### std::set & std::multiset
-- \#include<set>
-- \#include<multiset>
+- \#include\<set\>
+- \#include\<multiset\>
 - set和multiset都会根据特定的排序准则，自动将元素排序，两者不同在于multiset允许元素重复，而set不允许元素重复。
 - set和multiset的排序准备默认为由小到大，也可以自定义排序准则：
 ```
