@@ -86,7 +86,7 @@ $ exit
 **注意:** 通过**exec**进入容器的终端，在退出后并不会stop容器，利用**attach**则会。
 
 ## 导出容器快照
-- 将容器导出到本地文件ubuntu.tar
+- 将容器导出为镜像，存储到本地文件ubuntu.tar
 ```
 $ docker export 1e560fca3906 > ubuntu.tar
 ```
@@ -97,6 +97,8 @@ $ docker export 1e560fca3906 > ubuntu.tar
 $ cat docker/ubuntu.tar | docker import - test/ubuntu:v1
 $ docker import http://example.com/exampleimage.tgz example/imagerepo //支持url导入
 ```
+**注意:** 导入后会生成一个新的镜像，你需要自行重启该镜像的容器
+
 ## 删除容器
 ```
 $ docker rm -f 1e560fca3906
