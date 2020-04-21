@@ -26,3 +26,4 @@ keywords: path-planning
 # 轨迹优化
 - ### [Optimization Common](https://xwlu.github.io/wiki/path-planning/optimization/)
 - ### [Bezier Curve Optimization](https://xwlu.github.io/wiki/path-planning/bezier-curve-optimization/)
+- ### [OSQP](https://xwlu.github.io/wiki/path-planning/osqp/)
