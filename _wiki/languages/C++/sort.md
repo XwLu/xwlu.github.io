@@ -65,4 +65,13 @@ keywords: sort, C++
          cout<<((*it).second).first<<endl;
          cout<<((*it).second).second<<endl;
     }
-```    
+```
+### lower_bound
+```
+auto compare_s = [](const std::pair<double, double>& point, const double s) {
+    return point.first < s;
+};
+vector<pair<double, double>> var;
+auto it_lower = std::lower_bound(var.begin(),
+                                 var.end(), s, compare_s);
+```
