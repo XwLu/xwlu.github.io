@@ -75,7 +75,7 @@ bind -n M-Down select-pane -D
 ```
 
 ### 3.活动监听
-- 如果你开了多个窗口，可能想当别的窗口发生什么的时候你能收到通知。粘贴这段命令：
+#### 如果你开了多个窗口，可能想当别的窗口发生什么的时候你能收到通知。粘贴这段命令：
 ```
 setw -g monitor-activity on
 set -g visual-activity on
