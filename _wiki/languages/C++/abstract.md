@@ -13,3 +13,5 @@ keywords: c++, abstract
 ### [File IO](https://xwlu.github.io/wiki/languages/C++/file-io/)
 ### [Multi-thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/abstract)
 ### [Time-counting](https://xwlu.github.io/wiki/languages/C++/time-counting/)
+### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton/)
+### [Lambda](https://xwlu.github.io/wiki/languages/C++/lambda/)
