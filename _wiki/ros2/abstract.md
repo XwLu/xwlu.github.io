@@ -8,8 +8,8 @@ keywords: ros2, abstract
 
 ### [Publisher](https://xwlu.github.io/wiki/ros2/publisher/)
 ### [Subscriber](https://xwlu.github.io/wiki/ros2/subscriber/)
-### [Message Generate](https://xwlu.github.io/wiki/ros/message-generate/)
-### [Service Generate](https://xwlu.github.io/wiki/ros/service-generate/)
+### [Message Generate](https://xwlu.github.io/wiki/ros2/message-generate/)
+### [Service Generate](https://xwlu.github.io/wiki/ros2/service-generate/)
 ### [Service Client](https://xwlu.github.io/wiki/ros2/service-client/)
 ### [Service Server](https://xwlu.github.io/wiki/ros2/service-server/)
 ### [Launch](https://xwlu.github.io/wiki/ros2/launch/)
