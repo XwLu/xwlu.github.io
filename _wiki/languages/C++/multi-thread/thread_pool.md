@@ -116,7 +116,16 @@ int main(int argc, char** argv) {
     futures.emplace_back(thread_pool.enqueue(std::bind(DataProcessing, std::ref(data), std::to_string(i))));
   }
   for (auto& future : futures) {
-    future.get();
+    try {
+      if (future.valid()) {
+        future.get();
+      } else {
+        std::cerr << "Future is invalid";
+      }
+    } catch (const std::future_error& ex) {
+      std::cerr << "Caught a future error with code[" << ex.code() << "] message[" << ex.what() << "].";
+      throw ex;
+    }
   }
   auto time2 = std::chrono::system_clock::now();
   std::chrono::duration<double> diff = time2 - time1;
@@ -124,5 +133,4 @@ int main(int argc, char** argv) {
   std::cout << "Time Diff = " << diff.count() * 1000<< " msec." << std::endl;
   return 0;
 }
-
 ```
