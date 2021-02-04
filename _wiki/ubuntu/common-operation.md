@@ -23,3 +23,6 @@ keywords: source, ubuntu16.04
 
 ### 键盘调整终端
 > alt+space
+
+### ag安装
+sudo apt-get install silversearcher-ag
