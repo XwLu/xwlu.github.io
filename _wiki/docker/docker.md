@@ -103,3 +103,8 @@ $ docker import http://example.com/exampleimage.tgz example/imagerepo //支持ur
 ```
 $ docker rm -f 1e560fca3906
 ```
+
+## 进入容器的同时挂载本地目录
+```
+docker run -itd -v /Users/looyifan/workspace:/root/home/workspace ${IMAGE_ID} /bin/bash
+```
