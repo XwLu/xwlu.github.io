@@ -7,6 +7,7 @@ keywords: ubuntu, abstract
 ---
 
 ### [开机自启](https://xwlu.github.io/wiki/ubuntu/auto-startup/)
+### [远程启动](https://xwlu.github.io/wiki/ubuntu/remote-wakeup/)
 ### [常用操作](https://xwlu.github.io/wiki/ubuntu/common-operation/)
 ### [pip加速](https://xwlu.github.io/wiki/ubuntu/pip-accelerate/)
 ### [串口调试](https://xwlu.github.io/wiki/ubuntu/serialport/)
