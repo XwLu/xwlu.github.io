@@ -6,6 +6,22 @@ description: SS服务器搭建教程
 keywords: ss, server, fq
 ---
 
+# 终端翻墙
+- 找到所用VPN的http监听端口，假设为127.0.0.1:1087
+- 在zshrc中写入如下函数
+```
+function proxy_on(){
+    export http_proxy=http://127.0.0.1:1087
+    export https_proxy=http://127.0.0.1:1087
+    echo -e "已开启代理"
+}
+function proxy_off(){
+    unset http_proxy
+    unset https_proxy
+    echo -e "已关闭代理"
+}
+```
+
 # 服务器搭建
 - ## 购买
   - 搬瓦工等
