@@ -7,6 +7,40 @@ keywords: container, C++
 ---
 
 ## 容器
+### 容器分类
+- 序列容器：对象有序排列，使用整数值进行索引
+- 关联容器：对像顺序不重要，利用键进行索引
+- 适配器：调整原有容器行为，使其对外展现出新的类型、接口或返回新的元素
+- 生成器：构造元素序列
+
+### 迭代器
+- 获取迭代器
+  - begin, end
+  - cbegin, cend  (const)
+  - rbegin, rend
+  - crbegin, crend
+- 迭代器分类
+  - Input Iterator
+  - Output Iterator
+  - Forward Iterator = Input Iterator + Output Iterator，只能往前挪
+  - Bidirection Iterator，可以双向挪动
+  - Random Access Iterator，支持iter+N
+- 支持迭代器的容器统称为range
+
+### 序列容器
+- array:元素个数固定的序列容器，不支持添加和删除
+  - 当容器中的元素是连续存储的时候，容器都会有一个data()接口，返回指向第一个元素的指针
+  - swap的实现是元素复制，效率很低
+- vector:元素连续存储的序列容器
+  - vector也有data()接口
+  - swap是指针交换，效率很高
+  - emplace_back()相比push_back()少了一次对象的拷贝或者移动，因此当对象是string或者自定义结构数据时，用emplace_back效率更高
+  - insert和emplace是在vector中间插入元素，但效率很低；emplace和insert的差异与上面的emplace_back和push_back的差异一致
+  - 会导致iter失效的操作：swap、push_back等写操作
+- forward_list/list:基于链表/双向链表的容器
+- deque:vector与list的折衷，它会将整个容器分成若干段，段内是连续存储，段间是链表
+- basic_string:提供了对字符串的专门支持
+
 ### 以下是一些选择容器的基本原则：
 - #### 除法你有很好的理由选择其他容器，否则应该使用vector；
 - #### 如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用list或forward_list；
@@ -128,5 +162,8 @@ for (auto it = myarray.begin(); it != myarray.end();++it){
   cout << *it << endl;
 }
 ```
-- #### 注意
+
+---
+
+#### 注意
 - 尽量使用at方法来访问元素，因为运算符\[\]不会对索引值进行检查，像myarray\[-1\]是不会报错的。使用at()，将在运行期间捕获非法索引的，默认将程序中断。
