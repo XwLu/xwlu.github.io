@@ -15,4 +15,4 @@ keywords: c++, abstract
 ### [Time-counting](https://xwlu.github.io/wiki/languages/C++/time-counting/)
 ### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton/)
 ### [Lambda](https://xwlu.github.io/wiki/languages/C++/lambda/)
-### [SharedPtr](https://xwlu.github.io/wiki/languages/C++/shared-ptr/)
+### [Shared-Ptr](https://xwlu.github.io/wiki/languages/C++/shared-ptr/)
