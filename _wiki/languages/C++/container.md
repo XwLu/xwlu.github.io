@@ -37,9 +37,58 @@ keywords: container, C++
   - emplace_back()相比push_back()少了一次对象的拷贝或者移动，因此当对象是string或者自定义结构数据时，用emplace_back效率更高
   - insert和emplace是在vector中间插入元素，但效率很低；emplace和insert的差异与上面的emplace_back和push_back的差异一致
   - 会导致iter失效的操作：swap、push_back等写操作
-- forward_list/list:基于链表/双向链表的容器
+- list:双向链表的容器
+  - 插入和删除成本较低，随机访问成本较高
+  - 支持pop_front, push_front操作，但是不支持[]访问
+  - 提供了splice接口，A.splice(it, B)：将list B插入到A的it位置
+  - 写操作通常不改变iter有效性
+  - 如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用list或forward_list
+- forward_list:基于单向链表的容器
+  - 只支持递增，无rbegin
+  - 不支持size 
+  - 不支持push_back, pop_back
+  - 提供了xxx_after操作 
 - deque:vector与list的折衷，它会将整个容器分成若干段，段内是连续存储，段间是链表
+  - push_back和push_front比较快
+  - 在序列中间插入删除比较慢
+  - 通常情况下我们不会想要用deque，随机访问速度不如vector，插入删除不如list
+  - 只有在我们想要得到类似于vector的功能，但又希望push_front比较快的时候才会使用deque
 - basic_string:提供了对字符串的专门支持
+  - 提供了数值与字符串转换的接口
+  - 短字符串优化，short string optimization: SSO
+
+### 关联容器
+- 底层实现分类
+  - set/map/multiset/multimap
+    - 底层用红黑树实现
+  - unordered_xxx
+    - 底层用hash表实现
+- set
+  - 元素需要支持使用<比较大小，如果是自定义的元素，需要定义比较函数并在初始化的时候传入std::set<MyType, Cmp>
+  
+  ```
+  struct MyType{
+    int x;
+  };
+
+  bool MyCmp(const MyType& lhs, const MyType& rhs) {
+    return lhs.x < rhs.x;
+  }
+  
+  std::set<MyType, decltype(&MyCmp)> s({MyType(3), MyType(5)}, MyCmp);
+  ```
+  
+  - 插入insert/emplace/emplace_hint
+    - emplace_hint可以给出一些插入的提示，从而加速插入的速度，但是如果hint给错了，反而增加耗时
+  
+  ```
+  std::set<MyType, decltype(&MyCmp)> s({MyType{3}, MyType{5}, MyCmp);
+  s.insert(MyType{100});
+  s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
+  ```
+  
+  - 提供了extract来修改元素(C++17)，但是操作很复杂。
+  - set的迭代器是只读的，不能用于修改元素。 
 
 ### 以下是一些选择容器的基本原则：
 - #### 除法你有很好的理由选择其他容器，否则应该使用vector；
