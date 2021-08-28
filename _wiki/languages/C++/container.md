@@ -90,7 +90,7 @@ keywords: container, C++
   - 提供了extract来修改元素(C++17)，但是操作很复杂。
   - set的迭代器是只读的，不能用于修改元素。
 - map
-  - 每个节点是个std::pair
+  - 每个节点是个std::pair，其中pair.first是const类型，不能修改
   - key需要支持使用<比较大小，也支持自定义比较函数
   - 支持k，v分别获取
   
@@ -100,6 +100,111 @@ keywords: container, C++
     std::cout << k << " " << v << std::endl;
   }
   ```
+  - 访问元素：find/contain/[]/at
+    - map.at(key)若key不存在，会抛出异常
+    - map[key]若key不存在，会插入一个新的pair<key,T()>
+- multiset/multimap
+  - 允许重复key
+  - 元素访问：
+    - find：返回首个查到的元素
+    - count：返回元素个数
+    - lower_bound/upper_bound/equal_range：返回查找到的区间
+
+    ```
+    std::multiset<int> s{1, 3, 1};
+    auto [b, e] = s.equal_range(100);
+    for (auto iter = b; iter != e; ++iter) {
+      // ...
+    }
+    auto b = s.lower_bound(100);
+    auto e = s.upper_bound(100);
+    ```
+- unordered_xxx
+  - 底层实现：
+    - 新建一个size=N的bucket vector
+    - 对于新插入的元素，将其key转换为hash值n，index = n % N，往bucket vector[index]中维护的链表的尾部插入该元素
+    - 每一个bucket中都维护了一个链表，一般来说大部分bucket中的链表元素的长度都比较小
+  - 与set,map相比，查找性能更好，转换成hash后找对应的bucket，如果其中的链表元素个数是1，直接返回；即使大于1，也一般都比较小，做几次判断即可。
+  - 插入操作一些情况下会慢，比如一个bucket中包含的链表元素过多了，就会出发rehash，这个过程就比较耗时了
+  - key需要支持两种操作
+    - 转换为hash
+    - 判等
+  - 除了!=和==，不支持容器级别的关系运算；同时!=和==的计算很慢，因为当一个bucket中的链表元素较多时，为了判断两个set是否相等，需要将两条链表判断是否相等
+  - 自定义hash转换
+    - 方法1
+    
+    ```
+    struct Str {
+      int x;
+    };
+ 
+    size_t MyHash(const Str& val) {
+        return val.x;
+    }
+ 
+    bool MyEqual(const Str& lhs, const Str& rhs) {
+      return lhs.x = rhs.x;
+    }
+    std::unordered_set<Str, decltype(&MyHash), decltype(&MyEqual)> s{1, MyHash, MyEqual};  // 1 是bucket vector的size，最小为1
+    ```
+    - 方法2(推荐)
+    
+    ```
+    class Str {
+      int x;
+      bool operate==(const Str& s) const {
+        return (this->x == s.x);
+      }
+    };
+
+    class MyHasFunction {
+    public:
+      size_t operator(const Str& s) const {
+        return s.x;
+      }
+    };
+
+    std::unordered_set<Str, MyHasFunction> s;
+    ```
+
+### 适配器
+- 类型适配器
+  - basic_string_view (C++17)
+    - 代码demo
+    ```
+    void fun(std::string_view str) {  // 这里不需要引用，因为string_view只记录了string开头和结尾的位置，无论字符串本身有多长，它的内存都很小
+      if (!str.empty()) {
+        std::cout << str[0] << std::endl;
+      }
+    }
+
+    fun("1234");  // fun(char[6])
+    fun(std::string("1234"));  // fun(std::string)
+
+    std::string s("12345");
+    fun(std::string_view(s.begin(), s.begin() + 3));  // 只传入"123"
+    ```
+    - 提供较低成本的操作接口
+      - 比如std::string的substr会开辟一段新的内存来存放截取到的字符串，但std::string_view的substr只会初始化一个新的string_view来记录截取的字符串，string_view只占16个字节，所以很轻量
+    - 不能进行写操作
+    - 一般string_view只作为函数的输入，作为输出的时候需要小心，函数中的临时变量销毁导致string_view记录的指针位置失效
+  - span (C++20)
+    - span就是string_view的功能在其他类型的容器上的扩展，用于提升代码的性能
+    - 只能处理连续存储的容器，比如vector、array
+    - 支持写操作，这与string_view不同
+- 接口适配器
+  - stack
+    - stack中维护了一个底层容器，然后封装了它的接口，只保留了push，pop，top这三个操作
+    
+    ```
+    std::stack<int> s;
+    std::stack<int, std::vector<int>> s;  // 指定使用vector作为stack的底层容器
+    ```
+  - queue
+  - priority_queue
+    - 输入的元素需要支持比较操作（比较操作用于确定优先级）
+    - 支持自定义比较函数
+    - 输入元素和queue一致，但输出的元素一定是所有元素中优先级最高的元素
 
 ### 容器介绍
 - list:
