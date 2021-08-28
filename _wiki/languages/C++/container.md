@@ -58,7 +58,7 @@ keywords: container, C++
   - 短字符串优化，short string optimization: SSO
 
 ### 关联容器
-- 底层实现分类
+- 按底层实现分为两类
   - set/map/multiset/multimap
     - 底层用红黑树实现
   - unordered_xxx
@@ -88,13 +88,18 @@ keywords: container, C++
   ```
   
   - 提供了extract来修改元素(C++17)，但是操作很复杂。
-  - set的迭代器是只读的，不能用于修改元素。 
-
-### 以下是一些选择容器的基本原则：
-- #### 除法你有很好的理由选择其他容器，否则应该使用vector；
-- #### 如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用list或forward_list；
-- #### 如果程序要求随机访问元素，应使用vector或deque；
-- #### 如果程序要求在容器的中间插入或删除元素，应使用list或forward_list；
+  - set的迭代器是只读的，不能用于修改元素。
+- map
+  - 每个节点是个std::pair
+  - key需要支持使用<比较大小，也支持自定义比较函数
+  - 支持k，v分别获取
+  
+  ```
+  std::map<int, bool> m{{3, true}, {4, false}};
+  for (auto& [k, v] : m) {
+    std::cout << k << " " << v << std::endl;
+  }
+  ```
 
 ### 容器介绍
 - list:
@@ -112,6 +117,7 @@ keywords: container, C++
   - 关联性：元素根据键来引用，而不是根据索引来引用。
   - 无序性：元素不会根据其键值或映射值按任何特定顺序排序，而是根据其哈希值组织到桶中，以允许通过键值直接快速访问各个元素（常量的平均时间复杂度）。
   - 唯一性：std::unorederd_map中的元素的键是唯一的。
+
 
 ### 容器操作
 #### vector
