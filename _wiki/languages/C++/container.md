@@ -101,7 +101,7 @@ keywords: container, C++
   - 支持k，v分别获取
   
   ```
-  std::map<int, bool> m{{3, true}, {4, false}};
+  std::map<int, bool> m{{3, true}};
   for (auto& [k, v] : m) {
     std::cout << k << " " << v << std::endl;
   }
