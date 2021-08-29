@@ -67,15 +67,21 @@ keywords: container, C++
   - 元素需要支持使用<比较大小，如果是自定义的元素，需要定义比较函数并在初始化的时候传入std::set<MyType, Cmp>
   
   ```
-  struct MyType{
-    int x;
+  #include <set>
+  #include <type_traits>
+
+  struct MyType {
+      int x;
   };
 
   bool MyCmp(const MyType& lhs, const MyType& rhs) {
-    return lhs.x < rhs.x;
+      return lhs.x < rhs.x;
   }
-  
-  std::set<MyType, decltype(&MyCmp)> s({MyType(3), MyType(5)}, MyCmp);
+
+  int main() {
+      std::set<MyType, decltype(&MyCmp)> s({MyType{1}, MyType{2}}, MyCmp);
+      return 0;
+  }
   ```
   
   - 插入insert/emplace/emplace_hint
