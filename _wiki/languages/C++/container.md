@@ -82,7 +82,7 @@ keywords: container, C++
     - emplace_hint可以给出一些插入的提示，从而加速插入的速度，但是如果hint给错了，反而增加耗时
   
   ```
-  std::set<MyType, decltype(&MyCmp)> s({MyType{3}, MyType{5}, MyCmp);
+  std::set<MyType, decltype(&MyCmp)> s({MyType{3}, MyType{5}}, MyCmp);
   s.insert(MyType{100});
   s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
   ```
