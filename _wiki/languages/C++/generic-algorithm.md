@@ -7,7 +7,7 @@ keywords: generic algorithm, C++
 ---
 
 # 泛型算法简介
-- C++标准库中的泛型算法：<algorithm>, <numeric>, <ranges>
+- C++标准库中的泛型算法：algorithm, numeric, ranges
 - 泛型算法的实现都不复杂，但优化足够好
 - 一些泛型算法与方法同名，实现功能类似，此时建议调用方法而非算法
   - std::find VS. std::map::find
