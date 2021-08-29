@@ -254,7 +254,7 @@ keywords: container, C++
     std::cout << std::endl;
     ```
   - 数值适配器可以组合，引入复杂的数值适配逻辑
-- 生成器
+- 生成器(C++20)
   - std::ranges::itoa_view
   
   ```
