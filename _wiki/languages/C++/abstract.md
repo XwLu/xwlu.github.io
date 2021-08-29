@@ -16,3 +16,4 @@ keywords: c++, abstract
 ### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton/)
 ### [Lambda](https://xwlu.github.io/wiki/languages/C++/lambda/)
 ### [Shared-Ptr](https://xwlu.github.io/wiki/languages/C++/shared-ptr/)
+### [Generic-Algorithm](https://xwlu.github.io/wiki/languages/C++/generic-algorithm/)
