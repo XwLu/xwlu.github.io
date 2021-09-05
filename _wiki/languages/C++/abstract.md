@@ -7,7 +7,7 @@ keywords: c++, abstract
 ---
 
 ### [Container](https://xwlu.github.io/wiki/languages/C++/container/)
-### [Sort](https://xwlu.github.io/wiki/languages/C++/sort/)
+### [Class](https://xwlu.github.io/wiki/languages/C++/class/)
 ### [Eigen](https://xwlu.github.io/wiki/languages/C++/eigen/)
 ### [Grammer](https://xwlu.github.io/wiki/languages/C++/grammer/)
 ### [File IO](https://xwlu.github.io/wiki/languages/C++/file-io/)

@@ -7,6 +7,7 @@ keywords: generic algorithm, C++
 ---
 
 # 泛型算法简介
+- 我们把一些常用的简单的算法抽象出来，然后用不同的迭代器去调用这些函数，这些算法被称为泛型算法
 - C++标准库中的泛型算法：algorithm, numeric, ranges
 - 泛型算法的实现都不复杂，但优化足够好
 - 一些泛型算法与方法同名，实现功能类似，此时建议调用方法而非算法
@@ -123,7 +124,70 @@ int main() {
 int main() {
   std::vector<int> x{1, 2, 3, 4, 5};
   auto it = std::find(x.begin(), x.end(), 3);
+  it = std::ranges::find(x.begin(), x.end(), 3);
+  it = std::ranges::find(x, 3);
   std::cout << *it << std::endl;
 }
 ```
+  - 通过std::ranges::dangling避免返回无效的迭代器
+- 引入映射概念，简化代码编写
 
+```
+std::map<int, int> m{{2, 3}};
+auto it = std::ranges::find(m.begin(), m.end(), 3, &std::pair<const int, int>::second);  // projectionii，本质上是个指针，指向了pair的第二个元素
+std::cout << it->first << std::endl;
+```
+- 引入view，灵活组织程序逻辑
+  - 通过 | 这样的符号串联起来组成更加复杂的语句，这个在container部分有讲
+- 从类型上区分迭代器与哨兵
+
+------
+
+# 排序
+- ### sort排序
+```
+    vector<Struct> A
+    bool f1 (Struct a,Struct b) { return (a.x>b.x); }
+    bool f2 (Struct a,Struct b) { return (a.x<b.x); }
+    sort(A.begin(), A.end(), f1);//降序排列
+    sort(A.begin(), A.end(), f2);//升序排列
+    sort(A.begin(), A.end(), \[\](const struct& A, const struct& B){return A.a < B.b;})
+
+    //cmp函数需要输入额外变量时
+    bool f3(Struct a, Struct b, double c){
+        if(a.y - b.y > c){
+            return a.x < b.x;
+        }else{
+            return a.x > b.x;
+        }
+    }
+    double c = 10;
+    sort(A.begin(), A.end(), std::bind(f3,
+                                       std::placeholders::_1,
+                                       std::placeholders::_2,
+                                       c));
+```
+
+- ### nth_element函数
+```
+    vector<int> pts;
+    //只保证pts[6]是排名第6的元素,同时pts[0-5]<pts[6],pts[6-end]>pts[6]
+    nth_element(pts.begin(), pts.begin()+6; pts.end())
+
+    compare(Ponit2d* a, Ponit2d* b)
+    {
+        return(a->x < b->x);
+    }
+    vector<point2d> pts;
+    nth_element(pts.begin(), pts.begin()+6; pts.end(), compare);
+```
+
+- ### lower_bound
+```
+auto compare_s = [](const std::pair<double, double>& point, const double s) {
+    return point.first < s;
+};
+vector<pair<double, double>> var;
+auto it_lower = std::lower_bound(var.begin(),
+                                 var.end(), s, compare_s);
+```
