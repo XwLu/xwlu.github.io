@@ -14,6 +14,6 @@ keywords: c++, abstract
 ### [Multi-thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/abstract)
 ### [Time-counting](https://xwlu.github.io/wiki/languages/C++/time-counting/)
 ### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton/)
-### [Lambda](https://xwlu.github.io/wiki/languages/C++/bind-lambda/)
+### [Bind & Lambda](https://xwlu.github.io/wiki/languages/C++/bind-lambda/)
 ### [Shared-Ptr](https://xwlu.github.io/wiki/languages/C++/shared-ptr/)
 ### [Generic-Algorithm](https://xwlu.github.io/wiki/languages/C++/generic-algorithm/)
