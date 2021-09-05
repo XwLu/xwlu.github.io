@@ -145,6 +145,7 @@ std::cout << it->first << std::endl;
 
 # 排序
 - ### sort排序
+
 ```
     vector<Struct> A
     bool f1 (Struct a,Struct b) { return (a.x>b.x); }
@@ -169,6 +170,7 @@ std::cout << it->first << std::endl;
 ```
 
 - ### nth_element函数
+
 ```
     vector<int> pts;
     //只保证pts[6]是排名第6的元素,同时pts[0-5]<pts[6],pts[6-end]>pts[6]
@@ -183,6 +185,7 @@ std::cout << it->first << std::endl;
 ```
 
 - ### lower_bound
+
 ```
 auto compare_s = [](const std::pair<double, double>& point, const double s) {
     return point.first < s;
