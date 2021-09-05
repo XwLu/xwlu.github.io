@@ -357,15 +357,17 @@ array<int,5> otherarray = myarray;
 ```
 - #### 访问
 - 可通过下标运算符[]对元素进行操作，还可以通过at/front/back进行操作
+
 ```
 for (int i = 0; i < 5; i++){
   cout << setw(10) << << myarray.at(i) << endl;
 }
 ```
 - 可以通过正向和反向迭代器对元素进行遍历
+
 ```
 for (auto it = myarray.begin(); it != myarray.end();++it){
-  cout << *it << endl;
+  cout << \*it << endl;
 }
 ```
 
