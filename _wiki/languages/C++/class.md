@@ -8,6 +8,7 @@ keywords: class, C++
 
 # 结构体
 - 仅有声明的结构体是不完整类型
+
 ```
 struct Str;
 
@@ -19,6 +20,7 @@ int main() {
 - 结构体（以及类）的一处定义原则：翻译单元级别
   - 下面这份代码是可以通过编译并运行的，两个相同的结构体在不同的编译单元
   - source.cpp的内容
+
   ```
   struct Str{
     int x;
@@ -29,6 +31,7 @@ int main() {
   }
   ```
   - main.cpp的内容
+
   ```
   struct Str {
     int x;
@@ -48,6 +51,7 @@ int main() {
 - 数据成员会在构造对象时定义
 - (C++11)支持类内成员初始化
 - 结构体支持聚合初始化，但不建议使用
+
 ```
 struct Str {
   int x;
@@ -61,11 +65,13 @@ int main() {
 
 ```
 - 为了解决上面的问题，C++20引入了指派初始化
+
 ```
 Str s{.x=3, .y=4};
 ```
 
 # mutable限定符
+
 ```
 struct Str {
   mutable int x;
@@ -83,6 +89,7 @@ int main() {
 - 多个对象之前共享的数据成员
 - 定义方式的演化
   - C++98：1. 类外定义 2. const静态成员的类内初始化 
+
   ```
   struct Str {
     static int x;
@@ -106,6 +113,7 @@ int main() {
   }
   ```
   - C++17：内联静态成员的初始化
+
   ```
   struct Str {
     inline static int array_size = 100;  // 不需要const了，可修改
@@ -115,6 +123,7 @@ int main() {
   std::cout << &(s1.array_size) << std::endl;  // 编译通过
   ```
 - 静态数据成员可以使用auto推导类型
+
 ```
 struct Str {
   inline static auto array_size = 100;
@@ -126,6 +135,7 @@ struct Str {
   - Str::x
 
 - 在类的内部声明相同类型的静态数据成员
+
 ```
 struct Str {
   Str s;  // 编译不通过，因为不知道要给Str分配多大内存，又是鸡蛋问题
@@ -143,6 +153,7 @@ int main() {
 ```
 - inline使用的注意点
   - 错误使用方法
+
   ```
   struct Str {
     inline static int x;  // 编译通过
@@ -158,6 +169,7 @@ int main() {
   
   ```
   - 正确使用方法
+
   ```
   struct Str {
     static Str s;
