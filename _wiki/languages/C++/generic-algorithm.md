@@ -115,3 +115,15 @@ int main() {
   return 1;
 }
 ```
+# 泛型算法的改进--ranges(C++20)
+- ranges可以视为C++标准模块库的2.0版本
+- 可以使用容器而非迭代器做为输入
+
+```
+int main() {
+  std::vector<int> x{1, 2, 3, 4, 5};
+  auto it = std::find(x.begin(), x.end(), 3);
+  std::cout << *it << std::endl;
+}
+```
+
