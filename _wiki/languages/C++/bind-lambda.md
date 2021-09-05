@@ -32,6 +32,7 @@ keywords: bind, lambda, C++
 
 ### Bind
 - bind：通过绑定的方式修改可调用对象的调用方式(C++11)
+
   ```
   #include <functional>
   bool BiggerThan(const int val1, const int val2) {
@@ -164,6 +165,7 @@ std::cout << x(5) << std::endl;
   ```
   - 说明符
     - mutable
+
     ```
     int main() {
       int y = 3;
