@@ -138,7 +138,7 @@ auto it = std::ranges::find(m.begin(), m.end(), 3, &std::pair<const int, int>::s
 std::cout << it->first << std::endl;
 ```
 - 引入view，灵活组织程序逻辑
-  - 通过 | 这样的符号串联起来组成更加复杂的语句，这个在container部分有讲
+  - 通过 \| 这样的符号串联起来组成更加复杂的语句，这个在container部分有讲
 - 从类型上区分迭代器与哨兵
 
 ------
