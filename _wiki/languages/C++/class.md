@@ -524,10 +524,29 @@ keywords: class, C++
     };
   
     struct Str {
+      // 缺省构造
       Str() = default;
+      // 拷贝构造
       Str(const Str&) = default;
+      // 移动构造
       Str(Str&&) = default;
-  
+      // 拷贝赋值
+      Str& operator= (const Str& x) {
+        std::cout << "copy assignment is called" << std::endl;
+        val = x.val;
+        a = x.a;
+        return *this;
+      }
+      // 移动赋值
+      Str& operator= (Str&& x) {
+        std::cout << "move assignment is called" << std::endl;
+        val = std::move(x.val);
+        a = std::move(x.a);
+        return *this;
+      }
+
+      int val;
+      std::string a;
       Str2 m_str2;
     };
 
@@ -536,7 +555,14 @@ keywords: class, C++
       // 因为Str2有拷贝构造函数了，编译器不会自动合成缺省构造函数，而Str的default构造函数又需要调用Str2的缺省构造函数，所以就报错了
       // 解决方案：在Str2类内加入"Str2() = default;"
 
-      Str m2 = std::move(m);  // 这里会依次对Str类的成员变量调用移动构造，由于Str2没有定义移动构造，所以会执行Str2的拷贝构造
+      Str m2 = std::move(m);  //移动构造
+      // 这里会依次对Str类的成员变量调用移动构造，由于Str2没有定义移动构造，所以会执行Str2的拷贝构造
+      
+      Str m3 = m;  // 拷贝构造
+
+      Str m4;
+      m4 = m;  // 拷贝赋值
+      m4 = std::move(m);  // 移动赋值
     }
     ```
   - 移动构造函数通常声明为不可抛出异常函数：在函数声明的后面加上"noexcept"
@@ -546,3 +572,47 @@ keywords: class, C++
       std::cout << x.val << std::endl;  // 在这一行里面，x是个左值
     }
     ```
+- 拷贝赋值函数(operator=)
+  - 代码如上
+  - 拷贝赋值不可以使用初始化列表
+  - 拷贝赋值函数通常返回该类型的引用
+    - 目的是为了支持"m1=m2=m3;"的使用方式
+    - 也可以返回void，比如把上面的"return *this"去掉，这样也可以赋值，但是不支持连等操作了
+  - 一些情况下编译器会自动合成
+- 移动赋值函数
+  - 不可以使用初始化列表
+  - 通常返回该类型的引用
+  - 注意给自身赋值的情况
+
+    ```
+    struct Str {
+      Str& operator= (Str&& x) {
+        if (&x == this) {
+          return *this;
+        }
+        delete ptr;
+        ptr = x.ptr;
+        x.ptr = nullptr;
+      }
+
+      int* ptr;
+    };
+
+    int main() {
+      Str m1;
+      m1 = std::move(m1);  // 如果没有一开始的if判断，这里会把m1的指针给搞成nullptr，显然不是我们想要的
+    }
+    ```
+  - 一些情况下编译器会自动合成 
+
+---
+
+# 析构函数
+- 无参数，无返回值，用于释放内存
+- 内存回收是在析构函数执行完才进行
+- 除非显示声明，否则编译器会自动合成一个，其内部逻辑为平凡的
+- 析构函数通常不能抛出异常
+  - 因为C++在抛出异常的时候会把当前域内的数据都析构掉，如果析构过程又有新的异常，C++会直接退出，因为C++无法处理多个异常同时抛出的情况
+  ```
+  ~Str() noexcept = default;
+  ```
