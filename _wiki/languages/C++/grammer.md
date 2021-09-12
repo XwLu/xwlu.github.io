@@ -15,16 +15,16 @@ keywords: grammer, C++
 
 ## const
 ### 函数声明末尾加const
-```
-    class Foo 
+  ```
+  class Foo 
+  {
+  public:
+    int Bar(int random_arg) const
     {
-    public:
-        int Bar(int random_arg) const
-        {
-            // code
-        }
-    };
-```
+        // code
+    }
+  };
+ ```
 - Bar(int )函数声明末尾带有const，表示不允许Bar(int)函数对类Foo中的成员进行修改（mutable成员除外）。
 
 ## 继承
@@ -33,18 +33,18 @@ keywords: grammer, C++
 
 ## 遍历
 考虑下面的需求，对vector<int>中的每个元素加1，如何做？
-```
-    void add(int& lhs)
-    {
-        lhs= lhs + 1;
-    }
-    for_each(intVector.begin(),intVector.end(),add);
-``` 
+  ```
+  void add(int& lhs)
+  {
+    lhs= lhs + 1;
+  }
+  for_each(intVector.begin(),intVector.end(),add);
+  ``` 
 考虑下面的需求，对vector<int>中的每个元素加一个变量，如何做？
-```
-    void add(int& lhs,int rhs)
-    {
-        lhs= lhs + rhs;
-    }
-    for_each(intVector.begin(),intVector.end(),boost::bind(add,_1,100));
-```
+  ```
+  void add(int& lhs,int rhs)
+  {
+    lhs= lhs + rhs;
+  }
+  for_each(intVector.begin(),intVector.end(),boost::bind(add,_1,100));
+  ```

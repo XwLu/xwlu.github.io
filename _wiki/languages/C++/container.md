@@ -66,33 +66,31 @@ keywords: container, C++
 - set
   - 元素需要支持使用<比较大小，如果是自定义的元素，需要定义比较函数并在初始化的时候传入std::set<MyType, Cmp>
   
-  ```
-  #include <set>
-  #include <type_traits>
+    ```
+    #include <set>
+    #include <type_traits>
 
-  struct MyType {
-      int x;
-  };
+    struct MyType {
+        int x;
+    };
 
-  bool MyCmp(const MyType& lhs, const MyType& rhs) {
-      return lhs.x < rhs.x;
-  }
+    bool MyCmp(const MyType& lhs, const MyType& rhs) {
+        return lhs.x < rhs.x;
+    }
 
-  int main() {
-      std::set<MyType, decltype(&MyCmp)> s({MyType{1}, MyType{2}}, MyCmp);
-      return 0;
-  }
-  ```
-  
+    int main() {
+        std::set<MyType, decltype(&MyCmp)> s({MyType{1}, MyType{2}}, MyCmp);
+        return 0;
+    }
+    ```
   - 插入insert/emplace/emplace_hint
     - emplace_hint可以给出一些插入的提示，从而加速插入的速度，但是如果hint给错了，反而增加耗时
   
-  ```
-  std::set<MyType, decltype(&MyCmp)> s({MyType{3}, MyType{5}}, MyCmp);
-  s.insert(MyType{100});
-  s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
-  ```
-  
+    ```
+    std::set<MyType, decltype(&MyCmp)> s({MyType{3}, MyType{5}}, MyCmp);
+    s.insert(MyType{100});
+    s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
+    ```
   - 提供了extract来修改元素(C++17)，但是操作很复杂。
   - set的迭代器是只读的，不能用于修改元素。
 - map
@@ -100,12 +98,12 @@ keywords: container, C++
   - key需要支持使用<比较大小，也支持自定义比较函数
   - 支持k，v分别获取
   
-  ```
-  std::map<int, bool> m{{3, true}};
-  for (auto& [k, v] : m) {
-    std::cout << k << " " << v << std::endl;
-  }
-  ```
+    ```
+    std::map<int, bool> m{{3, true}};
+    for (auto& [k, v] : m) {
+      std::cout << k << " " << v << std::endl;
+    }
+    ```
   - 访问元素：find/contain/[]/at
     - map.at(key)若key不存在，会抛出异常
     - map[key]若key不存在，会插入一个新的pair<key,T()>
@@ -116,15 +114,15 @@ keywords: container, C++
     - count：返回元素个数
     - lower_bound/upper_bound/equal_range：返回查找到的区间
 
-    ```
-    std::multiset<int> s{1, 3, 1};
-    auto [b, e] = s.equal_range(100);
-    for (auto iter = b; iter != e; ++iter) {
-      // ...
-    }
-    auto b = s.lower_bound(100);
-    auto e = s.upper_bound(100);
-    ```
+      ```
+      std::multiset<int> s{1, 3, 1};
+      auto [b, e] = s.equal_range(100);
+      for (auto iter = b; iter != e; ++iter) {
+        // ...
+      }
+      auto b = s.lower_bound(100);
+      auto e = s.upper_bound(100);
+      ```
 - unordered_xxx
   - 底层实现：
     - 新建一个size=N的bucket vector
@@ -139,58 +137,58 @@ keywords: container, C++
   - 自定义hash转换
     - 方法1
     
-    ```
-    struct Str {
-      int x;
-    };
- 
-    size_t MyHash(const Str& val) {
-        return val.x;
-    }
- 
-    bool MyEqual(const Str& lhs, const Str& rhs) {
-      return lhs.x = rhs.x;
-    }
-    std::unordered_set<Str, decltype(&MyHash), decltype(&MyEqual)> s{1, MyHash, MyEqual};  // 1 是bucket vector的size，最小为1
-    ```
+      ```
+      struct Str {
+        int x;
+      };
+  
+      size_t MyHash(const Str& val) {
+          return val.x;
+      }
+  
+      bool MyEqual(const Str& lhs, const Str& rhs) {
+        return lhs.x = rhs.x;
+      }
+      std::unordered_set<Str, decltype(&MyHash), decltype(&MyEqual)> s{1, MyHash, MyEqual};  // 1 是bucket vector的size，最小为1
+      ```
     - 方法2(推荐)
     
-    ```
-    class Str {
-      int x;
-      bool operate==(const Str& s) const {
-        return (this->x == s.x);
-      }
-    };
+      ```
+      class Str {
+        int x;
+        bool operate==(const Str& s) const {
+          return (this->x == s.x);
+        }
+      };
 
-    class MyHasFunction {
-    public:
-      size_t operator(const Str& s) const {
-        return s.x;
-      }
-    };
+      class MyHasFunction {
+      public:
+        size_t operator(const Str& s) const {
+          return s.x;
+        }
+      };
 
-    std::unordered_set<Str, MyHasFunction> s;
-    ```
+      std::unordered_set<Str, MyHasFunction> s;
+      ```
 
 ### 适配器
 - 类型适配器
   - basic_string_view (C++17)
     - 代码demo
 
-    ```
-    void fun(std::string_view str) {  // 这里不需要引用，因为string_view只记录了string开头和结尾的位置，无论字符串本身有多长，它的内存都很小
-      if (!str.empty()) {
-        std::cout << str[0] << std::endl;
+      ```
+      void fun(std::string_view str) {  // 这里不需要引用，因为string_view只记录了string开头和结尾的位置，无论字符串本身有多长，它的内存都很小
+        if (!str.empty()) {
+          std::cout << str[0] << std::endl;
+        }
       }
-    }
 
-    fun("1234");  // fun(char[6])
-    fun(std::string("1234"));  // fun(std::string)
+      fun("1234");  // fun(char[6])
+      fun(std::string("1234"));  // fun(std::string)
 
-    std::string s("12345");
-    fun(std::string_view(s.begin(), s.begin() + 3));  // 只传入"123"
-    ```
+      std::string s("12345");
+      fun(std::string_view(s.begin(), s.begin() + 3));  // 只传入"123"
+      ```
     - 提供较低成本的操作接口
       - 比如std::string的substr会开辟一段新的内存来存放截取到的字符串，但std::string_view的substr只会初始化一个新的string_view来记录截取的字符串，string_view只占16个字节，所以很轻量
     - 不能进行写操作
@@ -203,10 +201,10 @@ keywords: container, C++
   - stack
     - stack中维护了一个底层容器，然后封装了它的接口，只保留了push，pop，top这三个操作
     
-    ```
-    std::stack<int> s;
-    std::stack<int, std::vector<int>> s;  // 指定使用vector作为stack的底层容器
-    ```
+      ```
+      std::stack<int> s;
+      std::stack<int, std::vector<int>> s;  // 指定使用vector作为stack的底层容器
+      ```
   - queue
   - priority_queue
     - 输入的元素需要支持比较操作（比较操作用于确定优先级）
@@ -217,50 +215,50 @@ keywords: container, C++
   - 可以将一个输出区间中的值变换后输出
     - demo1
 
-    ```
-    std::vector<int> v{1, 2, 3, 4, 5};
+      ```
+      std::vector<int> v{1, 2, 3, 4, 5};
 
 
-    int Square(int i) {
-      return i * i;
-    }
-    for (auto p : std::ranges::transform_view(v, Square)) {
-      std::cout << p << " ";  // 打印出1, 4, 9, 16, 25
-    }
-    std::cout << std::endl;
+      int Square(int i) {
+        return i * i;
+      }
+      for (auto p : std::ranges::transform_view(v, Square)) {
+        std::cout << p << " ";  // 打印出1, 4, 9, 16, 25
+      }
+      std::cout << std::endl;
 
 
-    bool IsEven(int i) {
-      return i % 2 == 0;
-    }
-    // 用法1
-    for (auto p : std::ranges::filter_view(v, isEven)) {
-      std::cout << p << " ";  // 只打印出偶数
-    }
-    std::cout << std::endl;
+      bool IsEven(int i) {
+        return i % 2 == 0;
+      }
+      // 用法1
+      for (auto p : std::ranges::filter_view(v, isEven)) {
+        std::cout << p << " ";  // 只打印出偶数
+      }
+      std::cout << std::endl;
 
-    // 用法2
-    auto x = std::views::filter(IsEven);
-    for (auto p : x(v)) {
-      std::cout << p << " ";  // 只打印出偶数
-    }
-    std::cout << std::endl;
+      // 用法2
+      auto x = std::views::filter(IsEven);
+      for (auto p : x(v)) {
+        std::cout << p << " ";  // 只打印出偶数
+      }
+      std::cout << std::endl;
 
-    // 用法3
-    auto x2 = std::views::filter(IsEven);
-    auto y = std::views::transform(Square);
-    for (auto p : v | x2 | y) {  // 按位或，模拟linux bash中的pipe功能，这里可以无限后缀新操作 v | x2 | y | k
-      std::cout << p << " ";
-    }
-    std::cout << std::endl;
-    
-    // 用法4
-    auto operate = std::views::filter(IsEven) ｜ std::views::transform(Square);
-    for (auto p : v | operate) {
-      std::cout << p << " ";
-    }
-    std::cout << std::endl;
-    ```
+      // 用法3
+      auto x2 = std::views::filter(IsEven);
+      auto y = std::views::transform(Square);
+      for (auto p : v | x2 | y) {  // 按位或，模拟linux bash中的pipe功能，这里可以无限后缀新操作 v | x2 | y | k
+        std::cout << p << " ";
+      }
+      std::cout << std::endl;
+      
+      // 用法4
+      auto operate = std::views::filter(IsEven) ｜ std::views::transform(Square);
+      for (auto p : v | operate) {
+        std::cout << p << " ";
+      }
+      std::cout << std::endl;
+      ```
   - 数值适配器可以组合，引入复杂的数值适配逻辑
   - view这种算法和之前讨论的泛型算法有两点核心区别
     - view没有对输入的东西立即进行计算，而是需要的时候才进行计算, 这样可以提高性能（比如10000个数据，只有前几个元素会被view计算，后面的计算就省掉了）
@@ -269,37 +267,37 @@ keywords: container, C++
 - 生成器(C++20)
   - std::ranges::itoa_view
   
-  ```
-  for (int i : std::ranges::itoa_view{1, 10}) {
-    std::cout << i << " ";
-  }
-  std::cout << std::endl;
+    ```
+    for (int i : std::ranges::itoa_view{1, 10}) {
+      std::cout << i << " ";
+    }
+    std::cout << std::endl;
 
-  for (int i : std::views::itoa(1, 10)) {
-    std::cout << i << " ";
-  }
-  std::cout << std::endl;
+    for (int i : std::views::itoa(1, 10)) {
+      std::cout << i << " ";
+    }
+    std::cout << std::endl;
 
-  // std::views::itoa(...)，如果这里的...只有一个元素，就表示生成一个以该元素为开头的无限长的容器，后面的take(n)表示取容器中的前9个元素
-  for (int i : std::views::itoa(1) | std::views::take(9)) {
-    std::cout << i << " ";
-  }
-  std::cout << std::endl;
+    // std::views::itoa(...)，如果这里的...只有一个元素，就表示生成一个以该元素为开头的无限长的容器，后面的take(n)表示取容器中的前9个元素
+    for (int i : std::views::itoa(1) | std::views::take(9)) {
+      std::cout << i << " ";
+    }
+    std::cout << std::endl;
 
-  // 上面三种写法的输出都是1，2，3，4，5，6，7，8，9
-  ```
+    // 上面三种写法的输出都是1，2，3，4，5，6，7，8，9
+    ```
 
 ### 容器操作
 ### std::greater & std::loss
 - \#include\<functional\>
 - 排序准则
 
-```
-int a[]={3,1,4,2,5};
-int len=sizeof(a)/sizeof(int);//这里切记要除以sizeof(int)
-sort(a ,a + len, greater<int>());//内置类型的由大到小排序
-sort(a ,a + len, less<int>());//内置类型的由小到大排序
-```
+  ```
+  int a[]={3,1,4,2,5};
+  int len=sizeof(a)/sizeof(int);//这里切记要除以sizeof(int)
+  sort(a ,a + len, greater<int>());//内置类型的由大到小排序
+  sort(a ,a + len, less<int>());//内置类型的由小到大排序
+  ```
 
 ### std::set & std::multiset
 - \#include\<set\>
@@ -307,16 +305,16 @@ sort(a ,a + len, less<int>());//内置类型的由小到大排序
 - set和multiset都会根据特定的排序准则，自动将元素排序，两者不同在于multiset允许元素重复，而set不允许元素重复。
 - set和multiset的排序准备默认为由小到大，也可以自定义排序准则：
 
-```
-std::set<float,std::greater<float>> var;
-var.insert(1.0);
-var.insert(3.0);
-var.insert(2.0);
-for (auto&it : var) {
-	cout << it << " ";
-}
-//ouput: 3.0 2.0 1.0
-```
+  ```
+  std::set<float,std::greater<float>> var;
+  var.insert(1.0);
+  var.insert(3.0);
+  var.insert(2.0);
+  for (auto&it : var) {
+    cout << it << " ";
+  }
+  //ouput: 3.0 2.0 1.0
+  ```
 
 ### std::tuple & std::tie
 - #### tuple
@@ -326,37 +324,37 @@ for (auto&it : var) {
   - std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。
   - 生成方式多样
 
-  ```
-  auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
-  std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
-  std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
-  ```
+    ```
+    auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
+    std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
+    std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
+    ```
   - tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
 
-  ```
-  my_tuple2.swap (my_tuple1);
-  ```
+    ```
+    my_tuple2.swap (my_tuple1);
+    ```
   - 函数模板 get<>() 可以返回 tuple 中的一个元素的**引用值**。
 
-  ```
-  auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
-  std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
-  ```
+    ```
+    auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
+    std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
+    ```
   - 也可以用基于类型的 get<>() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
 
-  ```
-  auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
-  std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
-  ```
+    ```
+    auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
+    std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
+    ```
 - #### tie
   - tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
 
-  ```
-  tuple<int,double,string> t3 = {1, 2.0, "3"};
-  int i; double d; string s;
-  tie(i, d, s) = t3;
-  tie(i, d, s) = {1, 2.0, "3"};//这一行会报错，因为tie只能解构tuple
-  ```
+    ```
+    tuple<int,double,string> t3 = {1, 2.0, "3"};
+    int i; double d; string s;
+    tie(i, d, s) = t3;
+    tie(i, d, s) = {1, 2.0, "3"};//这一行会报错，因为tie只能解构tuple
+    ```
 
 ### std::array
 - #### 定义
@@ -365,25 +363,25 @@ for (auto&it : var) {
 - 可通过array构造新的array，可以使用{}构造
 - 不可使用数组构造
 
-```
-array<int, 5> myarray = {1,2,3,4,5};
-array<int,5> otherarray = myarray;
-```
+  ```
+  array<int, 5> myarray = {1,2,3,4,5};
+  array<int,5> otherarray = myarray;
+  ```
 - #### 访问
 - 可通过下标运算符[]对元素进行操作，还可以通过at/front/back进行操作
 
-```
-for (int i = 0; i < 5; i++){
-  cout << setw(10) << << myarray.at(i) << endl;
-}
-```
+  ```
+  for (int i = 0; i < 5; i++){
+    cout << setw(10) << << myarray.at(i) << endl;
+  }
+  ```
 - 可以通过正向和反向迭代器对元素进行遍历
 
-```
-for (auto it = myarray.begin(); it != myarray.end();++it){
-  cout << \*it << endl;
-}
-```
+  ```
+  for (auto it = myarray.begin(); it != myarray.end();++it){
+    cout << \*it << endl;
+  }
+  ```
 
 ---
 
