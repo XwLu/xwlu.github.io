@@ -616,3 +616,62 @@ keywords: class, C++
   ```
   ~Str() noexcept = default;
   ```
+
+---
+
+# 相关注意点
+- 通常来说，一个类
+  - 如果需要定义析构函数，那么也需要定义拷贝构造和拷贝赋值函数
+  - 如果需要定义拷贝构造函数，那么也需要定义拷贝赋值函数
+  - 如果需要定义拷贝构造（赋值）函数，那么也需要定义移动构造（赋值）函数
+- default关键字
+  - 只对特殊成员函数有效（比如你只能对构造函数、析构函数等使用default方法）
+- delete关键字
+  - 对所有函数都有效
+    ```
+    void fun(int) = delete;
+    void fun(double) { std::cout << "double is called"; }
+
+    class Str {
+    public:
+      Str() = default;
+      ~Str() = delete;
+    private:
+      int* ptr;
+    };
+
+    int main() {
+      fun(3);  // 程序报错，因为根据名称查找规则，这里会调用void fun(int)，但是该函数是delete修饰的，不能被调用
+      Str a;  // 程序报错，因为变量a在main函数执行结束后会被销毁，但析构函数是delete修饰的，不能被调用
+      Str* p = new Str();  // 合法，因为new对象不会被自动销毁，所以不会调用析构函数，但是这么写是有内存泄漏的
+      // 同时，如果主动调用delete p;，也无法通过编译
+    }
+    ```
+  - 注意，不要为移动构造（赋值）函数引入delete限定符
+    - 如果只允许拷贝，那就引入拷贝构造即可
+    - 如果不需要拷贝，那就将拷贝构造声明为delete即可
+    - 注意delete移动构造（赋值）对C++17的新影响
+      ```
+      class Str {
+      public:
+        Str() = default;
+        Str(const Str& val) = default;
+        Str(Str&& val) = delete;
+      };
+
+      voidf fun(Str val) {}
+
+      int main() {
+        fun(Str{});  // C++11会报错，因为传入了一个将亡值，会调用移动构造函数
+        // C++17不会报错，因为C++17会优化掉移动构造这一步，这就导致同一份代码在不同环境下表现不一样了
+      }
+      ```
+- 特殊成员的合成行为列表（红色的表示支持但可能会废除的行为）
+  - ![special-members](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/special-members.png?raw=true)
+  - 横着看，最左侧一栏表示如果用户声明了xxx，右边的表示系统的行为。
+  - 2014年的标准
+  
+---
+
+# 字面值类
+- 可以构造编译器常量的类型
