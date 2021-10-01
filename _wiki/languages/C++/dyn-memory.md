@@ -7,7 +7,6 @@ keywords: dynamic memory, C++
 ---
 
 - sizeof 无法获取动态分配内存的大小, 因为sizeof是在编译期就确定的，而动态内存的大小是在运行期决定的
-
   ```
   std::vector<int> x;
   x.push_back(10);
@@ -17,7 +16,6 @@ keywords: dynamic memory, C++
 
 # allocator
 - 使用allocator来分配内存和释放内存
-
   ```
   std::allocator<int> al;
   int* ptr = al.allocate(3);
@@ -31,7 +29,6 @@ keywords: dynamic memory, C++
 
 # malloc & free
 - 使用malloc和free来管理内存
-
   ```
   int* p1 = malloc(4 * sizeof(int));
   int* p2 = malloc(sizeof(int[4]));  // same space
@@ -50,7 +47,6 @@ keywords: dynamic memory, C++
 ---
 
 # 动态内存与异常安全
-
   ```
   int* ptr = new int(3);
   /*

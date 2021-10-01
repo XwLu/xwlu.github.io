@@ -13,7 +13,6 @@ keywords: bind, lambda, C++
   - transform / copy_if / sort
 - 可调用对象
   - 函数指针：概念直观，但是定义位置受限
-
     ```
     #include <functional>
     bool BiggerThan(const int val) {
@@ -32,7 +31,6 @@ keywords: bind, lambda, C++
 
 ### Bind
 - bind：通过绑定的方式修改可调用对象的调用方式(C++11)
-
   ```
   #include <functional>
   bool BiggerThan(const int val1, const int val2) {
@@ -81,7 +79,6 @@ keywords: bind, lambda, C++
 - #### 基本组成
 - 参数与函数体
 - 返回类型
-
   ```
   auto x = [](int val) {
     if (val > 3) {
@@ -107,7 +104,6 @@ keywords: bind, lambda, C++
     - [&, z]：除了z之外的局部自动对象引用捕获，z值捕获
     - [&x, z]：x引用捕获，z值捕获
   - this捕获(C++11)
-  
     ```
     struct Str {
       auto fun() {
@@ -123,7 +119,6 @@ keywords: bind, lambda, C++
     };
     ```
   - 初始化捕获(C++14)
-  
     ```
     int x = 3;
     int y = 4;
@@ -138,7 +133,6 @@ keywords: bind, lambda, C++
     // method1的好处在于x+y这步计算不用每次调用lam的时候都重新算一遍
     ```
   - \*this捕获(C++17)
-
     ```
     struct Str {
       auto fun() {
@@ -165,7 +159,6 @@ keywords: bind, lambda, C++
     ```
   - 说明符
     - mutable
-
       ```
       int main() {
         int y = 3;
@@ -180,7 +173,6 @@ keywords: bind, lambda, C++
       }
       ```
     - constexpr(C++17)
-
       ```
       auto lam = [](int val) constexpr {
         return val + 1;
@@ -191,7 +183,6 @@ keywords: bind, lambda, C++
       - constexpr所修饰的函数，既可以在编译期调用，也可以在运行期调用
       - consteval修饰的函数只能在编译期调用
   - 模板形参(C++20)
-
     ```
     auto lam = []<typename T>(T val) {
       return val + 1;
@@ -202,7 +193,6 @@ keywords: bind, lambda, C++
 - #### lambda深入
   - 捕获时计算(C++14)：就是上面举的初始化捕获的例子
   - 即调用函数表达式(Immediately-Invoked Function Expression, IFE)
-  
     ```
     int x = 3, y = 5;
     const auto val = [z = x + y]() {
@@ -210,7 +200,6 @@ keywords: bind, lambda, C++
     }();  // 构造完立刻执行该lambda表达式
     ```
   - 使用auto避免复制(C++14)
-  
     ```
     std::map<int, int> m{{2, 3}};
     auto lam = [](const std::pair<int, int>& p) {
@@ -223,7 +212,6 @@ keywords: bind, lambda, C++
     // 解决方案2：auto lam = [](const auto& p) {/*...*/};
     ```
 - Lifting(C++14)
-
   ```
   auto fun(int val) {
     return val - 1;
@@ -243,7 +231,6 @@ keywords: bind, lambda, C++
   }
   ```
 - 递归调用(C++14)
-
   ```
   // demo 1
   int factorial(int n) {

@@ -8,7 +8,6 @@ keywords: class, C++
 
 # 结构体
 - 仅有声明的结构体是不完整类型
-
   ```
   struct Str;
   int main() {
@@ -19,7 +18,6 @@ keywords: class, C++
 - 结构体（以及类）的一处定义原则：翻译单元级别
   - 下面这份代码是可以通过编译并运行的，两个相同的结构体在不同的编译单元
   - source.cpp的内容
-
     ```
     struct Str{
       int x;
@@ -30,7 +28,6 @@ keywords: class, C++
     }
     ```
   - main.cpp的内容
-
     ```
     struct Str {
       int x;
@@ -50,7 +47,6 @@ keywords: class, C++
 - 数据成员会在构造对象时定义
 - (C++11)支持类内成员初始化
 - 结构体支持聚合初始化，但不建议使用
-
   ```
   struct Str {
     int x;
@@ -62,13 +58,11 @@ keywords: class, C++
   }
   ```
 - 为了解决上面的问题，C++20引入了指派初始化
-
   ```
   Str s{.x=3, .y=4};
   ```
 
 # mutable限定符
-
   ```
   struct Str {
     mutable int x;
@@ -84,7 +78,6 @@ keywords: class, C++
 - 多个对象之前共享的数据成员
 - 定义方式的演化
   - C++98：1. 类外定义 2. const静态成员的类内初始化 
-
     ```
     struct Str {
       static int x;
@@ -108,7 +101,6 @@ keywords: class, C++
     }
     ```
   - C++17：内联静态成员的初始化
-
     ```
     struct Str {
       inline static int array_size = 100;  // 不需要const了，可修改
@@ -118,7 +110,6 @@ keywords: class, C++
     std::cout << &(s1.array_size) << std::endl;  // 编译通过
     ```
 - 静态数据成员可以使用auto推导类型
-
   ```
   struct Str {
     inline static auto array_size = 100;
@@ -130,7 +121,6 @@ keywords: class, C++
   - Str::x
 
 - 在类的内部声明相同类型的静态数据成员
-
   ```
   struct Str {
     Str s;  // 编译不通过，因为不知道要给Str分配多大内存，又是鸡蛋问题
@@ -144,27 +134,22 @@ keywords: class, C++
     Str s2;
     std::cout << &(s1.s) << std::endl;
   }
-  
   ```
 - inline使用的注意点
   - 错误使用方法
-
     ```
     struct Str {
       inline static int x;  // 编译通过
       inline static Str s;  // 编译不通过，因为使用inline后，这里就不是声明而是定义了，但程序执行到这一行的时候Str还是不完全类型，所以无法完成定义的操作
     };
     
-    
     int main() {
       Str s1;
       Str s2;
       std::cout << &(s1.s) << std::endl;
     }
-    
     ```
   - 正确使用方法
-
     ```
     struct Str {
       static Str s;
@@ -184,7 +169,6 @@ keywords: class, C++
 # 成员函数
 - 声明与定义
   - 类内定义(隐式内联)
-
     ```
     // str.h
     struct Str {
@@ -199,7 +183,6 @@ keywords: class, C++
     #include "str.h"
     ```
   - 类内声明+类外定义
-
     ```
     // str.h
     struct Str {
@@ -217,7 +200,6 @@ keywords: class, C++
     #include "str.h"
     ```
     - 错误示范
-
       ```
       // str.h
       struct Str {
@@ -238,7 +220,6 @@ keywords: class, C++
     - 当某些成员函数采用类内定义的时候，它用到的成员函数的定义还在后面
     - 所以C++引入了两遍处理逻辑，看到类内定义的时候，只当作声明，等到把类的声明都过一遍之后再回来处理隐式内联函数的定义
   - 成员函数与尾随返回类型(trail returning type)
-
     ```
     // str.h
     struct Str {
@@ -262,7 +243,6 @@ keywords: class, C++
     - 基于const的成员函数重载
       - this是被const修饰的，所以你不能执行this = nullptr这种，但是你可以操作this指向的内容
       - 如果在成员函数的末尾加上const，传入的参数就变成const Str* const this，此时this和它指向的内容都无法被修改 
-
         ```
         struct Str {
           // 下面这两个函数能够形成重载，因为传入的this指针类型不一样
@@ -280,7 +260,6 @@ keywords: class, C++
     - 在调用该函数的时候，不会隐式传入this指针了
     - 因为上一条特性，所以它不能调用一般成员变量，但可以返回静态的数据成员
   - 成员函数基于引用限定符的重载(C++11)
-
     ```
     class Type {
       void foo() &;
@@ -336,7 +315,6 @@ keywords: class, C++
     ```
   - 友元函数的类内类外定义（注意：友元类不可以类内定义）
     - 类外定义
-   
       ```
       // 类外定义
       class Str {
@@ -352,7 +330,6 @@ keywords: class, C++
       ```
     - 类内定义（隐藏友元hidden friend）
       - 错误示例
-
         ```
         // 类内定义
         class Str {
@@ -372,7 +349,6 @@ keywords: class, C++
         }
         ```
       - 隐藏友元的正确打开方式
-
         ```
         // 常规的名称查找找不到fun，Argument-Depende-Lookup(ADL)可以）
 
@@ -437,7 +413,6 @@ keywords: class, C++
     - 当我们在类内定义了一个带参数的构造函数后，编译器不会自动合成缺省构造函数了，这时候我们可以用Str() = default;来自己构造一个
 - 单一构造函数
   - 可以是为一种类型转换函数
-
     ```
     struct Str {
     public:
@@ -456,7 +431,6 @@ keywords: class, C++
     }
     ```
   - explict关键字避免求值过程中的隐式类型转换
-
     ```
     struct Str {
     public:
@@ -480,7 +454,6 @@ keywords: class, C++
     - 如果不传引用，首先需要将实参拷贝给形参，就需要调用拷贝构造函数，而拷贝构造函数正在被定义中，就无限嵌套了
   - 如果未显式提供，编译器会自动合成一个，合成版本会依次对每个数据成员调用拷贝构造函数，因此拷贝构造函数也可以使用default来构造
 - 移动构造函数(C++11)：接受一个当前类右值引用对象的构造函数
-
   ```
   std::string ori("abc");
   std::string new_str = ori;  // 拷贝构造函数
@@ -490,7 +463,6 @@ keywords: class, C++
   std::cout << ori << " " << new_str2 << std::endl;  //  abc
   ```
   - 自定义移动构造函数
-
     ```
     struc Str {
       // 构造函数
@@ -512,7 +484,6 @@ keywords: class, C++
     }
     ```
   - 缺省移动构造函数
-  
     ```
     struct Str2 {
       Str2(const Str2&);
@@ -578,7 +549,6 @@ keywords: class, C++
   - 不可以使用初始化列表
   - 通常返回该类型的引用
   - 注意给自身赋值的情况
-
     ```
     struct Str {
       Str& operator= (Str&& x) {

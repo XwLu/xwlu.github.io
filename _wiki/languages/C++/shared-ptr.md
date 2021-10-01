@@ -9,7 +9,6 @@ keywords: shared_ptr, C++
 # 指定内存回收逻辑
 - 为shared_ptr指定自定义的回收逻辑，用于回收复杂的自定义结构
 - 设计内存池的时候，自定义Deletor，可以不用真的执行delete操作，而是直接在Deletor函数中将指针交还给内存池
-
   ```
   void fun(int* ptr) {
     std::cout << "call delete\n";
@@ -25,7 +24,6 @@ keywords: shared_ptr, C++
 ---
 
 # make_shared
-
   ```
   std::shared_ptr<int> x = new int(3);
   auto x = std::make_shared<int>(3);
@@ -42,13 +40,11 @@ keywords: shared_ptr, C++
 # 智能指针数组
 - C++17之前需要自定义Deletor函数执行delete []
 - 从C++17开始支持
-
   ```
   std::shared_ptr<int[]> x(new int[5]);
   ```
 
 - 从C++20开始支持make_shared<T[]>
-
   ```
   auto x = std::make_shared<int[5]>();
   auto x = std::make_shared<int[]>(5); // 两者相等
@@ -57,7 +53,6 @@ keywords: shared_ptr, C++
 ---
 
 # shared_ptr初始化陷阱
-
   ```
   std::shared_ptr<int> x(new int(5));
   std::shared_ptr<int> y(x.get());  // core, x和y互相不知道对方的存在，当x和y分别析构的时候，会delete两次int(5)这块内存
@@ -68,7 +63,6 @@ keywords: shared_ptr, C++
 
 # 循环引用
 - 以下是shared_ptr的循环引用举例
-
   ```
   struct Str{
     std::shared_ptr<Str> nei;
@@ -86,7 +80,6 @@ keywords: shared_ptr, C++
   ```
 
 - 引入weak_ptr解决循环引用问题:
-
   ```
   struct Str{
     std::weak_ptr<Str> nei;
@@ -105,7 +98,6 @@ keywords: shared_ptr, C++
 
 # weak_ptr的lock方法
 - weak_ptr的引入也会引发一些问题
-
   ```
   struct Str{
     std::weak_ptr<Str> nei;
@@ -128,7 +120,6 @@ keywords: shared_ptr, C++
 - 如果不在了，返回shared_ptr<T>()
 - 如果还在，返回shared_ptr<T>(*this)
 - 最终的正确写法为
-
   ```
   struct Str{
     std::weak_ptr<Str> nei;

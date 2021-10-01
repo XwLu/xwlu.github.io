@@ -39,7 +39,6 @@ keywords: generic algorithm, C++
     - 如果输入的是随机访问迭代器，就可以直接用last_it - begin_it得到距离
 - 特殊的迭代器
   - 插入迭代器：back_insert_iterator(back_inserter), front_insert_iterator(front_inseter), insert_iterator(inserter)
-  
     ```
     std::vector<int> x;
     std::fill_n(x.begin(), 10, 3);  // core，因为x的内存比10小
@@ -52,7 +51,6 @@ keywords: generic algorithm, C++
     ```
   - 流迭代器
     - istream_iterator
-    
       ```
       std::istringstream str("1 2 3 4 5");
       std::istream_iterator<int> x(str);
@@ -68,7 +66,6 @@ keywords: generic algorithm, C++
       std::accumulate(x, y, 0);  // 15
       ```
     - ostream_iterator
-    
       ```
       std::vector<int> x{1, 2, 3};
       std::copy(x.rbegin(), y.rbegin(), std::ostream_iterator<int>(std::cout, " "));
@@ -87,7 +84,6 @@ keywords: generic algorithm, C++
   - std::execution::par_unseq：并发非顺序执行
   - std::execution::unseq：非顺序执行
 - 代码demo(注意：下面的代码可能需要在编译时加上-o3和-ltbb库的优化才能体现出加速效果)
-
   ```
   #include <iostream>
   #include <algorithm>
@@ -119,7 +115,6 @@ keywords: generic algorithm, C++
 # 泛型算法的改进--ranges(C++20)
 - ranges可以视为C++标准模块库的2.0版本
 - 可以使用容器而非迭代器做为输入
-
   ```
   int main() {
     std::vector<int> x{1, 2, 3, 4, 5};
@@ -131,7 +126,6 @@ keywords: generic algorithm, C++
   ```
   - 通过std::ranges::dangling避免返回无效的迭代器
 - 引入映射概念，简化代码编写
-
   ```
   std::map<int, int> m{{2, 3}};
   auto it = std::ranges::find(m.begin(), m.end(), 3, &std::pair<const int, int>::second);  // projectionii，本质上是个指针，指向了pair的第二个元素
@@ -145,7 +139,6 @@ keywords: generic algorithm, C++
 
 # 排序
 - ### sort排序
-
   ```
   vector<Struct> A
   bool f1 (Struct a,Struct b) { return (a.x>b.x); }
@@ -170,7 +163,6 @@ keywords: generic algorithm, C++
   ```
 
 - ### nth_element函数
-
   ```
   vector<int> pts;
   //只保证pts[6]是排名第6的元素,同时pts[0-5]<pts[6],pts[6-end]>pts[6]
