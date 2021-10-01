@@ -825,6 +825,86 @@ keywords: class, C++
   - 可重载但不建议重载的运算符(&&,||,逗号运算符)
     - C++17中规定了相应的求值顺序但没有方式实现短路逻辑(短路逻辑即:A&&B,如果A为非，B不用执行)
   - 不可重载的运算符(如 ?: 三元运算符)
+- 相对来说比较特殊的运算符重载
+  - 对称运算符通常定义为非成员函数以支持首个操作数的类型转换
+    ```
+    // 错误示范
+    struct Str {
+      Str(int x) : val(x) {}
+      auto operator + (const Str& input) {
+        return Str(val + input.val);
+      }
+      int val;
+    };
+
+    int main() {
+      Str x(3);
+      Str y = x + 4;  // 通过，4会隐式转换为Str(4)
+      Str z = 4 + x;  // 不通过，最好不要将称运算符定义为成员函数
+    }
+    ```
+    ```
+    // 正确示范
+    struct Str {
+      Str(int x) : val(x) {}
+
+      Str& operator= (const std::string& input) {
+        val = static_cast<int>(input.size());
+        return *this;
+      }
+
+      // 定义为友元的原因是val是私有成员，而operator +是一个类外的运算符重载函数
+      friend auto operator + (const Str& input1, const Str& input2) {
+        return Str(input1.val + input2.val);
+      }
+      
+      // 注意这里要返回引用，因为输出流是不支持拷贝的
+      friend auto& operator << (std::ostream& ostr, const Str& input) {
+        ostr << input.val;
+        return ostr;
+      }
+
+      int& operator[] (int id) {  // func1
+        return val;
+      }
+
+      int operator[] (int id) const {  // func2
+        return val;
+      }
+
+    private:
+      int val;
+    };
+
+    int main() {
+      Str x = 3;
+      x = "1234";
+      Str y = 4 + x;  // 合法，我们在类外定了operator + (const Str&, const Str&)函数，4会被隐式转换为Str(4)
+      std::cout << x << y;  // 合法
+
+      std::cout << x[0];  // 合法
+      x[0] = 1;  // 如果func1不是返回的引用，就不合法，因为右值一般不能出现在等号左边
+
+      const Str cx = 3;
+      std::cout << cx[0];  // 如果没有定义func2，就不合法，因为func1没用const修饰，可能对类本身进行修改
+    }
+    ```
+  - 移位运算符一定要定义为非成员函数，因为其首个操作数类型需要是流类型(如上面代码所示)
+  - 赋值运算符也可以接受一般参数，比如上面代码中传入了一个string。
+  - operator []通常返回引用，某些情况下不返回引用，比如上面的func2
+  - 自增、自减运算符的前缀、后缀重载法
+    ```
+    Str& operator++ () {  //如果()里是空的，对应前缀自增x++
+      ++val;
+      return *this;
+    }
+    Str operator++ (int) {  // 如果()里有个int变量，对应后缀自增++x，注意这里的()里面的变量没有任何意义，不会参与任何计算或者赋值
+      Str tmp(*this);
+      ++val;
+      return tmp;
+    }
+    // 从上面的代码可以看出，能用前缀自增就用前缀，更加高效
+    ```
 ---
 
 # 类的继承
