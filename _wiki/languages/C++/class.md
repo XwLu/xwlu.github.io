@@ -875,6 +875,180 @@ keywords: class, C++
     }
     // 从上面的代码可以看出，能用前缀自增就用前缀，更加高效
     ```
+  - 使用解引用运算符(*)与成员访问运算符(->)模拟指针行为
+    ```
+    struct Str {
+    public:
+      Str(int* p) : ptr(p) {}
+      
+      int& operator * () {
+        return *ptr;
+      }
+
+      Str* operator -> () {
+        return this;
+      }
+
+      int val = 5;
+
+    private:
+      int* ptr;
+    };
+  
+    int main() {
+      int x = 100;
+      Str ptr(&x);
+      std::cout << *ptr << std::endl;
+      std::cout << ptr->val << std::endl;
+      // C++编译的时候遇到->就会去查看有没有operator->重载，如果有重载的话，就把它当作一个类成员函数去调用
+      // 所以ptr->val会被翻译为：ptr.operator->()->val，其中ptr.operator->()的返回值就是一个Str*类型的指针
+    }
+    ```
+    - 注意，"."运算符不能重载
+    - "->"会递归调用"->"操作
+      ```
+      struct Str2 {
+        Str2* operator -> () {
+          return this;
+        }
+
+        int val2 = 123;
+      };
+
+      struct Str {
+        Str2 operator -> () {
+          return Str2{};
+        }
+        
+        int val = 5;
+      };
+
+      int main() {
+        Str ptr = Str();
+        std::cout << ptr->val2 << std::endl;
+        // 由于Str的operator->()函数返回的是Str2，不是一个指针类型，所以编译期还会继续调用Str2的operator->()函数，直到返回一个指针为止
+        // ptr.operator->().operator()->val2
+      }
+      ```
+  - 使用函数调用运算符构造可调用对象(lambda表达式就是通过这个手段实现的)
+    ```
+    struct Str {
+      Str(int p) : val(p) {}
+
+      bool operator () (int input) {
+        return val++ < input;
+      }
+
+    private:
+      int val;
+    };
+
+    int main() {
+      Str obj(100);
+      std::cout << obj(99) << std::endl;  // 0
+      std::cout << obj(102) << std::endl;  // 1
+      std::cout << obj(102) << std::endl;  // 0, 因为val++
+    }
+    ```
+  - 类型转换运算符
+    - 函数声明为operator type() const
+      ```
+      struct Str {
+        Str(int p) : val(p) {}
+        
+        operator int() const {
+          return val;
+        }
+
+        friend auto operator + (Str a, Str b) {
+          return Str(a.val + b.val);
+        }
+
+      private:
+        int val;
+      };
+
+      int main() {
+        Str obj(100);
+        static_cast<Str>(100);  // 通过
+        static_cast<int>(obj);  // 通过
+        int v = obj;  // 通过
+        std::cout << v << std::endl;
+
+        obj + 3;  // 不通过，编译器既可以选择把obj转为int再相加，也可以把3转换为Str类型再相加（上面实现了Str的+友元重载）
+        // 解决方案就是在Str的构造函数或者型转换运算符重载函数前面加上explicit关键字
+        // 如果在构造函数前加explicit，3就不能隐式转换为Str类型了
+        // 注意，不能两个函数前同时加上explicit，如果都加了也编译不过，因为没有任何隐式转换发生的话，Str和int无法执行+。
+
+        // 如果在两个函数前同时加上explicit，代码就要这么改
+        obj + static_cast<Str>(3);
+        static_cast<int>(obj) + 3;
+      }
+      ```
+    - 与单参数构造函数一样，都引入了一种类型转换方式
+    - 注意避免引入歧义性与意料之外的行为
+      - 通过explicit引入显示类型转换(参考上面的代码)
+    - explicit bool的特殊性：用于条件表达式时会进行隐式类型转换
+      ```
+      struct Str {
+        explicit Str(int p) : val(p) {}
+
+        explicit operator bool() const {
+          return val == 0;
+        }
+
+      private:
+        int val;
+      };
+
+      int main() {
+        Str obj(100);    
+        std::cout << obj << std::endl;  // 不通过，因为上面有explicit修饰，不能隐式转换了
+
+        if (obj) {  // 通过，即使定义了explicit，但这里仍然会进行隐式类型转换
+          std::cout << 1 << std::endl;
+        } else {
+          std::cout << 0 << std::endl;
+        }
+
+        auto var = obj ? 1 : 0;  // 通过
+        std::cout << var << std::endl;
+      }
+      ```
+  - C++20中对==与<==>的重载
+    - 在C++20之前，如果我们想重载大小比较，我们需要实现6个重载，==, !=, >=, <=, >, <。 
+    - 在C++20之后，只需要重载==, <==>这两个就可以完成对上面6个功能的定义
+    - 通过==定义!=
+    - 隐式交换操作数
+      ```
+      #include <compare>
+      struct Str {
+        Str(int p) : val(p) {}
+
+        friend bool operator == (Str obj, int obj2) {
+          return obj.val == obj2;
+        }
+
+        auto operator <==> (int x) {
+          return val <==> x;
+        }
+
+      private:
+        int val;
+      };
+
+      int main() {
+        Str obj(100);
+        std::cout << (obj == 100) << std::endl;
+        std::cout << (obj != 100) << std::endl;  // C++20之后通过
+        std::cout << (100 == obj) << std::endl;  // C++20之后通过，C++20会先尝试找(int, Str)，如果找不到会继续找(Str, int)
+
+        std::cout << (100 >= obj) << std::endl;
+        std::cout << (obj >= 100) << std::endl;
+      }
+      ```
+    - 通过<==>定义多种比较逻辑(参考上main的代码)
+      - 注意<==>可以返回的类型，strong_ordering, weak_ordering, partial_ordering
 ---
 
 # 类的继承
