@@ -1053,3 +1053,24 @@ keywords: class, C++
 ---
 
 # 类的继承
+- 通过类的继承（派生）来引入“是一个”的关系
+  - 通常采用public继承
+    - class缺省情况下采用的是private继承
+    - struct缺省情况下采用的是public继承
+  - 继承部分不是类的声明，声明的时候直接"class xxx;"即可，不可以在声明的时候带上": public base"
+  - 使用基类的指针或引用可以指向派生类对象
+    ```
+    struct Base {};
+
+    struct Derive : public Base {};
+
+    int main () {
+      Derive d;
+      Base& ref = d;
+      Base* ptr = &d;
+    }
+    ```
+  - 静态类型 v.s. 动态类型
+    - 静态类型是编译期确定的变量类型，比如上面的ref静态类型是Base&，ptr静态类型是Base*
+    - 动态类型是运行期变量实际被赋予的类型，比如上面的ref静态类型是Base&，ptr静态类型是Base*
+
