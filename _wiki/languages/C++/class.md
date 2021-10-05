@@ -1062,15 +1062,147 @@ keywords: class, C++
     ```
     struct Base {};
 
-    struct Derive : public Base {};
+    struct Derived : public Base {};
 
     int main () {
-      Derive d;
+      Derived d;
       Base& ref = d;
       Base* ptr = &d;
     }
     ```
   - 静态类型 v.s. 动态类型
     - 静态类型是编译期确定的变量类型，比如上面的ref静态类型是Base&，ptr静态类型是Base*
-    - 动态类型是运行期变量实际被赋予的类型，比如上面的ref静态类型是Base&，ptr静态类型是Base*
+    - 动态类型是运行期变量实际被赋予的类型，比如上面的ref动态类型是Derived&，ptr静态类型是Derived*
+    - 静态类型是给编译器看的，所以变量只能调用静态类型所拥有的成员变量或成员函数
+  - protected限定符：派生类可访问，外部不可访问
+- 类的派生会形成嵌套域
+  - 派生类所在域位于基类内部
+  - 派生类中的名称定义会覆盖基类
+  - 使用域操作符显示访问基类成员
+    ```
+    struct Base {
+      int val = 2;
+    };
 
+    class Derived : public Base {
+    public:
+      void fun() {
+        std::cout << val << std::endl;  // 3, val的值被Derived中的val覆盖
+        std::cout << Base::val << std::endl;  // 2, 限定了Base域之后，就会打印Base中val的值
+      }
+
+      int val = 3;
+    };
+
+    int main() {
+      Derived d;
+      d.fun();
+    }
+    ```
+  - 在派生类中调用基类的构造函数
+    ```
+    struct Base {
+      Base(int) {}
+    };
+
+    class Derived : public Base {
+      Derived(int a) : Base(a) {}  // 必须要在初始化列表中调用Base的初始化函数，如果放在后面的函数体中是无法通过编译的
+    }
+    
+    int main() {
+      Derived d(3);
+    }
+    ```
+- 虚函数
+  - 通过虚函数与引用（指针）实现动态绑定
+    - 使用关键字virtual引入
+    - 非静态、非构造函数可以声明为虚函数
+    - 虚函数会引入vtable结构
+      - dynamic_cast
+      - ![vtable](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/vtable.png?raw=true)
+        ```
+        struct Base {
+          virtual void baseMethod() {}
+          int baseMember;
+        };
+
+        class myClassDerived : public Base {
+          virtual void derivedMethod() {}
+          int derivedMember;
+        };
+        
+        class myClassDerived2 : public myClassDerived {
+          virtual void derivedMethod2() {}
+          int derivedMember2;
+        };
+        
+        int main() {
+          myClassDerived2 d;
+
+          // 从派生类转换到基类很自然
+          Base* ptr = &d;
+          Base& ref = d;
+
+          // 从基类转换为派生类可能存在风险，安全的做法是使用dynamic_cast
+          // 下面这段代码之所以可以编译并运行就是因为vtable里包含了typeinfo of myClassDerived2
+          myClassDerived2& ref2 = dynamic_cast<myClassDerived2&>(ref);  // 如果ref的typeinfo中记录的确实是myClassDerived2类型的数据，转换就成功，否则这里会抛出异常
+          myClassDerived2* ptr2 = dynamic_cast<myClassDerived2*>(ptr);  // 如果ptr的typeinfo中记录的确实是myClassDerived2类型的数据，转换就成功，否则这里会返回空指针 
+          // 如果把上面的Base class中的虚函数注释掉，编译就会报错，因为vtable没了，typeinfo也就没了
+          // 如果把ptr的类型从Base*变成myClassDerived*，那就要保证myClassDerived的虚函数存在，Base中的虚函数则无关紧要
+          // 换句话说，从基类A转换到派生类B，需要保证A中存在虚函数
+          
+          // 注意:下面的转换也是可以的，虽然ref和ptr指向的数据的类型是myClassDerived2，但是myClassDerived2是继承自myClassDerived，所以可以转换
+          myClassDerived& ref3 = dynamic_cast<myClassDerived&>(ref);
+          myClassDerived* ptr3 = dynamic_cast<myClassDerived*>(ptr);
+          
+          // 从上面的例子可以看出，dynamic_cast的使用会占用很多动态过程的运算资源，所以在追求性能的场景下慎用
+        }
+        ```
+  - 虚函数在基类中的定义
+    - 引入缺省逻辑
+      ```
+      struct Base {
+        virtual void fun() {
+          std::cout << Base::fun << std::endl;
+        }
+      };
+
+      class Derived : public Base {
+        void fun() {
+          std::cout << Derived::fun << std::endl;
+        }    
+      }
+
+      int main() {
+        Derived d;
+        d.fun();  // Derived::fun
+
+        Base& b = d;
+        b.fun();  // Derived::fun
+        // 虽然b的静态类型是Base&，但是b引用(指针)指向的数据内存里的vtable中的fun函数指针指向的是Derived::fun
+        // 但是如果把上面的Base中的virtual关键字去掉，上面还是会打印Derived::fun（因为覆盖作用依然存在）；但是这里就会打印Base::fun，因为vtable不存在了，所有的函数调用会在编译期就被固定下来，而编译器只看静态类型（b的静态类型是Base&），所以b.fun就只会绑定到Base::fun
+      }
+      ```
+    - 虚函数的意义就在于我们可以通过同一个Base的接口，通过传入不同派生类的对象，实现不同的代码逻辑，也就是**动态多态**（区别于静态多态）
+    - 可以通过=0声明纯虚函数，相应地构造抽象基类
+  - 虚函数在派生类中的重写
+    - 函数签名保持不变（唯一可以变的是：返回类型可以是原始返回指针/引用类型的派生指针/引用类型）
+      ```
+      struct Base {};
+
+      struct Derived : public Base {};
+
+      struct Base2 {
+        virtual Base& fun() {
+          static Base b;
+          return b;
+        }
+      };
+
+      struct Derived2 : public Base2 {
+        Derived& fun() {  // 通过，因为Derived继承自Base
+          static Derived inst;
+          return inst;
+        }
+      };
+      ```
