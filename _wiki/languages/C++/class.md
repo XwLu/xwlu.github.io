@@ -1481,3 +1481,125 @@ keywords: class, C++
       }
       // 如果上面的操作允许的话，所谓的protected和private的访问权限就形同虚设了，我只要搞个派生类，定义一个友元，就可以无限制地访问基类中所有成员，显然不合理
       ```
+  - 通过基类指针实现在容器中保存不同类型的对象
+    ```
+    struct Base {
+      virtual double GetValue() = 0;
+      virtual ~Base() = default;
+    };
+
+    struct Derived : public Base {
+      Derive(int x) : val(x) {}
+      double GetValue() override { return val; }
+    private:
+      int val;
+    };
+
+    struct Derived2 : public Base {
+      Derive2(double x) : val(x) {}
+      double GetValue() override { return val; }
+    private:
+      double val;
+    };
+
+    int main() {
+      std::vector<std::shared_ptr<Base>> vec;
+      vec.emplace_back(new Derived(1));
+      vec.emplace_back(new Derived2(3.14));
+    }
+    ```
+  - 多重继承
+    - Derived继承自Base1和Base2，我们就可以使用Base1或者Base2的指针来保存Derived对象
+  - 虚继承
+    - 错误示例
+      ```
+      struct Base {
+        virtual ~Base() = default;
+        int x;
+      };
+
+      struct Base1 : Base {
+        virtual ~Base1() = default;
+      };
+
+      struct Base2 : Base {
+        virtual ~Base2() = default;
+      };
+  
+      struct Derived : public Base1, public Base2 {};
+
+      int main() {
+        Derived d;
+        d.x;  // 报错，不知道是Base1中的x还是Base2中的x
+      }
+      ```
+    - 正确示例
+      ```
+      struct Base {
+        virtual ~Base() = default;
+        int x;
+      };
+
+      struct Base1 : virtual Base {
+        virtual ~Base1() = default;
+      };
+
+      struct Base2 : virtual Base {
+        virtual ~Base2() = default;
+      };
+  
+      struct Derived : public Base1, public Base2 {};
+
+      int main() {
+        Derived d;
+        d.x;  // 正确，使用了虚继承
+      }
+      ```
+  - 空基类优化与[[no unique address]]属性
+    - 未优化代码
+      ```
+      struct Base {
+        void fun() {}  // 成员函数不会占用类的大小
+      };
+
+      struct Derived {
+        int x;
+        Base b;  // 为了调用Base中的一些函数，把Base对象声明为了成员变量
+      };
+
+      int main() {
+        std::cout << sizeof(Base) << std::endl;  // 1，没有fun函数这里还是1
+        std::cout << sizeof(Derived) << std::endl;  // 8，本来应该是5，编译器会做padding
+      }
+      ```
+    - 优化后代码
+      ```
+      struct Base {
+        void fun() {}
+      };
+
+      struct Derived : Base {
+        int x;
+      };
+
+      int main() {
+        std::cout << sizeof(Base) << std::endl;  // 1
+        std::cout << sizeof(Derived) << std::endl;  // 4，空基类优化，如果基类中不包含任何数据成员，占用的内存会被省去
+      }
+      ``` 
+    - 上面的优化代码仍然不够好，因为Derived并不是真的想继承Base（Derived不是一个Base），只是想用Base中的方法。虽然代码功能实现了，但是表达的内容不是那么精确，所以C++20引入了[[no_unique_address]]
+      ```
+      struct Base {
+        void fun() {}  // 成员函数不会占用类的大小
+      };
+
+      struct Derived {
+        int x;
+        [[no_unique_address]] Base b;  // 为了调用Base中的一些函数，把Base对象声明为了成员变量
+      };
+
+      int main() {
+        std::cout << sizeof(Base) << std::endl;  // 1，没有fun函数这里还是1
+        std::cout << sizeof(Derived) << std::endl;  // 4
+      }
+      ```
