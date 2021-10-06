@@ -1206,3 +1206,147 @@ keywords: class, C++
         }
       };
       ```
+    - 纯虚函数可以被定义，且可以在派生类中调用基类的纯虚函数。
+      ```
+      struct Base {
+        virtual void fun() = 0;
+      }
+
+      void Base::fun() {
+        std::cout << "Base::fun" << std::endl;  
+        // 如果基类过于抽象，导致某些函数无法被完整定义，就可以声明为纯虚函数，强制派生类去重写。但是基类的纯虚函数仍然可以被定义，实现一些通用的预处理逻辑，在派生类中被调用。
+      }
+
+      struct Derived : public Base {
+        void fun() {
+          Base::fun();  // 调用基类的纯虚函数
+          std::cout << "Derived::fun" << std::endl;
+        };  
+      };
+      ```
+    - 虚函数特性保持不变
+      - Base -> Derived -> Derived2，嵌套继承，Base中的虚函数fun在Derived中被重写后，依然是虚函数，所以Derived2再次重写fun后，还是会保留虚函数的特性
+    - override关键字
+      - 让编译器检查是否基类中的虚函数确实被正确重写了
+  - 由虚函数所引入的动态绑定属于运行期行为，与编译期行为有所区别
+    - 虚函数的缺省实参只会考虑静态类型
+      ```
+      struct Base {
+        virtual void fun(int x = 3) {
+          std::cout << "Base: " << x << std::endl;
+        }
+      };
+
+      struct Derived : public Base {
+        void fun(int x = 4) override final {  // 这里final的含义是，后面继承自Derived的所有派生类都不会再重写fun函数
+          std::cout << "Derived: " << x << std::endl;
+        }    
+      };
+
+      struct Derived2 final : public Base {};  // 这里final的含义是，Derived2不会有派生类了
+  
+      void Proc1(Base& ref) {
+        ref.fun();
+      }
+
+      void Proc2(Base b) {
+        b.fun();
+      }
+
+      int main() {
+        Derived d;
+        Proc1(d);  // Derived: 3
+        // 由于编译器看到的ref是Base&类型，所以这里的ref.fun()会被翻译成ref.fun(3)，但是运行期调用的是Derived中的fun函数，所以才会出现上面的结果
+
+        Proc2(d);  // Base: 3
+        // 由于b不是d的引用或指针，而是由d构造出来的Base类型的数据，所以只会调用Base的成员函数
+      }
+      ```
+    - 虚函数的调用成本高于非虚函数
+      - C++缺省情况下不会把函数声明为虚函数（为了性能），Java所有的函数都是虚函数
+      - final关键字(见上面的代码)
+    - 要使用指针（或引用）引入动态绑定，比较上面代码中的Proc1和Proc2
+    - 在构造函数中调用虚函数要小心，在基类中调用虚函数，这个函数不是派生类的实现
+      ```
+      struct Base {
+        Base() {
+          fun();
+        }
+
+        virtual void fun() {
+          std::cout << "Base" << std::endl;
+        }
+      };
+
+      struct Derived : public Base {
+        void fun() override {
+          std::cout << "Derived" << std::endl;
+        }  
+      };
+
+      int main() {
+        Derived d;  // Base
+        // 构造Derived的第一步是构造Base，而Base的构造函数中调用了fun，由于此时Base已经构造完成，Derived还没有构造完成，所以这里的fun是Base中的实现
+      }
+      ```
+    - 派生类的析构函数会隐式调用基类的析构函数
+    - 通常来说要将基类的析构函数声明为virtual的
+      ```
+      struct Base {
+        ~Base() {
+          std::cout << "Base" << std::endl;
+        }
+      };
+
+      struct Derived final : Base {
+        ~Derived() {
+          std::cout << "Derived" << std::endl;
+        }  
+      };
+
+      int main() {
+        Derived* d = new Derived();
+        Base* b = d;
+        delete b;  // 只会打印"Base"
+        // 因为Base的析构函数不是虚函数，所以delete b这行代码在编译期就会被确定为调用Base的析构函数
+        // 但是这样就出问题了，因为Derived的析构函数没有被正常调用
+        // 解决方案就是将Base的析构函数定义为虚函数: virtual ~Base() {}
+        
+        // 但是并非任何情况下都需要将基类的析构函数定义为虚函数，比如下面这样不使用基类指针就行，只不过在大部分时候，我们之所以使用类的继承就是为了用基类的指针去挂载派生类的对象
+        delete d;  // 会打印"Derived" "Base"
+      }
+      ```
+    - 在派生类中我们可以修改虚函数的访问权限
+      ```
+      struct Base {
+      protected:
+        virtual void fun() {}
+      };
+
+      struct Derived : Base {
+      public:
+        void fun() override {}  
+      };
+
+      int main() {
+        Derived d;
+        d.fun();  // 可以通过编译，Derived中的fun被重写为public函数了
+
+        Base& b = d;
+        b.fun();  // 编译器只知道b是Base&类型，但fun在Base中是protected函数，当然无法通过编译
+      }
+      ```
+- 继承与特殊成员
+  - 派生类的系统自动合成的……
+    - 缺省构造函数会隐式调用基类的缺省构造函数
+    - 拷贝构造函数会隐式调用基类的拷贝构造函数
+    - 赋值函数将隐式调用基类的赋值函数
+  - 派生类的析构函数会调用基类的析构函数
+  - 派生类的其他构造函数将隐式调用基类的缺省构造函数
+    - 比如说，如果派生类的拷贝构造函数不是default(系统自动合成)的，而是有显示定义的，那在调用派生类的拷贝构造函数时，不会隐式调用基类的拷贝构造函数，而是调用的缺省构造函数
+  - 所有的特殊成员函数在显式定义时都可能需要显示调用基类相关成员
+    - 原因就是上一条描述的内容，调用方式类似于这样：Derived(const Derived& input) : Base(input) {}
+    - 如果没有显示地调用": Base(input)"，系统默认会调用Base的缺省构造函数，而非这里的拷贝构造函数
+  - 构造与销毁顺序
+    - 基类的构造函数会先调用，之后才涉及到派生类中数据成员的构造
+    - 派生类中的数据成员会被先销毁，之后才涉及到基类的析构函数调用
