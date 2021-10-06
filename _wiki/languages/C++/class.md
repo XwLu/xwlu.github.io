@@ -1350,3 +1350,134 @@ keywords: class, C++
   - 构造与销毁顺序
     - 基类的构造函数会先调用，之后才涉及到派生类中数据成员的构造
     - 派生类中的数据成员会被先销毁，之后才涉及到基类的析构函数调用
+- 补充知识
+  - public，protected与private继承
+    ```
+    struct Base {
+    public:
+      // 基类、派生类、类外都可以访问
+      int x;
+    private:
+      // 基类可访问
+      int y;
+    protected:
+      // 基类、派生类可访问
+      int z;
+    };
+
+    // 无论Derived采用什么继承方式(public, private, protected)，上面的三种访问权限都是不变的。
+    // 区别在如下几个点：
+    // 1.public继承，Base中的public，protected和private属性在Derived中都保持不变，比如在Derived中x还是public，y还是private，z还是protected。
+    // 2.protected继承，Base中的public，protected在Derived中都变成protected，private属性则保持不变。
+    // 3.private继承，Base中的public，protected和private属性在Derived中都变成private。
+    struct Derived : public Base {};
+    ```
+    - public继承：描述“是一个”的关系
+    - private继承：描述“根据基类实现出“的关系，但是有更好的实现方式，就是把Base对象创建为Derived的一个私有成员变量，所以private继承很少用
+    - protected继承：几乎不会用
+  - using与继承
+    - 使用using改变基类成员的访问权限
+      ```
+      struct Base {
+      public:
+        int x;
+      private:
+        int y;
+      protected:
+        int z;
+        void fun() {}
+      };
+
+      struct Derived : public Base {
+      public:
+        using Base::z;
+        using Base::fun;  // 所有的fun函数都会变成public，如果fun有重载的话，会作用到所有的fun上
+      private:
+        using Base::x;
+      };
+      
+      int main() {
+        Derived d;
+        d.z;  // 有了上面“的using Base::z;”，这里就可以正常调用了
+        d.x;  // 有了上面“的using Base::x;”，这里就会报错
+        d.fun();  // 可以正常调用
+      }
+      ```
+      - 注意以下两点！！
+      - 要想通过using改变权限，首先该成员要对派生类可见，比如上面如果想把Base::y改成public或者protected就不行，因为对Derived来说，Base::y就不可见
+      - 无法改变构造函数的访问权限
+    - 使用using继承基类的构造函数逻辑
+      - Base中有多种自定义的构造函数(系统无法自动合成的)，且Derived和Base的数据成员和构造函数的实现逻辑又是一样的，如果再实现一遍就会很耗时，这时候就可以用using来把Base中的实现都复制过来
+    - using与部分重写
+      ```
+      struct Base {
+      protected:
+        virtual void fun() {
+          std::cout << "1\n";
+        }
+
+        virtual void fun(int) {
+          std::cout << "2\n";
+        }
+      };
+
+      struct Derived : public Base {
+      public:
+        using Base::fun;
+
+        void fun(int) override {
+          std::cout << "3\n";
+        }
+      };
+
+      int main() {
+        Derived d;
+        d.fun();  // 1
+        d.fun(3);  // 3
+      }
+      ```
+  - 继承与友元
+    - 友元关系无法继承，但基类的友元可以访问派生类中的基类的相关成员
+      ```
+      struct Derived;  // 声明，否则下面编译不通过
+      struct Base {
+        friend void fun(const Derived&);
+      protected:
+        int x = 10;
+      };
+
+      struct Derived : public Base {
+      private:
+        int y = 20;
+      };   
+
+      void fun(const Derived& val) {
+        std::cout << val.x << std::endl;  // 通过, 基类的友元可以访问派生类中的基类的相关成员
+        std::cout << val.y << std::endl;  // 不通过，y不属于Base
+      }
+      ```
+    - 派生类中的友元无法获得基类中成员的访问权限
+      ```
+      struct Derived;  // 声明，否则下面编译不通过
+      struct Base {
+      protected:
+        int x = 10;
+      };
+
+      struct Derived : public Base {
+        friend void fun(const Derived&);
+        friend void fun(const Base&);
+      private:
+        int y = 20;
+      };   
+
+      void fun(const Base& val) {
+        std::cout << val.x << std::endl;  // 不通过, 派生类的友元不可以访问基类中的成员
+      }
+
+      void fun(const Derived& val) {
+        std::cout << val.x << std::endl;  // 不通过, 派生类的友元不可以访问基类中的成员
+        std::cout << val.y << std::endl;  // 通过
+      }
+      // 如果上面的操作允许的话，所谓的protected和private的访问权限就形同虚设了，我只要搞个派生类，定义一个友元，就可以无限制地访问基类中所有成员，显然不合理
+      ```
