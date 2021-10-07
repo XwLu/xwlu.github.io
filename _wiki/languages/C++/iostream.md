@@ -97,7 +97,22 @@ keywords: iostream, C++
     |binary|二进制模式|
 
     - 每种文件流都有缺省的打开方式
+      ```
+      // ifstream的缺省打开方式是ios_base::in
+      // ofstream的缺省打开方式是ios_base::out | ios_base::trunc，trunc会导致在向文件写入的时候，文件里已有的内容会被删除; 可以设定为ios_base::out | ios_base::app来实现追加
+      // fstream的缺省打开方式是ios_base::in | ios_base::out
+      std::ifstream inFile("file_name", std::ios_base::in);  // 这里的ios_base::in也可以不加，因为ifstream对象的缺省打开方式就是这个
+      std::ifstream inFile("file_name", std::ios_base::in | std::ios_base::ate);  // 从文件末尾开始读取
+      ```
     - 注意ate和app的异同
+      ```
+      // 下面这种写法还是会清空文件里已有的内容
+      std::ofstream outFile("filename", std::ios_base::out | std::ios_base::ate);
+
+      // 下面这种写法可以追加内容
+      std::ofstream outFile("filename", std::ios_base::out | std::ios_base::app);
+      ```
     - binary能禁止系统特定的转换
-    - 避免意义不明确的流使用方式（如ifstream+out）
+    - 避免意义不明确的流使用方式（如ifstream + out）
+    - 推荐的打开方式
 
