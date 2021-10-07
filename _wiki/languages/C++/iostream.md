@@ -126,6 +126,80 @@ keywords: iostream, C++
       |in\|out\|trunc|如果文件存在，长度截断为0；否则创建文件供更新使用|初始文件位置位于文件末尾|禁止系统转换|
 - 内存操作
   - 内存流：basic_istringstream / basic_ostringstream / basic_stringstream
-  - 也会受打开模式：in / out / app的影响
+  - 也会受打开模式：in / out / app的影响，不会受trunc和binary的影响
+    ```
+    std::ostringstream buf("test");
+    buf << '1';
+    std::cout << buf.str() << "\n";  // 输出“1est”
+    
+    std::ostringstream buf2("test", std::ios_base::ate);
+    buf2 << '1';
+    std::cout << buf2.str() << "\n";  // 输出“test1”
+    ```
   - 使用str()方法获取底层所对应的字符串
-    - 小心避免使用str().c_str()的形式获取C风格字符串
+    - 小心避免使用str().c_str()的形式获取C风格字符串，因为str()返回的是一个右值，是个临时对象，该行语句执行完就会被销毁，所以拿str()返回值的指针进行操作是一件很危险的事
+    - 可以分两步写，先把str()存在一个局部变量里，再返回该局部对象的c_str()
+  - 基于字符串流的字符串拼接优化
+    ```
+    // 下面这种写法的性能非常差
+    // 当x新加入一些字符的时候，它会判断当前x所拥有的内存是否够用，不够用的话，会新开辟一块大内存，把x中已经有的内容和新加入的内存一起放在新的大内存里，再去销毁掉原来占用的小内存
+    // 这种操作很像vector.emplace_back过程，不断在开辟和释放内存，非常占资源
+    std::string x;
+    x += "hello";
+    x += "hello";
+    x += "hello";
+
+    // 改成这样就好很多
+    // 因为stream会在内部维护一个缓冲区，只有缓冲区填满了才会写入内存。
+    // 由于缓冲区一般比较大，所以相比上面的写法，下面的写法对内存的操作会变少很多。
+    std::ostringstream tmp;
+    tmp << "hello";
+    tmp << "hello";
+    tmp << "hello";
+    std::string x = tmp.str();
+    ```
+
+# 流的定位
+- 获取流位置
+  - tellg() / tellp()可以用于获取输入(get) / 输出(put)流位置（pos_type类型）
+  - 两个方法可能会失败，此时返回pos_type(-1)
+- 设置流位置
+  - seekg() / seekp()用于设置输入/输出流的位置
+  - 这两个方法分别有两个重置版本
+    - 设置绝对位置：传入pos_type进行设置
+    - 设置相对位置：通过偏移量（字符格式ios_base::beg）+ 流位置符号的方式设置
+      - ios_base::beg：流的开头
+      - ios_base::cur：当前流的位置
+      - ios_base::end：流的结尾
+
+# 流的同步
+- 基于flush() / sync() / unibuf的通过
+  - flush()用于输出流同步，刷新缓冲区
+    ```
+    // 下面的代码有一个问题，cout的缓冲区要满了才会输出到终端，如果像这里没有满的话，终端上就没有"What's your name?"，用户就不知道该干嘛
+    std::cout << "What's your name?";
+    std::string name;
+    std::cin >> name;
+
+    // 解决方案1
+    std::cout << "What's your name?" << std::flush;
+
+    // 解决方案2
+    std::cout << "What's your name?";
+    std::cout.flush();
+
+    // 解决方案3，不建议用，性能会受较大影响，缓冲区机制就不存在了
+    std::cout << std::unibuf << "What's your name?";
+    ```
+  - sync()用于输入流同步，其实现逻辑是编译器所定义的
+  - 输出流可以通过设置unibuf来保证每次输出后自动同步
+- 基于绑定(tie)的同步
+  - 绑定的目标一定是个输出流
+  - 流可以绑定到一个输出流上，这样每次输入 / 输出前可以刷新输出流的缓冲区
+  - 比如cin绑定到了cout上
+- 与C语言标准IO库的同步
+  - cout维护了一个缓冲区，printf也维护了一个缓冲区，如果不同步，那cout和printf的输出顺序就和他们在代码中的执行顺序不一致了
+  - 缺省情况下，C++的输入输出操作会与C的输入输出函数同步
+  - 可以通过sync_with_stdio关闭该同步，因为为了这个同步，系统牺牲了一部分性能
+
+# 流的状态
