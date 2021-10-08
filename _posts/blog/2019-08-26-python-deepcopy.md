@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Python DeepCpoy
+title: Python DeepCopy
 categories: [Python]
 description: 总结一下使用python deepcopy的坑
 keywords: python, deepcopy
