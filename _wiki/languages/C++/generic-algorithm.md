@@ -14,6 +14,8 @@ keywords: generic algorithm, C++
   - std::find VS. std::map::find
   - 方法会根据对应数据结构的特性做优化，而泛型算法为了确保通用性，不会做特定优化
 
+---
+
 # 泛型算法分类
 - 读算法：给定迭代区间，读取其中的元素并进行计算
   - accumulate/find/count
@@ -24,6 +26,8 @@ keywords: generic algorithm, C++
 - 排序算法：改变输入序列中元素的顺序
   - sort/unique
   - 注意unique的用法，只把原序列中连在一起的相同元素合并为1个
+
+---
 
 # 迭代器的分类
 - 泛型算法使用迭代器实现元素访问
@@ -77,7 +81,9 @@ keywords: generic algorithm, C++
   - 哨兵一般指标识迭代器结束的标志，比如vector.end(), 以及上面的std::istream_iterator<int> y{}，都是哨兵
   - 哨兵在ranges算法中是个非常重要的概念
 
-### 并发算法(C++17/20)
+---
+
+# 并发算法(C++17/20)
 - 有些算法可以通过指定执行policy来加速，下面是一些policy的举例
   - std::execution::seq：顺序执行
   - std::execution::par：并发执行
@@ -112,6 +118,9 @@ keywords: generic algorithm, C++
     return 1;
   }
   ```
+
+---
+
 # 泛型算法的改进--ranges(C++20)
 - ranges可以视为C++标准模块库的2.0版本
 - 可以使用容器而非迭代器做为输入
@@ -138,7 +147,7 @@ keywords: generic algorithm, C++
 ------
 
 # 排序
-- ### sort排序
+- sort排序
   ```
   vector<Struct> A
   bool f1 (Struct a,Struct b) { return (a.x>b.x); }
@@ -162,7 +171,7 @@ keywords: generic algorithm, C++
                                       c));
   ```
 
-- ### nth_element函数
+- nth_element函数
   ```
   vector<int> pts;
   //只保证pts[6]是排名第6的元素,同时pts[0-5]<pts[6],pts[6-end]>pts[6]
@@ -176,8 +185,7 @@ keywords: generic algorithm, C++
   nth_element(pts.begin(), pts.begin()+6; pts.end(), compare);
   ```
 
-- ### lower_bound
-
+- lower_bound
   ```
   auto compare_s = [](const std::pair<double, double>& point, const double s) {
       return point.first < s;
