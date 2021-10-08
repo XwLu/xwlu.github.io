@@ -118,7 +118,7 @@ keywords: shared_ptr, C++
 - 为了解决上面的问题，在调用weak_ptr的时候需要调用它的lock方法
 - lock会检查weak_ptr指向的内存是否还在
 - 如果不在了，返回shared_ptr<T>()
-- 如果还在，返回shared_ptr<T>(*this)
+- 如果还在，返回shared_ptr<T>(\*this)
 - 最终的正确写法为
   ```
   struct Str{
