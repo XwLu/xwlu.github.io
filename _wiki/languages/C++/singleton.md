@@ -6,7 +6,7 @@ description: Singleton for C++
 keywords: singleton, C++
 ---
 
-## Apollo Singleton Macro
+# Apollo Singleton Macro
   ```
   #ifndef CYBER_COMMON_MACROS_H_
   #define CYBER_COMMON_MACROS_H_
