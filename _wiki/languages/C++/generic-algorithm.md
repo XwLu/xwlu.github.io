@@ -146,7 +146,7 @@ keywords: generic algorithm, C++
 
 ------
 
-# demo
+# Demo
 - sort排序
   ```
   vector<Struct> A

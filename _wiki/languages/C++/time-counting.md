@@ -6,6 +6,7 @@ description: Time counting for C++
 keywords: time-counting, C++
 ---
 
+# Demo
   ```
   #include <chrono>
   auto time1 = std::chrono::system_clock::now();
