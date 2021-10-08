@@ -6,10 +6,12 @@ description: Muti thread skills
 keywords: thread, C++
 ---
 
-## 前言
+# 前言
 - 在阅读Apollo Planning代码的dp_st_graph部分的时候，遇到future这个多线程接口，特地来记录一下。
 
-### 用法一：等待task执行完毕
+---
+
+# 用法一：等待task执行完毕
 
   ```
   #include <iostream>
@@ -39,9 +41,9 @@ keywords: thread, C++
   }
   ```
 
-------
+---
 
-### 用法二：同步获取异步结果
+# 用法二：同步获取异步结果
   ```
   #include <iostream>
   #include <future>
@@ -98,5 +100,5 @@ keywords: thread, C++
   }
   ```
 
-#### 三个task结束的时间不一样，但是程序获取task返回值是一起获取的，
+- 三个task结束的时间不一样，但是程序获取task返回值是一起获取的，
 

@@ -6,9 +6,7 @@ description: Thread eor C++
 keywords: thread, C++
 ---
 
-# Thread
-------
-## 创建线程
+# 创建线程
   ```
   #include <iostream>
   #include <thread>
@@ -39,8 +37,10 @@ keywords: thread, C++
   }
   ```
 #### Tip: 上面的代码存在一个问题，主线程结束之后，其他两个线程也会直接结束，引起异常报错
-------
-## join方法
+
+---
+
+# join方法
 - join的作用是让主线程在join函数处等待，直到该子线程执行结束，再往后执行
   ```
   #include <iostream>
@@ -70,9 +70,10 @@ keywords: thread, C++
   }
   ```
 - 这样，当两个线程执行完之后，主程序才会执行cout并退出
-#### Tips: 需要注意的是线程对象执行了join后就不再joinable了，所以只能调用join一次
-------
-## detach方法
+
+---
+
+# detach方法
 - detach是用来和线程对象分离的，这样线程可以独立地执行，不过这样由于没有thread对象指向该线程而失去了对它的控制，当对象析构时线程会继续在后台执行，但是当主程序退出时并不能保证线程能执行完
   ```
   int main() {
@@ -88,11 +89,16 @@ keywords: thread, C++
   }
   ```
 #### Tips: 如果没有良好的控制机制或者这种后台线程比较重要，最好不用detach而应该使用join
-------
-## 注意：调用 join 或 detach 之前需要调用 joinable() 判断一下线程是否运行. 如果 joinable() 返回 false, 则不需要.
 
-------
-## 调用类内对象
+---
+
+# 注意
+  - 调用 join 或 detach 之前需要调用 joinable() 判断一下线程是否运行. 如果 joinable() 返回 false, 则不需要.
+  - 需要注意的是线程对象执行了join后就不再joinable了，所以只能调用join一次
+
+---
+
+# 调用类内对象
   ```
   class Demo {
   Public:
@@ -113,11 +119,11 @@ keywords: thread, C++
     }
   }
   ```
-------
-## CMakeLists.txt
-- 需要加,否则编译无法通过:
+
+---
+
+# CMakeLists.txt
+- 需要链接pthread库，否则编译无法通过:
   ```
-  TARGET_LINK_LIBRARIES( your_executable
-  pthread
-  )
+  TARGET_LINK_LIBRARIES(your_executable pthread)
   ```
