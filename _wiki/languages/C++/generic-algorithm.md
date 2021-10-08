@@ -146,7 +146,7 @@ keywords: generic algorithm, C++
 
 ------
 
-# 排序
+# demo
 - sort排序
   ```
   vector<Struct> A
@@ -193,4 +193,17 @@ keywords: generic algorithm, C++
   vector<pair<double, double>> var;
   auto it_lower = std::lower_bound(var.begin(),
                                   var.end(), s, compare_s);
+  ```
+
+- for_each
+  ```
+  void add(int& lhs) {
+    lhs= lhs + 1;
+  }
+  for_each(intVector.begin(),intVector.end(),add);
+
+  void add(int& lhs,int rhs) {
+    lhs= lhs + rhs;
+  }
+  for_each(intVector.begin(),intVector.end(),boost::bind(add,_1,100));
   ```
