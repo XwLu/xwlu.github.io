@@ -6,6 +6,7 @@ description: Dynamic memory for C++
 keywords: dynamic memory, C++
 ---
 
+# sizeof
 - sizeof 无法获取动态分配内存的大小, 因为sizeof是在编译期就确定的，而动态内存的大小是在运行期决定的
   ```
   std::vector<int> x;
@@ -13,6 +14,8 @@ keywords: dynamic memory, C++
   x.push_back(10);
   std::cout << sizeof(x) << std::endl;  // 无法获取x的大小
   ```
+
+---
 
 # allocator
 - 使用allocator来分配内存和释放内存
