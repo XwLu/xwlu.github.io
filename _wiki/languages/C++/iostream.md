@@ -124,6 +124,41 @@ keywords: iostream, C++
       |out\|app|附加：打开或创建文件，仅供文件末尾写入|初始文件位置位于文件末尾|禁止系统转换|
       |in\|out|打开文件供更新使用(支持读写)|初始文件位置位于文件末尾|禁止系统转换|
       |in\|out\|trunc|如果文件存在，长度截断为0；否则创建文件供更新使用|初始文件位置位于文件末尾|禁止系统转换|
+  - 文件读取代码例子
+    ```
+    //读取方式: 逐词读取, 词之间用空格区分
+    void ReadDataFromFileWBW() {
+      ifstream fin("data.txt");
+      string s;  // c++的流析取器 >> 从流对象析取内容到右操作数。
+                 // 它的默认分隔符是：\t, space, enter.
+      while(fin >> s) {
+        cout << "Read from file: " << s << endl;
+      }
+    }
+    
+    //读取方式: 逐行读取, 将行读入字符数组, 行之间用回车换行区分
+    void ReadDataFromFileLBLIntoCharArray() {
+      ifstream fin("data.txt");
+      const int LINE_LENGTH = 100; // 一:fstream.getline的第二个参数需要传入字符数，而非字节数，文档中没有明确说明。
+                                   // 二:如果单行超过了缓冲，则循环会结束。
+                                   // 总结：用getline的时候，一定要保证缓冲区够大，能够容纳各种可能的数据行。切记传入字符数。
+                                   // 在此例中则为创建"data.txt"的时候，每一行的字符数不要超过100，否则while循环会结束。
+      char str[LINE_LENGTH];
+      while(fin.getline(str, LINE_LENGTH)) {
+        cout << "Read from file: " << str << endl;
+      }
+    }
+    
+    //读取方式: 逐行读取, 将行读入字符串, 行之间用回车换行区分
+    void ReadDataFromFileLBLIntoString() {
+      ifstream fin("data.txt");
+      string s;
+      // 这里的getline是C++ string里面的API，和上面的不一样
+      while(getline(fin,s)) {
+        cout << "Read from file: " << s << endl;
+      }
+    }
+    ```
 - 内存操作
   - 内存流：basic_istringstream / basic_ostringstream / basic_stringstream
   - 也会受打开模式：in / out / app的影响，不会受trunc和binary的影响
