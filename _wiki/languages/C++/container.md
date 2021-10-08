@@ -6,17 +6,18 @@ description: Container for C++
 keywords: container, C++
 ---
 
-## 容器
-### 容器分类
+# 容器分类
+- pair & tuple
 - 序列容器：对象有序排列，使用整数值进行索引
 - 关联容器：对像顺序不重要，利用键进行索引
 - 适配器：调整原有容器行为，使其对外展现出新的类型、接口或返回新的元素
 - 生成器：构造元素序列
 
-### 迭代器
+---
+
+# 迭代器
 - 获取迭代器
   - begin, end
-  - cbegin, cend  (const)
   - rbegin, rend
   - crbegin, crend
 - 迭代器分类
@@ -27,8 +28,49 @@ keywords: container, C++
   - Random Access Iterator，支持iter+N
 - 支持迭代器的容器统称为range
 
-### 序列容器
+---
+
+# pair & tuple
+- tuple & tie
+  - tuple
+    - tuple是类似pair的模板
+    - 每个pair都恰好有两个成员,tuple可以有任意数量的成员
+    - 我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。
+    - std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。
+    - 生成方式多样
+      ```
+      auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
+      std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
+      std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
+      ```
+    - tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
+      ```
+      my_tuple2.swap (my_tuple1);
+      ```
+    - 函数模板 get<>() 可以返回 tuple 中的一个元素的**引用值**。
+      ```
+      auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
+      std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
+      ```
+    - 也可以用基于类型的 get<>() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
+      ```
+      auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
+      std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
+      ```
+  - tie
+    - tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
+      ```
+      tuple<int,double,string> t3 = {1, 2.0, "3"};
+      int i; double d; string s;
+      tie(i, d, s) = t3;
+      tie(i, d, s) = {1, 2.0, "3"};//这一行会报错，因为tie只能解构tuple
+      ```
+
+---
+
+# 序列容器
 - array:元素个数固定的序列容器，不支持添加和删除
+  - 定义时必须用**常量**指定array的大小，因为大小是模板参数之一，不可忽略
   - 当容器中的元素是连续存储的时候，容器都会有一个data()接口，返回指向第一个元素的指针
   - swap的实现是元素复制，效率很低
 - vector:元素连续存储的序列容器
@@ -57,7 +99,9 @@ keywords: container, C++
   - 提供了数值与字符串转换的接口
   - 短字符串优化，short string optimization: SSO
 
-### 关联容器
+---
+
+# 关联容器
 - 按底层实现分为两类
   - set/map/multiset/multimap
     - 底层用红黑树实现
@@ -165,7 +209,9 @@ keywords: container, C++
       std::unordered_set<Str, MyHasFunction> s;
       ```
 
-### 适配器
+---
+
+# 适配器
 - 类型适配器
   - basic_string_view (C++17)
     - 代码demo
@@ -277,93 +323,9 @@ keywords: container, C++
     // 上面三种写法的输出都是1，2，3，4，5，6，7，8，9
     ```
 
-### 容器操作
-### std::greater & std::loss
-- \#include\<functional\>
-- 排序准则
-  ```
-  int a[]={3,1,4,2,5};
-  int len=sizeof(a)/sizeof(int);//这里切记要除以sizeof(int)
-  sort(a ,a + len, greater<int>());//内置类型的由大到小排序
-  sort(a ,a + len, less<int>());//内置类型的由小到大排序
-  ```
-
-### std::set & std::multiset
-- \#include\<set\>
-- \#include\<multiset\>
-- set和multiset都会根据特定的排序准则，自动将元素排序，两者不同在于multiset允许元素重复，而set不允许元素重复。
-- set和multiset的排序准备默认为由小到大，也可以自定义排序准则：
-  ```
-  std::set<float,std::greater<float>> var;
-  var.insert(1.0);
-  var.insert(3.0);
-  var.insert(2.0);
-  for (auto&it : var) {
-    cout << it << " ";
-  }
-  //ouput: 3.0 2.0 1.0
-  ```
-
-### std::tuple & std::tie
-- #### tuple
-  - tuple是类似pair的模板
-  - 每个pair都恰好有两个成员,tuple可以有任意数量的成员
-  - 我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。
-  - std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。
-  - 生成方式多样
-    ```
-    auto my_tuple0 = std::make_tuple("Peter", 10, "1024"};
-    std::tuple<std::string, size_t, std::string> my_tuple1{"Mike", 20, "24"};
-    std::tuple<std::string, size_t, std::string> my_tuple2{my_tuple0};
-    ```
-  - tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
-    ```
-    my_tuple2.swap (my_tuple1);
-    ```
-  - 函数模板 get<>() 可以返回 tuple 中的一个元素的**引用值**。
-    ```
-    auto my_tuple = std::make_tuple (Name {"Peter","Piper"}, 42, std::string {"914 626 7890"});
-    std::cout << std::get<0>(my_tuple)<< "age = "<<std::get<1>(my_tuple)<< " tel: " << std::get<2>(my_tuple) << std::endl;
-    ```
-  - 也可以用基于类型的 get<>() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
-    ```
-    auto my_tuple = std::make_tuple(Name{"Peter", "Piper"}, 42, std::string {"914 626 7890"});
-    std::cout << std::get<Name>(my_tuple)<<" age = " << std::get<int> (my_tuple)<< " tel: " <<std::get<std::string>(my_tuple) << std::endl;
-    ```
-- #### tie
-  - tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
-    ```
-    tuple<int,double,string> t3 = {1, 2.0, "3"};
-    int i; double d; string s;
-    tie(i, d, s) = t3;
-    tie(i, d, s) = {1, 2.0, "3"};//这一行会报错，因为tie只能解构tuple
-    ```
-
-### std::array
-- #### 定义
-- 定义时必须指定array的大小，因为大小是模板参数之一，不可忽略
-- 定义时不能使用变量指定大小
-- 可通过array构造新的array，可以使用{}构造
-- 不可使用数组构造
-  ```
-  array<int, 5> myarray = {1,2,3,4,5};
-  array<int,5> otherarray = myarray;
-  ```
-- #### 访问
-- 可通过下标运算符[]对元素进行操作，还可以通过at/front/back进行操作
-  ```
-  for (int i = 0; i < 5; i++){
-    cout << setw(10) << << myarray.at(i) << endl;
-  }
-  ```
-- 可以通过正向和反向迭代器对元素进行遍历
-  ```
-  for (auto it = myarray.begin(); it != myarray.end();++it){
-    cout << \*it << endl;
-  }
-  ```
-
 ---
 
-#### 注意
-- 尽量使用at方法来访问元素，因为运算符\[\]不会对索引值进行检查，像myarray\[-1\]是不会报错的。使用at()，将在运行期间捕获非法索引的，默认将程序中断。
+# 注意事项
+- 尽量使用at方法来访问元素
+  - 运算符\[\]不会对索引值进行检查，像调用myarray\[-1\]是不会报错的
+  - 使用at()，将在运行期间捕获非法索引，默认将程序中断
