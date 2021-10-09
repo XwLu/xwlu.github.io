@@ -238,3 +238,39 @@ keywords: iostream, C++
   - 可以通过sync_with_stdio关闭该同步，因为为了这个同步，系统牺牲了一部分性能
 
 # 流的状态
+- iostate
+  - failbit: 输入输出操作失败（格式化或者提取错误）
+    ```
+    // outFile本身就是close状态（没有关联到任何文件），执行close操作会失败
+    std::ofstream outFile;
+    std::cout << outFile.fail() << std::endl;  // 0
+    outFile.close();
+    std::cout << outFile.fail() << std::endl;  // 1
+    ```
+  - badbit: 不可恢复的错误
+    ```
+    std::ofstream outFile;
+    outFile << "hello";
+    std::cout << outFile.bad() << std::endl;  // 1
+    ```
+  - eofbit: 关联的输入序列已抵达文件尾
+  - goodbit: 无错误
+- 检测流的状态
+  - good() / fail() / bad() / eof()方法
+  - 流会隐式转换为bool值
+    ```
+    int x;
+    if (std::cin >> x) {
+      std::cout << "succ" << std::endl;
+    }
+    std::cout << static_cast<bool>(std::cin) << std::endl;
+    ```
+  - ![iostate](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/iostate.png?raw=true)
+- 注意
+  - 转换为bool值时不会考虑eof
+  - fail与eofkennel会被同时设置，但两者含义不同
+- 通常来说，只要流处于某种错误状态时，后续的插入/提取操作就不会生效
+- 设置流状态
+  - clear(iostate): 设置流的状态为一个具体的数值（缺省为goodbit）
+  - setstate: 将某个状态附加到现有的流状态上
+- 捕获流异常: exceptions方法
