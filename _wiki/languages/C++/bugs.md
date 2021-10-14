@@ -13,11 +13,16 @@ keywords: bugs, C++
 #include <algorithm>
 
 bool cmp(int a, int b) {
-  return a <= b;  // 不能写<=，不满足strict weak ordering，会导致数组访问越界，可能导致未定义问题
+  return a >= b;  // 不满足strict weak ordering，导致快排中的while循环不停++，越界了
 }
 
 int main() {
-  std::vector<int> vec{1, 1, 1};
+  std::vector<int> vec;
+  for (int i = 0; i < 17; ++i) {  // 17就会稳定core，16就不core
+                                  // 对于std::sort()，当容器里面元素的个数大于_S_threshold 的枚举常量值时
+                                  // 会使用快速排序（stl的这个默认值是16），快速排序中的while循环没有检查越界
+    vec.push_back(1);
+  }
   std::sort(vec.begin(), vec.end(), cmp);
   return 0;
 }
