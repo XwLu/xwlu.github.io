@@ -86,3 +86,207 @@ keywords: template, C++
   fun<int>(&x);
   fun<int>(x);
   ```
+- 模版实参的类型推导
+  - 如果函数模版在实例化时没有显示制定模版实参，那么系统会尝试进行推导
+  - 推导时基于函数实参（表达式）确定模版实参的过程，其基本原则与auto类型推导类似
+    - 函数形参是左值引用/指针：
+      - 忽略表达式类型中的引用
+      - 将表达式类型与函数形参模式匹配以确定模版实参
+        ```
+        template<typename T>
+        void fun(T& input) {
+          std::cout << input << std::endl;
+        }
+        
+        int main() {
+          int x = 3;
+          fun(3);  // fun(int&);
+
+          int& y = x;
+          fun(y);  // fun(int&);
+
+          const int& z = x;
+          fun(z);  // fun(const int&);
+        }
+        ```
+    - 函数的形参是万能引用
+      - 如果实参表达式是右值，那么模版形参被推导为去掉引用的基本类型
+      - 如果实参表达式是左值，那么模版形参被推导为左值引用，触发引用折叠
+        ```
+        template<typename T>
+        void fun(T&& input) {}  // 如果T是一个确定的类型（比如int&&，double&&），那&&就是右值引用
+                                // 编译器在编译的时候，T还没被确定为一个具体的类型，那&&就被当作万能引用
+                                // 既可以引用左值，也可以引用右值
+        int main() {
+          int&& x = 3;
+          fun(3);  // fun(int&&)
+          int y = 3;
+          fun(y);  // fun(int&)
+        }
+        ```
+    - 函数形参不包含引用(写起来最简单，模型推导最复杂)
+      - 忽略表达式中的引用
+      - 忽略顶层const
+      - 数组、函数转换成相应的指针类型
+        ```
+        template<typename T>
+        void fun(T input) {}
+        
+        int main() {
+          fun(3);  // fun(int)
+
+          int x = 3;
+          int& ref = x;
+          fun(ref);  // fun(int)
+
+          const int& ref = x;
+          fun(ref);  // fun(int)
+
+          const int* const ptr = &x;  // 注意，这里的顶层const是后面那个const，直接修饰变量的那个
+                                      // 因为变量是拷贝进fun的，所以这个const会失效
+          fun(ptr);  // fun(const int*);
+
+          int x[3];
+          fun(x);  // fun(int*)
+        }
+        ```
+    - 多个T情况
+      ```
+      // 同样的T
+      template<typename T>
+      void fun(T input1, T input2) {}
+
+      int main() {
+        fun<int>(3, 5.0);  // 通过，不存在模型推导，T显示指定为int
+        fun(3, 5.0);  // 不通过，3推导出T为int，5.0推导出T为double，int和double不是一个类型，报错
+      }
+
+      // 不同的T
+      template<typename T>
+      void fun(T1 input1, T2 input2) {}
+
+      int main() {
+        fun<int>(3, 5.0);  // 通过，T1显示指定为int，T2隐式指推断为double
+      }
+      ```
+- 模版实参并非总是能够推导得到
+  - 如果模版形参与函数形参无关，则无法推导
+    ```
+    template <typename T, typename Res>
+    Res fun(T input) {}
+
+    int main() {
+      fun(3);  // Res无法推导，编译不通过
+    }
+    ```
+  - 即使相关，也不一定能进行推导，推导成功也可能存在因歧义而无法使用(见上面“同样的T”)
+    ```
+    template <typename T>
+    void fun(typename std::remove_reference<T>::type input) {}
+
+    int main() {
+      fun(3);  // 编译器在实例化fun函数的时候，发现std::remove_reference<T>::type的结果是int
+               // T到底是啥不确定，可以是int，也可以是int&，int&&所以编译器报错
+    }
+    ```
+- 在无法推导时，编译器会选择使用缺省模版实参
+  ```
+  template <typename T = int>
+  void fun(typename std::remove_reference<T>::type input) {}
+
+  int main() {
+    fun(3);  // 编译通过，有缺省值
+  }
+  ```
+  - 只能处理推导不成功的场景，不能处理歧义而无法使用的场景
+    ```
+    template<typename T = double>
+    void fun(T input1, T input2) {}
+
+    int main() {
+      fun(3, 5.0);  // 不通过，当编译器可以从变量推导T的类型的时候，就不会看T的缺省值
+    }
+    ```
+  - 可以为任意位置的模版形参指定缺省模板实参——注意与函数缺省实参的区别
+    - 函数的缺省实参只能排在最后面
+      ```
+      void fun(int x = 3.0, int y) {}  //  编译不通过
+
+      template <typename Res = double, typename T>  // 编译通过
+      Res fun(T input) {}
+
+      int main() {
+        fun(3);
+      }
+      ```
+- 显示指定部分模版实参
+  - 显示指定的模版实参必须是从最左边开始，依次指定
+  - 模版形参的声明顺序会影响调用的灵活性
+  - 越是需要显示指定的T，就越要放在前面
+    ```
+    // good case
+    template <typename Res, typename T>
+    Res fun(T x) {}
+
+    int main() {
+      fun<int>(5);  // Res显示指定，T隐式指定
+    }
+
+    // bad case
+    template <typename T, typename Res>
+    Res fun(T x) {}
+
+    int main() {
+      fun<int>(5);  // T显示指定, Res无法推断
+    }
+    ```
+- 函数模板自动推导是会遇到的几种情况
+  - 函数形参无法匹配——SFINAE（替换失败并非错误）
+    ```
+    template <typename T>
+    void fun(T x, T y) {}
+
+    int main() {
+      fun(3, 5.0);  // 编译不通过，但是不代表template fun有错误，只是找不到合适的匹配模板
+                    // 如果重载一个fun(T1, T2)，就没问题了
+                    // SFINAE这个概念在元编程的时候很有用
+    }
+    ```
+  - 模板与非模版同时匹配，匹配等级相同，系统会选择非模版函数
+  - 多个模版同时匹配，此时采用偏序关系确定选择“最特殊”版本
+    ```
+    template <typename T>
+    void fun(T x, float y) {
+      std::cout << 2 << std::endl;
+    }
+
+    template <typename T, typename T2>
+    void fun(T x, T2 y) {
+      std::cout << 1 << std::endl;
+    }
+
+    template <typename T>
+    void fun(T* x, float y) {
+      std::cout << 3 << std::endl;
+    }
+
+    int main() {
+      fun(3, 5.0);  // 2 
+      int x = 3;
+      fun(&x, 5.0);  // 3
+    }
+    ```
+    - 如果一样特殊，那就编译不通过了
+      ```
+      template <typename T, typename T2>
+      void fun(T* x, T2 y) {}
+
+      template <typename T, typename T2>
+      void fun(T x, T2* y) {}
+
+      int main() {
+        int x = 3;
+        fun(&x, &x);
+      }
+      ```
+
