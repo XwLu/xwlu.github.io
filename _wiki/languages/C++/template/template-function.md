@@ -317,9 +317,7 @@ int main() {
   - 某些库中不想给出模版的内部实现逻辑，只给出模版的声明，此时就需要提前实例化用户想要使用的函数
 - 显示实例化定义
   ```
-  /**********
-   * header.h
-   *********/
+  // header.h
   template <typename T>
   void fun(T x) {
     std::cout << x << std::endl;
@@ -329,9 +327,7 @@ int main() {
   void fun<int>(int);  // 实例化
   // 也可以这么写：void fun(int);
 
-  /**********
-   * main.cc
-   *********/
+  // main.cc
   #include "header.h"
   int main() {
     int x = 3;
@@ -340,25 +336,19 @@ int main() {
   ```
 - 显示实例化声明
   ```
-  /**********
-   * header.h
-   *********/
+  //header.h
   template <typename T>
   void fun(T x) {
     std::cout << x << std::endl;
   }
 
-  /**********
-   * source.cc
-   *********/
+  // source.cc
   #include "header.h"
 
   template
   void fun<int>(int);
 
-  /**********
-   * main.cc
-   *********/
+  // main.cc
   #include "header.h"
 
   extern template
@@ -373,26 +363,20 @@ int main() {
 - 注意一处定义原则
   - 隐式实例化可以在多处有实例化，编译器会选择其中一个，删除掉多余的
     ```
-    /**********
-     * header.h
-     *********/
+    // header.h
     template <typename T>
     void fun(T x) {
       std::cout << x << std::endl;
     }
 
-    /**********
-     * source.cc
-     *********/
+    // source.cc
     #include "header.h"
 
     void fun2() {
       fun<int>(3);  // source中隐式实例化一次
     }
 
-    /**********
-     * main.cc
-     *********/
+    // main.cc
     #include "header.h"
 
     int main() {
@@ -402,17 +386,13 @@ int main() {
     ```
   - 显示实例化原则上在整个程序中只能有一处，但是有多处的话，编译器也不一定会报错，尽量不要这么写
     ```
-    /**********
-     * header.h
-     *********/
+    // header.h
     template <typename T>
     void fun(T x) {
       std::cout << x << std::endl;
     }
 
-    /**********
-     * source.cc
-     *********/
+    // source.cc
     #include "header.h"
 
     template
@@ -422,9 +402,7 @@ int main() {
       fun<int>(3);  
     }
 
-    /**********
-     * main.cc
-     *********/
+    // main.cc
     #include "header.h"
 
     template
