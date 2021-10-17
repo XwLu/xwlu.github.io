@@ -1,0 +1,10 @@
+---
+layout: wiki
+title: Template Abstract
+categories: [Abstract]
+description: Template Abstract
+keywords: template, abstract
+---
+
+### [函数模版](https://xwlu.github.io/wiki/languages/C++/template/template-function)
+### [类模版](https://xwlu.github.io/wiki/languages/C++/template/template-class)
