@@ -289,4 +289,146 @@ keywords: template, C++
         fun(&x, &x);
       }
       ```
+- 模版函数的实例化控制
+  - 只实例化，不调用函数
+    - 某些库中不想给出模版的内部实现逻辑，只给出模版的声明，此时就需要提前实例化用户想要使用的函数
+  - 显示实例化定义
+    ```
+    /**********
+     * header.h
+     *********/
+    template <typename T>
+    void fun(T x) {
+      std::cout << x << std::endl;
+    }
+    
+    template
+    void fun<int>(int);  // 实例化
+    // 也可以这么写：void fun(int);
+  
+    /**********
+     * main.cc
+     *********/
+    #include "header.h"
+    int main() {
+      int x = 3;
+      fun<int>(x);
+    }
+    ```
+  - 显示实例化声明
+    ```
+    /**********
+     * header.h
+     *********/
+    template <typename T>
+    void fun(T x) {
+      std::cout << x << std::endl;
+    }
 
+    /**********
+     * source.cc
+     *********/
+    #include "header.h"
+
+    template
+    void fun<int>(int);
+
+    /**********
+     * main.cc
+     *********/
+    #include "header.h"
+
+    extern template
+    void fun<int>(int);  // extern表示已经在别的翻译单元实例化过了，这里不要再实例化一遍
+                         // 链接的时候会直接链到source里面的实例
+
+    int main() {
+      int x = 3;
+      fun<int>(x);
+    }
+    ```
+  - 注意一处定义原则
+    - 隐式实例化可以在多处有实例化，编译器会选择其中一个，删除掉多余的
+      ```
+      /**********
+       * header.h
+       *********/
+      template <typename T>
+      void fun(T x) {
+        std::cout << x << std::endl;
+      }
+
+      /**********
+       * source.cc
+       *********/
+      #include "header.h"
+
+      void fun2() {
+        fun<int>(3);  // source中隐式实例化一次
+      }
+
+      /**********
+       * main.cc
+       *********/
+      #include "header.h"
+
+      int main() {
+        int x = 3;
+        fun<int>(x);  // main中隐式实例化一次
+      }
+      ```
+    - 显示实例化原则上在整个程序中只能有一处，但是有多处的话，编译器也不一定会报错，尽量不要这么写
+      ```
+      /**********
+       * header.h
+       *********/
+      template <typename T>
+      void fun(T x) {
+        std::cout << x << std::endl;
+      }
+
+      /**********
+       * source.cc
+       *********/
+      #include "header.h"
+
+      template
+      void fun<int>(int);  // source中显示实例化一次
+
+      void fun2() {
+        fun<int>(3);  
+      }
+
+      /**********
+       * main.cc
+       *********/
+      #include "header.h"
+
+      template
+      void fun<int>(int);  // main中显示实例化一次
+
+      int main() {
+        int x = 3;
+        fun<int>(x);
+      }
+      ```
+  - 注意实例化过程中的模版形参推导
+    ```
+    // 模版1
+    template <typename T>
+    void fun(T x) {
+      std::cout << x << std::endl;
+    }
+
+    template
+    void fun(int* x);  // 显示实例化放在这里会调用模板1，因为程序从上到下执行，还没看到后面的模板2
+    
+    // 模板2
+    template <typename T>
+    void fun(T* x) {
+      std::cout << x << std::endl;
+    }
+
+    template
+    void fun(int* x);  // 显示实例化放在这里会调用模板2
+    ```
