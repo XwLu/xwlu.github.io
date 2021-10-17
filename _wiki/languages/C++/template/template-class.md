@@ -168,16 +168,46 @@ keywords: template, class, C++
   };
   ```
 - 部分特化
-```
-template <typename T, typename T2>
-struct B {
-  void fun() {}
-};
+  ```
+  template <typename T, typename T2>
+  struct B {
+    void fun() {}
+  };
+  
+  template <typename T>  // 这里的T对应上面的T2
+  struct B<int, T> {
+    void fun2() {}
+  }
+  ```
 
-template <typename T2>
-struct B<int, T2> {
-  void fun2() {}
-}
-```
+---
 
-
+# 类模版的实参推导(C++17开始)
+- 基于构造函数的实参推导
+  ```
+  template <typename T>
+  struct B {
+    B(T input) {}  // 构造函数
+  };
+  
+  int main() {
+    B x(3);
+  }
+  ```
+- 用户自定义的推导指引
+- 注意，引入实参推导并不意味着降低了类型限制
+  ```
+  std::pair x(3, 3.14);  // std::pair<int, double> x(3, 3.14);
+  x.first = "123";  // 报错，int类型变量不可以用string赋值
+  ```
+- C++17之前的解决方案：引入辅助模版函数
+  ```
+  template <typename T1, typename T2>
+  std::pair<T1, T2> make_pair(T1 first, T2 second) {
+    return std::pair<T1, T2>(first, second);
+  }
+  
+  int main() {
+    auto res = make_pair(3, 3.14);
+  }
+  ```
