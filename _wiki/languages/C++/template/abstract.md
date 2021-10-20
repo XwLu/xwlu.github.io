@@ -8,3 +8,4 @@ keywords: template, abstract
 
 ### [函数模版](https://xwlu.github.io/wiki/languages/C++/template/template-function)
 ### [类模版](https://xwlu.github.io/wiki/languages/C++/template/template-class)
+### [Concepts](https://xwlu.github.io/wiki/languages/C++/template/concepts)
