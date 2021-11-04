@@ -17,6 +17,7 @@ keywords: c++, abstract
 ### [Class](https://xwlu.github.io/wiki/languages/C++/class/abstract)
 ### [Template](https://xwlu.github.io/wiki/languages/C++/template/abstract)
 ### [Meta-Programming](https://xwlu.github.io/wiki/languages/C++/meta-programming/abstract)
+### [Exception](https://xwlu.github.io/wiki/languages/C++/exception)
 ### [Eigen](https://xwlu.github.io/wiki/languages/C++/eigen)
 ### [Multi-Thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/abstract)
 ### [Time-Counting](https://xwlu.github.io/wiki/languages/C++/time-counting)
