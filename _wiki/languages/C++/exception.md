@@ -140,3 +140,51 @@ keywords: exception, C++
 - 不要在析构函数或者operator delete函数重载版本中抛出异常
 - 通常来说，catch所接收的异常类型为引用类型
   - 如果不加&，就是用的拷贝初始化，而拷贝初始化过程可以抛出异常，所以存在程序崩溃风险
+
+---
+
+# 异常与构造&析构函数
+- 使用function-try-block来保护初始化逻辑
+  ```
+  struct Str {
+    Str() { throw 100; }
+  };
+  
+  class Cla {
+  public:
+    Cla()
+    try : mem() {  // 这里的": mem()"可以删掉，编译器会隐式初始化mem，不需要用户显示指明
+      // init logic
+    } catch(int) {
+      std::cout << "exception catched in Cla::Cla" << std::endl;
+      // 编译器会在这里隐式地加一句"throw;"
+    }
+    int xxx;
+  private:
+    Str mem;
+  };
+  
+  int main() {
+    try {
+      Cla cla;
+      cla.xxx;
+    } catch(int) {
+      // 下面这一行也会执行，因为C++规定，如果是在构造函数内捕获的异常，编译器会隐式地在catch语句块最后加上"throw;"命令
+      // 这样做的原因是:
+      // 如果不继续向外吐出捕获，程序就会执行到上面的"cla.xxx;"指令，由于cla的初始化并没有成功，执行这条指令的行为是未定义的。
+      std::cout << "exception catched in main" << std::endl;
+    }
+  }
+  ```
+- function-try-block也支持一般函数
+  ```
+  void fun()
+  try {
+    throw 123;  
+  } catch(...) {
+  
+  }
+  ```
+- 在构造函数中抛出异常时，已经构造的成员会被销毁，但析构函数不会被调用
+  - 构造函数没执行完，有些变量还没初始化，直接调用析构函数就存在未定义行为了
+  - 对于已经构造出来的变量，如果需要手动清理的话，应该在构造函数的catch语句块中进行销毁处理
