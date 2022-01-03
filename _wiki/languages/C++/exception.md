@@ -188,3 +188,35 @@ keywords: exception, C++
 - 在构造函数中抛出异常时，已经构造的成员会被销毁，但析构函数不会被调用
   - 构造函数没执行完，有些变量还没初始化，直接调用析构函数就存在未定义行为了
   - 对于已经构造出来的变量，如果需要手动清理的话，应该在构造函数的catch语句块中进行销毁处理
+
+---
+
+# 描述函数是否会抛出异常
+- 如果函数不会抛出异常，则应表明，为系统提供更多的优化空间
+  - C++98的方式：
+    - throw()：不会抛出异常
+    - throw(int, char)：可能会抛出异常
+  - C++11后的改进：
+    - noexcept：不会抛出异常
+    - noexcept(false)：可能会抛出异常
+- noexcept
+  - 限定符：接受false/true表示是否会抛出异常
+  - 操作符：接受一个表达式，根据表达式是否可能抛出异常返回false/true
+    ```
+    void fun() noexcept(false) {}
+    void fun1() noexcept(noexcept(fun())) {
+      fun();
+    }
+    int main() {
+      std::cout << noexcept(fun()) << std::endl;  // 0
+    }
+    ```
+  - 在声明了noexcept的函数中抛出异常会导致terminate被调用，程序终止，这里的异常无法在外部被捕获
+  - 不作为函数重载依据，但函数指针、虚拟函数重写时要保持形式兼容
+    ```
+    void fun() {}
+    int main() {
+      void (*ptr)() noexcept = fun;  // 报错，fun可能会抛出异常，这里的函数指针明确了不能抛出异常，冲突了
+      (*ptr)();
+    }
+    ```
