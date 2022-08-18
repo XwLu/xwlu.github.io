@@ -220,3 +220,60 @@ keywords: exception, C++
       (*ptr)();
     }
     ```
+
+# 标准异常
+## 异常类型
+- ![std-exception](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/std-exception.png?raw=true)
+- exception:异常
+  - runtime_error: 运行期异常
+    - overflow_error
+    - underflow_error
+  - logic_error: 逻辑异常
+    - invalid_argument
+    - length_error
+    - out_of_range
+  - bad_alloc
+  - bad_cast
+  - bad_type_id
+  - bad_exception
+
+## 尽量使用C++提供的标准异常
+```
+#include <stdexcept>
+void fun() {
+  // throw 123;
+  throw std::runtime_error("Invalid Input!");
+}
+
+int main() {
+  try {
+    fun();
+  } catch (const std::runtime_error& e) {
+    std::cout << e.what() << "\n";  // what是exception（基类）的虚函数
+  } catch (const std::bad_alloc& e) {
+    // 如果在这里捕获到异常，意味着发生了内存分配失败的问题 
+  }
+  // 之所以标准定义了这么多种类的异常，就是让你在写代码的时候一眼就可以看出来异常类型和对应的处理逻辑
+  // 你也可以自己定义异常
+}
+```
+
+# 正确对待异常
+- 不要滥用：异常的成本非常高
+  - 异常是用于处理程序不应该发生的逻辑，正常的跳转不要用
+- 不要不用：对真正的异常场景，异常处理是相对高效、简洁的处理方式
+- 编写异常安全的代码
+  - 不安全的例子
+    ```
+    void fun() {
+      int* ptr = new int[3];
+      throw std::runtime_error("Invalid Input!");  // 栈展开了，ptr被销毁，但指向的内存没有被释放，泄露了
+      delete []ptr;
+    }
+    ```
+  - 需要注意的点：
+    - 避免裸的资源分配（如上代码）
+      - 内存：使用智能指针
+      - 文件：使用C++提供的fstream
+    - 接口设计
+      - stack的pop只返回void，top返回的是内容，这样设计就是为了异常安全

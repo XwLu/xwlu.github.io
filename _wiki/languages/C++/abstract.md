@@ -22,6 +22,8 @@ keywords: c++, abstract
 ### [Multi-Thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/abstract)
 ### [Time-Counting](https://xwlu.github.io/wiki/languages/C++/time-counting)
 ### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton)
+### [Enum](https://xwlu.github.io/wiki/languages/C++/enum)
+### [Union](https://xwlu.github.io/wiki/languages/C++/union)
 ### [Others](https://xwlu.github.io/wiki/languages/C++/others)
 
 ### [Bugs](https://xwlu.github.io/wiki/languages/C++/bugs)

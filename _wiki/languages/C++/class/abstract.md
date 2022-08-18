@@ -13,3 +13,5 @@ keywords: class, abstract
 ### [成员指针](https://xwlu.github.io/wiki/languages/C++/class/member-ptr)
 ### [运算符重载](https://xwlu.github.io/wiki/languages/C++/class/operator)
 ### [类的继承](https://xwlu.github.io/wiki/languages/C++/class/inheritance)
+### [嵌套类](https://xwlu.github.io/wiki/languages/C++/class/nested-class)
+### [局部类](https://xwlu.github.io/wiki/languages/C++/class/local-class)
