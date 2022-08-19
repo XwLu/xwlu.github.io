@@ -25,8 +25,8 @@ keywords: compile, linl, C++
   - > gcc -E ./main.cpp -o ./main.i
   - 将源文件转换为翻译单元的过程
   - 防止头文件被循环展开
-    - # ifdef
-    - # pragma once（推荐，用ifdef如果后面的文件宏写错了（比如两个不同h文件的宏写成一样了），那就只会include其中一个头文件）。
+    - ifdef
+    - pragma once（推荐，用ifdef如果后面的文件宏写错了（比如两个不同h文件的宏写成一样了），那就只会include其中一个头文件）。
 - 编译：file.i -> file.s
   - > g++ main.i -S -o main.s
   - 将翻译单元转换为相应的汇编语言表示
