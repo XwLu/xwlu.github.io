@@ -7,8 +7,9 @@ keywords: c++, abstract
 ---
 
 ### [Compile & Link](https://xwlu.github.io/wiki/languages/C++/compile-link)
-### [IOStream](https://xwlu.github.io/wiki/languages/C++/iostream)
 ### [Expression](https://xwlu.github.io/wiki/languages/C++/expression)
+### [Type](https://xwlu.github.io/wiki/languages/C++/type)
+### [IOStream](https://xwlu.github.io/wiki/languages/C++/iostream)
 ### [Container](https://xwlu.github.io/wiki/languages/C++/container)
 ### [Generic-Algorithm](https://xwlu.github.io/wiki/languages/C++/generic-algorithm)
 ### [Shared-Ptr](https://xwlu.github.io/wiki/languages/C++/shared-ptr)
@@ -18,12 +19,15 @@ keywords: c++, abstract
 ### [Template](https://xwlu.github.io/wiki/languages/C++/template/abstract)
 ### [Meta-Programming](https://xwlu.github.io/wiki/languages/C++/meta-programming/abstract)
 ### [Exception](https://xwlu.github.io/wiki/languages/C++/exception)
+### [Enum](https://xwlu.github.io/wiki/languages/C++/enum)
+### [Union](https://xwlu.github.io/wiki/languages/C++/union)
+### [Namespace](https://xwlu.github.io/wiki/languages/C++/namespace)
+### [Bit Field](https://xwlu.github.io/wiki/languages/C++/bit-field)
+### [Volatile](https://xwlu.github.io/wiki/languages/C++/volatile)
 ### [Eigen](https://xwlu.github.io/wiki/languages/C++/eigen)
 ### [Multi-Thread](https://xwlu.github.io/wiki/languages/C++/multi-thread/abstract)
 ### [Time-Counting](https://xwlu.github.io/wiki/languages/C++/time-counting)
 ### [Singleton](https://xwlu.github.io/wiki/languages/C++/singleton)
-### [Enum](https://xwlu.github.io/wiki/languages/C++/enum)
-### [Union](https://xwlu.github.io/wiki/languages/C++/union)
 ### [Others](https://xwlu.github.io/wiki/languages/C++/others)
 
 ### [Bugs](https://xwlu.github.io/wiki/languages/C++/bugs)
