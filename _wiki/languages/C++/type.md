@@ -109,3 +109,96 @@ keywords: type, C++
   - 指针可以为空，引用肯定指向某个内存对象
   - 指针的地址可能非法
   - 引用的本质就是不可变的、合法的、指向某块内存的指针
+
+# 常量引用
+```
+constexpr T xx;  // xx的数据类型还是const T，只不过constexpr表示它的初始值在编译期就确定了
+constexpr const int* ptr = nullptr;  // constexpr修饰ptr，所以ptr的类型是const * const
+```
+
+# 类型别名与类型的自动推导
+- 两种引入类型别名的方法
+  ```
+  typedef int MyInt;
+  using MyInt = int;  // (since C++11)
+  ```
+- 使用using引入类型别名更好
+  ```
+  typedef char MyCharArr[4];  // 写法比较混乱
+  using MyCharArr = char[4];
+  ```
+- 类型别名和指针、引用的关系
+  - 应该将指针的类型别名视为一个整体，在此基础上引入的长量表示指针为常量的类型
+    ```
+    using IntPtr = int*;
+    int main() {
+      int x = 3;
+      const IntPtr ptr = &x;
+      const int* ptr = &x;  // 上下两行不等价，上面的const修饰的是ptr，下面的const修饰的是指针指向的内容
+    }
+    ```
+  - 不能通过类型别名构造引用的引用
+    ```
+    #include <type_traits>
+    using RefInt = int&;
+    using RefRefInt = RefInt&;
+    int main() {
+      std::is_same_v(RefInt, RefRefInt);  // true
+    }
+    ```
+- 类型的自动推导
+  - 常见形式
+    - auto: 最常用的形式，但会产生类型退化
+      ```
+      int x = 3;
+      int& ref = x;
+      auto ref2 = ref;  // auto 自动推导出来的类型不是int&，而是int
+      ```
+    - const auto/constexpr auto: 推导出的是常量、常量表达式类型
+    - auto&: 推导出引用类型，避免类型退化
+      ```
+      const int x = 3;
+      auto& y = x;  // y的类型是const int&
+
+      int x1[3] = {1, 2, 3};
+      auto x2 = x1;  // x2的类型是int*
+      auto& x3 = x1;  // x3的类型是int(&)[3]
+      ```
+    - decltype(exp): 返回exp表达式的类型（如果表达式是左值，会加引用）
+      ```
+      int x = 3;
+      int& y1 = x;
+      auto y2 = y1;  // int
+      decltype(y1) y3 = y1;  // int&
+
+      int* ptr = &x;
+      decltype(*ptr);  // int&, 因为*ptr是个左值，所以会加上引用
+      decltype(3.5 + 15l);  // double，表达式是右值，所以不加引用
+      ```
+    - decltype(val): 返回val的类型
+      ```
+      int x = 3;
+      decltype(x);  // 按照上面的说法，x是左值，所以这里是int&，但其实不是
+      // 原因是，有个约定，如果decltype后面跟的是一个变量名，不加引用
+      int* ptr = &x;
+      decltype(ptr);  // int*, ptr是个左值，但更是一个变量名，所以不加引用
+
+      const int y1 = 3;
+      const int& y2 = y1;
+      decltype(y1);  // const int
+      decltype(y2);  // const int&
+      decltype((y1));  // const int&, (y1)是一个表达式，且是一个左值，所以加上引用
+      decltype((y2));  // const int&, (y2)是一个表达式，且是一个左值，所以加上引用，但本身已经有引用，不会变成引用的引用
+      ```
+    - decltype(auto): since C++14
+      ```
+      int x = 3;
+      int& y1 = x;
+      auto y2 = y1;  // int，简洁
+      decltype(y1) y3 = y1;  // int&，不会引起退化
+      decltype(auto) y3 = y1;  // int&，简洁且不会引起退化
+      ```
+    - concept auto: since C++20
+      ```
+      std::integral auto y = 3.5;  // 编译失败，auto自动推导出来的类型(double、float)都不属于integral的范畴
+      ```

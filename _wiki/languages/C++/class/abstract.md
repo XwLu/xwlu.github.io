@@ -15,3 +15,4 @@ keywords: class, abstract
 ### [类的继承](https://xwlu.github.io/wiki/languages/C++/class/inheritance)
 ### [嵌套类](https://xwlu.github.io/wiki/languages/C++/class/nested-class)
 ### [局部类](https://xwlu.github.io/wiki/languages/C++/class/local-class)
+### [虚函数]（https://mp.weixin.qq.com/s?__biz=MzkyMjIxMzIxNA==&mid=2247485303&idx=1&sn=985f6128d6910a3f7376f10b61ce03f7&chksm=c1f68946f6810050e21b70ff44e7f302f355e63213a5139aaaf9b482ce44a13b9c98efcb68e4&token=1580177273&lang=zh_CN#rd）
