@@ -9,7 +9,7 @@ keywords: c++, abstract
 ### [Compile & Link](https://xwlu.github.io/wiki/languages/C++/compile-link)
 ### [Expression](https://xwlu.github.io/wiki/languages/C++/expression)
 ### [Type](https://xwlu.github.io/wiki/languages/C++/type)
-### [Array](https://xwlu.github.io/wiki/languages/C++/array)
+### [Array-Vector-String](https://xwlu.github.io/wiki/languages/C++/array-vector-string)
 ### [Function](https://xwlu.github.io/wiki/languages/C++/function)
 ### [IOStream](https://xwlu.github.io/wiki/languages/C++/iostream)
 ### [Container](https://xwlu.github.io/wiki/languages/C++/container)
