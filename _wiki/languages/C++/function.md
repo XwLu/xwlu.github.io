@@ -194,3 +194,75 @@ keywords: function, C++
     return 0;
   }
   ```
+# 函数指针
+- 函数类型
+  ```
+  using K = int(int);  // K就是一个函数类型的别名
+  K fun;  // 函数声明，等同于int fun(int);
+  std::function<void(int)> f;  // 这里的模板参数就是函数类型
+  ```
+- 函数指针类型
+  ```
+  int inc(int x) {
+    return x + 1;
+  }
+
+  int dec(int x) {
+    return x - 1;
+  }
+
+  using K = int(int);
+
+  void Demo(K in) {}
+  void Demo1(K* in) {}
+
+  int main() {
+    K* fun = &inc;
+    (*fun)(100);  // 101
+
+    auto fun2 = dec;  // 等同于：using F = int(*)(int); F fun2 = dec;
+    
+    // 下面四种写法效果一样
+    Demo(inc);
+    Demo(&inc);
+    Demo1(inc);
+    Demo1(&inc);
+  }
+  ```
+- 函数指针重载
+  ```
+  void fun(int) {}
+
+  void fun(int, int) {}
+
+  int main() {
+    auto f = fun;  // 报错，编译器不知道指向上面哪个fun函数
+    void(*)(int) f = fun;  // 通过，类型明确
+  }
+  ```
+- 将函数指针作为函数参数
+- 将函数指针作为函数的返回值
+  ```
+  int inc(int x) {
+    return x + 1;
+  }
+
+  int dec(int x) {
+    return x - 1;
+  }
+
+  auto fun(bool input) {
+    if (input) {
+      return inc;
+    } else {
+      return dec;
+    }
+  }
+
+  int main() {
+    (*fun(true))(100);  // 101
+  }
+  ```
+- 注意most vexing parse问题
+  - 该问题促使C++11引入T xx{};的初始化方式
+  - 使用{}而非()去初始化一个变量可以避免该问题的发生
