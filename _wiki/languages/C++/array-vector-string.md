@@ -105,3 +105,104 @@ keywords: array, vector, string, C++
     *a;
     ptr[1];
     ```
+- 其他操作
+  - 求元素的个数
+    ```
+    extern int array[];  // 下面的三个方法都无法处理这种imcomplete type
+    int a[3];
+    sizeof(a);  // 12，int占四个字节，这里的a不会退化为指针，C语言的方法，编译期计算
+    std::size(a);  // 3， 推荐使用该方法，C++方法，编译期计算
+    std::end(a) - std::begin(a);  // 3，运行期计算
+    ```
+  - 元素遍历
+    ```
+    int a[3];
+    // 方法1
+    size_t i = 0;
+    while (i < std::size(a)) {
+      a[i];
+      ++i;
+    }
+    // 方法2
+    auto ptr =  std::cbegin(a);
+    while (ptr != std::cend(a)) {
+      ++ptr;
+    }
+    // 方法3
+    for (int x : a) {}
+    ```
+
+# C字符串
+- 本质上是数组char\[\]
+- C语言提供了额外的操作
+  ```
+  #include <cstring>
+  char str[] = "Hello";
+  strlen(str);
+  // strcmp
+  ```
+
+# 多维数组
+- 类型推导
+  ```
+  #include <type_traits>
+  int x[3][4];  // x是一个数组，包含了3个 int[4]类型的元素
+  std::is_same_v(decltype(x[0], int(&)[4]));  // true，x[0]是个表达式，decltype(表达式)会加上引用
+  auto ptr = x;  // 类型退化只发生在第一维，ptr类型是int(*)[4]，只有这样在执行ptr+1的时候才知道要往后移动多少位
+
+  using A = int[4];  // 使用类型别名简化初始化
+  A x2[3];  // int x2[3][4]
+  A* ptr = x2;
+  ```
+- 初始化
+  ```
+  int x[2][3] = {1, 2, 3, 4};  // {123}{400}
+  int x[2][3] = {{1, 2, 3}, {4, 5, 6}};  // {123}{456}
+  int x[2][3] = {{1, 2, 3}, {4, 5}};  // // {123}{450}
+  int x[2][3] = {{1, 2}, {4, 5}};  // // {120}{450}
+
+  int x[][3] = {1, 2, 3, 4, 5};  // x的类型是int[2][3]
+  int x[][] = {{1, 2, 3}, {4, 5， 6}};  // 报错，只有第一个[]里面的size可以自动推导，后面的都得显示标明
+  ```
+- 遍历
+  - 二维数组遍历的时候，尽量按行遍历，因为一行的元素往往存在同一块内存，cache命中的概率比较高
+  ```
+  int x[2][3] = {1, 2, 3, 4};
+  for (auto& p : x) {  // 这里的&不能少，如果没有&，p会从int(&)[3]退化为int*，无法进入下面的循环
+    for (auto& q : p) {
+      // ...
+    }
+  }
+  ```
+# Vector
+- 是内建数组的代替品
+- 与数组比，更注重易用性
+  - 可复制
+  - 可在运行期改变元素个数
+- 初始化
+  ```
+  std::vector<int> x(3);
+  std::vector<int> x(3, 1);  // 1, 1, 1
+  std::vector<int> x{3, 1};  // 3, 1
+  std::vector<int> x = {1, 2, 3};
+  ```
+- 索引与遍历
+  ```
+  std::vector<int> x = {1, 2, 3};
+  std::cout << x[20] << std::endl;  // 编译通过，运行可能不会报错
+  std::cout << x.at(20) << std::endl;  // 编译通过，运行报错，所以这种写法更好
+  ```
+- 迭代器
+  - 模拟指针的行为
+  - 包含多种类别，每种类别支持的操作不同
+  - vector对应随机访问迭代器
+    - 解引用与下标访问
+    - 移动
+    - 相减求距离
+    - 两个迭代器比较
+- 其他
+  - 添加元素会导致迭代器失效
+
+# String
+- 是内建字符串的代替品
+- string其实是std::basic_string\<char\>的类型别名，basic_string是一个类模板
