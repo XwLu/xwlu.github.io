@@ -18,7 +18,7 @@ keywords: local-class, C++
     struct Helper {
       MyInt x;
       int y = val;  // 编译失败
-      inline static int val2 = 100;
+      inline static int val2 = 100;  // 编译失败 
 
       int inc();
       int acc() {  // 编译成功，函数定义在类内部
