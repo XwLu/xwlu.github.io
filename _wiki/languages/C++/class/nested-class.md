@@ -10,6 +10,7 @@ keywords: nested-class, C++
 - 在类中定义的类
   - 嵌套类有自己的域，与外围类的域形成嵌套关系
     - 嵌套类中的名称查找失败时会在其外围类中继续查找
+
   ```
   class Out {
     using MyInt = int;
