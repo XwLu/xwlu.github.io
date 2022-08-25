@@ -237,7 +237,7 @@ keywords: function, C++
 
   int main() {
     auto f = fun;  // 报错，编译器不知道指向上面哪个fun函数
-    void(*)(int) f = fun;  // 通过，类型明确
+    void(*f)(int) = fun;  // 通过，类型明确
   }
   ```
 - 将函数指针作为函数参数
