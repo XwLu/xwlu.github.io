@@ -29,13 +29,14 @@ keywords: compile, linl, C++
     - pragma once（推荐，用ifdef如果后面的文件宏写错了（比如两个不同h文件的宏写成一样了），那就只会include其中一个头文件）。
 - 编译：file.i -> file.s
   - > g++ main.i -S -o main.s
-  - 将翻译单元转换为相应的汇编语言表示
+  - 将翻译单元转换为相应的汇编语言表示（汇编语言还是有符号表示的）
   - 编译优化
     - https://godbolt.org/z/zh9aqx
   - 增量编译 V.S. 全部编译
     - 有时候只修改了头文件，增量编译不知道需要重新编译，这时候就需要全部编译
 - 汇编：file.s -> file.o
   - > g++ main.s -c -o main.o
+  - 将汇编语言进一步转化为机器语言(二进制文件，看不到任何符号表示)
 - 链接：file.o -> file.exe
   - g++ main.o -S -o main
   - 合并多个目标文件，关联声明与定义
