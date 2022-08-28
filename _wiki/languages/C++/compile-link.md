@@ -16,7 +16,7 @@ keywords: compile, linl, C++
 - 程序级：一般函数
 - 翻译单元级：内联函数、类、模板(虽然可以在整个程序中有多处定义，但是需要保证一模一样)
   - 因为编译期是以翻译单元为单位进行编译的，而上面三种类型的代码需要有具体的定义才能正常编译，光有声明是不够的。
-  - 这也是为什么Eigen全是头文件，因为它全是模板类，没办法定义在源文件中。否则编译的时候，只有头文件的声明，无法编译模版类相关代码。
+  - 这也是为什么Eigen全是头文件，因为它全是模板类，没办法定义在源文件中。[链接](https://blog.csdn.net/l15799033407/article/details/120411311?spm=1001.2101.3001.6661.1&utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120411311-blog-123913519.topnsimilarv1&depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120411311-blog-123913519.topnsimilarv1&utm_relevant_index=1)
 
 ---
 
