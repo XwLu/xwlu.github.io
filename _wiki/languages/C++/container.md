@@ -77,6 +77,7 @@ keywords: container, C++
   - vector也有data()接口
   - swap是指针交换，效率很高
   - emplace_back()相比push_back()少了一次对象的拷贝或者移动，因此当对象是string或者自定义结构数据时，用emplace_back效率更高
+    - (emplace_back vs push_back)[https://zhuanlan.zhihu.com/p/183861524]
   - insert和emplace是在vector中间插入元素，但效率很低；emplace和insert的差异与上面的emplace_back和push_back的差异一致
   - 会导致iter失效的操作：swap、push_back等写操作
 - list:双向链表的容器
@@ -97,7 +98,7 @@ keywords: container, C++
   - 只有在我们想要得到类似于vector的功能，但又希望push_front比较快的时候才会使用deque
 - basic_string:提供了对字符串的专门支持
   - 提供了数值与字符串转换的接口
-  - 短字符串优化，short string optimization: SSO
+  - 短字符串优化，(short string optimization: SSO)[https://tigercosmos.xyz/post/2022/06/c++/sso/]
 
 ---
 

@@ -484,6 +484,8 @@ keywords: inheritance, class, C++
 
       int main() {
         Derived d;
+        std::cout << &(d.Base1::x) << "\n";
+        std::cout << &(d.Base2::x) << "\n";  // 通过，且地址一样的
         d.x;  // 报错，不知道是Base1中的x还是Base2中的x
       }
       ```
@@ -507,6 +509,10 @@ keywords: inheritance, class, C++
       int main() {
         Derived d;
         d.x;  // 正确，使用了虚继承
+        std::cout << &(d.Base1::x) << "\n";
+        std::cout << &(d.Base2::x) << "\n";
+        std::cout << &(d.x) << "\n";  // 正确，使用了虚继承
+        // 上面三个地址的输出都是一样的
       }
       ```
   - 空基类优化与[[no unique address]]属性

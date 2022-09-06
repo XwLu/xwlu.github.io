@@ -131,6 +131,6 @@ keywords: enum, C++
     int main() {
       Color x;  // 即使在别的文件中有定义，还是失败；因为在这个翻译单元中，编译器不知道Color的具体大小是int还是char还是其他大小，无法分配内存
       Color2 x;  // 可以编译，Color2的大小确定
-      Color2 x;  // 可以编译，有作用域的枚举类型默认是int型
+      Color3 x;  // 可以编译，有作用域的枚举类型默认是int型
     }
     ```
