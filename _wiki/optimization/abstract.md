@@ -8,5 +8,3 @@ keywords: optimization
 
 # [数值优化基础](https://xwlu.github.io/wiki/optimization/basic/)
 
----
-
