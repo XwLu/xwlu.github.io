@@ -28,3 +28,10 @@ int main() {
 }
 ```
 
+# Eigen & auto
+- [参考链接](https://blog.csdn.net/weixin_44327262/article/details/127073001)
+  ```
+  // 用auto接受Eigen的对象时会出错，不要使用
+  Eigen::VectorXd dir = (-1.0 * func.grad(x));
+  // auto dir = (-1.0 * func.grad(x));
+  ```
