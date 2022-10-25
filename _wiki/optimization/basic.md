@@ -69,3 +69,17 @@ keywords: optimization
 - > d(tr(X)) = I
 - > d(f(g(x))) = (df/dg)\*dg(x)
 
+# 凸函数及其性质
+- f(ax + (1-a)y) <= af(x) + (1-a)f(y)
+  - 如果严格<，称为strictly convex function
+- 凸函数一定有convex sub level set
+- quasi-convex(拟凸函数)
+  - f(x) = log(\|x\| + 1)
+  - 拟凸函数的线性加和不一定还是拟凸函数，但凸函数的线性加和肯定是凸函数
+- 凸函数的局部最小值一定是全局最小值
+- 凸函数的局部最小值的集合一定是凸集
+- 凸函数的很多operation是可以保留其凸性的
+  - 加权和
+  - 范数
+  - 仿射变换
+  - point-wise max
