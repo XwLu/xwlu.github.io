@@ -21,7 +21,7 @@ keywords: reinforcement-learning, dynamic-planning
 
 # 策略评价
 - ## 问题
-> 给定一个策略<img src="https://latex.codecogs.com/gif.latex?\pi "/>,求对应的值函数<img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)"/>或者<img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)"/>
+> 给定一个策略<img src="https://latex.codecogs.com/svg.image?\pi "/>,求对应的值函数<img src="https://latex.codecogs.com/svg.image?v_{\pi }(s)"/>或者<img src="https://latex.codecogs.com/svg.image?q_{\pi }(s,a)"/>
 - ## 方法
   - 直接解
     - 可以直接求得精确解
@@ -31,7 +31,7 @@ keywords: reinforcement-learning, dynamic-planning
     - 可以收敛到精确解
 
 # 策略提升
-  - 根据现有的策略评价结果<img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)"/>改进策略<img src="https://latex.codecogs.com/gif.latex?\pi "/>
+  - 根据现有的策略评价结果<img src="https://latex.codecogs.com/svg.image?v_{\pi }(s)"/>改进策略<img src="https://latex.codecogs.com/svg.image?\pi "/>
   - 典型的如贪婪策略提升
 
 # 策略迭代
@@ -67,5 +67,5 @@ keywords: reinforcement-learning, dynamic-planning
     - 实时动态规划
 
 # 就地(In-Place)动态规划
-- 同步值迭代存储了两个版本的值函数，在计算<img src="https://latex.codecogs.com/gif.latex?v_{new}"/>的时候，使用了<img src="https://latex.codecogs.com/gif.latex?v_{old}"/>的复制版本，在整个更新过程中，<img src="https://latex.codecogs.com/gif.latex?v_{old}"/>是不变的，保持上一个循环的状态。
-- 就地(In-Place)动态规划只对一个值函数<img src="https://latex.codecogs.com/gif.latex?v_{new}"/>进行更新，因此，从左上角开始更新和从右下角开始更新，得到的结果是不一样的。
+- 同步值迭代存储了两个版本的值函数，在计算<img src="https://latex.codecogs.com/svg.image?v_{new}"/>的时候，使用了<img src="https://latex.codecogs.com/svg.image?v_{old}"/>的复制版本，在整个更新过程中，<img src="https://latex.codecogs.com/svg.image?v_{old}"/>是不变的，保持上一个循环的状态。
+- 就地(In-Place)动态规划只对一个值函数<img src="https://latex.codecogs.com/svg.image?v_{new}"/>进行更新，因此，从左上角开始更新和从右下角开始更新，得到的结果是不一样的。

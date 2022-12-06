@@ -94,5 +94,5 @@ keywords: reinforcement-learning, model-based
   - 从当前状态St开始采样片段
   - 估计Q(s, a)
   - 对于每一步的仿真，使用Sarsa方法更新Q函数
-    - <img src="https://latex.codecogs.com/gif.latex?\Delta Q(S,A)=\alpha (R+\gamma Q({S}',{A}')-Q(S,A))"/>
+    - <img src="https://latex.codecogs.com/svg.image?\Delta Q(S,A)=\alpha (R+\gamma Q({S}',{A}')-Q(S,A))"/>
   - 基于Q(s, a)选择动作

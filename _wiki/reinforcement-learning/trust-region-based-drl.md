@@ -18,11 +18,11 @@ keywords: reinforcement-learning, TRPO
 # 知识背景
 - ## 自然梯度
   - Natural Gradient Works Efficiently in Learning, 1998
-  - 在黎曼空间里面，最快的下降方向不是梯度方向，而是自然梯度方向<img src="https://latex.codecogs.com/gif.latex?G^{-1}(\theta )J(\theta )"/>
+  - 在黎曼空间里面，最快的下降方向不是梯度方向，而是自然梯度方向<img src="https://latex.codecogs.com/svg.image?G^{-1}(\theta )J(\theta )"/>
   - 只有当坐标系统正交，才退化成欧式空间
   - 神经网络中的参数空间是黎曼空间
-  - 其中<img src="https://latex.codecogs.com/gif.latex?G"/>为 Reimannian metric tensor
-  - 统计问题中，<img src="https://latex.codecogs.com/gif.latex?G"/>可以用 Hessian 矩阵去计算
+  - 其中<img src="https://latex.codecogs.com/svg.image?G"/>为 Reimannian metric tensor
+  - 统计问题中，<img src="https://latex.codecogs.com/svg.image?G"/>可以用 Hessian 矩阵去计算
 - ## 保守策略迭代
   - CPI: Approximately Optimal Approximate Reinforcement Learning, 2002
   - 给出策略性能增长的条件
