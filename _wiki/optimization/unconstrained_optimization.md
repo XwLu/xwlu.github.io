@@ -26,8 +26,8 @@ keywords: optimization
     - Armijo condition（充分下降条件）
       - ![Armijo line search](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/armijo_line_search.png?raw=true)
       - <img src="https://latex.codecogs.com/svg.image?\tau"/>初始化为1.0，<img src="https://latex.codecogs.com/svg.image?c\in&space;(0,1)"/>
-      - <img src="https://latex.codecogs.com/svg.image?\tau"/>每个循环都减半，直到函数值第一次落到上图虚线的下方，更新<img src="https://latex.codecogs.com/svg.image?x"/>
-      - 注意，次梯度的话需要沿着least norm grad的反方向更新，循环结束条件是次梯度包含0向量
+      - <img src="https://latex.codecogs.com/svg.image?\tau"/>每个循环都减半，直到函数值第一次落到上图虚线的下方，结束循环，更新<img src="https://latex.codecogs.com/svg.image?x"/>
+      - 注意，函数只有次梯度的话需要沿着least norm grad的反方向更新，循环结束条件是次梯度包含0向量
     - Inexact line search虽然迭代次数比Exact line search更多，但每次迭代的耗时少很多，因此大部分情况下总时间也少
 - 缺点
   - ![sgd drawback](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/sgd_drawback.png?raw=true)
