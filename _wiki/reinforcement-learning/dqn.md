@@ -20,9 +20,9 @@ keywords: reinforcement-learning, DQN
     - ![dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/dqn-flow.png?raw=true)
 - ## Double DQN
   - ### 核心思路
-    - DQN中的TD目标值<img src="https://latex.codecogs.com/gif.latex?r+\gamma max_{a}Q({s}',a)"/>存在max操作，会引入一个正向偏差
+    - DQN中的TD目标值<img src="https://latex.codecogs.com/svg.image?r+\gamma max_{a}Q({s}',a)"/>存在max操作，会引入一个正向偏差
     - 因此建模两个Q网络，一个用于选动作，一个用于评估动作：
-      - <img src="https://latex.codecogs.com/gif.latex?r+\gamma Q^{B}({s}',argmax_{a}Q^{A}({s}',a))"/>
+      - <img src="https://latex.codecogs.com/svg.image?r+\gamma Q^{B}({s}',argmax_{a}Q^{A}({s}',a))"/>
     - 其实只要把DQN的target network也变成独立更新的就行了
   - ### 算法流程
     - ![double-dqn](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/double-dqn-flow.png?raw=true)
@@ -48,9 +48,9 @@ keywords: reinforcement-learning, DQN
     - 过分关注 TD 误差大的 transition 丧失了样本多样性 使用某种分布采样了 Experience, 会引入 Bias
   - ### 解决方法
     - 两种变体：
-      - <img src="https://latex.codecogs.com/gif.latex?p_{i}=|\delta _{i}|+e"/>
-      - 其中，<img src="https://latex.codecogs.com/gif.latex?\delta _{i}"/>表示TD误差，<img src="https://latex.codecogs.com/gif.latex?e"/>表示人为施加的噪声，通过这个噪声保证多样性
-      - <img src="https://latex.codecogs.com/gif.latex?p_{i}=\frac{1}{rank(i)}"/>，序号的倒数来表示权重，对噪声的敏感度下降。简单的说，即使TD误差有0.1的误差，但顺序上依然是排第二，这时，误差就没有影响了。
+      - <img src="https://latex.codecogs.com/svg.image?p_{i}=|\delta _{i}|+e"/>
+      - 其中，<img src="https://latex.codecogs.com/svg.image?\delta _{i}"/>表示TD误差，<img src="https://latex.codecogs.com/svg.image?e"/>表示人为施加的噪声，通过这个噪声保证多样性
+      - <img src="https://latex.codecogs.com/svg.image?p_{i}=\frac{1}{rank(i)}"/>，序号的倒数来表示权重，对噪声的敏感度下降。简单的说，即使TD误差有0.1的误差，但顺序上依然是排第二，这时，误差就没有影响了。
     - 重要性采样，消除Bias
   - ## 算法流程
     - ![prioritized-exp-replay](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/rl/deep-rl/prioritized-exp-replay.png?raw=true)

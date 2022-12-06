@@ -14,7 +14,7 @@ keywords: reinforcement-learning, MDP
   - 要求环境全观测
 
 - ## 任务类型定义
-  - 强化学习中,从初始状态<img src="https://latex.codecogs.com/gif.latex?S_{1}"/>到终止状态的序列过程,被称为一个片段(episode)。
+  - 强化学习中,从初始状态<img src="https://latex.codecogs.com/svg.image?S_{1}"/>到终止状态的序列过程,被称为一个片段(episode)。
     - 如果一个任务总以终止状态结束,那么这个任务被称为片段任务(episodic task)
     - 如果一个任务会没有终止状态,会被无限执行下去,这被称为连续性任务 (continuing task)
   - 终止状态等价于自身转移概率为 1,奖励为 0 的的状态
@@ -33,9 +33,9 @@ s1 | s2 | s3 | s4 | 转移
 - ## 奖励与回报
   - ### 奖励值:对每一个状态的评价
   - ### 回报值: 对每一个片段的评价
-    - 对于片断性任务，回报值是未来有限个状态的奖励值的和<img src="https://latex.codecogs.com/gif.latex?G_{t}=\sum_{k=0}^{T-t-1}\gamma ^{k}R_{t+k+1}"/>
-    - 对于连续性任务，回报值是未来无限个状态的奖励值的和<img src="https://latex.codecogs.com/gif.latex?G_{t}=\sum_{k=0}^{\infty }\gamma ^{k}R_{t+k+1}"/>
-    - 回报值是从时间<img src="https://latex.codecogs.com/gif.latex?t"/>处开始的累计衰减奖励
+    - 对于片断性任务，回报值是未来有限个状态的奖励值的和<img src="https://latex.codecogs.com/svg.image?G_{t}=\sum_{k=0}^{T-t-1}\gamma ^{k}R_{t+k+1}"/>
+    - 对于连续性任务，回报值是未来无限个状态的奖励值的和<img src="https://latex.codecogs.com/svg.image?G_{t}=\sum_{k=0}^{\infty }\gamma ^{k}R_{t+k+1}"/>
+    - 回报值是从时间<img src="https://latex.codecogs.com/svg.image?t"/>处开始的累计衰减奖励
   - ### 指数衰减值
     - 对未来的把握也是逐渐衰减的
     - 一般情况下,我们更关注短时间的反馈
@@ -43,13 +43,13 @@ s1 | s2 | s3 | s4 | 转移
 
 - ## 贝尔曼方程
   - 强化学习的核心
-  - <img src="https://latex.codecogs.com/gif.latex?v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')"/>
+  - <img src="https://latex.codecogs.com/svg.image?v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')"/>
 
 - ## 策略
-  - 状态值函数(<img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)"/>)：是从状态 s 开始，使用策略 π 得到的期望回报值
-  - 状态动作值函数(<img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)"/>)：是从状态 s 开始,执行动作 a，然后使用策略 π 得到的期望回报值
-  - <img src="https://latex.codecogs.com/gif.latex?v_{\pi }(s)=\sum \pi (a|s)q_{\pi }(s,a)"/>
-  - <img src="https://latex.codecogs.com/gif.latex?q_{\pi }(s,a)=R(s,a)+\gamma \sum_{s'\in S}^{ }P_{s{s}'}^{a}v_{\pi }(s)"/>
+  - 状态值函数(<img src="https://latex.codecogs.com/svg.image?v_{\pi }(s)"/>)：是从状态 s 开始，使用策略 π 得到的期望回报值
+  - 状态动作值函数(<img src="https://latex.codecogs.com/svg.image?q_{\pi }(s,a)"/>)：是从状态 s 开始,执行动作 a，然后使用策略 π 得到的期望回报值
+  - <img src="https://latex.codecogs.com/svg.image?v_{\pi }(s)=\sum \pi (a|s)q_{\pi }(s,a)"/>
+  - <img src="https://latex.codecogs.com/svg.image?q_{\pi }(s,a)=R(s,a)+\gamma \sum_{s'\in S}^{ }P_{s{s}'}^{a}v_{\pi }(s)"/>
 
 - ## 知识点
   - 贝尔曼最优方程不是线性的

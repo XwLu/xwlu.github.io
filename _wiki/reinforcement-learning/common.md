@@ -8,11 +8,11 @@ keywords: reinforcement-learning
 
 # 问题定义
 ```
-每个时刻<img src="https://latex.codecogs.com/gif.latex?t"/>
+每个时刻<img src="https://latex.codecogs.com/svg.image?t"/>
 - 智能体(Agent)
-  - 智能体执行动作<img src="https://latex.codecogs.com/gif.latex?A_{t}"/>，并在环境中得到观测<img src="https://latex.codecogs.com/gif.latex?O_{t}"/>和奖励<img src="https://latex.codecogs.com/gif.latex?R_{t}"/>
+  - 智能体执行动作<img src="https://latex.codecogs.com/svg.image?A_{t}"/>，并在环境中得到观测<img src="https://latex.codecogs.com/svg.image?O_{t}"/>和奖励<img src="https://latex.codecogs.com/svg.image?R_{t}"/>
 - 环境(Environment)
-  - 环境会对智能体的动作<img src="https://latex.codecogs.com/gif.latex?A_{t}"/>的做出反应,然后发送新的观测<img src="https://latex.codecogs.com/gif.latex?O_{t+1}"/>和奖励<img src="https://latex.codecogs.com/gif.latex?R_{t+1}"/>
+  - 环境会对智能体的动作<img src="https://latex.codecogs.com/svg.image?A_{t}"/>的做出反应,然后发送新的观测<img src="https://latex.codecogs.com/svg.image?O_{t+1}"/>和奖励<img src="https://latex.codecogs.com/svg.image?R_{t+1}"/>
 ```
 
 # 核心概念
@@ -29,13 +29,13 @@ keywords: reinforcement-learning
   - 可以没有观测,但是不能没有奖励
   - 奖励是强化学习区别其他机器学习的标志特征
   - 特点
-    - 奖励<img src="https://latex.codecogs.com/gif.latex?R_{t}"/>是一个**标量**反馈
-    - 它衡量了智能体在时间<img src="https://latex.codecogs.com/gif.latex?t"/>上做得有多好
+    - 奖励<img src="https://latex.codecogs.com/svg.image?R_{t}"/>是一个**标量**反馈
+    - 它衡量了智能体在时间<img src="https://latex.codecogs.com/svg.image?t"/>上做得有多好
     - 智能体的目标就是**最大化累计奖励**
 
 # 强化学习组成
 - ## 奖励
-> 指智能体在执行某个动作<img src="https://latex.codecogs.com/gif.latex?A_{t}"/>后得到的累计回报<img src="https://latex.codecogs.com/gif.latex?G_{t}"/>，<img src="https://latex.codecogs.com/gif.latex?G_{t}=w_{t}R_{t}+w_{t+1}R_{t+1}+w_{t+2}R_{t+2}+..."/>，<img src="https://latex.codecogs.com/gif.latex?w_{t+n}=\gamma ^{n}"/>。其中<img src="https://latex.codecogs.com/gif.latex?\gamma "/>越小表示我们越关注短期奖励，<img src="https://latex.codecogs.com/gif.latex?\gamma "/>越大表示我们越关注长期奖励
+> 指智能体在执行某个动作<img src="https://latex.codecogs.com/svg.image?A_{t}"/>后得到的累计回报<img src="https://latex.codecogs.com/svg.image?G_{t}"/>，<img src="https://latex.codecogs.com/svg.image?G_{t}=w_{t}R_{t}+w_{t+1}R_{t+1}+w_{t+2}R_{t+2}+..."/>，<img src="https://latex.codecogs.com/svg.image?w_{t+n}=\gamma ^{n}"/>。其中<img src="https://latex.codecogs.com/svg.image?\gamma "/>越小表示我们越关注短期奖励，<img src="https://latex.codecogs.com/svg.image?\gamma "/>越大表示我们越关注长期奖励
 
 - ## 状态
   - ### 环境状态
