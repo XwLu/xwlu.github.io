@@ -7,4 +7,5 @@ keywords: optimization
 ---
 
 # [数值优化基础](https://xwlu.github.io/wiki/optimization/basic/)
+# [无约束优化](https://xwlu.github.io/wiki/optimization/unconstrained_optimization/)
 
