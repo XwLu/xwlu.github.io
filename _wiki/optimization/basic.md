@@ -19,16 +19,14 @@ keywords: optimization
 
 # 优化问题
 - 一般形式
-  ```
-  min f(x)
-  s.t. g(x) <= 0, h(x) = 0
+  - <img src="https://latex.codecogs.com/svg.image?min(f(x))"/>
+  - <img src="https://latex.codecogs.com/svg.image?s.t.g(x)\leq&space;0,&space;h(x)=0"/>
 
-  ```
 - 问题有解的条件
   - <img src="https://latex.codecogs.com/gif.latex?f(x)"/> is lower bounded(有下界)
-    - 在x的取值范围内，<img src="https://latex.codecogs.com/gif.latex?f(x)\geq \alpha"/>
+    - 在<img src="https://latex.codecogs.com/svg.image?x"/>的取值范围内，<img src="https://latex.codecogs.com/gif.latex?f(x)\geq \alpha"/>
   - <img src="https://latex.codecogs.com/gif.latex?f(x)"/> is bounded level set
-    - 满足<img src="https://latex.codecogs.com/gif.latex?f(x)< \beta "/>的x的取值有上下界，<img src="https://latex.codecogs.com/gif.latex?f(x)=\frac{1}{x},(x>0)"/>就不满足，x到无穷大时<img src="https://latex.codecogs.com/gif.latex?f(x)"/>最小
+    - 满足<img src="https://latex.codecogs.com/gif.latex?f(x)< \beta "/>的<img src="https://latex.codecogs.com/svg.image?x"/>的取值有上下界，<img src="https://latex.codecogs.com/gif.latex?f(x)=\frac{1}{x},(x>0)"/>就不满足，<img src="https://latex.codecogs.com/svg.image?x"/>到无穷大时<img src="https://latex.codecogs.com/gif.latex?f(x)"/>最小
 
 - 机器人领域中常见的优化问题
   - SLAM: Nolinear Least Squares
@@ -82,7 +80,7 @@ keywords: optimization
   - ![lipschitz](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/basic/lipschitz.png?raw=true)
   - lipschitz常数和强凸都可以用来刻画可微凸函数的凸性
   - 从上图可以看到，强凸性描述了凸函数的下界；lipschitz常数描述了凸函数的上界(如果一个函数的lipschitz常数存在，就可以找到一个二次函数来bound住函数的上界)
--  条件数
+- 条件数
   - 计算方式
     - 对光滑函数而言，Hessian矩阵的SVD分解得到的最大奇异值除以最小奇异值就是该函数的条件数
     - 对可导但不一定存在Hessian的函数而言，条件数<img src="https://latex.codecogs.com/gif.latex?\kappa =\frac{M}{m}"/>，这里的M就是lipschitz常数，m就是强凸性的常数
