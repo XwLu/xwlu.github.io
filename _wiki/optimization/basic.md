@@ -114,3 +114,8 @@ keywords: optimization
   - <img src="https://latex.codecogs.com/svg.image?f(x)=\left \| b+A_{i}x_{i} \right \|"/>
     - 本质上是仿射变换
   - <img src="https://latex.codecogs.com/svg.image?f(x)=min_{y}g(x,y)"/>, <img src="https://latex.codecogs.com/svg.image?g(x,y)"/>是凸的
+
+# 评价数值优化算法的指标
+- 收敛速度（迭代次数）
+- 对不同函数的收敛稳定性
+- 每次迭代的计算量
