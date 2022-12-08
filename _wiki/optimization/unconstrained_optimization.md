@@ -78,3 +78,46 @@ keywords: optimization
     - 其中，<img src="https://latex.codecogs.com/svg.image?L"/>是个下三角矩阵，<img src="https://latex.codecogs.com/svg.image?B"/>是个对角线由<img src="https://latex.codecogs.com/svg.image?1\times&space;1"/>和<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>的矩阵块组成的块对角阵
     - <img src="https://latex.codecogs.com/svg.image?1\times&space;1"/>的标量一定是正数，<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>的矩阵块的特征值是一正一负，我们需要把每个<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>矩阵替换为和其最接近的<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>正定矩阵，最终得到新的<img src="https://latex.codecogs.com/svg.image?\tilde{B}"/>（正定），把<img src="https://latex.codecogs.com/svg.image?d"/>求解出来
       - 上面<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>矩阵的正定化就是把负的特征值都算出来，然后用一个<img src="https://latex.codecogs.com/svg.image?\epsilon&space;"/>去代替负特征值得到新的矩阵
+
+# Quasi Newton's Method
+### 拟牛顿法
+- 牛顿法的问题
+  - 牛顿法需要函数在任何点的Hessian可逆且正定，条件比较苛刻
+  - 牛顿法的计算量太大
+  - 当<img src="https://latex.codecogs.com/svg.image?x"/>距离函数的最优解还比较远的时候，用二次函数进行近似的效果不好，这时候用牛顿法不仅计算量大，收敛还很慢；当<img src="https://latex.codecogs.com/svg.image?x"/>距离函数的最优解比较近的时候，二次函数的近似会好一些，收敛会很快。
+  - Hessian拟合的函数的条件数可能会变得很大（poorly conditioned）。比如函数是一段直线和一段二次曲线拼接起来的，在直线部分计算Hessian去确定更新步长的话，会得到一个非常大的更新步长（曲率是0，对0取逆是无穷大）
+- 拟牛顿法需要满足的一些特质
+  - 原理和修正阻尼牛顿法一样，设计一个<img src="https://latex.codecogs.com/svg.image?M"/>去近似<img src="https://latex.codecogs.com/svg.image?H"/>
+  - 收敛速度应该在牛顿法和最速梯度下降法之间
+  - 不需要计算完整的Hessian矩阵（低计算量）
+  - 线性方程<img src="https://latex.codecogs.com/svg.image?Md=-\triangledown&space;f(x)"/>存在闭式解
+  - <img src="https://latex.codecogs.com/svg.image?M"/>不应该是一个稠密的阵，只需要在重要的的方向上对<img src="https://latex.codecogs.com/svg.image?H"/>做近似，尽可能稀疏
+  - <img src="https://latex.codecogs.com/svg.image?d"/>一定得让函数下降（和梯度方向的夹角小于90度），其实就是<img src="https://latex.codecogs.com/svg.image?M"/>必须正定
+  - <img src="https://latex.codecogs.com/svg.image?d"/>应该包含曲率信息（收敛要比梯度下降来的快），也就是满足<img src="https://latex.codecogs.com/svg.image?\Delta&space;g\approx&space;M^{k&plus;1}\Delta&space;x"/>
+- 拟牛顿法的核心思路
+  - 通过采样N对<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>和<img src="https://latex.codecogs.com/svg.image?\Delta&space;g"/>来估计<img src="https://latex.codecogs.com/svg.image?\Delta&space;M"/>
+  - 同时，考虑到最终是要求<img src="https://latex.codecogs.com/svg.image?M^{-1}"/>，干脆直接估计<img src="https://latex.codecogs.com/svg.image?B=M^{-1}"/>，更新方向<img src="https://latex.codecogs.com/svg.image?\Delta&space;x=B\Delta&space;g&space;"/>
+- 凸且光滑函数的BFGS方法
+  - 假设我们有了很多的<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>和<img src="https://latex.codecogs.com/svg.image?\Delta&space;g"/>，怎么估计B呢？还是用优化迭代的思路：
+    - 初始化<img src="https://latex.codecogs.com/svg.image?B^{0}"/>为单位阵
+    - 迭代求解最优的<img src="https://latex.codecogs.com/svg.image?B"/>，迭代的思路如下：
+      - 我们希望迭代前后B的差距尽可能小：<img src="https://latex.codecogs.com/svg.image?min_{B^{k+1}}\left\|&space;B^{k+1}-B^{k}&space;\right\|^{2}"/>
+      - 其次，<img src="https://latex.codecogs.com/svg.image?B"/>需要满足一些约束：
+        - <img src="https://latex.codecogs.com/svg.image?B=B^{T}"/>，这是因为Hessian是对称阵，所以Hessian的逆也应该对称
+        - <img src="https://latex.codecogs.com/svg.image?\Delta&space;x=B\Delta&space;g&space;"/>
+      - 注意，单纯用差的二范数描述<img src="https://latex.codecogs.com/svg.image?B^{k}"/>和<img src="https://latex.codecogs.com/svg.image?B^{k+1}"/>的变化并不好，比如<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;1&space;\\&space;1&space;&&space;100&space;\\\end{bmatrix}"/>和<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;0.5&space;\\&space;0.5&space;&&space;100&space;\\\end{bmatrix}"/>的差值的二范数很小，但对于右上和左下角的元素来说变化和其自身的大小相比是巨大的，因此需要进行归一化
+      - 归一化后，优化目标变成：<img src="https://latex.codecogs.com/svg.image?min_{B^{k&plus;1}}\left\|&space;H^{\frac{1}{2}}(B^{k&plus;1}-B^{k})H^{\frac{1}{2}}&space;\right\|^{2}"/>，<img src="https://latex.codecogs.com/svg.image?B=H"/>为真实的Hessian矩阵，<img src="https://latex.codecogs.com/svg.image?H=\int_{0}^{1}\triangledown^{2}f\left[(1-\tau)x^{k}&plus;\tau&space;x^{k&plus;1}\right]d\tau"/>
+      - 我们本来就是套估计H，现在这里还要用到H，看起来是个鸡生蛋，蛋生鸡的问题，但实际上这个问题是有解析解的，与<img src="https://latex.codecogs.com/svg.image?H"/>无关。四个优化领域的大佬提出了BFGS方法，最终得到的更新公式如下：
+      - ![BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs.png?raw=true)
+      - 注意：当<img src="https://latex.codecogs.com/svg.image?\Delta&space;g^{T}\Delta&space;x>0"/>时，我们可以保证BFGS更新的结果是正定的，从而保证<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>的方向是函数值下降的方向，对凸函数而言，这是绝对成立的（可以回顾强凸性的定义）；非凸函数后面讨论
+  - 适用于凸且光滑函数的BFGS方法的流程
+    - ![BFGS for convex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs_for_convex.png?raw=true)
+    - <img src="https://latex.codecogs.com/svg.image?g"/>是梯度
+    - <img src="https://latex.codecogs.com/svg.image?d"/>是更新方向
+    - <img src="https://latex.codecogs.com/svg.image?t"/>是line search方法确定的步长
+  - 缺点
+    - 严格梯度单调性（严格凸函数）的条件过于苛刻，一般函数很难满足
+    - 曲率的计算在optimum附近有效，在远处反而是浪费算力
+    - 每次迭代的计算复杂度是优化变量的维度的平方，还是不够轻量
+    - 在非凸函数上是否能够保证收敛仍未知
+    - 在非光滑函数上能否正常使用仍未知
