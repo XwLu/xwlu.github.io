@@ -57,8 +57,14 @@ keywords: optimization
   - 很多时候Hessian矩阵是半正定或者不定的，会导更新方向不是梯度的反方向，函数值增大
   - ![Hessian indefinite](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/hessian_indef.png?raw=true)
 
-# Modified Damped Newton's Method
-### 修正阻尼牛顿法
+# Damped Newton's Method
+### 阻尼牛顿法
+- 当初始点距离最优解较远时，Hessian不一定正定，迭代不一定收敛，因此引入步长因子<img src="https://latex.codecogs.com/svg.image?t"/>
+  - <img src="https://latex.codecogs.com/svg.image?d=-H^{-1}g/">
+  - <img src="https://latex.codecogs.com/svg.image?x_{k&plus;1}=x_{k}&plus;td_{k}"/>
+
+# Modified Newton's Method
+### 修正牛顿法
 - 背景
   - 提高牛顿方法在一般函数上的鲁棒性
   - 对牛顿法的优化思路
@@ -78,6 +84,8 @@ keywords: optimization
     - 其中，<img src="https://latex.codecogs.com/svg.image?L"/>是个下三角矩阵，<img src="https://latex.codecogs.com/svg.image?B"/>是个对角线由<img src="https://latex.codecogs.com/svg.image?1\times&space;1"/>和<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>的矩阵块组成的块对角阵
     - <img src="https://latex.codecogs.com/svg.image?1\times&space;1"/>的标量一定是正数，<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>的矩阵块的特征值是一正一负，我们需要把每个<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>矩阵替换为和其最接近的<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>正定矩阵，最终得到新的<img src="https://latex.codecogs.com/svg.image?\tilde{B}"/>（正定），把<img src="https://latex.codecogs.com/svg.image?d"/>求解出来
       - 上面<img src="https://latex.codecogs.com/svg.image?2\times&space;2"/>矩阵的正定化就是把负的特征值都算出来，然后用一个<img src="https://latex.codecogs.com/svg.image?\epsilon&space;"/>去代替负特征值得到新的矩阵
+- 缺点
+  - 仅仅保证了Hessian的正定，还是要把Hessian求出来，计算量大
 
 # Quasi Newton's Method
 ### 拟牛顿法
