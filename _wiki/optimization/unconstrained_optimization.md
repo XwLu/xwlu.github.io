@@ -105,27 +105,59 @@ keywords: optimization
 - 拟牛顿法的核心思路
   - 通过采样N对<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>和<img src="https://latex.codecogs.com/svg.image?\Delta&space;g"/>来估计<img src="https://latex.codecogs.com/svg.image?\Delta&space;M"/>
   - 同时，考虑到最终是要求<img src="https://latex.codecogs.com/svg.image?M^{-1}"/>，干脆直接估计<img src="https://latex.codecogs.com/svg.image?B=M^{-1}"/>，更新方向<img src="https://latex.codecogs.com/svg.image?\Delta&space;x=B\Delta&space;g&space;"/>
-- 凸且光滑函数的BFGS方法
-  - 假设我们有了很多的<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>和<img src="https://latex.codecogs.com/svg.image?\Delta&space;g"/>，怎么估计B呢？还是用优化迭代的思路：
-    - 初始化<img src="https://latex.codecogs.com/svg.image?B^{0}"/>为单位阵
-    - 迭代求解最优的<img src="https://latex.codecogs.com/svg.image?B"/>，迭代的思路如下：
-      - 我们希望迭代前后B的差距尽可能小：<img src="https://latex.codecogs.com/svg.image?min_{B^{k+1}}\left\|&space;B^{k+1}-B^{k}&space;\right\|^{2}"/>
-      - 其次，<img src="https://latex.codecogs.com/svg.image?B"/>需要满足一些约束：
-        - <img src="https://latex.codecogs.com/svg.image?B=B^{T}"/>，这是因为Hessian是对称阵，所以Hessian的逆也应该对称
-        - <img src="https://latex.codecogs.com/svg.image?\Delta&space;x=B\Delta&space;g&space;"/>
-      - 注意，单纯用差的二范数描述<img src="https://latex.codecogs.com/svg.image?B^{k}"/>和<img src="https://latex.codecogs.com/svg.image?B^{k+1}"/>的变化并不好，比如<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;1&space;\\&space;1&space;&&space;100&space;\\\end{bmatrix}"/>和<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;0.5&space;\\&space;0.5&space;&&space;100&space;\\\end{bmatrix}"/>的差值的二范数很小，但对于右上和左下角的元素来说变化和其自身的大小相比是巨大的，因此需要进行归一化
-      - 归一化后，优化目标变成：<img src="https://latex.codecogs.com/svg.image?min_{B^{k&plus;1}}\left\|&space;H^{\frac{1}{2}}(B^{k&plus;1}-B^{k})H^{\frac{1}{2}}&space;\right\|^{2}"/>，<img src="https://latex.codecogs.com/svg.image?B=H"/>为真实的Hessian矩阵，<img src="https://latex.codecogs.com/svg.image?H=\int_{0}^{1}\triangledown^{2}f\left[(1-\tau)x^{k}&plus;\tau&space;x^{k&plus;1}\right]d\tau"/>
-      - 我们本来就是套估计H，现在这里还要用到H，看起来是个鸡生蛋，蛋生鸡的问题，但实际上这个问题是有解析解的，与<img src="https://latex.codecogs.com/svg.image?H"/>无关。四个优化领域的大佬提出了BFGS方法，最终得到的更新公式如下：
-      - ![BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs.png?raw=true)
-      - 注意：当<img src="https://latex.codecogs.com/svg.image?\Delta&space;g^{T}\Delta&space;x>0"/>时，我们可以保证BFGS更新的结果是正定的，从而保证<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>的方向是函数值下降的方向，对凸函数而言，这是绝对成立的（可以回顾强凸性的定义）；非凸函数后面讨论
-  - 适用于凸且光滑函数的BFGS方法的流程
-    - ![BFGS for convex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs_for_convex.png?raw=true)
-    - <img src="https://latex.codecogs.com/svg.image?g"/>是梯度
-    - <img src="https://latex.codecogs.com/svg.image?d"/>是更新方向
-    - <img src="https://latex.codecogs.com/svg.image?t"/>是line search方法确定的步长
-  - 缺点
-    - 严格梯度单调性（严格凸函数）的条件过于苛刻，一般函数很难满足
-    - 曲率的计算在optimum附近有效，在远处反而是浪费算力
-    - 每次迭代的计算复杂度是优化变量的维度的平方，还是不够轻量
-    - 在非凸函数上是否能够保证收敛仍未知
-    - 在非光滑函数上能否正常使用仍未知
+  - 估计<img src="https://latex.codecogs.com/svg.image?B"/>的时候避免计算Hessian矩阵
+
+#### 凸且光滑函数的BFGS方法
+- 假设我们有了很多的<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>和<img src="https://latex.codecogs.com/svg.image?\Delta&space;g"/>，怎么估计B呢？还是用优化迭代的思路：
+  - 初始化<img src="https://latex.codecogs.com/svg.image?B^{0}"/>为单位阵
+  - 迭代求解最优的<img src="https://latex.codecogs.com/svg.image?B"/>，迭代的思路如下：
+    - 我们希望迭代前后B的差距尽可能小：<img src="https://latex.codecogs.com/svg.image?min_{B^{k+1}}\left\|&space;B^{k+1}-B^{k}&space;\right\|^{2}"/>
+    - 其次，<img src="https://latex.codecogs.com/svg.image?B"/>需要满足一些约束：
+      - <img src="https://latex.codecogs.com/svg.image?B=B^{T}"/>，这是因为Hessian是对称阵，所以Hessian的逆也应该对称
+      - <img src="https://latex.codecogs.com/svg.image?\Delta&space;x=B\Delta&space;g&space;"/>
+    - 注意，单纯用差的二范数描述<img src="https://latex.codecogs.com/svg.image?B^{k}"/>和<img src="https://latex.codecogs.com/svg.image?B^{k+1}"/>的变化并不好，比如<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;1&space;\\&space;1&space;&&space;100&space;\\\end{bmatrix}"/>和<img src="https://latex.codecogs.com/svg.image?\begin{bmatrix}&space;100&space;&&space;0.5&space;\\&space;0.5&space;&&space;100&space;\\\end{bmatrix}"/>的差值的二范数很小，但对于右上和左下角的元素来说变化和其自身的大小相比是巨大的，因此需要进行归一化
+    - 归一化后，优化目标变成：<img src="https://latex.codecogs.com/svg.image?min_{B^{k&plus;1}}\left\|&space;H^{\frac{1}{2}}(B^{k&plus;1}-B^{k})H^{\frac{1}{2}}&space;\right\|^{2}"/>，<img src="https://latex.codecogs.com/svg.image?B=H"/>为真实的Hessian矩阵，<img src="https://latex.codecogs.com/svg.image?H=\int_{0}^{1}\triangledown^{2}f\left[(1-\tau)x^{k}&plus;\tau&space;x^{k&plus;1}\right]d\tau"/>
+    - 我们本来就是套估计H，现在这里还要用到H，看起来是个鸡生蛋，蛋生鸡的问题，但实际上这个问题是有解析解的，与<img src="https://latex.codecogs.com/svg.image?H"/>无关。四个优化领域的大佬提出了BFGS方法，最终得到的更新公式如下：
+    - ![BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs.png?raw=true)
+    - 注意：当<img src="https://latex.codecogs.com/svg.image?\Delta&space;g^{T}\Delta&space;x>0"/>时，我们可以保证BFGS更新的结果是正定的，从而保证<img src="https://latex.codecogs.com/svg.image?\Delta&space;x"/>的方向是函数值下降的方向，对凸函数而言，这是绝对成立的（可以回顾强凸性的定义）；非凸函数后面讨论
+- 适用于凸且光滑函数的BFGS方法的流程
+  - ![BFGS for convex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs_for_convex.png?raw=true)
+  - <img src="https://latex.codecogs.com/svg.image?g"/>是梯度
+  - <img src="https://latex.codecogs.com/svg.image?d"/>是更新方向
+  - <img src="https://latex.codecogs.com/svg.image?t"/>是line search方法确定的步长
+- 缺点与问题
+  - 严格梯度单调性（严格凸函数）的条件过于苛刻，一般函数很难满足
+  - 曲率的计算在optimum附近有效，在远处反而是浪费算力
+  - 每次迭代的计算复杂度是优化变量的维度的平方，还是不够轻量
+  - 在非凸函数上是否能够保证收敛仍未知
+  - 在非光滑函数上能否正常使用仍未知
+
+#### 非凸但光滑函数的BFGS方法
+- 在非凸函数上如何保证<img src="https://latex.codecogs.com/svg.image?\Delta&space;g^{T}\Delta&space;x>0"/>，从而保证更新方向是函数值的下降方向呢？答案是线搜索的时候满足Wolfe conditions
+  - weak wolfe conditions
+    - ![weak wolfe conditions](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/weak_wolfe.png?raw=true)
+    - sufficient decrease condition保证了函数值的下降
+    - curvature condition保证了这一步跨的足够大，从下山跨到上山
+  - strong wolfe conditions
+    - ![strong wolfe conditions](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/strong_wolfe.png?raw=true)
+    - strong和weak的区别在于对curvature condition加了个绝对值约束，不让这一步跨的太过头（跑到对面的山坡上），可以抑制震荡
+- 但Wolfe conditions只能保证方向是下降方向，如何保证BFGS的收敛性呢？答案是cautious update(Li and Fukushima 2001) with mild conditions
+  - ![cautious update](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/cautious_update.png?raw=true)
+  - 只要函数满足如下两个条件，cautious update都可以保证BFGS的收敛性
+    - 函数有bounded sub-level sets
+    - 函数有lipschitz continuous grad
+- 适用于非凸但光滑函数的BFGS方法的流程
+  - ![BFGS for nonconvex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs_for_nonconvex.png?raw=true)
+- 与牛顿方法的收敛速度对比
+  - ![BFGS vs Newton](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/bfgs_vs_newton.png?raw=true)
+  - 速度上慢了一点点，但计算量少很多，综合看更具优势
+
+#### Limited-memory BFGS(L-BFGS)方法
+- 由于<img src="https://latex.codecogs.com/svg.image?B^{k&plus;1}"/>是由<img src="https://latex.codecogs.com/svg.image?B^{k}"/>迭代计算得到的。所以<img src="https://latex.codecogs.com/svg.image?B^{k}"/>隐含了<img src="https://latex.codecogs.com/svg.image?B^{k-100}"/>的信息。但直觉上来说，<img src="https://latex.codecogs.com/svg.image?x^{k}"/>和<img src="https://latex.codecogs.com/svg.image?x^{k-100}"/>已经差的很远了，<img src="https://latex.codecogs.com/svg.image?x^{k-100}"/>处的曲率信息对<img src="https://latex.codecogs.com/svg.image?x^{k}"/>处的曲率信息的推导没有啥有效价值了，因此我们可以设置一个memory buffer，让<img src="https://latex.codecogs.com/svg.image?B^{k-m}"/>到<img src="https://latex.codecogs.com/svg.image?B^{k-1}"/>来决定<img src="https://latex.codecogs.com/svg.image?B^{k}"/>的取值，从而降低计算量。
+- L-BFGS方法的流程
+  - 就是把上面的Cautious-BFGS过程改成下面的<img src="https://latex.codecogs.com/svg.image?B^{k}"/>更新流程
+  - ![L-BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/limit_memory_update.png?raw=true)
+  - 上图左边方法的复杂度是<img src="https://latex.codecogs.com/svg.image?O(mn^{2})"/>，因为每个window size内的信息都被重复遍历并计算了。实际上每个循环中，我们只需要将窗口中的头元素去掉，末尾的新元素算进来即可，因此改成右边的计算过程后可以将复杂度简化到<img src="https://latex.codecogs.com/svg.image?O(mn)"/>，具体推导可以看Liu and Nocedal 1989.
+- 与Newton和BFGS的对比
+  - ![L-BFGS vs BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/l_bfgs_vs_bfgs.png?raw=true)
+  - 由于牺牲了部分历史信息，收敛速度相比BFGS更慢一些，但计算量从<img src="https://latex.codecogs.com/svg.image?O(n^{2})"/>降低到<img src="https://latex.codecogs.com/svg.image?O(mn)"/>，当<img src="https://latex.codecogs.com/svg.image?n"/>很大的时候，效率提升就非常大了，基本上是光滑非凸函数优化的第一选择
