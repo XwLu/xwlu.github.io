@@ -6,6 +6,9 @@ description: unconstrained optimization
 keywords: optimization 
 ---
 
+# 无约束优化方法一览
+- ![unconstrained optimization](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/unconstrained_optimization.png?raw=true)
+
 # Steepest Gradient Descent
 ### 最速下降法
 - 沿着梯度（grad或least-norm sub-grad）的负方向更新
@@ -161,3 +164,31 @@ keywords: optimization
 - 与Newton和BFGS的对比
   - ![L-BFGS vs BFGS](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/l_bfgs_vs_bfgs.png?raw=true)
   - 由于牺牲了部分历史信息，收敛速度相比BFGS更慢一些，但计算量从<img src="https://latex.codecogs.com/svg.image?O(n^{2})"/>降低到<img src="https://latex.codecogs.com/svg.image?O(mn)"/>，当<img src="https://latex.codecogs.com/svg.image?n"/>很大的时候，效率提升就非常大了，基本上是光滑非凸函数优化的第一选择
+
+#### 非凸且非光滑函数的L-BFGS方法
+- wolfe conditions方法选择
+  - 假设我们把strong wolfe conditions方法直接应用在非凸且非光滑函数上，看看会发生什么
+    - ![strong wolfe on nonconvex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/strong_wolfe_on_nonconvex.png?raw=true)
+    - 回顾一下，strong wolfe conditions通过绝对值约束，将更新点的梯度压在0附近，但上图右侧的非光滑函数没有任何点的梯度在0附近，导致无法找到满足strong wolfe conditions的点
+  - 假设我们把weak wolfe conditions方法直接应用在非凸且非光滑函数上，看看效果
+    - ![weak wolfe on nonconvex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/weak_wolfe_on_nonconvex.png?raw=true)
+    -  weak wolfe conditions方法可以保证能找到满足条件的更新点
+  - 结论：使用weak wolfe conditions方法处理nonsmooth函数
+- 如何确定一个步长使得weak wolfe conditions被满足呢？
+  - 对smooth函数，用拟合法确定步长
+    - 先初始化一个步长<img src="https://latex.codecogs.com/svg.image?\alpha"/>
+    - 如果该步长满足weak wolfe conditions，直接返回
+    - 如果不满足weak wolfe conditions，根据<img src="https://latex.codecogs.com/svg.image?\left&space;(&space;x,{f}\&space;'(x)&space;\right&space;)"/>和<img src="https://latex.codecogs.com/svg.image?\left&space;(&space;x&plus;\alpha&space;d,{f}\&space;'(x&plus;\alpha&space;d)&space;\right&space;)"/>两个点去拟合二次函数，取二次函数的极值点作为新的步长，不断迭代，直到满足weak wolfe conditions
+    - 但是当函数nonsmooth（或者条件数很大）的时候，这种二次函数拟合的效果很差，导致求出来的极值点也很不理想，就不再适用了
+  - 对nonsmooth函数，用Lewis & Overton line search方法
+    - ![lewis overton 1](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/lewis_overton_1.png?raw=true)
+    - ![lewis overton 2](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/lewis_overton_2.png?raw=true)
+- 注意点
+  - <img src="https://latex.codecogs.com/svg.image?x_{0}"/>一定要取在可导的点，不能一上来就落在nonsmooth处
+- 非凸且非光滑函数的L-BFGS方法流程
+  - ![L-BFGS for nonsmooth nonconvex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/lbfgs_nonsmooth_nonconvex.png?raw=true)
+
+# Newton Conjugate Gradient Method
+### 共轭梯度法
+- 背景
+  - 本质上是一种求<img src="https://latex.codecogs.com/svg.image?Ax=b"/>的方法，它厉害在不需要知道<img src="https://latex.codecogs.com/svg.image?A"/>的具体值，只需要多调用几次<img src="https://latex.codecogs.com/svg.image?Ay"/>点积接口就可以把<img src="https://latex.codecogs.com/svg.image?x"/>求出来
