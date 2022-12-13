@@ -233,5 +233,3 @@ keywords: optimization
   - LCG特点
     - 很多时候需要在求LCG之前把<img src="https://latex.codecogs.com/svg.image?A"/> normalize一下，可以通过L-BFGS(memory size=8)去近似估计<img src="https://latex.codecogs.com/svg.image?B"/>（即Hessian的逆），令<img src="https://latex.codecogs.com/svg.image?\tilde{A}=B^{\frac{1}{2}}AB^{\frac{1}{2}}"/>，对<img src="https://latex.codecogs.com/svg.image?\tilde{A}x=b"/>进行lcg求解，最后将<img src="https://latex.codecogs.com/svg.image?x"/>做线性变换恢复到真实值。<img src="https://latex.codecogs.com/svg.image?\tilde{A}"/>的条件数会比<img src="https://latex.codecogs.com/svg.image?A"/>更低，CG过程会收敛的更快。下图是一个例子，A的维度是<img src="https://latex.codecogs.com/svg.image?555\times&space;555"/>，条件数是<img src="https://latex.codecogs.com/svg.image?10^{10}"/>，Preconditioned CG收敛速度比其他方法快很多
       - ![cg with preconditioner](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/unconstrained_optimization/cg_with_preconditioner.png?raw=true)
-
-  - hessian-vec的计算复杂度很低，但我们要算的其实是inv-hessian-vec，<img src="https://latex.codecogs.com/svg.image?H^{-1}g"/>
