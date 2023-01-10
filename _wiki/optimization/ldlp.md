@@ -8,11 +8,11 @@ keywords: optimization
 
 # Low-Dimensional Linear Program
 - 问题形式
-  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_qp.png?raw=true)
+  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_lp.png?raw=true)
   - 其中的<img src="https://latex.codecogs.com/svg.image?d"/>特别的小，但c<img src="https://latex.codecogs.com/svg.image?n"/>可以很大
 - 几何上的理解
-  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_qp_geometry.png?raw=true)
-  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_qp_geometry_2.png?raw=true)
+  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_lp_geometry.png?raw=true)
+  - ![classification](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/low_dim_lp_geometry_2.png?raw=true)
 - 相关方法对比
   - the simplex algorithm
     - 能得到精确解，但最坏复杂度是指数时间的
