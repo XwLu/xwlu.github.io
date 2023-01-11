@@ -20,3 +20,5 @@ keywords: optimization
 # [约束优化](https://xwlu.github.io/wiki/optimization/constrained_optimization/)
 - ## [Low-Dimensional Linear Program](https://xwlu.github.io/wiki/optimization/ldlp/)
 - ## [Low-Dimensional Quadratic Program](https://xwlu.github.io/wiki/optimization/ldqp/)
+- ## Constrained Optimization via Sequential Unconstrained Optimization
+  - ### [Penalty Methods](https://xwlu.github.io/wiki/optimization/penalty_methods/)
