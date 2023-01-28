@@ -22,3 +22,4 @@ keywords: optimization
 - ## [Low-Dimensional Quadratic Program](https://xwlu.github.io/wiki/optimization/ldqp/)
 - ## Constrained Optimization via Sequential Unconstrained Optimization
   - ### [Penalty Methods](https://xwlu.github.io/wiki/optimization/penalty_methods/)
+  - ### [Barrier Methods](https://xwlu.github.io/wiki/optimization/barrier_methods/)
