@@ -23,3 +23,4 @@ keywords: optimization
 - ## Constrained Optimization via Sequential Unconstrained Optimization
   - ### [Penalty Methods](https://xwlu.github.io/wiki/optimization/penalty_methods/)
   - ### [Barrier Methods](https://xwlu.github.io/wiki/optimization/barrier_methods/)
+  - ### [Lagrangian Relaxation](https://xwlu.github.io/wiki/optimization/lagrangian_relaxation/)
