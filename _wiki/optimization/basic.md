@@ -75,6 +75,7 @@ keywords: optimization
 - 如果函数的Hessian严格正定，最小特征值大于0，则为强凸函数，收敛速度快
   - ![strong convex](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/basic/strong_convex.png?raw=true)
   - 可以看到，强凸函数比凸函数在定义上更加严格，比线性近似的上方还多了一个min curvature项(m>0)
+  - 强凸 > 严格凸 > 凸
   - 可以通过将非强凸函数构造为强凸函数加速优化速率
 - lipschitz常数：任意两个点的梯度差值不会比两个点的距离的常数倍来的大
   - ![lipschitz](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/basic/lipschitz.png?raw=true)

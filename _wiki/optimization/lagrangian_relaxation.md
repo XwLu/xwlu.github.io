@@ -30,4 +30,4 @@ keywords: optimization
   - (致命)该方法要求<img src="https://latex.codecogs.com/svg.image?f(x)"/>是凸的
   - (致命)该方法要求<img src="https://latex.codecogs.com/svg.image?min_{x}\L(x,\lambda):=f(x)+\left<\lambda,Ax-b\right>"/>关于原问题的优化变量<img src="https://latex.codecogs.com/svg.image?x"/>是严格凸的
   - 梯度上升的步长需要调参
-  - 收敛速度不一定快
+  - 收敛速度不一定快，因为严格凸不保证函数的光滑性，如果函数不光滑，在某些点就只存在次梯度，根据前面的介绍，沿着次梯度的反（正）方向走不保证函数值下降（上升）。
