@@ -24,3 +24,6 @@ keywords: optimization
   - ### [Penalty Methods](https://xwlu.github.io/wiki/optimization/penalty_methods/)
   - ### [Barrier Methods](https://xwlu.github.io/wiki/optimization/barrier_methods/)
   - ### [Lagrangian Relaxation](https://xwlu.github.io/wiki/optimization/lagrangian_relaxation/)
+- ## Generally Constrained Optimization
+  - ### [Karush-Kuhn-Tucker(KKT) Conditions](https://xwlu.github.io/wiki/optimization/kkt/)
+  - ### [PHR Augmented Lagrangian Method](https://xwlu.github.io/wiki/optimization/phr_alm/)
