@@ -47,3 +47,22 @@ keywords: optimization
   - <img src="https://latex.codecogs.com/svg.image?min_{x\in&space;R^{n},s\in&space;R^{m}}f(x)"/>
   - <img src="https://latex.codecogs.com/svg.image?s.t.g(x)+\left[s\right]^{2}\leq0"/>，其中<img src="https://latex.codecogs.com/svg.image?\left[\cdot\right]^{2}"/>表示element-wise squaring
   - ![phr alm inequal](https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/optimization/constrained_optimization/phr_alm_inequal.png?raw=true)
+
+# 等式约束+不等式约束
+- 问题形式
+  - <img src="https://latex.codecogs.com/svg.image?min_{x\in&space;R^{n}}f(x)"/>
+  - <img src="https://latex.codecogs.com/svg.image?s.t.g(x)\leq0,h(x)=0"/>
+- PHR_Augmented Lagrangian
+  - <img src="https://latex.codecogs.com/svg.image?\pounds_{\rho}(x,\lambda,\mu):=f(x)+\frac{\rho}{2}\left\{\left\|h(x)+\frac{\lambda}{\rho}\right\|^{2}+\left\|max\left[g(x)+\frac{\mu}{\rho},0\right%20])\right\|\right\}-\frac{1}{2\rho}\left\{\left\|\lambda\right\|^{2}%20+%20\left\|\mu\right\|^{2}\right\}"/>
+    - 丄式的最后一项一般都省略掉
+    - <img src="https://latex.codecogs.com/svg.image?\rho>0,\mu\geq0"/>
+- 迭代步骤
+  - <img src="https://latex.codecogs.com/svg.image?\left\{\begin{matrix}x\leftarrow%20argmin_{x}\pounds_{\rho}(x,\lambda,\mu)\\\lambda\leftarrow\lambda+\rho%20h(x)\\\mu\leftarrow%20max\left[\mu+\rho%20g(x),0\right%20]\\\rho\leftarrow%20min\left[(1+\lambda)\rho,\beta\right]\end{matrix}\right."/>
+- 参数初始化
+  - <img src="https://latex.codecogs.com/svg.image?\rho=1,\lambda=\mu=0,\gamma=1,\beta=10^{3}"/>
+- 内层循环退出条件（求<img src="https://latex.codecogs.com/svg.image?argmin_{x}"/>）
+  - <img src="https://latex.codecogs.com/svg.image?\left\|\triangledown_{x}\pounds_{\rho}(x,\lambda,\mu)\right\|_{\infty}%3C\xi^{k}min\left[1,max\left[\left\|h(x)\right\|_{\infty},\left\|max\left[g(x),-\frac{\mu}{\rho}\right]\right\|_{\infty}\right]\right]"/>
+  - <img src="https://latex.codecogs.com/svg.image?\xi"/>从一个正数逐渐收敛到0
+- 外层迭代退出条件
+  - <img src="https://latex.codecogs.com/svg.image?max\left[\left\|h(x)\right\|_{\infty},\left\|max\left[g(x),-\frac{\mu}{\rho}\right]\right\|_{\infty}\right]%3C\epsilon_{cons}"/>
+  - <img src="https://latex.codecogs.com/svg.image?\left\|\triangledown_{x}\pounds_{\rho}(x,\lambda,\mu)\right\|_{\infty}%3C\epsilon_{prec}"/>
