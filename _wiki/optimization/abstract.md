@@ -28,4 +28,4 @@ keywords: optimization
   - ### [Karush-Kuhn-Tucker(KKT) Conditions](https://xwlu.github.io/wiki/optimization/kkt/)
   - ### [PHR Augmented Lagrangian Method](https://xwlu.github.io/wiki/optimization/phr_alm/)
 
-# [对称锥规划](https://xwlu.github.io/wiki/optimization/cone_programming/)
+# [对称锥规划](https://xwlu.github.io/wiki/optimization/conic_programming/)
