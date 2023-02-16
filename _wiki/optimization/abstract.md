@@ -6,18 +6,18 @@ description: wiki on optimization
 keywords: optimization
 ---
 
-# [数值优化基础](https://xwlu.github.io/wiki/optimization/basic/)
+# [Basic Knowledge](https://xwlu.github.io/wiki/optimization/basic/)
 
 ---
 
-# [无约束优化](https://xwlu.github.io/wiki/optimization/unconstrained_optimization/)
+# [Unconstrained Optimization](https://xwlu.github.io/wiki/optimization/unconstrained_optimization/)
 - ## [SGD](https://xwlu.github.io/wiki/optimization/sgd/)
 - ## [Newton Methods](https://xwlu.github.io/wiki/optimization/newton/)
 - ## [Newton Conjugate Gradient Method](https://xwlu.github.io/wiki/optimization/newton_cg/)
 
 ---
 
-# [约束优化](https://xwlu.github.io/wiki/optimization/constrained_optimization/)
+# [Constrained Optimization](https://xwlu.github.io/wiki/optimization/constrained_optimization/)
 - ## [Low-Dimensional Linear Program](https://xwlu.github.io/wiki/optimization/ldlp/)
 - ## [Low-Dimensional Quadratic Program](https://xwlu.github.io/wiki/optimization/ldqp/)
 - ## Constrained Optimization via Sequential Unconstrained Optimization
@@ -30,5 +30,9 @@ keywords: optimization
 
 ---
 
-# [对称锥规划](https://xwlu.github.io/wiki/optimization/conic_programming/)
- - ## [称增广的拉格朗日](https://xwlu.github.io/wiki/optimization/conic_augmented_lagrangian/)
+# [Conic Programming](https://xwlu.github.io/wiki/optimization/conic_programming/)
+ - ## [Conic Augmented Lagrangian](https://xwlu.github.io/wiki/optimization/conic_augmented_lagrangian/)
+
+ ---
+ # 优化问题构建和求解技巧
+ - ## [Smoothing Techniques](https://xwlu.github.io/wiki/optimization/smoothing/)
