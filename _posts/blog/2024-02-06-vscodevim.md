@@ -65,13 +65,42 @@ keywords: vscode vim
         "before": ["<C-l>"],
         "after": ["$"]
       },
+      // 部分格式化
+      {
+        "before": ["f", "f"],
+        "commands": ["editor.action.formatSelection"]
+      },
     ],
     // 插入模式下的非递归按键绑定
     "vim.insertModeKeyBindings": [],
     // 命令模式下的非递归按键绑定
     "vim.commandLineModeKeyBindingsNonRecursive": [],
     // 可视模式下的非递归按键绑定
-    "vim.operatorPendingModeKeyBindings": [],
+    "vim.visualModeKeyBindings": [
+      // 上下跳5行
+      {
+        "before": ["<C-j>"],
+        "after": ["5", "j"]
+      },
+      {
+        "before": ["<C-k>"],
+        "after": ["5", "k"]
+      },
+      // 行首行尾
+      {
+        "before": ["<C-h>"],
+        "after": ["^"]
+      },
+      {
+        "before": ["<C-l>"],
+        "after": ["$"]
+      },
+      // 部分格式化
+      {
+        "before": ["f", "f"],
+        "commands": ["editor.action.formatSelection"]
+      },
+    ],
     // 下面定义的按键将交由vscode进行处理，而不是vscode-vim插件
     "vim.handleKeys": {
       "<C-a>": false,

@@ -1,7 +1,7 @@
 ---
 layout: page
 title: About
-description: 用代码记录生活
+description: 日拱一卒
 keywords: Drake Lu, 陆一帆
 comments: true
 menu: 关于
