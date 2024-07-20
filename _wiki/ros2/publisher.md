@@ -1,6 +1,6 @@
 ---
 layout: wiki
-title: ROS2 Pulisher
+title: ROS2 Publisher
 categories: [ROS2]
 description: ROS2 Publisher
 keywords: ros2, publishe
