@@ -2,6 +2,9 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://xwlu.github.io/post/robotics/e2e/game_former/</loc>
+    <lastmod>2025-04-02T11:08:42+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/gen_ad/</loc>
     <lastmod>2025-04-02T11:08:42+08:00</lastmod>
   </url><url>
@@ -20,7 +23,7 @@
     <loc>https://xwlu.github.io/readme/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
-    <loc>https://xwlu.github.io/post/abstract/</loc>
+    <loc>https://xwlu.github.io/post/robotics/abstract/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/categories/</loc>

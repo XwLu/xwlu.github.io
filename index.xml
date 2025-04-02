@@ -9,6 +9,13 @@
     <lastBuildDate>Wed, 02 Apr 2025 11:08:42 +0800</lastBuildDate>
     <atom:link href="https://xwlu.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>GameFormer</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/game_former/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/game_former/</guid>
+      <description>Paper Reading Notes of GameFormer</description>
+    </item>
+    <item>
       <title>GenAD</title>
       <link>https://xwlu.github.io/post/robotics/e2e/gen_ad/</link>
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
@@ -34,13 +41,13 @@
       <link>https://xwlu.github.io/readme/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/readme/</guid>
-      <description>&lt;h2 id=&#34;skills&#34;&gt;Skills&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;C++&lt;/li&gt;&#xA;&lt;li&gt;Python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/XwLu&#34;&gt;looyifan github&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;notes&#34;&gt;Notes&lt;/h2&gt;</description>
+      <description>&lt;h2 id=&#34;skills&#34;&gt;Skills&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;C++&lt;/li&gt;&#xA;&lt;li&gt;Python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/XwLu&#34;&gt;looyifan github&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;notes&#34;&gt;Notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/robotics/abstract&#34;&gt;Robotics&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title>Robotics Abstract</title>
-      <link>https://xwlu.github.io/post/abstract/</link>
+      <link>https://xwlu.github.io/post/robotics/abstract/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
-      <guid>https://xwlu.github.io/post/abstract/</guid>
+      <guid>https://xwlu.github.io/post/robotics/abstract/</guid>
       <description>The Abstract of Robotics Tech</description>
     </item>
   </channel>

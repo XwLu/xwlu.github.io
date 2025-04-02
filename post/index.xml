@@ -9,6 +9,13 @@
     <lastBuildDate>Wed, 02 Apr 2025 11:08:42 +0800</lastBuildDate>
     <atom:link href="https://xwlu.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>GameFormer</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/game_former/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/game_former/</guid>
+      <description>Paper Reading Notes of GameFormer</description>
+    </item>
+    <item>
       <title>GenAD</title>
       <link>https://xwlu.github.io/post/robotics/e2e/gen_ad/</link>
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
@@ -31,9 +38,9 @@
     </item>
     <item>
       <title>Robotics Abstract</title>
-      <link>https://xwlu.github.io/post/abstract/</link>
+      <link>https://xwlu.github.io/post/robotics/abstract/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
-      <guid>https://xwlu.github.io/post/abstract/</guid>
+      <guid>https://xwlu.github.io/post/robotics/abstract/</guid>
       <description>The Abstract of Robotics Tech</description>
     </item>
   </channel>

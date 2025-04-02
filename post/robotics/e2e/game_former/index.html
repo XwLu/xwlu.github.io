@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>GameFormer - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Paper Reading Notes of GameFormer" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/robotics/e2e/game_former/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="GameFormer - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Paper Reading Notes of GameFormer" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="GameFormer - My New Hugo Site">
+<meta property="og:description"
+  content="Paper Reading Notes of GameFormer" />
+<meta property="og:url" content="https://xwlu.github.io/post/robotics/e2e/game_former/" />
+<meta property="og:site_name" content="GameFormer" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 11:08:42 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/robotics/e2e/game_former/">GameFormer</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 11:08:42 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 11:08:42 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      4401 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="问题建模">问题建模</h1>
+<ul>
+<li>输入：\(N\)个agents，历史状态，地图（交通灯、车道中心线、边界线、斑马线等）</li>
+<li>输出：每个agent输出 \(M\)条轨迹及对应score</li>
+<li>多次迭代更新agent的预测轨迹</li>
+<li>第 \(i\)个agent的第 \(k\)层策略为 \(\pi_{i}^{(k)}=min_{\pi_{i}}L_{i}^{k}(\pi_{i}^{(k)}|\pi_{\neg i}^{(k-1)})\)，这边的 \(\pi
+\)指的是每个agent的多模态预测轨迹（GMM模型）</li>
+</ul>
+<h1 id="模块细节">模块细节</h1>
+<h2 id="scene-encoding">Scene Encoding</h2>
+<ul>
+<li>Input Representation
+<ul>
+<li>agent的历史状态 \(S_{p}\in R^{N*T_{h}*d_{s}}\)， \(d_{s}\)是状态属性的维度</li>
+<li>局部地图polyline \(M\in R^{N*N_{m}*N_{p}*d_{p}}\)，对每个agent，找到其周围的 \(N_{m}\)个地图元素，每个元素包含 \(N_{p}\)个点， \(d_{p}\)是属性维度。通过DFS为每个agent构造候选参考线，遍历候选参考线里的车道内的每个路点，记录点的位置和类型、左右边界位置和类型、限速、信号灯、信号牌等.</li>
+</ul>
+</li>
+<li>Agent History Encoding
+<ul>
+<li>利用LSTM编码历史状态，得到 \(A_{p}\in R^{N*D}\)，包含所有agent的过去历史信息， \(D\)是隐藏层特征维度</li>
+</ul>
+</li>
+<li>Vectorized Map Encoding
+<ul>
+<li>利用MLP为所有agent编码周围地图信息 \(M_{p}\in R^{N*N_{m}*N_{p}*D}\)，后面将同一个地图元素中的 \(N_{p}\)个点通过max pooling聚合，将 \(N_{p}\)维度压缩掉（类似于PointNet），新的shape为 \(M_{r}\in R^{N*N_{mr}*D}\)， \(N_{mr}\)是每个agent周围的地图元素数量</li>
+</ul>
+</li>
+<li>Relation Encoding
+<ul>
+<li>针对每个agent，聚合所有agent（包括它自己）的历史信息和其周围的地图信息， \(C_{i}=[A_{p},M_{p}^{i}]\in R^{(N+N_{mr})*D}\)</li>
+<li>通过一个包含 \(E\)层的multi-head self-attention transformer计算彼此之间的交互，最终得到一个scene context encoding \(C_{s}\in R^{N*(N+N_{mr})*D}\)</li>
+</ul>
+</li>
+</ul>
+<h2 id="future-decoding-with-level-k-reasoning">Future Decoding with Level-k Reasoning</h2>
+<ul>
+<li>Modality Embedding
+<ul>
+<li>为了描述不确定信引入多模态，初始化一个可学习的modality embedding \(I \in R^{N*M*D}\)， \(M\)是模态的数量</li>
+</ul>
+</li>
+<li>Level-0 Decoding
+<ul>
+<li>输入 \(I\)和该agent在scene context encoding中的历史信息编码 \(C_{s,A_{p}}\)(by inflating a modality axis)，得到 \((C_{s,A_{p}}+I)\in R^{N*M*D}\)作为query，然后 \(C_{s}\)作为key、value。</li>
+<li>multi-head cross-attention Transformer作用在每个agent的modality axis上，得到query content features \(Z_{L_{0}}\in R^{N*M*D}\)。</li>
+<li>\(Z_{L_{0}}\)通过一个MLP解码得到预测轨迹的GMM参数 \(G_{L_{0}}\in R^{N*M*T_{f}*4}\)，4个维度对应每个timestamp的 \((\mu_{x},\mu_{y},log\sigma_{x},log\sigma_{y})\)。再通过另一个MLP解码得到每组预测的score \(P_{L_{0}}\in R^{N*M*1}\)</li>
+</ul>
+</li>
+<li>Interaction Decoding
+<ul>
+<li>\(k\)次迭代decode过程</li>
+<li>第 \(k\)次迭代
+<ul>
+<li>取所有agent在 \(k-1\)次迭代中生成的轨迹点 \(S_{f}^{L_{k-1}}\in R^{N*M*T_{f}*2}\)（每对点是GMM参数 \(G_{L_{k-1}}\)中的 \(\mu_{x}, \mu_{y}\)），通过MLP和max pooling操作在时间维度上对轨迹进行编码，得到agent的多模预测轨迹编码 \(A_{mf}^{L_{k-1}}\in R^{N*M*D}\)</li>
+<li>依据 \(k-1\)次迭代中得到的scores \(P_{L_{k-1}}\)对 \(A_{mf}^{L_{k-1}}\)在模态维度上对进行weighted-average-pooling操作，得到agent的future feature \(A_{f}^{L_{k-1}}\in R^{N*D}\)</li>
+<li>通过multi-head self-attention Transformer实现 \(A_{f}^{L_{k-1}}\)之间的交互</li>
+<li>针对每个agnet，将交互完成后的future feature和编码过程中得到的scene context encoding合并在一起， \(C_{L_{k}}^{i}=[A_{fi}^{L_{k-1}},C_{s}^{i}]\in R^{(N+N_{m}+N)*D}\)</li>
+<li>将当前关注agent在第 \(k-1\)次迭代中得到的query content features \(Z_{L_{k-1}}^{i}\)和该agent多模预测轨迹编码 \(A_{mf}^{L_{k-1}} \)组合为query \((Z_{L_{k-1}}^{i}+A_{mf}^{i,L_{k-1}})\in R^{M*D}\)，将更新过的scene context encoding \(C_{L_{k}}^{i}\)作为key和value过一遍multi-head cross-attention Transformer</li>
+<li>通过mask策略阻止第 \(i\)个agent在第 \(k\)次迭代中获取到它自己在前面几次迭代中的future  interaction features。只能获取周围其他障碍的future  interaction features</li>
+<li>最终得到的query content tensor \(Z_{L_{k}}^{i}\)通过两个MLP解码得到预测轨迹的GMM参数和每组预测的score
+<img src="/images/robotics/e2e/game_former/1.png" alt="pic"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="训练过程">训练过程</h1>
+<h2 id="imitation-loss">Imitation Loss</h2>
+<ul>
+<li>采用imitation loss作为主要loss来规范agent的行为，以此来学习交通规则和驾驶风格等</li>
+<li>通过negative log-likelihood loss，对比best prediction \(m^{*}\)（和gt最接近的预测结果）和gt来计算imitation loss</li>
+</ul>
+<p>$$L_{IL}=\sum_{t=1}^{T_{f}}{L_{NLL}(\mu_{m^{*}}^{t},\sigma_{m^{*}}^{t},p_{m^{*}},s_{t})}$$</p>
+<p>$$L_{NLL}=log\sigma_{x}+log\sigma_{y}+\frac{1}{2}((\frac{dx}{\sigma_{x}})^{2}+(\frac{dy}{\sigma_{y}})^{2})-log(p_{m^{*}})$$</p>
+<ul>
+<li>其中， \(ds=s_{x}-\mu_{x}\)， \(dy=s_{y}-\mu_{y}\)， \((s_{x},s_{y})\)是gt轨迹点； \(p_{m^{*}}\)是best prediction对应的网络输出概率</li>
+</ul>
+<h2 id="auxiliary-loss">Auxiliary Loss</h2>
+<ul>
+<li>充分考虑了每个agent之间的交互</li>
+<li>通过一个interaction loss鼓励每个agent避免和其他agent在 \(k-1\)次迭代中生成的future traj碰撞。
+<ul>
+<li>通过一个斥力场来拉开各个agent轨迹之间的距离
+$$L_{inter}=\sum_{m=1}^{M}{\sum_{t=1}^{T_{f}}{\max\limits_{\forall j\neq i,\forall n \in 1:M}\frac{1}{d(\hat s_{m,t}^{(i,k)},s_{n,t}^{(j,k-1)})+1}}}$$</li>
+<li>其中 \(d(\cdot,\cdot)\)是预测轨迹点的 \(L2\)距离， \(m\)是agent \(i\)的预测轨迹模态， \(n\)是（ \(k-1\)次迭代中）agent \(j\)的预测轨迹模态。</li>
+<li>为了确保安全loss只在近距离被激活，引入一个安全阈值，只有距离小于安全阈值才有loss惩罚</li>
+</ul>
+</li>
+</ul>
+<h2 id="total-loss">Total Loss</h2>
+<p>$$L_{i}^{k}(\pi_{i}^{(k)})=w_{1}L_{IL}(\pi_{i}^{(k)})+w_{2}L_{inter}(\pi_{i}^{(k)},\pi_{\neg i}^{(k-1)})$$</p>
+<h1 id="实验">实验</h1>
+<h2 id="环境">环境</h2>
+<ul>
+<li>数据集
+<ul>
+<li>Waymo open motion dataset(WOMD)</li>
+<li>nuPlan dataset</li>
+</ul>
+</li>
+<li>实验模型
+<ul>
+<li>预测模型
+<ul>
+<li>采用WOMD训练</li>
+<li>每次只评价两个被标记的交互障碍物的未来8s轨迹和真值的差距</li>
+<li>评价指标包括：最小平均位移误差minADE、最小最终位移误差minFDE、未命中率 miss rate、平均精度mAP
+<img src="/images/robotics/e2e/game_former/2.png" alt="pic"></li>
+</ul>
+</li>
+<li>规划模型
+<ul>
+<li>
+<p>采用WOMD和nuPlan训练</p>
+</li>
+<li>
+<p>开环</p>
+<ul>
+<li>planning ADE、collision rate、miss rate、prediction ADE</li>
+</ul>
+</li>
+<li>
+<p>闭环</p>
+<ul>
+<li>成功率（无碰撞且无偏航）、导航完成进度、纵向acc &amp; jerk、横向acc、位置误差</li>
+</ul>
+</li>
+<li>
+<p>迭代层数 \(k=4\)效果最好</p>
+<p><img src="/images/robotics/e2e/game_former/3.png" alt="pic"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/robotics/e2e/game_former/4.png" alt="pic"></p>
+<ul>
+<li>消融实验
+<ul>
+<li>agent future modeling的作用
+<ul>
+<li>第 \(k-1\)层得到的future trajectory不输入第 \(k\)层的解码过程</li>
+<li>输入上一层的future trajectory，但不进行self-attention操作</li>
+<li>训练过程中不引入interaction loss(Auxiliary Loss)
+<img src="/images/robotics/e2e/game_former/5.png" alt="pic"></li>
+</ul>
+</li>
+<li>解码器结构的作用
+<ul>
+<li>用 \(k\)个共享权重的decoder代替当前设计中 \(k\)个独立的decoder</li>
+<li>用一个multi-layer transformer代替当前设计中 \(k\)个独立的decoder
+<img src="/images/robotics/e2e/game_former/6.png" alt="pic"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="代码解读">代码解读</h1>
+<h2 id="文件结构">文件结构</h2>
+<ul>
+<li>open_loop_planning
+<ul>
+<li>data_process.py：以帧为单位打包ego, neighbors, lanes, crosswalk, ref_line数据</li>
+<li>open_loop_test.py：开环方式跑测试集统计相关指标</li>
+<li>train.py：规划模型训练</li>
+</ul>
+</li>
+<li>interaction_prediction
+<ul>
+<li>data_process.py：同上</li>
+<li>train.py：预测模型训练</li>
+</ul>
+</li>
+<li>model
+<ul>
+<li>GameFormer.py：GF网络主体结构</li>
+<li>modules.py：子网络的实现</li>
+</ul>
+</li>
+<li>utils
+<ul>
+<li>inter_pred_utils.py：loss定义、metrics定义</li>
+<li>data_utils.py：地图存储、搜错，data normalization</li>
+<li>cubic_spline_planner.py：Spline类定义</li>
+<li>open_loop_test_utils.py：open_loop_test.py中工具函数的实现</li>
+<li>open_loop_test_train.py：open_loop_planning/train.py中工具函数的实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="核心代码">核心代码</h2>
+<ul>
+<li>GameFormer.py
+<ul>
+<li>GF网络主体，encoder + decoder
+<img src="/images/robotics/e2e/game_former/7.png" alt="pic"></li>
+<li>GM.encoder
+<ul>
+<li>
+<p>agent encoding( \(B*N*D\))</p>
+<p><img src="/images/robotics/e2e/game_former/8.png" alt="pic"></p>
+<ul>
+<li>这里的ego encoder和agent encoder都是AgentEncoder类，concat(LSTM(state), MLP(type))</li>
+</ul>
+</li>
+<li>
+<p>map encoding( \(B*N_{mr}*N_{pts}*D\))</p>
+<p><img src="/images/robotics/e2e/game_former/9.png" alt="pic"></p>
+<ul>
+<li>LaneEncoder: PE(concat(MLP(pts), MLP(spd_limit), embeding(type)))，PE用的三角函数式绝对位置编码</li>
+<li>CrosswalkEncoder: MLP(pts)</li>
+</ul>
+</li>
+<li>
+<p>fusion encoding( \(N*(N+N_{mr})*D\))</p>
+<p><img src="/images/robotics/e2e/game_former/10.png" alt="pic"></p>
+<ul>
+<li>segment_map核心是max pooling，将 \(N_{pts}\)维度压缩掉</li>
+<li>fusion_encoder是一个6层的transformer_encoder，计算每个agent和周围其他agent以及地图元素的关系，得到每个agent的周围环境的编码scene_context_encoding（循环 \(N\)次后stack）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GM.decoder
+<ul>
+<li>
+<p>level 0 encoding</p>
+<p><img src="/images/robotics/e2e/game_former/11.png" alt="pic"></p>
+<ul>
+<li>
+<p>核心是initial_stage函数</p>
+<p><img src="/images/robotics/e2e/game_former/12.png" alt="pic"></p>
+<ul>
+<li>这里输入的encoding是id对应的agent的周围环境信息 \(\in R^{(N+N_{mr})*D}\)</li>
+<li>multi_modal_query \(\in R^{M*D}\)，模态 \(M\)的值为6</li>
+<li>agent_query \(\in R^{D}\)也是取自一个随机初始化的可学习的embedding</li>
+<li>前面两者相加得到一个多模态的agent query \(\in R^{M*D}\)，再和GM.encoder中对每个agent计算的scene_context_encoding \(\in R^{(N+N_{mr})*D}\)中该agent对应的历史状态维度 \(\in R^{N*None*D}\)相加（在模态维度上新增一个维度），得到最终的query \(\in R^{M*D}\)</li>
+<li>将scene_context_encoding \(\in R^{(N+N_{mr})*D}\)作为key和value，与上面的query在模态维度上进行cross attention，得到query content \(\in R^{M * D}\)，表征该agent的不同预测模态和周围环境的交互编码</li>
+<li>self.predictor即GMMPredictor类，本质上是2个MLP，一个回归GMM参数 \(\in R^{B*M*T*4}\)，一个回归score \(\in R^{B*M}\)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Interaction Decoding</p>
+<p><img src="/images/robotics/e2e/game_former/13.png" alt="pic"></p>
+<ul>
+<li>
+<p>核心是interaction_decoder函数（ \(k\)个相互独立的InteractionDecoder），它不断拿上一层计算出来的其他agent的predict和score去更新当前关注的agent的未来轨迹（先猜别人怎么走，再思考自己怎么应对）</p>
+<p><img src="/images/robotics/e2e/game_former/14.png" alt="pic"></p>
+<ul>
+<li>future encoding是编码其他agent在上一层（ \(k-1\)层）计算的prediction和score， \(\in R^{N*D}\)<img src="/images/robotics/e2e/game_former/15.png" alt="pic"></li>
+<li>通过self attention计算上一层的预测之间的关联，并将结果不断concat到对应agent的scene context encoding当中（所以每个agent的scene context encoding包含了最开始的环境中每个障碍物的历史信息，地图信息，以及后面1～ \(k-1\)层的future interaction信息）</li>
+<li>注意，这里有个mask，是为了让每个agent不看自己在前1～ \(k-1\)层的future encoding。
+<img src="/images/robotics/e2e/game_former/16.png" alt="pic"></li>
+<li>这里把当前关注agent在 \(k-1\)层的query content和该agent的预测轨迹编码相加作为query，该agent的scene context encoding作为key和value，通过multi-head cross-attention Transformer得到该agent在本层的query content</li>
+<li>最后通过一个GMMPredictor回归最新的GMM prediction和scores</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>
