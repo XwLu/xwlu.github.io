@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title>Robotics Abstract - My New Hugo Site</title>
+    <title>GenAD - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="The Abstract of Robotics Tech" />
+  content="Paper Reading Notes of GenAD" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/post/abstract/" />
+<link rel="canonical" href="https://xwlu.github.io/post/robotics/e2e/gen_ad/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="Robotics Abstract - My New Hugo Site" />
+<meta name="twitter:title" content="GenAD - My New Hugo Site" />
 <meta name="twitter:description"
-  content="The Abstract of Robotics Tech" />
+  content="Paper Reading Notes of GenAD" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,17 +39,17 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content="Robotics Abstract - My New Hugo Site">
+<meta property="og:title" content="GenAD - My New Hugo Site">
 <meta property="og:description"
-  content="The Abstract of Robotics Tech" />
-<meta property="og:url" content="https://xwlu.github.io/post/abstract/" />
-<meta property="og:site_name" content="Robotics Abstract" />
+  content="Paper Reading Notes of GenAD" />
+<meta property="og:url" content="https://xwlu.github.io/post/robotics/e2e/gen_ad/" />
+<meta property="og:site_name" content="GenAD" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
 <meta property="og:image:height" content="1024">
 
-<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+<meta property="article:published_time" content="2025-04-02 11:08:42 &#43;0800 CST" />
 
 
 
@@ -145,13 +145,13 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/post/abstract/">Robotics Abstract</a>
+                    <a href="https://xwlu.github.io/post/robotics/e2e/gen_ad/">GenAD</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
-                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                  Created <relative-time datetime="Wed, 02 Apr 2025 11:08:42 &#43;0800"
                     class="no-wrap">
-                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+                    Wed, 02 Apr 2025 11:08:42 &#43;0800</relative-time>
 
                   
                 </div>
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      4 Words
+                      1927 Words
                     
 
                   </div>
@@ -194,11 +194,131 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h1 id="e2e">E2E</h1>
+                <article class="markdown-body entry-content container-lg"><h1 id="方案细节">方案细节</h1>
+<h2 id="instance-centric-scene-representation">Instance-Centric Scene Representation</h2>
+<h3 id="image-to-bev">Image to BEV</h3>
 <ul>
-<li><a href="/post/robotics/e2e/way_former">WayFormer</a></li>
-<li><a href="/post/robotics/e2e/pluto">Pluto</a></li>
-<li><a href="/post/robotics/e2e/gen_ad">GenAD</a></li>
+<li>
+<p>初始化一个 \(H\times W\)的BEV query \(B_{0}\)，将摄像头提取的multi-scaled feature \(F\)与之进行deformable cross-attention，得到BEV feature</p>
+<p>$$B=DA(B_{0},F,F)$$</p>
+<ul>
+<li>\(DA(Q,K,V)\)表示deformable cross-attention</li>
+</ul>
+</li>
+</ul>
+<h3 id="bev-to-map">BEV to Map</h3>
+<ul>
+<li>
+<p>借鉴VAD的思路，初始化一个learnable query \(M_{0}\)，集合BEV feature通过global cross-attention得到地图元素表达 \(M\)</p>
+<p>$$M=CA(M_{0},B,B)$$</p>
+</li>
+</ul>
+<h3 id="bev-to-agent">BEV to agent</h3>
+<ul>
+<li>
+<p>类似地图元素，agent特征的提取方式为：</p>
+<p>$$A=DA(A_{0},B,B)$$</p>
+<ul>
+<li>\(A_{0}\)是learnable query</li>
+<li>这边得到agent特征后，会接一个3D目标检测head进行agent的位置、朝向、种类的解码</li>
+</ul>
+</li>
+</ul>
+<h3 id="instance-centric-scene-representation-1">Instance-centric scene representation</h3>
+<ul>
+<li>将上面学到的agent特征和ego query拼在一起， \(I=concat(e,A)\)</li>
+<li>学习agent和ego之间的相互影响， \(I=SA(I,I,I)\)， \(SA(Q,K,V)\)表示self-attention</li>
+<li>学习agent、ego和地图之间的交互， \(I=CA(I,M,M)\)</li>
+</ul>
+<h2 id="trajectory-prior-modeling">Trajectory Prior Modeling</h2>
+<ul>
+<li>
+<p>自车和障碍物的轨迹都是高度结构化的（连续的），并遵循一定的模式。例如，当车辆以恒定速度行驶时，大多数轨迹都是直线，当车辆右转或左转时，其中一些轨迹是曲率接近恒定的曲线。只有在极少数情况下，轨迹才会是曲折的。考虑到这一点，我们采用变分自动编码器（VAE）架构来学习latent spaec \(Z\)，以此来建模trajectory prior。</p>
+</li>
+<li>
+<p>这里利用一个GT轨迹encoder \(e_{f}\)来建模 \(p(z|\mathsf{\mathbf{T}}(T,f))\)，它将未来轨迹映射到latent spaec \(Z\)。encoder \(e_{f}\)输出一组 \(\mu_{f}\)和 \(\sigma_{f}\)来表示GMM的均值和方差。</p>
+<ul>
+<li>
+<p>\(e_{f}\)代码实现</p>
+<p><img src="/images/robotics/e2e/gen_ad/1.png" alt="pic"></p>
+</li>
+</ul>
+<p>$$p(z|\mathsf{\mathbf{T}}(T,f)) \thicksim N(\mu_{f},\sigma_{f})$$</p>
+</li>
+<li>
+<p>分布 \(p(z|\mathsf{\mathbf{T}}(T,f))\)包含未来轨迹的先验，可用于提高障碍物和自车的运动预测和规划的真实性。</p>
+</li>
+</ul>
+<h2 id="latent-future-trajectory-generation">Latent Future Trajectory Generation</h2>
+<ul>
+<li>
+<p>有了未来轨迹的latent distribution作为先验后，我们需要将未来轨迹从latent spaec \(Z\)中解码出来。最直接的办法是用一个MLP在BEV space下解码出轨迹点，但是这种方法无法模拟障碍物和自车随时间变化产生的交互。为了建模每个实例在不同时间戳之间的时间上的联系，对联合概率分布 \(p(\mathsf{\mathbf{T}}(T,f)|z)\)进行分解：</p>
+<p>$$p(\mathsf{\mathbf{T}}(T,f)|z)=p(w^{T+1}|z^{T})\cdot p(w^{T+2}|w^{T+1},z^{T})&hellip;p(w^{T+f}|w^{T+1},&hellip;,w^{T+f-1},z^{T})$$</p>
+</li>
+</ul>
+<ul>
+<li>
+<p>我们从分布 \(N(\mu_{f},\sigma_{f})\)中采样一组 \(\mu_{f}\)和\(\sigma_{f}\)作为当前时刻的 \(z^{T}\)的latent state。不同于其他方法中一次性将轨迹decode出来，这边是采用分步解码的方法。引入decoder \(d_{w}\)（MLP）从latent state中解码轨迹点。 \(p(w^{T+1}|z^{T})\)通过 \(w=d_{w}(z)\)来表示。</p>
+<ul>
+<li>采样代码实现：
+<img src="/images/robotics/e2e/gen_ad/2.png" alt="pic"></li>
+</ul>
+</li>
+<li>
+<p>我们通过GRU模型来建模状态随时间的演化。 \(z^{T+1}=g(z^{T})\)，然后再解码下个时刻的轨迹点， \(w^{T+1}=g(z^{T+1})\)， \(T+f\)时刻同理。</p>
+<p><img src="/images/robotics/e2e/gen_ad/3.png" alt="pic"></p>
+<ul>
+<li>
+<p>从distribution里面采样出的latent state进行future state的预测</p>
+<p><img src="/images/robotics/e2e/gen_ad/4.png" alt="pic"></p>
+</li>
+<li>
+<p>这边的self.predict_model函数里包含了GRU的实现，但是从代码上看，没有按照T循环调用GRU，而是设计了一个4层（layer_num=4）的GRU模拟状态随时间的推演。</p>
+<p><img src="/images/robotics/e2e/gen_ad/5.png" alt="pic"></p>
+<p><img src="/images/robotics/e2e/gen_ad/6.png" alt="pic"></p>
+</li>
+<li>
+<p>decoder是按照T循环解码出的轨迹点（下面的for循环），这里的self.ego_fut_decoder是个MLP，将GRU输出的latent future state转化为轨迹点</p>
+<p><img src="/images/robotics/e2e/gen_ad/7.png" alt="pic"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="generative-end-to-end-autonomous-driving">Generative End-to-End Autonomous Driving</h2>
+<ul>
+<li>
+<p>轨迹loss</p>
+<p>$$J_{prior}=L_{traj}(\hat{T_{e}},T_{e})+\frac{1}{N_{a}}L_{traj}(\hat{T_{a}},T_{a})+\lambda_{c}L_{focal}(\hat{C_{a}},C_{a})$$</p>
+<ul>
+<li>\(L_{traj}()\)衡量两条轨迹的L1 loss。 \(N_{a}\)是agent的数量， \(C_{a}\)是agent的预测类别， \(T_{a}\)是agent的预测轨迹。</li>
+</ul>
+</li>
+<li>
+<p>将上面得到的instance tokens \(I\)通过encoder \(e_{i}\)映射到latent space \(Z\)，也类似地输出一组输出一组 \(\mu_{i}\)和 \(\sigma_{i}\)。</p>
+<ul>
+<li>
+<p>\(e_{i}\)代码实现：</p>
+<p><img src="/images/robotics/e2e/gen_ad/8.png" alt="pic"></p>
+</li>
+</ul>
+<p>$$p(z|I)\thicksim N(\mu_{i},\sigma_{i})$$</p>
+</li>
+<li>
+<p>通过KL散度衡量 \(p(z|I)\)和GT轨迹 \(p(z|\mathsf{\mathbf{T}}(T,f))\)之间的差异</p>
+<p>$$J_{plan}=D_{KL}(p(z|I),p(z|\mathsf{\mathbf{T}}(T,f)))$$
+<img src="/images/robotics/e2e/gen_ad/9.png" alt="pic"></p>
+<ul>
+<li>KL散度衡量的就是上面的output_distribution中present和future的分布差异</li>
+</ul>
+</li>
+<li>
+<p>总loss</p>
+<p>$$J_{GenAD}=J_{prior}+\lambda_{plan}J_{plan}+\lambda_{map}J_{map}+\lambda_{det}J_{det}$$</p>
+</li>
+<li>
+<p>在infer阶段，弃用future trajectory encoder（因为没有GT），从 \(p(z|I)\)中采样latent state，作为轨迹生成模块的输入</p>
+<p><img src="/images/robotics/e2e/gen_ad/10.png" alt="pic"></p>
+</li>
 </ul>
 </article>
               </div>
@@ -242,6 +362,14 @@
 </body>
 
 <script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
 
 
 
