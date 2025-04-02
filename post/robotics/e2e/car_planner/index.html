@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>CarPlanner - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Paper Reading Notes of CarPlanner" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/robotics/e2e/car_planner/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="CarPlanner - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Paper Reading Notes of CarPlanner" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="CarPlanner - My New Hugo Site">
+<meta property="og:description"
+  content="Paper Reading Notes of CarPlanner" />
+<meta property="og:url" content="https://xwlu.github.io/post/robotics/e2e/car_planner/" />
+<meta property="og:site_name" content="CarPlanner" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 11:08:42 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/robotics/e2e/car_planner/">CarPlanner</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 11:08:42 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 11:08:42 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      5582 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="摘要">摘要</h1>
+<ul>
+<li>本文提出CarPlanner——一种基于强化学习生成多模态轨迹的一致性自回归规划器。</li>
+<li>其自回归结构支持高效的大规模强化学习训练，而引入的一致性机制通过保持跨时间步长的时序一致性，确保了策略学习的稳定性。此外，CarPlanner采用生成-选择框架，结合专家引导的奖励函数与不变视角模块，既简化了强化学习训练流程，又提升了策略性能。</li>
+<li>有效解决了训练效率与性能提升的双重挑战。</li>
+<li>首次证明了基于强化学习的规划器能够在具有挑战性的大规模真实世界数据集nuPlan上超越基于模仿学习（IL）和基于规则的最先进方法（SOTA）</li>
+</ul>
+<h1 id="相关工作">相关工作</h1>
+<ul>
+<li>IL存在分布偏移与因果混淆问题</li>
+<li>RL存在1）训练效率低下 2)性能表现不足的问题</li>
+<li>当前生成多步轨迹的方法主要分为两类：“初始化-优化”模型与“自回归模型”
+<ul>
+<li>方法A通过生成初始轨迹估计，并利用迭代式强化学习进行优化。然而，最新研究（如Gen-Drive）表明，该方法仍落后于基于模仿学习与规则的最优规划器。该框架的显著缺陷在于忽视了轨迹规划任务内在的时序因果性。此外，直接在高维轨迹空间进行优化所引发的复杂性，会制约强化学习算法的性能表现。</li>
+<li>方法B采用自回归模型，通过在状态转移模型内运用单步策略循环生成自车位姿序列形成完整规划轨迹。由于考量了时序因果关系，现有自回归模型能够生成交互式驾驶行为。但此类方法的共性局限在于依赖从动作分布中自回归随机采样来生成多模态轨迹，这种基础自回归流程可能损害长期一致性并过度扩展强化学习的探索空间，最终导致性能下降。
+<img src="/images/robotics/e2e/car_planner/1.png" alt="pic"></li>
+</ul>
+</li>
+<li>针对自回归模型的固有缺陷，将一致性模式表征作为自回归的条件约束。
+<ul>
+<li>采用纵向-横向分解模式表示法：纵向模式通过标量参数捕获平均速度特征，横向模式则基于自车当前状态与地图信息生成所有可行路径集合。此类模式在轨迹生成的时间维度上保持恒定，为策略采样过程提供稳定一致的行为引导。</li>
+</ul>
+</li>
+<li>设计了适用于大规模多样化场景的通用奖励函数。
+<ul>
+<li>专家引导项：通过量化规划轨迹与专家轨迹的位移误差（结合一致性模式表征），有效缩小策略探索空间。</li>
+<li>任务导向项：集成碰撞规避、可行驶区域约束等驾驶常识性指标。</li>
+</ul>
+</li>
+<li>此外，我们引入不变视角模块（Invariant-View Module, IVM），通过将智能体状态与横向模式信息转换至自车当前坐标系，并裁剪远端无关信息，为策略网络提供与时间无关的标准化输入，从而简化特征学习过程并增强泛化能力。</li>
+</ul>
+<h1 id="方案">方案</h1>
+<h2 id="强化学习基本范式">强化学习基本范式</h2>
+<p><img src="/images/robotics/e2e/car_planner/2.png" alt="pic"></p>
+<ul>
+<li>\(S\)：状态空间</li>
+<li>\(A\)：动作空间</li>
+<li>\(P\)：状态转移概率</li>
+<li>\(R\)：奖励函数</li>
+<li>\(T\)：规划时长</li>
+<li>\(\gamma\)：奖励衰减系数</li>
+<li>\(\pi\)：动作采样策略</li>
+<li>\(a_{t}\)： \(t\)时刻采样的动作</li>
+<li>\(s_{t}\)： \(t\)时刻状态</li>
+<li>\(\tau\)：状态-动作序列（轨迹）</li>
+<li>目标是最大化奖励</li>
+</ul>
+<h2 id="向量化的状态表征">向量化的状态表征</h2>
+<ul>
+<li>\(s_{t}\)
+<ul>
+<li>map
+<ul>
+<li>道路拓扑、 交通信号灯（通过polylines和polygons表示）</li>
+</ul>
+</li>
+<li>agent
+<ul>
+<li>历史状态</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="问题建模">问题建模</h2>
+<ul>
+<li>将自回归模型解耦为policy model 和 transition model（本质上就是周围其他agent的轨迹预测模型）</li>
+<li>将动作定义为下一个时刻的状态 \(a_{t} = s_{t+1}^{0}\)</li>
+</ul>
+<p><img src="/images/robotics/e2e/car_planner/3.png" alt="pic"></p>
+<ul>
+<li>从上面公式可以看到典型自回归方法相关的固有问题：动作来源于从策略分布中随机采样，进而导致前后帧的不一致行为。为了解决该问题，引入前后帧一致的模式信息 \(c\)</li>
+</ul>
+<p><img src="/images/robotics/e2e/car_planner/4.png" alt="pic"></p>
+<ul>
+<li>上面的公式展示了一个“生成-选择”架构的运行逻辑。模式选择器根据初始状态 \(s_{0}\)对候选模式进行打分，轨迹生成器根据模式的指导生成多模态轨迹</li>
+</ul>
+<h2 id="规划器架构">规划器架构</h2>
+<p><img src="/images/robotics/e2e/car_planner/5.png" alt="pic"></p>
+<ul>
+<li>四个部分组成
+<ul>
+<li>非交互的状态转移模型</li>
+<li>模式选择器</li>
+<li>轨迹生成器</li>
+<li>规则增强选择器</li>
+</ul>
+</li>
+</ul>
+<h3 id="map编码">Map编码</h3>
+<ul>
+<li>每个lane通过polyline表示，包含 \(3N_{p}\)个点，中心点、左边界点、右边界点；每个点特征 \(D_{m}=9\)（x,  y, heading, speed limit, category）。</li>
+<li>intersections, crosswalks, stop lines通过polygon表示</li>
+<li>通过PointNet提取特征后concat在一起得到 \(N_{m}*D\)</li>
+</ul>
+<h3 id="agent-编码">Agent 编码</h3>
+<ul>
+<li>每个障碍物保留过去 \(H\)帧的状态，每个状态特征 \(D_{a}=10\)（x,  y, heading, vel, bbox, timestamp, category）。</li>
+<li>通过PointNet提取特征后concat在一起得到 \(N_{a}*D\)</li>
+</ul>
+<h3 id="非交互式的状态转移模型">非交互式的状态转移模型</h3>
+<ul>
+<li>状态转移模型负责给环境中所有agent生成下一个时刻的状态（就是每个time step给所有agent做一次推演）。这个过程比较耗时，并且相比直接拿历史信息一次性生成整段预测轨迹的无交互预测模型并没有引入性能上的优化，所以实际实现的时候这边直接用了一个预测模型给除自车外的agent一次性生成整段多模轨迹。（本质是一个decoder从BEV feature中生成障碍物预测轨迹）</li>
+<li>TODO：ego和obs的交互自洽如何满足？</li>
+</ul>
+<h3 id="模式选择器">模式选择器</h3>
+<ul>
+<li>该模块以初始状态s₀及纵向-横向分解模式信息为输入，输出各模式的概率分布。</li>
+</ul>
+<h4 id="路径-速度解耦模式表征"><strong>路径-速度解耦模式表征</strong></h4>
+<ul>
+<li>为捕捉纵向行为特征，我们生成 \(N_{lon}\)个表征轨迹平均速度的模式。每个纵向模式 \(c_{lon,j}\)定义为标量值 \(\frac{j}{N_{lon}}\)，沿维度 \(D\)重复扩展，形成维度为纵向 \(N_{lon}\times D\)模式的矩阵。针对横向行为，我们通过图搜索算法从地图中提取 \(N_{lat}\)条可行路径，对应自车可用车道。原始路径表征维度为 \(N_{lat}\times N_{r} \times D_{m}\)（ \(N_{r}\)为路径点数， \(D_{m}\)为特征维度）。采用PointNet点云网络聚合路径点特征，生成维度 \(N_{lat}\times D\)的横向模式。将纵向与横向模式拼接后形成维度 \(N_{lat}\times N_{lon} \times 2D\)的复合模式表征 \(c\)，经线性层映射至 \(N_{lat}\times N_{lon} \times D\)以对齐特征空间，最终模式总数 \(N_{mode}=N_{lat}N_{lon}\)。</li>
+</ul>
+<h4 id="基于查询的transformer解码器"><strong>基于查询的Transformer解码器</strong></h4>
+<ul>
+<li>该解码器融合模式特征与 \(s_{0}\)中包含的地图/智能体特征。工作机制如下：以模式特征作为query，地图与智能体信息作为key-value。更新后的模式特征经MLP解码得到各模式评分，最终通过softmax归一化。</li>
+</ul>
+<h3 id="轨迹生成器">轨迹生成器</h3>
+<ul>
+<li>该模块以自回归方式运行，基于当前状态 \(s_{t}\)与恒定模式信息 \(c\)，循环解码自车下一时刻位姿 \(a_{t}\)。</li>
+</ul>
+<h4 id="不变视角模块ivm"><strong>不变视角模块（IVM）</strong></h4>
+<ul>
+<li>每个time step对下个时刻的自车位姿进行估计之前都要执行该操作：对模式与状态输入网络前进行预处理以消除时间信息
+<ul>
+<li><strong>近邻筛选</strong>：对状态 \(s_{t}\)中的地图与智能体信息，选择距离自车当前位姿最近的K近邻（KNN）作为输入（K分别取地图/智能体元素总数的50%）</li>
+<li><strong>路径裁剪</strong>：针对表征横向行为的路线，以距离自车当前位置最近的路径点为起点，保留 \(K_{r}\)个点（ \(K_{r}\)=单条路线 \(N_{r}\)点数的25%）</li>
+<li><strong>坐标系对齐</strong>：将路线、智能体及地图位姿转换至ego当前时刻 \(t\)的坐标系下</li>
+<li><strong>时序标准化</strong>：将历史时间步 \(t-H:t\)转换为相对当前时刻 \(t\)的 \([-H:0]\)区间</li>
+</ul>
+</li>
+</ul>
+<h4 id="基于查询的transformer解码器-1"><strong>基于查询的Transformer解码器</strong></h4>
+<ul>
+<li>采用与模式选择器相同的主干网络架构，但query维度不一样（因为IVM的作用，同一时刻下不同模态的下自车坐标系内环境信息是不同的，所以无法共享）：
+<ul>
+<li>Query： \(1 \times D\)维度（单模式特征）</li>
+<li>Key-Value： \((N+Nₘ)\times D\)维度（ \(N\)智能体+ \(N_{m}\)地图要素）</li>
+<li>输出特征： \(1 \times D\)维度（保持与查询维度一致）  </li>
+</ul>
+</li>
+</ul>
+<h4 id="策略输出层"><strong>策略输出层</strong></h4>
+<ul>
+<li>模式特征通过两个不同的head进行处理（A2C方法）：
+<ol>
+<li>policy head（Actor网络）：通过MLP生成动作分布参数（高斯分布）
+<ul>
+<li>训练阶段：从分布中采样动作以促进探索</li>
+<li>推理阶段：直接采用分布均值作为确定性输出</li>
+</ul>
+</li>
+<li>value head（Critic网络）：通过独立MLP估计状态价值  
+<ul>
+<li>数学建模：动作分布建模为 \(\mu + \sigma\)的高斯形式，策略优化基于PPO等强化学习算法实现。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="规则后处理">规则后处理</h3>
+<ol>
+<li><strong>多模态输入</strong>：接收初始状态 \(s_{0}\)、自车多模态规划轨迹集、周边智能体预测轨迹</li>
+<li><strong>规则化评估</strong>：基于预设规则计算
+<ul>
+<li>安全性：轨迹与障碍物的最小距离</li>
+<li>行进效率：轨迹终点纵向位移</li>
+<li>舒适度：加速度/加加速度的L2范数</li>
+</ul>
+</li>
+<li><strong>综合评分</strong>：将规则得分与模式选择器的模式评分加权求和</li>
+<li><strong>最优选择</strong>：选取综合评分最高的轨迹作为规划器最终输出</li>
+</ol>
+<h2 id="训练">训练</h2>
+<ul>
+<li>采用分阶段训练架构，核心流程如下：</li>
+</ul>
+<ol>
+<li><strong>状态转移模型预训练</strong>
+<ul>
+<li>优先训练非交互式的状态转移模型（预测任务预训练）</li>
+<li>训练模式选择器与轨迹生成器时冻结状态转移模型参数</li>
+</ul>
+</li>
+<li><strong>模式选择&amp;轨迹生成</strong>
+<ul>
+<li>
+<p>不输入所有模式给到轨迹生成模型，只输入正样本模式</p>
+</li>
+<li>
+<p>正样本模式确定方法：  </p>
+<p><em>横向模式</em>：根据真实轨迹终点所在路径段确定  </p>
+<p><em>纵向模式</em>：将轨迹起点至终点的纵向距离等分为 \(N_{lon}\)区间，匹配对应模式</p>
+</li>
+</ul>
+</li>
+<li><strong>损失函数设计</strong>
+<ul>
+<li>
+<p>模式选择损失：  </p>
+<p>▫ 正样本模式交叉熵损失（负对数似然）  </p>
+<p>▫ 辅助任务：真实轨迹回归损失</p>
+</li>
+<li>
+<p>轨迹生成损失：PPO算法三要素  </p>
+<p>▫ 策略改进项（Policy Improvement）  </p>
+<p>▫ 价值估计项（Value Estimation）  </p>
+<p>▫ 熵正则项（Entropy Regularization）</p>
+</li>
+</ul>
+</li>
+<li><strong>奖励函数构建</strong>
+<ul>
+<li>
+<p>基础奖励：自车未来位姿与真实轨迹的负位移误差（DE）</p>
+</li>
+<li>
+<p>增强约束：  </p>
+<p>▫ 碰撞检测：发生碰撞时奖励-1  </p>
+<p>▫ 可行驶区域合规性：越界时奖励-1  </p>
+<p>▫ 正常行驶时奖励保持0</p>
+</li>
+</ul>
+</li>
+<li><strong>模式丢失正则化</strong>
+<ul>
+<li>动机：防止Transformer结构中的残差连接导致对mode或route过于依赖</li>
+<li>实现：训练时随机屏蔽部分路径信息（mask概率=20%）</li>
+<li>效果：增强模型对局部信息缺失的鲁棒性</li>
+</ul>
+</li>
+</ol>
+<h2 id="实验">实验</h2>
+<h3 id="仿真平台"><strong>仿真平台</strong></h3>
+<ul>
+<li>采用nuPlan仿真器
+<ul>
+<li>
+<p><strong>交通参与者行为模式</strong>：  </p>
+<p>▫ 非反应模式：日志回放（log-replay）  </p>
+<p>▫ 反应模式：IDM策略（智能驾驶员模型）</p>
+</li>
+<li>
+<p><strong>自车控制架构</strong>：用户规划器生成轨迹 → LQR控制器跟踪生成控制指令</p>
+</li>
+<li>
+<p><strong>仿真参数</strong>：15秒时长/10Hz更新频率</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="基准测试集与评估指标"><strong>基准测试集与评估指标</strong></h3>
+<ul>
+<li>采用两大基准测试集：
+<ul>
+<li><strong>Test14-Random</strong>（来自PlanTF）：261个场景</li>
+<li><strong>Reduced-Val14</strong>（来自PDM）：318个场景</li>
+</ul>
+</li>
+<li>评估采用nuPlan官方闭环综合评分（CLS），包含：
+<ul>
+<li><strong>安全指标</strong>：碰撞率（S-CR）、碰撞时间（S-TTC）</li>
+<li><strong>可行驶区域合规性</strong>（S-Area）</li>
+<li><strong>行进效率</strong>（S-PR）</li>
+<li><strong>舒适度指标</strong>  </li>
+</ul>
+</li>
+</ul>
+<h3 id="实验细节"><strong>实验细节</strong></h3>
+<ol>
+<li><strong>数据划分</strong>（遵循PDM标准）：
+<ul>
+<li>训练集：176,218个场景（14类×4,000场景）</li>
+<li>验证集：1,118个场景（14类×100场景）</li>
+</ul>
+</li>
+<li><strong>训练配置</strong>：
+<ul>
+<li>硬件：2×NVIDIA 3090 GPU</li>
+<li>训练轮次：50 epochs</li>
+<li>批量大小：64/GPU</li>
+<li>优化器：AdamW（初始学习率1×10⁻⁴，验证损失停滞时学习率衰减因子0.3）</li>
+</ul>
+</li>
+<li><strong>强化学习参数</strong>：
+<ul>
+<li>折扣因子γ=0.1</li>
+<li>GAE参数λ=0.9</li>
+<li>损失权重：价值损失3，策略损失100，熵损失0.001</li>
+</ul>
+</li>
+<li><strong>模式参数</strong>：
+<ul>
+<li>纵向模式数：12</li>
+<li>最大横向模式数：5</li>
+</ul>
+</li>
+</ol>
+<h3 id="sota对比">SOTA对比</h3>
+<h4 id="方法分类与对比基准">方法分类与对比基准</h4>
+<ul>
+<li>基于轨迹生成器类型，我们将现有方法划分为规则驱动（Rule）、模仿学习（IL）与强化学习（RL）三大类：
+<ol>
+<li><strong>PDM</strong>：2023年nuPlan挑战赛冠军
+<ul>
+<li><em>PDM-Closed</em>：IL+规则混合框架，采用IDM生成候选轨迹，基于安全/效率/舒适度的规则选择器优选轨迹</li>
+<li><em>PDM-Open</em>：纯规则驱动版本</li>
+</ul>
+</li>
+<li><strong>PLUTO</strong>：生成-选择框架，结合对比模仿学习（Contrastive IL）与数据增强技术训练生成器</li>
+<li><strong>GenDrive</strong>：预训练-微调流程，先通过IL预训练扩散模型规划器，再基于AI偏好训练的奖励模型进行RL微调去噪过程</li>
+</ol>
+</li>
+</ul>
+<p><strong>实验结果分析</strong></p>
+<p>如表1（Test14-Random）与表2（Reduced-Val14）所示，CarPlanner在无交互场景（障碍物不对自车行为作出反应）中展现显著优势：</p>
+<p><img src="/images/robotics/e2e/car_planner/6.png" alt="pic"></p>
+<ul>
+<li>
+<p><strong>无交互式场景（CLS-NR）</strong>：  </p>
+<p>▫ 全指标领先，较PDM-Closed与PLUTO分别提升4.02与2.15分  </p>
+<p>▫ 行进效率（S-PR）显著优于PDM-Closed（表2对比）  </p>
+<p>▫ 碰撞率（S-CR）与基准方法持平，验证安全驾驶保障能力  </p>
+<p><em>技术亮点</em>：未使用数据增强、驾驶历史掩码等IL常用技术，彰显闭环任务解决能力</p>
+</li>
+<li>
+<p><strong>交互式场景（CLS-R）</strong>：  </p>
+<p>▫ 性能略逊于PDM-Closed  </p>
+<p><em>原因分析</em>：模型仅在无交互式场景训练，未接触IDM策略驱动的动态交互环境，导致对反应式智能体扰动鲁棒性不足</p>
+</li>
+</ul>
+<h4 id="总结">总结</h4>
+<ol>
+<li><strong>RL方法潜力验证</strong>：在无交互式场景全面超越IL与规则方法</li>
+<li><strong>效率-安全平衡</strong>：在保持碰撞率水平的同时显著提升行进效率</li>
+<li><strong>场景泛化局限</strong>：反应式场景性能揭示跨模式训练必要性</li>
+</ol>
+<h3 id="消融实验">消融实验</h3>
+<p><img src="/images/robotics/e2e/car_planner/7.png" alt="pic"></p>
+<h4 id="奖励项作用"><strong>奖励项作用</strong></h4>
+<ol>
+<li><strong>只生效质量奖励（Quality Only： collision check + drivable area check）</strong>：
+<ul>
+<li>规划器倾向于生成静态轨迹，行进效率（S-PR）显著降低</li>
+<li><em>成因分析</em>：自车初始处于安全可行驶状态，前行将面临碰撞/越界风险，导致策略陷入局部最优</li>
+</ul>
+</li>
+<li><strong>质量+位移误差奖励（Quality+DE）</strong>：
+<ul>
+<li>碰撞率（S-CR）从97.49→99.22，提升1.73%</li>
+<li>可行驶区域合规性（S-Area）从96.91→99.22，提升2.31%</li>
+</ul>
+</li>
+</ol>
+<h4 id="ivm模块有效性验证">IVM模块有效性验证</h4>
+<ul>
+<li>坐标变换技术&amp;KNN近邻筛选对最终表现的优化有较大收益</li>
+</ul>
+<h3 id="与il的对比">与IL的对比</h3>
+<p><img src="/images/robotics/e2e/car_planner/8.png" alt="pic"></p>
+<ul>
+<li>mode dropout和selector side task对IL和RL训练都有较大的帮助</li>
+<li>ego-history dropout
+<ul>
+<li>对IL帮助较大，提升碰撞率（S-CR）与可行驶区域合规性（S-Area），
+<ul>
+<li>随机屏蔽历史位姿与当前速度，缓解因果混淆问题</li>
+</ul>
+</li>
+<li>对RL则不是很重要
+<ul>
+<li>较大程度影响生成器loss中的value评估部分，闭环性能下降</li>
+<li>原因：RL通过奖励信号自动挖掘因果关系，无需人工干预</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>backbone  sharing
+<ul>
+<li>常用于IL场景，通过特征共享，提升泛化能力</li>
+<li>在RL场景起到反作用，引发不同任务之间的梯度冲突，轨迹生成器和模式选择器损失上升</li>
+<li>TODO：轨迹生成那边是循环生成下一帧轨迹的，前后帧感觉无法共享特征？</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景化定性分析"><strong>场景化定性分析</strong></h3>
+<ul>
+<li>
+<p>自车右转避让行人的复杂场景</p>
+</li>
+<li>
+<p>规则方法</p>
+<p><img src="/images/robotics/e2e/car_planner/9.png" alt="pic"></p>
+<ul>
+<li>未能预判行人动态，采取紧急制动仍与行人轨迹交叠</li>
+</ul>
+</li>
+<li>
+<p>IL方法</p>
+<p><img src="/images/robotics/e2e/car_planner/10.png" alt="pic"></p>
+<ul>
+<li>感知到行人运动趋势，及时启动制动操作，但与行人保持纵向距离不足（&lt;0.5m）</li>
+</ul>
+</li>
+<li>
+<p>RL方法</p>
+<p><img src="/images/robotics/e2e/car_planner/11.png" alt="pic"></p>
+<ul>
+<li>提前横向避让，构建横向安全缓冲区（1.2m），行进效率与安全指标均达最优</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>
