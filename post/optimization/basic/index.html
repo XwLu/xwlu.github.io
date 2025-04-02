@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>Basic of Optimization - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="description of optimization" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/optimization/basic/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Basic of Optimization - My New Hugo Site" />
+<meta name="twitter:description"
+  content="description of optimization" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Basic of Optimization - My New Hugo Site">
+<meta property="og:description"
+  content="description of optimization" />
+<meta property="og:url" content="https://xwlu.github.io/post/optimization/basic/" />
+<meta property="og:site_name" content="Basic of Optimization" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/optimization/basic/">Basic of Optimization</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      1838 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="参考书籍">参考书籍</h1>
+<ul>
+<li>
+<h3 id="最优化建模算法与理论">最优化：建模、算法与理论</h3>
+<ul>
+<li>中文版</li>
+</ul>
+</li>
+<li>
+<h3 id="numerical-optimization">Numerical Optimization</h3>
+<ul>
+<li>理论很全</li>
+<li>关注实数在程序中的表示方法导致的数值稳定性问题，给了很多工程上的实践，帮助读者写出更加鲁棒稳定的算法</li>
+</ul>
+</li>
+<li>
+<h3 id="lectures-on-convex-optimization">Lectures on Convex Optimization</h3>
+<ul>
+<li>理论清晰，涵盖很全</li>
+</ul>
+</li>
+<li>
+<h3 id="lecture-on-modern-convex-optimization">Lecture on Modern Convex Optimization</h3>
+<ul>
+<li>对Conic Programming有比较好的分析和应用</li>
+</ul>
+</li>
+</ul>
+<h1 id="优化问题">优化问题</h1>
+<ul>
+<li>
+<p>一般形式</p>
+<ul>
+<li>$$min(f(x))$$</li>
+<li>$$s.t.g(x)\leq 0, h(x)=0$$</li>
+</ul>
+</li>
+<li>
+<p>问题有解的条件</p>
+<ul>
+<li>\(f(x)\) is lower bounded(有下界)
+<ul>
+<li>在\(x\)的取值范围内，\(f(x)\geq \alpha\)</li>
+</ul>
+</li>
+<li>\(f(x)\) is bounded level set
+<ul>
+<li>满足\(f(x)&lt; \beta \)的\(x\)的取值有上下界，\(f(x)=\frac{1}{x},(x&gt;0)\)就不满足，\(x\)到无穷大时\(f(x)\)最小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>机器人领域中常见的优化问题</p>
+<ul>
+<li>SLAM: Nolinear Least Squares</li>
+<li>Trajectory: Nolinear Program</li>
+<li>Registration: Semi-Definite Program</li>
+<li>Time Optimal Path Parameterization: Second-Order Conic Program</li>
+</ul>
+</li>
+</ul>
+<h1 id="凸集">凸集</h1>
+<ul>
+<li>如果集合内的任意两点的连线仍然在集合内，则集合是一个凸集</li>
+<li>convex hull: 点集中所有点的convex combinations的并集</li>
+<li>常见的凸集合
+<ul>
+<li>hyperplane: \(Ax=b\)</li>
+<li>half-space: \(Ax\geq b\)</li>
+<li>sphere: \(\left | x-x_{0} \right |=b\)</li>
+<li>ball: \(\left | x-x_{0} \right |\leq b\)</li>
+<li>polynomials: 凸包</li>
+<li>cone: 锥(不一定是凸的)
+<ul>
+<li>半定锥(一定是凸的)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>凸集的交集一定是凸的</li>
+<li>凸集的并集不一定凸</li>
+<li>凸集的叉乘一定是凸</li>
+</ul>
+<h1 id="函数的高阶导数">函数的高阶导数</h1>
+<ul>
+<li>一阶导数: gradient</li>
+<li>二阶导数: hessian</li>
+<li>hessian是gradient的jacobian</li>
+</ul>
+<h1 id="矩阵求导">矩阵求导</h1>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Matrix_calculus">网址</a>
+<ul>
+<li><img src="/images/optimization/basic/grad_of_matrix.png" alt="gradient of matrix"></li>
+</ul>
+</li>
+</ul>
+<h1 id="凸函数及其性质">凸函数及其性质</h1>
+<ul>
+<li>$$f(ax+(1-a)y)\leq af(x)+(1-a)f(y)$$
+<ul>
+<li>如果严格&lt;，称为strictly convex function</li>
+</ul>
+</li>
+<li>凸函数一定有convex sub level set</li>
+<li>quasi-convex(拟凸函数)
+<ul>
+<li>$$f(x)=log(\left | x \right |+1)$$</li>
+<li>拟凸函数的线性加和不一定还是拟凸函数，但凸函数的线性加和肯定是凸函数</li>
+</ul>
+</li>
+<li>凸函数的局部最小值一定是全局最小值</li>
+<li>凸函数的局部最小值的集合一定是凸集</li>
+<li>如果一个光滑函数的Hessian矩阵(二阶导)是半正定的(\(y^{T}Hy\geq 0\))，它一定是凸函数</li>
+<li>对非凸函数而言，其局部极小值点处的二阶导一定是半正定的（正定和不定都是针对对称矩阵而言的）</li>
+<li>如果函数在某点的一阶导数是0，但Hessian不定（特征值有正有负），该点为鞍点。
+<ul>
+<li>反过来不成立，比如\(z=x^{4}-y^{4}\)在(0, 0)处Hessian不是不定的，但它是个鞍点</li>
+</ul>
+</li>
+<li>可微凸函数一定在其任一个点的线性近似的上方，这意味着梯度为0的点就是全局极小值</li>
+<li>如果函数的Hessian严格正定，最小特征值大于0，则为强凸函数，收敛速度快
+<ul>
+<li><img src="/images/optimization/basic/strong_convex.png" alt="strong convex"></li>
+<li>可以看到，强凸函数比凸函数在定义上更加严格，比线性近似的上方还多了一个min curvature项(m&gt;0)</li>
+<li>强凸 &gt; 严格凸 &gt; 凸</li>
+<li>可以通过将非强凸函数构造为强凸函数加速优化速率</li>
+</ul>
+</li>
+<li>lipschitz常数：任意两个点的梯度差值不会比两个点的距离的常数倍来的大
+<ul>
+<li><img src="/images/optimization/basic/lipschitz.png" alt="lipschitz"></li>
+<li>lipschitz常数和强凸都可以用来刻画可微凸函数的凸性</li>
+<li>从上图可以看到，强凸性描述了凸函数的下界；lipschitz常数描述了凸函数的上界(如果一个函数的lipschitz常数存在，就可以找到一个二次函数来bound住函数的上界)</li>
+</ul>
+</li>
+<li>条件数
+<ul>
+<li>计算方式
+<ul>
+<li>对光滑函数而言，Hessian矩阵的SVD分解得到的最大奇异值除以最小奇异值就是该函数的条件数</li>
+<li>对可导但不一定存在Hessian的函数而言，条件数\(\kappa =\frac{M}{m}\)，这里的M就是lipschitz常数，m就是强凸性的常数</li>
+<li>对任意函数而言，可以通过绘制函数的等高线，将等高线拟合成一个椭圆，椭圆的长轴除以短轴就是该函数的条件数</li>
+</ul>
+</li>
+<li>用处
+<ul>
+<li>可以用来判断是否需要用到函数的高阶信息</li>
+<li>有些算法对条件数很小的凸函数可以收敛的很快，对条件数较大的凸函数收敛比较慢，此时就需要用函数的曲率(高阶)信息更快收敛到最优解</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>次梯度
+<ul>
+<li><img src="/images/optimization/basic/sub_diff.png" alt="sub_diff"></li>
+<li>上图中，函数在\(x_{1}\)处不可微，该点处的导数有很多个，以左导数和右导数形成区间的导数集合就是次梯度</li>
+<li>对于可微凸函数而言，判断最优点的条件是导数为0；对于不可微函数，判断不可微点是否是最优解就看该点的次梯度有没有把0包含在内</li>
+<li>光滑函数的导致的负方向一定是函数值下降的方向，但沿着次梯度集合中某个方向的反方向走不一定让函数值下降；必须是次梯度集合中模长最小的那个方向的反方向才可以保证函数值的下降</li>
+</ul>
+</li>
+<li>梯度单调性
+<ul>
+<li><img src="/images/optimization/basic/monotone.png" alt="monotone"></li>
+<li>牛顿法求解无约束优化的时候，利用梯度单调性可以让算法更稳定</li>
+</ul>
+</li>
+<li>凸函数的很多operation是可以保留其凸性的
+<ul>
+<li>加权和(权重&gt;0)</li>
+<li>范数</li>
+<li>仿射变换</li>
+<li>point-wise max
+<ul>
+<li>绝对值</li>
+<li>最大特征值</li>
+<li>无穷范数</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>凸函数举例
+<ul>
+<li>$$f(x)=trace(A^{T}x)$$
+<ul>
+<li>本质上是线性操作</li>
+</ul>
+</li>
+<li>$$f(x)=max\left | x-y \right |$$
+<ul>
+<li>本质上是point-wise max，找凸集合距离x最远的点</li>
+</ul>
+</li>
+<li>$$f(x)=min\left | x-y \right |$$
+<ul>
+<li>虽然是point-wise min，但也是凸函数，找凸集合距离x最近的点</li>
+</ul>
+</li>
+<li>$$f(x)=\left | b+A_{i}x_{i} \right |$$
+<ul>
+<li>本质上是仿射变换</li>
+</ul>
+</li>
+<li>$$f(x)=min_{y}g(x,y)$$
+<ul>
+<li>\(g(x,y)\)是凸的</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="评价数值优化算法的指标">评价数值优化算法的指标</h1>
+<ul>
+<li>收敛速度（迭代次数）</li>
+<li>对不同函数的收敛稳定性</li>
+<li>每次迭代的计算量</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>

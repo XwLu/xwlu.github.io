@@ -65,6 +65,20 @@
       <description>Muti thread skills</description>
     </item>
     <item>
+      <title>Barrier Methods</title>
+      <link>https://xwlu.github.io/post/optimization/barrier_methods/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/barrier_methods/</guid>
+      <description>use barrier methods to solve constrained optimization problem</description>
+    </item>
+    <item>
+      <title>Basic of Optimization</title>
+      <link>https://xwlu.github.io/post/optimization/basic/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/basic/</guid>
+      <description>description of optimization</description>
+    </item>
+    <item>
       <title>Bind &amp; Lambda</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/bind-lambda/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -121,11 +135,32 @@
       <description>compile &amp;amp; link for C++</description>
     </item>
     <item>
+      <title>Conic Augmented Lagrangian</title>
+      <link>https://xwlu.github.io/post/optimization/conic_augmented_lagrangian/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/conic_augmented_lagrangian/</guid>
+      <description>conic augmented lagrangian</description>
+    </item>
+    <item>
+      <title>Conic Programming</title>
+      <link>https://xwlu.github.io/post/optimization/conic_programming/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/conic_programming/</guid>
+      <description>conic programming</description>
+    </item>
+    <item>
       <title>Constexpr of Class</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</guid>
       <description>constexpr for C++</description>
+    </item>
+    <item>
+      <title>Constrained Optimization</title>
+      <link>https://xwlu.github.io/post/optimization/constrained_optimization/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/constrained_optimization/</guid>
+      <description>constrained optimization</description>
     </item>
     <item>
       <title>Construction of Class</title>
@@ -240,11 +275,39 @@
       <description>IOStream for C++</description>
     </item>
     <item>
+      <title>Karush-Kuhn-Tucker(KKT) Conditions</title>
+      <link>https://xwlu.github.io/post/optimization/kkt/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/kkt/</guid>
+      <description>kkt conditions for phr-alm</description>
+    </item>
+    <item>
+      <title>Lagrangian Relaxation</title>
+      <link>https://xwlu.github.io/post/optimization/lagrangian_relaxation/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/lagrangian_relaxation/</guid>
+      <description>use lagrangian relaxation to solve constrained optimization problem</description>
+    </item>
+    <item>
       <title>Local Class</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</guid>
       <description>local class for C++</description>
+    </item>
+    <item>
+      <title>Low-Dimensional Linear Program</title>
+      <link>https://xwlu.github.io/post/optimization/ldlp/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/ldlp/</guid>
+      <description>Low-Dimensional lp for constrained optimization</description>
+    </item>
+    <item>
+      <title>Low-Dimensional Linear Program</title>
+      <link>https://xwlu.github.io/post/optimization/ldqp/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/ldqp/</guid>
+      <description>Low-Dimensional qp for constrained optimization</description>
     </item>
     <item>
       <title>Member Ptr of Class</title>
@@ -289,11 +352,32 @@
       <description>nested class for C++</description>
     </item>
     <item>
+      <title>Newton Conjugate Gradient Method</title>
+      <link>https://xwlu.github.io/post/optimization/newton_cg/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/newton_cg/</guid>
+      <description>newton cg for unconstrained optimization</description>
+    </item>
+    <item>
+      <title>Newton Methods</title>
+      <link>https://xwlu.github.io/post/optimization/newton/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/newton/</guid>
+      <description>newton methods for unconstrained optimization</description>
+    </item>
+    <item>
       <title>Operator</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</guid>
       <description>Operator for C++</description>
+    </item>
+    <item>
+      <title>Optimization</title>
+      <link>https://xwlu.github.io/post/optimization/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/abstract/</guid>
+      <description>wiki on optimization</description>
     </item>
     <item>
       <title>Other knowledges of template</title>
@@ -308,6 +392,20 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/others/</guid>
       <description>Some other knowledge for C++</description>
+    </item>
+    <item>
+      <title>Penalty Methods</title>
+      <link>https://xwlu.github.io/post/optimization/penalty_methods/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/penalty_methods/</guid>
+      <description>use penalty methods to solve constrained optimization problem</description>
+    </item>
+    <item>
+      <title>PHR Augmented Lagrangian Method</title>
+      <link>https://xwlu.github.io/post/optimization/phr_alm/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/phr_alm/</guid>
+      <description>Powell-Hestenes-Rockafellar Method for Equality- Constrained Cases</description>
     </item>
     <item>
       <title>Requires &amp; Concepts</title>
@@ -336,6 +434,20 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/</guid>
       <description>Singleton for C++</description>
+    </item>
+    <item>
+      <title>Smoothing Techniques</title>
+      <link>https://xwlu.github.io/post/optimization/smoothing/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/smoothing/</guid>
+      <description>smoothing techniques</description>
+    </item>
+    <item>
+      <title>Steepest Gradient Descent</title>
+      <link>https://xwlu.github.io/post/optimization/sgd/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/sgd/</guid>
+      <description>sgd for unconstrained optimization</description>
     </item>
     <item>
       <title>Template Abstract</title>
@@ -392,6 +504,13 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</guid>
       <description>Type for C++</description>
+    </item>
+    <item>
+      <title>Unconstrained Optimization</title>
+      <link>https://xwlu.github.io/post/optimization/unconstrained_optimization/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/optimization/unconstrained_optimization/</guid>
+      <description>unconstrained optimization</description>
     </item>
     <item>
       <title>Union</title>

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>Newton Methods - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="newton methods for unconstrained optimization" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/optimization/newton/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Newton Methods - My New Hugo Site" />
+<meta name="twitter:description"
+  content="newton methods for unconstrained optimization" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Newton Methods - My New Hugo Site">
+<meta property="og:description"
+  content="newton methods for unconstrained optimization" />
+<meta property="og:url" content="https://xwlu.github.io/post/optimization/newton/" />
+<meta property="og:site_name" content="Newton Methods" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/optimization/newton/">Newton Methods</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      4208 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="newtons-method">Newton&rsquo;s Method</h1>
+<h3 id="牛顿法">牛顿法</h3>
+<ul>
+<li>前提条件
+<ul>
+<li>一阶导和二阶导连续</li>
+<li>具有严格正定的Hessian矩阵</li>
+</ul>
+</li>
+<li>原理
+<ul>
+<li>对函数进行二阶泰勒展开
+<ul>
+<li>$$f(x)\approx f(x_{k})+\triangledown f(x_{k})^{T}(x-x_{k})+\frac{1}{2}(x-x_{k})^{T}\triangledown ^{2}f(x_{k})(x-x_{k})$$</li>
+</ul>
+</li>
+<li>导数为0时得到极值点
+<ul>
+<li>$$\triangledown f(x)=\triangledown ^{2} f(x_{k})(x-x_{k})+\triangledown f(x_{k})=0$$</li>
+<li>$$x=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+</ul>
+</li>
+<li>更新公式
+<ul>
+<li>$$x_{k+1}=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+<li>减号后面的内容就是牛顿步长（Newton step），这里需要满足Hessian严格正定\(\triangledown^{2} f(x_{k})&gt;0\)，因为沿着梯度的负方向才可以保证函数值下降，牛顿步长是一个负号乘Hessian的逆再乘梯度，Hessian的逆必须要和梯度是同向的（正定）才行，从而Hessian也必须是正定的</li>
+</ul>
+</li>
+<li>特别的，如果目标函数本身就是二次的，那一步就可以迭代到最优解</li>
+</ul>
+</li>
+<li>与梯度下降法对比
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/newton_vs_gd.png" alt="newton v.s. gd"></li>
+<li>下降路线更加平直</li>
+<li>迭代次数更少</li>
+<li>每次迭代计算量更大</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>很多时候Hessian矩阵是半正定或者不定的，会导更新方向不是梯度的反方向，函数值增大</li>
+<li><img src="/images/optimization/unconstrained_optimization/hessian_indef.png" alt="Hessian indefinite"></li>
+</ul>
+</li>
+</ul>
+<h1 id="damped-newtons-method">Damped Newton&rsquo;s Method</h1>
+<h3 id="阻尼牛顿法">阻尼牛顿法</h3>
+<ul>
+<li>当初始点距离最优解较远时，Hessian不一定正定，迭代不一定收敛，因此引入步长因子\(t\)
+<ul>
+<li>$$d=-H^{-1}g$$</li>
+<li>$$x_{k+1}=x_{k}+td_{k}$$</li>
+</ul>
+</li>
+</ul>
+<h1 id="modified-newtons-method">Modified Newton&rsquo;s Method</h1>
+<h3 id="修正牛顿法">修正牛顿法</h3>
+<ul>
+<li>背景
+<ul>
+<li>提高牛顿方法在一般函数上的鲁棒性</li>
+<li>对牛顿法的优化思路
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/modified_damped_newton.png" alt="Modified Damped Newton&rsquo;s Method"></li>
+<li>考虑到Hessian不一定正定，尝试用一个正定的\(M\)拟合Hessian，只要拟合的够接近，也可以近似表示曲率信息</li>
+<li>其实没必要求\(M^{-1}\)，本质上我们是想求线性方程\(Md=-\triangledown f(x)\)的解\(d\)，可以用一些成熟的线性求解器进行求解，比解逆快很多</li>
+<li>inexact line search不需要求Hessian，梯度也只是在最开始算一次，更新\(t\)的过程中不需要计算梯度，所以计算量很小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>原问题
+<ul>
+<li>$$\left [ \triangledown ^{2}f(x) \right ]d=-\triangledown f(x)$$</li>
+</ul>
+</li>
+<li>用\(M\)拟合Hessian
+<ul>
+<li>如果是凸函数（Hessian半正定）
+<ul>
+<li>$$M=\triangledown ^{2}f(x)+\epsilon I,\epsilon =min(1,\left| \triangledown f(x) \right|_{\infty })/10$$</li>
+<li>\(M\)严格正定，搜索方向的求解可以用Cholesky factorization快速求解</li>
+<li>\(Md=-\triangledown f(x),M=LL^{T}\)，\(L\)是个下三角矩阵</li>
+</ul>
+</li>
+<li>如果是非凸函数（Hessian不定）
+<ul>
+<li>将Hessian进行Bunch-Kaufman Factorization，原问题转化为\(LBL^{T}d=-\triangledown f(x)\)</li>
+<li>其中，\(L\)是个下三角矩阵，\(B\)是个对角线由\(1\times 1\)和\(2\times 2\)的矩阵块组成的块对角阵</li>
+<li>\(1\times 1\)的标量一定是正数，\(2\times 2\)的矩阵块的特征值是一正一负，我们需要把每个\(2\times 2\)矩阵替换为和其最接近的\(2\times 2\)正定矩阵，最终得到新的\(\tilde{B}\)（正定），把\(d\)求解出来
+<ul>
+<li>上面\(2\times 2\)矩阵的正定化就是把负的特征值都算出来，然后用一个\(\epsilon \)去代替负特征值得到新的矩阵</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>仅仅保证了Hessian的正定，还是要把Hessian求出来，计算量大</li>
+</ul>
+</li>
+</ul>
+<h1 id="quasi-newtons-method">Quasi Newton&rsquo;s Method</h1>
+<h3 id="拟牛顿法">拟牛顿法</h3>
+<ul>
+<li>牛顿法的问题
+<ul>
+<li>牛顿法需要函数在任何点的Hessian可逆且正定，条件比较苛刻</li>
+<li>牛顿法的计算量太大</li>
+<li>当\(x\)距离函数的最优解还比较远的时候，用二次函数进行近似的效果不好，这时候用牛顿法不仅计算量大，收敛还很慢；当\(x\)距离函数的最优解比较近的时候，二次函数的近似会好一些，收敛会很快。</li>
+<li>Hessian拟合的函数的条件数可能会变得很大（poorly conditioned）。比如函数是一段直线和一段二次曲线拼接起来的，在直线部分计算Hessian去确定更新步长的话，会得到一个非常大的更新步长（曲率是0，对0取逆是无穷大）</li>
+</ul>
+</li>
+<li>拟牛顿法需要满足的一些特质
+<ul>
+<li>原理和修正阻尼牛顿法一样，设计一个\(M\)去近似\(H\)</li>
+<li>收敛速度应该在牛顿法和最速梯度下降法之间</li>
+<li>不需要计算完整的Hessian矩阵（低计算量）</li>
+<li>线性方程\(Md=-\triangledown f(x)\)存在闭式解</li>
+<li>\(M\)不应该是一个稠密的阵，只需要在重要的的方向上对\(H\)做近似，尽可能稀疏</li>
+<li>\(d\)一定得让函数下降（和梯度方向的夹角小于90度），其实就是\(M\)必须正定</li>
+<li>\(d\)应该包含曲率信息（收敛要比梯度下降来的快），也就是满足\(\Delta g\approx M^{k+1}\Delta x\)</li>
+</ul>
+</li>
+<li>拟牛顿法的核心思路
+<ul>
+<li>通过采样N对\(\Delta x\)和\(\Delta g\)来估计\(\Delta M\)</li>
+<li>同时，考虑到最终是要求\(M^{-1}\)，干脆直接估计\(B=M^{-1}\)，更新方向\(\Delta x=B\Delta g \)</li>
+<li>估计\(B\)的时候避免计算Hessian矩阵</li>
+</ul>
+</li>
+</ul>
+<h4 id="凸且光滑函数的bfgs方法">凸且光滑函数的BFGS方法</h4>
+<ul>
+<li>假设我们有了很多的\(\Delta x\)和\(\Delta g\)，怎么估计B呢？还是用优化迭代的思路：
+<ul>
+<li>初始化\(B^{0}\)为单位阵</li>
+<li>迭代求解最优的\(B\)，迭代的思路如下：
+<ul>
+<li>我们希望迭代前后B的差距尽可能小：\(min_{B^{k+1}}\left| B^{k+1}-B^{k} \right|^{2}\)</li>
+<li>其次，\(B\)需要满足一些约束：
+<ul>
+<li>\(B=B^{T}\)，这是因为Hessian是对称阵，所以Hessian的逆也应该对称</li>
+<li>\(\Delta x=B\Delta g \)</li>
+</ul>
+</li>
+<li>注意，单纯用差的二范数描述\(B^{k}\)和\(B^{k+1}\)的变化并不好，比如\(\begin{bmatrix} 100 &amp; 1 \\ 1 &amp; 100 \end{bmatrix}\)和\(\begin{bmatrix} 100 &amp; 0.5 \\ 0.5 &amp; 100 \end{bmatrix}\)的差值的二范数很小，但对于右上和左下角的元素来说变化和其自身的大小相比是巨大的，因此需要进行归一化</li>
+<li>归一化后，优化目标变成：\(min_{B^{k+1}}\left| H^{\frac{1}{2}}(B^{k+1}-B^{k})H^{\frac{1}{2}} \right|^{2}\)，\(B=H\)为真实的Hessian矩阵，\(H=\int_{0}^{1}\triangledown^{2}f\left[(1-\tau)x^{k}+\tau x^{k+1}\right]d\tau\)</li>
+<li>我们本来就是套估计H，现在这里还要用到H，看起来是个鸡生蛋，蛋生鸡的问题，但实际上这个问题是有解析解的，与\(H\)无关。四个优化领域的大佬提出了BFGS方法，最终得到的更新公式如下：</li>
+<li><img src="/images/optimization/unconstrained_optimization/bfgs.png" alt="BFGS"></li>
+<li>注意：当\(\Delta g^{T}\Delta x&gt;0\)时，我们可以保证BFGS更新的结果是正定的，从而保证\(\Delta x\)的方向是函数值下降的方向，对凸函数而言，这是绝对成立的（可以回顾强凸性的定义）；非凸函数后面讨论</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>适用于凸且光滑函数的BFGS方法的流程
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/bfgs_for_convex.png" alt="BFGS for convex"></li>
+<li>\(g\)是梯度</li>
+<li>\(d\)是更新方向</li>
+<li>\(t\)是line search方法确定的步长</li>
+</ul>
+</li>
+<li>缺点与问题
+<ul>
+<li>严格梯度单调性（严格凸函数）的条件过于苛刻，一般函数很难满足</li>
+<li>曲率的计算在optimum附近有效，在远处反而是浪费算力</li>
+<li>每次迭代的计算复杂度是优化变量的维度的平方，还是不够轻量</li>
+<li>在非凸函数上是否能够保证收敛仍未知</li>
+<li>在非光滑函数上能否正常使用仍未知</li>
+</ul>
+</li>
+</ul>
+<h4 id="非凸但光滑函数的bfgs方法">非凸但光滑函数的BFGS方法</h4>
+<ul>
+<li>在非凸函数上如何保证\(\Delta g^{T}\Delta x&gt;0\)，从而保证更新方向是函数值的下降方向呢？答案是线搜索的时候满足Wolfe conditions
+<ul>
+<li>weak wolfe conditions
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/weak_wolfe.png" alt="weak wolfe conditions"></li>
+<li>sufficient decrease condition保证了函数值的下降</li>
+<li>curvature condition保证了这一步跨的足够大，从下山跨到上山</li>
+</ul>
+</li>
+<li>strong wolfe conditions
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/strong_wolfe.png" alt="strong wolfe conditions"></li>
+<li>strong和weak的区别在于对curvature condition加了个绝对值约束，不让这一步跨的太过头（跑到对面的山坡上），可以抑制震荡</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>但Wolfe conditions只能保证方向是下降方向，如何保证BFGS的收敛性呢？答案是cautious update(Li and Fukushima 2001) with mild conditions
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/cautious_update.png" alt="cautious update"></li>
+<li>只要函数满足如下两个条件，cautious update都可以保证BFGS的收敛性
+<ul>
+<li>函数有bounded sub-level sets</li>
+<li>函数有lipschitz continuous grad</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>适用于非凸但光滑函数的BFGS方法的流程
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/bfgs_for_nonconvex.png" alt="BFGS for nonconvex"></li>
+</ul>
+</li>
+<li>与牛顿方法的收敛速度对比
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/bfgs_vs_newton.png" alt="BFGS vs Newton"></li>
+<li>速度上慢了一点点，但计算量少很多，综合看更具优势</li>
+</ul>
+</li>
+</ul>
+<h4 id="limited-memory-bfgsl-bfgs方法">Limited-memory BFGS(L-BFGS)方法</h4>
+<ul>
+<li>由于\(B^{k+1}\)是由\(B^{k}\)迭代计算得到的。所以\(B^{k}\)隐含了\(B^{k-100}\)的信息。但直觉上来说，\(x^{k}\)和\(x^{k-100}\)已经差的很远了，\(x^{k-100}\)处的曲率信息对\(x^{k}\)处的曲率信息的推导没有啥有效价值了，因此我们可以设置一个memory buffer，让\(B^{k-m}\)到\(B^{k-1}\)来决定\(B^{k}\)的取值，从而降低计算量。</li>
+<li>L-BFGS方法的流程
+<ul>
+<li>就是把上面的Cautious-BFGS过程改成下面的\(B^{k}\)更新流程</li>
+<li><img src="/images/optimization/unconstrained_optimization/limit_memory_update.png" alt="L-BFGS"></li>
+<li>上图左边方法的复杂度是\(O(mn^{2})\)，因为每个window size内的信息都被重复遍历并计算了。实际上每个循环中，我们只需要将窗口中的头元素去掉，末尾的新元素算进来即可，因此改成右边的计算过程后可以将复杂度简化到\(O(mn)\)，具体推导可以看Liu and Nocedal 1989.</li>
+</ul>
+</li>
+<li>与Newton和BFGS的对比
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/l_bfgs_vs_bfgs.png" alt="L-BFGS vs BFGS"></li>
+<li>由于牺牲了部分历史信息，收敛速度相比BFGS更慢一些，但计算量从\(O(n^{2})\)降低到\(O(mn)\)，当\(n\)很大的时候，效率提升就非常大了，基本上是光滑非凸函数优化的第一选择</li>
+</ul>
+</li>
+</ul>
+<h4 id="非凸且非光滑函数的l-bfgs方法">非凸且非光滑函数的L-BFGS方法</h4>
+<ul>
+<li>wolfe conditions方法选择
+<ul>
+<li>假设我们把strong wolfe conditions方法直接应用在非凸且非光滑函数上，看看会发生什么
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/strong_wolfe_on_nonconvex.png" alt="strong wolfe on nonconvex"></li>
+<li>回顾一下，strong wolfe conditions通过绝对值约束，将更新点的梯度压在0附近，但上图右侧的非光滑函数没有任何点的梯度在0附近，导致无法找到满足strong wolfe conditions的点</li>
+</ul>
+</li>
+<li>假设我们把weak wolfe conditions方法直接应用在非凸且非光滑函数上，看看效果
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/weak_wolfe_on_nonconvex.png" alt="weak wolfe on nonconvex"></li>
+<li>weak wolfe conditions方法可以保证能找到满足条件的更新点</li>
+</ul>
+</li>
+<li>结论：使用weak wolfe conditions方法处理nonsmooth函数</li>
+</ul>
+</li>
+<li>如何确定一个步长使得weak wolfe conditions被满足呢？
+<ul>
+<li>对smooth函数，用拟合法确定步长
+<ul>
+<li>先初始化一个步长\(\alpha\)</li>
+<li>如果该步长满足weak wolfe conditions，直接返回</li>
+<li>如果不满足weak wolfe conditions，根据\(\left ( x,{f}\ &lsquo;(x) \right )\)和\(\left ( x+\alpha d,{f}\ &lsquo;(x+\alpha d) \right )\)两个点去拟合二次函数，取二次函数的极值点作为新的步长，不断迭代，直到满足weak wolfe conditions</li>
+<li>但是当函数nonsmooth（或者条件数很大）的时候，这种二次函数拟合的效果很差，导致求出来的极值点也很不理想，就不再适用了</li>
+</ul>
+</li>
+<li>对nonsmooth函数，用Lewis &amp; Overton line search方法
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/lewis_overton_1.png" alt="lewis overton 1"></li>
+<li><img src="/images/optimization/unconstrained_optimization/lewis_overton_2.png" alt="lewis overton 2"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>注意点
+<ul>
+<li>\(x_{0}\)一定要取在可导的点，不能一上来就落在nonsmooth处</li>
+</ul>
+</li>
+<li>非凸且非光滑函数的L-BFGS方法流程
+<ul>
+<li><img src="/images/optimization/unconstrained_optimization/lbfgs_nonsmooth_nonconvex.png" alt="L-BFGS for nonsmooth nonconvex"></li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>

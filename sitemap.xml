@@ -35,6 +35,12 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/async-future/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/optimization/barrier_methods/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/basic/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/bind-lambda/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
@@ -59,7 +65,16 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/optimization/conic_augmented_lagrangian/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/conic_programming/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/constrained_optimization/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/construct/</loc>
@@ -110,7 +125,19 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/optimization/kkt/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/lagrangian_relaxation/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/ldlp/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/ldqp/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</loc>
@@ -131,13 +158,28 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/nested-class/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/optimization/newton_cg/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/newton/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/abstract/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/others/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/others/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/penalty_methods/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/phr_alm/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</loc>
@@ -150,6 +192,12 @@
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/smoothing/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/sgd/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/abstract/</loc>
@@ -174,6 +222,9 @@
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/optimization/unconstrained_optimization/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/union/</loc>
