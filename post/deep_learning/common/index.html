@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>DL Common Knowledges - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
+  content="Common Knowledges of DL" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/deep_learning/common/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="DL Common Knowledges - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
+  content="Common Knowledges of DL" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="DL Common Knowledges - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Common Knowledges of DL" />
+<meta property="og:url" content="https://xwlu.github.io/post/deep_learning/common/" />
+<meta property="og:site_name" content="DL Common Knowledges" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/deep_learning/common/">DL Common Knowledges</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      11 Words
+                      1006 Words
                     
 
                   </div>
@@ -194,19 +194,95 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="基础知识">基础知识</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>
+<h3 id="极大似然估计">极大似然估计</h3>
+<ul>
+<li>$$p(x|\theta)$$</li>
+<li>如果\(\theta\)是已知的，则该函数叫做概率函数(Probability)，描述的是不同样本点 出现的概率；</li>
+<li>如果\(x\)是已知的，则该函数叫做似然函数(Likelihood)，描述的是对于不同的模型参数，出现样本点\(x\)的概率。</li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>
+<h3 id="反向传播">反向传播</h3>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>TODO</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+<li>
+<h3 id="激活函数">激活函数</h3>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
+<li>作用：对输入空间进行“弯曲（非线性变换）“，提升神经网络的非线性表达能力。</li>
+<li>设计原则
+<ul>
+<li>非线性函数，且连续可导</li>
+<li>函数及其导函数易于计算</li>
+<li>导函数的值域以及分布</li>
+</ul>
+</li>
+<li>典型函数
+<ul>
+<li><img src="/images/deep_learning/common/activation_function.png" alt="Activation Function"></li>
+<li><img src="/images/deep_learning/common/activation_function_info.png" alt="Activation Function Info.">
+<ul>
+<li>Z字型下降
+<ul>
+<li><img src="/images/deep_learning/common/z.png" alt="Z"></li>
+<li>如果输入神经元的数据总是正数（无论什么数值经过sigmoid之后都是正数），那么上图的\(a_{i}^{(j)}\)都是正数。梯度的符号取决于\(\delta _{2}^{(3)}\)，要么全部是正数，要么全部是负数。但很多时候，\(\Theta _{ij}^{(l)}\)的梯度更新方向是异号的，类似于右下角图片的黑色线段，同号就会导致更新需要花费很多步来回迭代到最优解（参数的运动路线像字母Z）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="卷积">卷积</h3>
+<ul>
+<li>感受野(Local Receptive Fields)：卷积神经网络每一层输出的特征图(feature map)上的像素点在原始图像（网络开始的输入图像）上映射的区域大小</li>
+<li>Max Pooling的作用
+<ul>
+<li>减少计算量，减少内存消耗</li>
+<li>提高感受野的大小</li>
+<li>减少参数数量</li>
+<li>增加平移不变性
+<ul>
+<li><img src="/images/deep_learning/common/tf_consist.png" alt="tf consist"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="模型的评价">模型的评价</h3>
+<ul>
+<li>期望风险(Expected Risk)：评估当前模型（也就是映射函数）在真实数据分布下的预测损失Loss的期望。前提是已知真实数据分布下的误差，那也就是说模型的真实误差。</li>
+<li>我们所能得到的观察数据是真实数据的一个真子集，因此可以利用模型在观察数据上的误差来近似反应模型在真实数据上的拟合能力，将这个误差称为经验误差。将在所有观察数据中得到的平均误差称为经验风险(Empirical Risk)</li>
+<li>过拟合是因为模型在训练数据集上拟合能力太强，反而对于新的测试数据表现不佳。根据奥卡姆剃刀原则需要限制模型的能力(模型的参数量)，从而提高泛化能力，因此，我们追求的是结构风险最小化。
+<ul>
+<li>奥卡姆剃刀原则：如无必要，勿增实体。简单的模型泛化能力更好，如果有两个性能相近的模型，我们应该选择更简单的模型。</li>
+</ul>
+</li>
+<li><img src="/images/deep_learning/common/l1_l2.png" alt="L1 L2"></li>
+</ul>
+</li>
+<li>
+<h3 id="损失函数">损失函数</h3>
+<ul>
+<li><img src="/images/deep_learning/common/loss.png" alt="Loss"></li>
+</ul>
+</li>
+<li>
+<h3 id="偏差方差">偏差方差</h3>
+<ul>
+<li>为了避免过拟合，我们经常会在模型的拟合能力和复杂度之间进行权衡。</li>
+<li>方差一般会随着训练样本的增加而减少。当样本比较多时，方差比较少，这时可以选择能力强的模型来减少偏差。</li>
+<li>随着模型复杂度的增加，模型的拟合能力变强，偏差减少而方差增大，从而导致过拟合。</li>
+</ul>
+</li>
 </ul>
 </article>
               </div>
@@ -250,6 +326,14 @@
 </body>
 
 <script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
 
 
 

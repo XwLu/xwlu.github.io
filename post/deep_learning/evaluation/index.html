@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>DL Evaluation - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Knowledges of DL Evaluation" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/deep_learning/evaluation/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="DL Evaluation - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Knowledges of DL Evaluation" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="DL Evaluation - My New Hugo Site">
+<meta property="og:description"
+  content="Knowledges of DL Evaluation" />
+<meta property="og:url" content="https://xwlu.github.io/post/deep_learning/evaluation/" />
+<meta property="og:site_name" content="DL Evaluation" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/deep_learning/evaluation/">DL Evaluation</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      3159 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="训练目标">训练目标</h1>
+<ul>
+<li>期望风险(Expected Risk)：评估当前模型（也就是映射函数）在真实数据分布下的预测损失Loss的期望。前提是已知真实数据分布下的误差，那也就是说模型的真实误差。</li>
+<li>我们所能得到的观察数据是真实数据的一个真子集，因此可以利用模型在观察数据上的误差来近似反应模型在真实数据上的拟合能力，将这个误差称为经验误差。将在所有观察数据中得到的平均误差称为经验风险(Empirical Risk)</li>
+<li>过拟合是因为模型在训练数据集上拟合能力太强，反而对于新的测试数据表现不佳。根据奥卡姆剃刀原则需要限制模型的能力(模型的参数量)，从而提高泛化能力，因此，我们追求的是结构风险最小化。
+<ul>
+<li>奥卡姆剃刀原则：如无必要，勿增实体。简单的模型泛化能力更好，如果有两个性能相近的模型，我们应该选择更简单的模型。</li>
+</ul>
+</li>
+<li><img src="/images/deep_learning/common/l1_l2.png" alt="L1 L2"></li>
+</ul>
+<h1 id="损失函数">损失函数</h1>
+<ul>
+<li><img src="/images/deep_learning/common/loss.png" alt="Loss"></li>
+</ul>
+<h1 id="偏差方差">偏差方差</h1>
+<ul>
+<li>为了避免过拟合，我们经常会在模型的拟合能力和复杂度之间进行权衡。</li>
+<li>方差一般会随着训练样本的增加而减少。当样本比较多时，方差比较少，这时可以选择能力强的模型来减少偏差。</li>
+<li>随着模型复杂度的增加，模型的拟合能力变强，偏差减少而方差增大，从而导致过拟合。</li>
+</ul>
+<h1 id="数据集划分">数据集划分</h1>
+<ul>
+<li>把数据集全部作为训练集，然后用这个训练集训练模型，用训练集验证模型。
+<ul>
+<li>选择训练集误差最小的模型</li>
+</ul>
+</li>
+<li>把数据集随机分为训练集和测试集，训练集训练模型，测试集验证模型。
+<ul>
+<li>选择测试集误差最小的模型</li>
+</ul>
+</li>
+<li>把数据集分为训练集、验证集和测试集，训练集训练模型，验证集验证模型。
+<ul>
+<li>根据情况不断调整模型，选择出最好的模型。再用训练集和验证集训练出一个最终的模型，最后用测试集评估最终的模型。</li>
+</ul>
+</li>
+<li>交叉验证把原始数据集平均分为K组不重复的子集，每次选择K-1组子集作为训练集，剩下一组子集作为验证集。
+<ul>
+<li>K次实验得到K个模型，将K个模型在各自验证集上的错误率的平均作为分类器的评价</li>
+</ul>
+</li>
+</ul>
+<h1 id="评价指标">评价指标</h1>
+<ul>
+<li>
+<h3 id="典型指标">典型指标</h3>
+<ul>
+<li>准确率（Accuracy）
+<ul>
+<li>准确率和错误率是在所有类别上整体的性能平均，由于数据类别的分布不平衡性，例如正负比例为9:1，那么模型只需要将所有样本全部分类为正例，也能获得90%的准确率。如果希望对每个类别都进行性能的评估，就需要计算精确率和召回率。</li>
+</ul>
+</li>
+<li>错误率（Error Rate）</li>
+<li>精确率（Precision）
+<ul>
+<li>$$P=\frac{TP}{TP+FP}$$</li>
+</ul>
+</li>
+<li>召回率（Recall）
+<ul>
+<li>$$P=\frac{TP}{TP+FN}$$</li>
+</ul>
+</li>
+<li>F值（F Measure）
+<ul>
+<li>F值是一个综合指标，为精确率和召回率的调和平均</li>
+<li>$$f=\frac{(1+\beta ^{2})\times P\times R}{\beta ^{2}\times P+R}$$</li>
+<li>$$F=f(\beta =1)$$</li>
+</ul>
+</li>
+<li>宏平均（Macro Average）</li>
+<li>微平均（Micro Average）</li>
+</ul>
+</li>
+<li>在实际应用中，我们也可以通过调整分类模型的阈值来进行更全面的评价，比如AUC(Area Under Curve)、ROC(Receiver Operating Characteristic)曲线、PR(Precision-Recall)曲线等。此外，很多任务还有自己专门的评价方式，比如TopN准确率。</li>
+</ul>
+<h1 id="网络优化">网络优化</h1>
+<ul>
+<li>
+<h3 id="梯度下降算法">梯度下降算法</h3>
+<ul>
+<li>批量梯度下降 Batch Gradient Descent
+<ul>
+<li>又叫Vanilla Gradient Descent，每次训练更新模型时采用的是整个训练集合的所有样本点。</li>
+<li>优点
+<ul>
+<li>每次更新朝着正确的方向进行</li>
+<li>保证收敛于极值点，凸函数收敛于全局极值点</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>学习时间太长</li>
+<li>消耗大量内存</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>随机梯度下降 Stochastic Gradient Descent
+<ul>
+<li>对每个训练样本进行参数更新。因为批量梯度下降在每次参数更新前重新计算类似样本的梯度，因此会对大数据集会有一些冗余的计算。而随机梯度下降由于每次只选取一个样本，所以会消除这种冗余</li>
+<li>优点
+<ul>
+<li>运行速度快，允许在线更新模型</li>
+<li>会跳出局部极小值点到另一个更好的局部极小值点</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>每次更新可能并不按照正确的方向进行</li>
+<li>以较大的方差频繁地更新，目标函数剧烈波动</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>小批量梯度下降 Mini-Batch Gradient Descent
+<ul>
+<li>在每次更新模型时使用的样本量做了权衡，即每次用多个样本组成的数据集来计算梯度并更新</li>
+<li>优点
+<ul>
+<li>降低了参数更新的方差，获得更加稳定的收敛</li>
+<li>利用深度学习库中常用的高度优化的矩阵优化方法</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>学习率的选择困难</li>
+<li>会陷入无限次的局部极小值，或鞍点</li>
+</ul>
+</li>
+<li>影响效果的主要因素
+<ul>
+<li>批量大小选择
+<ul>
+<li>一般而言，批量大小不影响随机梯度的期望，但是会影响随机梯度的方差。批量大小越大，随机梯度的方差越小，引入的噪声也越小，训练也越稳定，因此可以设置较大的学习率。而批量大小较小时，需要设置较小的学习率，否则模型会不收敛。</li>
+<li>线性缩放规则(Linear Scaling Rule)：当批量大小增加𝑚𝑚倍时，学习率也增加𝑚𝑚倍。线性缩放规则往往在批量大小比较小时适用，当批量大小非常大时，线性缩放会使得训练不稳定。</li>
+<li><img src="/images/deep_learning/common/mini_batch_param_selection.png" alt="Mini Batch Param Selection"></li>
+</ul>
+</li>
+<li>学习率
+<ul>
+<li>学习率过大，模型不会收敛；过小的话，收敛速度太慢。</li>
+<li>学习率衰减
+<ul>
+<li>从经验上看，学习率在刚开始的时候需要设置大一点保证收敛的速度，在收敛到最优点附近时要小一点避免来回震荡。</li>
+<li>分段常数衰减（Piecewise Constant Decay）</li>
+<li>逆时衰减（Inverse Time Decay）</li>
+<li>指数衰减（Exponential Decay）</li>
+<li>自然指数衰减（Natural Exponential Decay）</li>
+<li>余弦衰减（Cosine Decay）</li>
+</ul>
+</li>
+<li>学习率预热
+<ul>
+<li>训练刚开始的时候模型的参数是随机设置的，因此在使用Mini-Batch梯度下降法时，将学习率设置较大的情况下梯度也往往比较大，使得训练不稳定。为了提高训练的稳定性，可以在最初几轮的时候，采用比较小的学习率，等梯度下降到一定程度之后再恢复到初始的学习率，这种方法称为学习率预热。当预热过程结束，再选择一种学习率衰减方法来逐渐降低学习率。</li>
+</ul>
+</li>
+<li>周期性学习率调整
+<ul>
+<li>为了使得梯度下降法能够逃离鞍点或尖锐最小值，一种经验性的方式是在训练过程中周期性地增大学习率。当参数处于尖锐最小值附近时，增大学习率有助于逃离尖锐最小值；当参数处于平坦最小值附近时，增大学习率依然有可能在该平坦最小值的吸引域(Basin of Attraction)内。因此，周期性地增大学习率虽然可能短期内损害优化过程，使得网络收敛的稳定性变差，但从长期来看有助于找到更好的局部最优解。</li>
+</ul>
+</li>
+<li>自适应调整学习率方法
+<ul>
+<li>AdaGrad
+<ul>
+<li>借鉴L2正则化的思想，每次迭代时自适应地调整每个参数的学习率，梯度平方越大，学习率越大。</li>
+<li>缺点：经过一定次数迭代依然没有找到最优点时，由于学习率已经非常小，很难再继续找到最优点。</li>
+</ul>
+</li>
+<li>RMSprop
+<ul>
+<li>在有些情况下避免AdaGrad算法中学习率不断单调下降以至于过早衰减的缺点</li>
+</ul>
+</li>
+<li>AdaDelta
+<ul>
+<li>也是AdaGrad算法的一个改进。和RMSprop算法类似AdaDelta算法通过梯度平方的指数衰减移动平均来调整学习率。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>梯度估计修正
+<ul>
+<li>在Mini-Batch梯度下降算法中，每次选取的样本数量比较小，损失会呈现震荡的方式下降(每次迭代时梯度的估计值和整个训练集上的最优梯度并不一致)。一种有效的方式是通过使用最近一段时间内的平均梯度来代替当前时刻的随机梯度来作为参数更新的方向，从而提高优化速度。</li>
+<li>Momentum算法
+<ul>
+<li>利用之前积累的的动量来替代真正的梯度，每次迭代的梯度可以看作是加速度。在第N次迭代时，计算负梯度的“加权移动平均”作为参数的更新方.</li>
+<li>每个参数的实际更新差值取决于最近一段时间内梯度的加权平均值。当某个参数在最近一段时间内的梯度方向不一致时，其真实的参数更新幅度变小；相反，当在最近一段时间内的梯度方向都一致时，其真实的参数更新幅度变大，起到加速作用。</li>
+</ul>
+</li>
+<li>Nesterov加速梯度法
+<ul>
+<li>是一种对动量法的改进。</li>
+</ul>
+</li>
+<li>Adam算法
+<ul>
+<li>可以看作Momentum算法和RMSprop算法的结合，不但使用动量作为参数更新方向，而且可以自适应调整学习率。</li>
+</ul>
+</li>
+<li>梯度截断法
+<ul>
+<li>在深度神经网络或循环神经网络中，除了梯度消失之外，梯度爆炸也是影响学习效率的主要因素。在基于梯度下降的优化过程中，如果梯度突然增大，用大的梯度更新参数反而会导致其远离最优点。为了避免这种情况，当梯度的模大于一定阈值时，就对梯度进行截断。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>总结
+<ul>
+<li><img src="/images/deep_learning/common/optimization.png" alt="Optimization"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="名词解释">名词解释</h3>
+<ul>
+<li>Epoch：使用训练集全部数据对模型进行一次完整的训练，称为“一代训练”。</li>
+<li>Batch：使用训练集中一小部分样本利用MBGD更新一次参数，这部分样本被称为“一批数据”。</li>
+<li>Iteration：使用一个Batch的数据对模型进行一次参数更新的过程，称为“一次训练”。</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>

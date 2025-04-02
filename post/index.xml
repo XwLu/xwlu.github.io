@@ -51,11 +51,46 @@
       <description>Paper Reading Notes of WayFormer</description>
     </item>
     <item>
+      <title>Deep Learning Abstract</title>
+      <link>https://xwlu.github.io/post/deep_learning/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/deep_learning/abstract/</guid>
+      <description>The Abstract of Deep Learning Notes</description>
+    </item>
+    <item>
+      <title>DL Attention</title>
+      <link>https://xwlu.github.io/post/deep_learning/attention/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/deep_learning/attention/</guid>
+      <description>Knowledges of Attention</description>
+    </item>
+    <item>
+      <title>DL Common Knowledges</title>
+      <link>https://xwlu.github.io/post/deep_learning/common/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/deep_learning/common/</guid>
+      <description>Common Knowledges of DL</description>
+    </item>
+    <item>
+      <title>DL Evaluation</title>
+      <link>https://xwlu.github.io/post/deep_learning/evaluation/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/deep_learning/evaluation/</guid>
+      <description>Knowledges of DL Evaluation</description>
+    </item>
+    <item>
       <title>Robotics Abstract</title>
       <link>https://xwlu.github.io/post/robotics/abstract/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/robotics/abstract/</guid>
       <description>The Abstract of Robotics Tech</description>
+    </item>
+    <item>
+      <title>Transformer</title>
+      <link>https://xwlu.github.io/post/deep_learning/transformer/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/deep_learning/transformer/</guid>
+      <description>Knowledges of Transformer</description>
     </item>
   </channel>
 </rss>

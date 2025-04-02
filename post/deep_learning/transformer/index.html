@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Transformer - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
+  content="Knowledges of Transformer" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/deep_learning/transformer/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Transformer - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
+  content="Knowledges of Transformer" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Transformer - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Knowledges of Transformer" />
+<meta property="og:url" content="https://xwlu.github.io/post/deep_learning/transformer/" />
+<meta property="og:site_name" content="Transformer" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/deep_learning/transformer/">Transformer</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      11 Words
+                      809 Words
                     
 
                   </div>
@@ -194,19 +194,68 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="背景">背景</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>Transformer摆脱了NLP任务对于RNN、LSTM的依赖，使用了self-attention的方式对上下文进行建模，提高了训练和推理的速度。</li>
 </ul>
-<h2 id="links">Links</h2>
+<h1 id="模型结构">模型结构</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li><img src="/images/deep_learning/transformer/construction.png" alt="construction"></li>
+<li>第一部分：输入层
+<ul>
+<li>主要包含两个主要输入，词向量与位置向量，按元素相加的方式作为模型的输入层。</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+<li>第二部分：编码器
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
+<li>N表示编码层有N个同样的编码模块，其中每个模块包含有多头注意力层(Multi-Head Attention)与前向连接层(Feed Forward)，每个层之间有层归一化与残差连接层。</li>
+<li>多头注意力层(Multi-Head Attention)
+<ul>
+<li><img src="/images/deep_learning/transformer/multi_head.png" alt="multi_head"></li>
+</ul>
+</li>
+<li>前向连接层(Feed Forward)
+<ul>
+<li>$$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$
+<ul>
+<li>max操作就是Relu激活函数</li>
+</ul>
+</li>
+<li>$$W_{1}\in R^{d_{model}\times d_{ff}},W_{2}\in R^{d_{ff}\times d_{model}}$$</li>
+</ul>
+</li>
+<li>层归一化(Norm)
+<ul>
+<li>$$\mu^{l}=\frac{1}{H}\sum_{i=1}^{H}\alpha_{i}^{l}$$</li>
+<li>$$\sigma^{l}=\sqrt{\frac{1}{H}\sum_{i=1}^{H}(\alpha_{i}^{l}-\mu^{l})^{2}}$$</li>
+<li>$$x_{i}^{&rsquo;}=\frac{x_{i}-\mu }{\sigma}$$</li>
+<li>这一步的作用是前面的数据经过激活函数之后距离中心分布比较远，归一化后把这个数据分布又拉回到中心区域了，不至于越往后计算偏差越大</li>
+</ul>
+</li>
+<li>残差连接层
+<ul>
+<li><img src="/images/deep_learning/transformer/res.png" alt="res"></li>
+<li>残差单元可以以跳层连接的形式实现，即将单元的输入直接与单元输出加在一起，然后再激活。因此残差网络可以轻松地用主流的自动微分深度学习框架实现，直接使用BP算法更新参数。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>第三部分：解码器
+<ul>
+<li>解码层也有N个同样的编码模块，与编码层的每个模块不同的是，自注意层用的是一个<strong>Masked</strong> Multi-Head Attention层，主要是为了在解码的时候，屏蔽掉当前词后面的词（解码的时候只能获得当前单词的历史词）。
+<ul>
+<li><img src="/images/deep_learning/transformer/mask.png" alt="mask"></li>
+</ul>
+</li>
+<li>除此之外，自注意力层之上连接的是一个从Decoder到Encoder之间的一般注意力层(没有Masked的那个)。这里的\(K,V\)来自于Encoder最后一个模块的输出层输出，而\(Q\)则是来自Decoder自身上一层（Masked Multi-Head Attention）的输出。计算的是<strong>目标语言与源语言之间的注意力得分</strong>。</li>
+</ul>
+</li>
+<li>第四部分：输出层
+<ul>
+<li>通过Linear层将decoder得到的向量进行变换，得到一个跟词表同样大小的向量，然后经过softmax层进行概率归一化的表示。</li>
+<li>此时，得到的向量中每一个元素表示的就是预测的单词为词表中每一个单词的概率。</li>
+</ul>
+</li>
 </ul>
 </article>
               </div>
@@ -250,6 +299,14 @@
 </body>
 
 <script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
 
 
 

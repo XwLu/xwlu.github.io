@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>DL Attention - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Knowledges of Attention" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/deep_learning/attention/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="DL Attention - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Knowledges of Attention" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="DL Attention - My New Hugo Site">
+<meta property="og:description"
+  content="Knowledges of Attention" />
+<meta property="og:url" content="https://xwlu.github.io/post/deep_learning/attention/" />
+<meta property="og:site_name" content="DL Attention" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/deep_learning/attention/">DL Attention</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      3689 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="背景">背景</h1>
+<h3 id="起源">起源</h3>
+<ul>
+<li>模拟人的大脑思考机制，每时每刻，人脑都在接受巨量的信息。人脑的容量无法同时处理如此海量的信息，因此，人会将大部分的脑力资源集中在部分需要特别关注的信息点上。</li>
+<li>attention模型最早应用在seq2eq模型上。</li>
+</ul>
+<h3 id="encoder-decoder">Encoder-Decoder</h3>
+<ul>
+<li>这个框架可以看做是深度学习领域的研究模式，应用场景十分的广泛，可看作是由一个句子（或是篇章）生成另一个句子（或是篇章）的通用处理框架。</li>
+<li>Encoder: 对输入句子Source进行编码，将句子通过非线性的变换转化成一个中间的语句表示，即\(C=F(source)\)</li>
+<li>Decoder: Decoder: 根据中间语义表示𝐶𝐶和之前的已经生成的历史信息\(y_{1},y_{2},&hellip;,y_{t-1}\)来生成\(t\)时刻的内容，即\(y_{t}=G(C,y_{t-1})\)</li>
+<li>对比
+<ul>
+<li>RNN：无法并行，由于误差只能有效的传递到前两个历史时刻，无法很好的学习到全局的结构信息。</li>
+<li>CNN：很容易并行，容易捕捉到一些局部结构信息。</li>
+<li>注意力机制：注意力机制直接利用整个Encoder序列对当前的目标进行计算，因此能够很好的获得全局结构信息。同时，对Decoder中每个单词的注意力计算相互之间没有依赖关系，因此也能够进行并行计算。</li>
+</ul>
+</li>
+</ul>
+<h1 id="注意力机制">注意力机制</h1>
+<h3 id="基本结构">基本结构</h3>
+<ul>
+<li><img src="/images/deep_learning/attention/seq2seq.png" alt="seq2seq"></li>
+<li><img src="/images/deep_learning/attention/seq2seq_attention.png" alt="seq2seq with attention">
+<ul>
+<li>上图中的\(\alpha_{ij}\)就是描述的\(c_{i}\)对\(h_{j}\)的注意力大小</li>
+<li>可以看到\(\alpha_{ij}\)是通过对\(e_{ij}\)softmax操作得来的。\(e_{ij}\)。这边用\(h_{i-1}^{&rsquo;}\)的原因在于，我们要求的是\(h_{i}^{&rsquo;}\)，我们已知的是\(&hellip;, h_{i-2}^{&rsquo;}, h_{i-1}^{&rsquo;}\)，所以我们就用最近的\(h_{i-1}^{&rsquo;}\)和source中的每个\(h_{i}\)通过一个激活函数\(a(x,y)\)，计算彼此之间的关联度。关联度归一化后就变成了概率信息。</li>
+<li>最后解码的时候利用到的是\(c_{i}\)，而不是原先的一个固定的\(C\)</li>
+</ul>
+</li>
+</ul>
+<h3 id="分类">分类</h3>
+<ul>
+<li>SoftAttention
+<ul>
+<li>由于每一个\(c_{i}\)都是通过对原始输入\(x\)在输出侧的\(y_{i}\)上的一个概率分布来进行计算的，因此获得是当前需要解码位置在原始输入序列上的一个注意力分布，可以被嵌入到模型里面去，直接训练。</li>
+<li><img src="/images/deep_learning/attention/soft_attention.png" alt="soft attention"></li>
+</ul>
+</li>
+<li>HardAttention
+<ul>
+<li>是一个随机的过程，它不会选择整个encoder的输出作为其输入（注意看下图decoder层每个输出到encoder的连接，不是全连接），而是会依据概率来采样encoder端的某些隐藏层作为其attention。为了实现梯度的反向传播，需要使用蒙特卡洛的方法来估计模块的梯度。</li>
+<li><img src="/images/deep_learning/attention/hard_attention.png" alt="hard attention"></li>
+</ul>
+</li>
+<li>GlobalAttention
+<ul>
+<li>与传统的Attention模式一样。所有的encoder端的hidden state都被用于计算背景向量的权重。</li>
+</ul>
+</li>
+<li>LocalAttention
+<ul>
+<li>将Soft &amp; Hard Attention结合起来，每次先为decoder端当前的词，预测一个source端对齐位置（aligned position）\(p_{t}\)。然后基于\(p_{t}\)选择一个窗口，用于计算背景向量\(c_{t}\)。
+<ul>
+<li>$$p_{t}=S\cdot sigmod(v_{p}^{t}tanh(W_{p}h_{t}))$$</li>
+<li>$$a_{t}(s)=align(h_{t},h_{t}^{&rsquo;})exp(-\frac{(s-p_{t}^{2})}{2\sigma^{2}})$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="核心思想">核心思想</h3>
+<ul>
+<li>本质上，Attention机制是对source中元素的value（指代source中的\(h_{i}\)或\(x_{i}\)）值进行加权求和，而query（上文中的\(h_{i}^{&rsquo;}\)）和key（source中的\(h_{j}\)）用来计算对应value的权重系数
+<ul>
+<li>$$attention(query,key)=\sum_{i=1}^{t}sim(query,key_{i})*value_{i}$$</li>
+</ul>
+</li>
+<li>聚焦的过程体现在权重系数的计算上，权重越大越聚焦到其对应的value上，即权重代表了信息的重要性，而value是其对应的信息。</li>
+</ul>
+<h3 id="计算步骤">计算步骤</h3>
+<ul>
+<li>阶段一：根据query&lt;-&gt;key计算相似性或相关性</li>
+<li>阶段二：原始分值归一化、概率化</li>
+<li>阶段三：根据权重系数对value进行加权求和</li>
+<li><img src="/images/deep_learning/attention/process.png" alt="process"></li>
+<li>$$Attention(Q,K,V)=softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V$$
+<ul>
+<li>$$Q\in R^{n\times d_{k}}$$</li>
+<li>$$K\in R^{m\times d_{k}}$$</li>
+<li>$$V\in R^{m\times d_{v}}$$</li>
+</ul>
+</li>
+<li>公式理解
+<ul>
+<li>如果忽略激活函数softmax的话，那么事实上它就是三个\(n\times d_{k}\), \(d_{k}\times m\), \(m\times d_{v}\)的矩阵相乘，最后的结果也是一个\(n\times d_{v}\)的矩阵。即\(n\times d_{k}\)的序列\(Q\)编码成了一个新的\(n\times d_{v}\)</li>
+<li>$$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{&lt;Q,k_{s}&gt;}{d_{k}})v_{s}$$
+<ul>
+<li>\(K\)和\(V\)是一一对应的，每次拿一个\(q_{t}\)和各个key做内积并softmax，得到\(q_{t}\)与各个\(v_{s}\)的相似程度，然后加权求和，得到一个\(d_{v}\)的向量。</li>
+<li>其中，因子\(\sqrt{d_{k}}\)起到调节的作用，使得内积不至于太大（太大的话softmax就是非0即1了，不够soft）</li>
+<li>这个定义只是注意力的一种形式，还有一些其他的选择，比如query和key的运算方式并不一定是点乘，还可以是拼接后再内积一个参数向量，甚至是权重都不一定要归一化等。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img src="/images/deep_learning/attention/scaled_dot_prod_attention.png" alt="scaled dot product attention"></li>
+</ul>
+<h3 id="扩展">扩展</h3>
+<ul>
+<li>
+<p>Mutil-Head Attention</p>
+<ul>
+<li>Mutil-Head Attention是Google提出的新概念，是Attention机制的完善，不过从形式上看，它其实就是把Q,K,V通过参数矩阵映射一下，然后再做Attention，把这个过程重复做了h次，结果拼接起来就行了。</li>
+<li><img src="/images/deep_learning/attention/multi_head.png" alt="multi-head attention"></li>
+<li>$$head_{i}=Attention(QW_{i}^{Q},KW_{i}^{K},VW_{i}^{V})$$</li>
+<li>$$W_{i}^{Q}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{K}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{V}\in R^{d_{v}\times \breve{d}_{v}}$$</li>
+<li>$$MultiHead(Q,K,V)=Concat(head_{1},&hellip;,head_{n})$$</li>
+<li>最后得到一个\(n\times (h\breve{d}_{k})\)的序列，所谓的“多头”，就是多做几次同样的事情（参数不共享），然后把结果进行拼接。</li>
+</ul>
+</li>
+<li>
+<p>Self Attention</p>
+<ul>
+<li>传统的Attention是基于source端和target端的隐变量计算的。得到的结果是source端的每个单词与target端的每个词之间的依赖关系。</li>
+<li>Self Attention分别在source端和target端进行，但是分别在两端捕捉自身的词与词之间的依赖关系，然后再把source端得到的self Attention加入到target端得到的self Attention中，捕捉source端和target端词与词之间的依赖关系。</li>
+<li><strong>Self Attention要比传统的Attention Mechanism效果好</strong>，主要原因之一是：传统的Attention机制忽略了source/target端自身的词之间的依赖关系。</li>
+<li>在Google的论文中，大部分的Attention都是Self Attention。</li>
+<li>Self Attention就是\(Attention(X, X, X)\), \(X\) 是前面说的输入序列，也就是在序列内部做Attention，寻找序列内部的联系。</li>
+<li>Google论文的主要贡献之一就是它表明了内部注意力在机器翻译（甚至在一般的seq2seq）任务的序列编码上是相当重要的，而之前关于seq2seq的研究基本都只是把注意力机制用在解码端。</li>
+</ul>
+</li>
+<li>
+<p>Posting Embedding</p>
+<ul>
+<li>Attention模型并不能捕捉序列的顺序，换句话说，如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention模型的结果还是一样，这就表明了它顶多是一个非常巧妙的BOW模型。</li>
+<li><strong>顺序对于时间序列至关重要，如果学习不到顺序信息，那么效果会大打折扣。</strong></li>
+<li>Position Embedding将每个位置编号，然后每个编号对应一个向量，通过结合位置向量和词向量，就给每个词都引入了一定的位置信息，这样Attention就可以分辨出不同位置的词了。</li>
+<li>以前的RNN，CNN模型中都出现过Position Embedding，但是那些模型本身就能够学习到序列的位置信息，所以Position Embedding(PE)不是必须的。但是在Attention模型中，PE是位置信息的唯一来源，因此它是模型的核心成分之一，并非仅仅是简单的辅助手段。</li>
+<li>在之前的PE中，基本都是根据任务训练出来的向量，而Google直接给出了一个构造PE的公式：
+<ul>
+<li>$$PE_{2i}(p)=sin(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+<li>$$PE_{2i+1}(p)=cos(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+</ul>
+</li>
+<li>Position Embedding 本身是一个绝对位置的信息，但是在语言中，相对位置也很重要，Google选择前述的位置向量公式一个重要的原因是：由于有\(sin(\alpha +\beta )=sin\alpha cos\beta +cos\alpha sin\beta\)和\(cos(\alpha +\beta )=cos\alpha cos\beta -sin\alpha sin\beta\)，这表明位置\(p+k\)的向量可以表明位置为\(p\)的向量的线性变换，这提供了表达相对位置的可能性。</li>
+<li>结合位置向量和词向量的几个可选方案：可以把他们拼接起来作为一个新向量，也可以把位置向量定义为跟词向量一样大小，然后两者加起来。Facebook的论文和Google的论文中用的都是后者。直觉上相加会导致信息损失，似乎是不可取，但是实验证明相加也是很好的方案。</li>
+</ul>
+<h3 id="缺点">缺点</h3>
+<ul>
+<li>Attention层的好处就是能够一步到位的捕捉全局的联系，因为它直接把序列两两比较（代价是计算量变为\(O(n^{2})\)）。相比之下，RNN需要一步步地递推才能捕捉到，而CNN需要通过层叠扩大感受野，这是Attention层的明显优势。
+<ul>
+<li><img src="/images/deep_learning/attention/complexity.png" alt="complexity"></li>
+</ul>
+</li>
+<li>Attention虽然跟CNN没有直接联系，但是事实上充分的借鉴了CNN的思想，比如Multi-Head Attention就是Attention做多次然后拼接，这个CNN的多个卷积核思想是一致的，论文用到的残差结构都源于CNN网络。</li>
+<li>无法对位置信息进行很好的建模，PE的引入无法从根本上解决这个问题。</li>
+<li>并非所有的问题都是需要长程的全局的依赖，也有很多的问题只是依赖于局部结构，这时候用纯的Attention不是很好。所以论文中还是提到了一个受限Attention的概念。</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>
