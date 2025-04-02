@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>DiffusionDrive - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Paper Reading Notes of DiffusionDrive" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/robotics/e2e/diffusion_drive/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="DiffusionDrive - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Paper Reading Notes of DiffusionDrive" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="DiffusionDrive - My New Hugo Site">
+<meta property="og:description"
+  content="Paper Reading Notes of DiffusionDrive" />
+<meta property="og:url" content="https://xwlu.github.io/post/robotics/e2e/diffusion_drive/" />
+<meta property="og:site_name" content="DiffusionDrive" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 11:08:42 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/robotics/e2e/diffusion_drive/">DiffusionDrive</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 11:08:42 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 11:08:42 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      1932 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="背景知识">背景知识</h1>
+<h2 id="条件扩散模型">条件扩散模型</h2>
+<h3 id="forward-diffusion-process">forward diffusion process</h3>
+<ul>
+<li>不断往采样出来的数据上增加噪声
+$$q(\tau^{i}|\tau^{0})=\mathcal{N}(\tau^{i};\sqrt{\bar{\alpha}^{i}}\tau^{0},(1-\bar{\alpha}^{i})I)$$
+<ul>
+<li>其中 \(\tau^{0}\)是未添加噪声的初始采样数据， \(\tau^{i}\)是第 \(i\)次添加噪声后的数据</li>
+<li>\(\bar{\alpha}^{i}=\prod_{s=1}^{i}\alpha^{s}=\prod_{s=1}^{i}(1-\beta^{s})\)， \(\beta^{s}\)是noise schedule</li>
+</ul>
+</li>
+</ul>
+<h3 id="reverse-diffusion-process">reverse diffusion process</h3>
+<ul>
+<li>训练一个噪声去除模型 \(f_{\theta}(\tau^{i},z,i)\)一步一步从 \(\tau^{i}\)再还原到 \(\tau^{0}\)， \(\theta\)是训练模型的参数。</li>
+<li>还原的过程中输入环境信息 \(z\)作为指导（条件），使得最终还原出来的 \(\tau^{0}\)和周围的环境有合理的交互</li>
+</ul>
+<p>$$p_{\theta}(\tau^{0}|z)=\int p(\tau^{T})\prod_{i=1}^{T}p_{\theta}(\tau^{i-1}|\tau^{i},z)d\tau^{1:T}$$</p>
+<h1 id="预备实验">预备实验</h1>
+<h2 id="改造transfuser为生成式模型">改造Transfuser为生成式模型</h2>
+<ul>
+<li>将transfuser模型最后的MLP回归层替换为conditional diffusion model。</li>
+<li>将一个随机初始化的noise采样通过20次reverse diffusion操作refine为一条精细的轨迹。</li>
+<li>实验证明diffusion模型的结果比MLP回归模型的更好。</li>
+</ul>
+<h2 id="模态坍缩">模态坍缩</h2>
+<ul>
+<li>为了探索驾驶行为的多模特性，采样了20个随机噪声（满足高斯分布），通过20次reverse diffusion进行去噪。</li>
+<li>结果20个随机采样的噪声最后都收敛到了一个模态。</li>
+</ul>
+<p><img src="/images/robotics/e2e/diffusion_drive/1.png" alt="pic"></p>
+<ul>
+<li>为了定量分析模态坍缩的现象，定义了一个模态多样性得分\(D\)（通过计算每条去噪后的轨迹和所有去噪后轨迹的平均重叠面积计算）
+$$D=1-\frac{1}{N}\sum_{i=1}^{N}{\frac{Area(\tau_{i}\cap \bigcup_{j=1}^{N}\tau_{j})}{Area(\tau_{i}\cup \bigcup_{j=1}^{N}\tau_{j})}}$$
+<ul>
+<li>\(\tau_{i}\)表示第 \(i\)条去噪轨迹， \(N\)是采样轨迹总数， \(\bigcup_{j=1}^{N} \tau_{j} \)是所有去噪轨迹的并集。</li>
+</ul>
+</li>
+</ul>
+<h2 id="去噪开销">去噪开销</h2>
+<ul>
+<li>DDIM diffusion模型需要20次去噪将一个随机噪声refine为可用的轨迹，导致计算负担非常大，无法在实车上部署。</li>
+</ul>
+<h1 id="模块细节">模块细节</h1>
+<h2 id="截断扩散模型">截断扩散模型</h2>
+<ul>
+<li>人类驾驶是有一定的固定范式的，没必要从一个完全随机的噪声开始去噪，因此，本文提出的方案尝试从anchored Gaussian distribution开始进行去噪过程。而不是从一个标准的高斯分布（随机噪声）开始去噪。</li>
+</ul>
+<h3 id="训练过程">训练过程</h3>
+<ul>
+<li>通过K-means算法将训练集中自车行驶的轨迹进行聚类，得到20条anchors \(\lbrace a_{k}\rbrace_{k=1}^{N_{anchor}}\)，其中 \(a_{k}=\lbrace (x_{t},y_{t})\rbrace_{t=1}^{T_{f}}\)</li>
+<li>向anchor添加噪声：
+$$\tau_{k}^{i}=\sqrt{\bar{\alpha}^{i}}a_{k}+\sqrt{1-\bar{\alpha}^{i}}\epsilon,\epsilon \in \mathcal{N}(0,I)$$
+<ul>
+<li>其中 \(i \in [1,T_{trunc}],T_{trunc}\ll T\)是扩散步数</li>
+</ul>
+</li>
+<li>diffusion decoder \(f_{\theta}\)输入带噪声的anchor轨迹 \(\lbrace \tau_{k}^{i}\rbrace_{k=1}^{N_{anchor}}\)，输出分类score \(\lbrace{s_{k}}\rbrace_{k=1}^{N_{anchor}}\)和去噪轨迹 \(\lbrace\tau_{k}\rbrace_{k=1}^{N_{anchor}}\)
+$$\lbrace \lbrace s_{k},\tau_{k}\rbrace\rbrace_{k=1}^{N_{anchor}}=f_{\theta}(\lbrace \tau_{k}^{i}\rbrace_{k=1}^{N_{anchor}},z)$$
+<ul>
+<li>其中， \(z\)表示条件信息。</li>
+</ul>
+</li>
+<li>将带噪轨迹中最接近GT的轨迹的分类标签设置为true（ \(y_{k}=1\)），其他为false（ \(y_{k}=0\)），loss设计如下：
+$$L=\sum_{k=1}^{N_{anchor}}{[y_{k}L_{rec}(\tau_{k},\tau_{gt})+\lambda BCE(s_{k},y_{k})]}$$
+<ul>
+<li>其中， \(\lambda\)用来平衡L1 reconstruction loss \(L_{rec}\)和binary cross-entropy classification loss</li>
+</ul>
+</li>
+</ul>
+<h3 id="推理过程">推理过程</h3>
+<ul>
+<li>去噪过程中，前一步去噪得到的轨迹作为输入传入下一步去噪过程，得到新的分类score \(\lbrace s_{k}\rbrace_{k=1}^{N_{anchor}}\)和去噪轨迹 \(\lbrace \tau_{k}\rbrace_{k=1}^{N_{anchor}}\)。</li>
+<li>新的去噪轨迹 \(\lbrace \tau_{k}\rbrace_{k=1}^{N_{anchor}}\)会通过DDIM的更新规则采样轨迹给到下一步去噪过程。</li>
+</ul>
+<h1 id="算法架构">算法架构</h1>
+<p><img src="/images/robotics/e2e/diffusion_drive/2.png" alt="pic"></p>
+<h2 id="diffusion-decoder">Diffusion decoder</h2>
+<ul>
+<li>给定一组符合anchored Gaussian distribution的带噪轨迹 \(\lbrace \tau_{k}\rbrace_{k=1}^{N_{infer}}\)，通过 deformable spatial cross-attention将其与BEV和PV feature进行交互，得到trajectory feature。</li>
+<li>将trajectory feature和感知模块中得到的agent/map query进行cross-attention。</li>
+<li>为了对diffusion timestamp进行编码，引入Timestep Modulation layer</li>
+<li>最后跟两个MLP，得到confidence score和trajectory offset（用上一层轨迹加上这个offset得到新的轨迹）</li>
+<li>不同的diffusion decoder层共用一套模型参数</li>
+</ul>
+<h1 id="实验细节">实验细节</h1>
+<ul>
+<li>在diffusion decoder层，只和BEV feature进行spatial cross-attention。由于transfuser模型没有map construction结果，只和agent query进行cross-attention。</li>
+<li>采样20个anchor</li>
+<li>通过2层diffusion decoder进行轨迹去噪。</li>
+<li>diffusion schedule 定为50/1000。</li>
+</ul>
+<p><img src="/images/robotics/e2e/diffusion_drive/3.png" alt="pic"></p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>
