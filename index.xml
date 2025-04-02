@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>https://xwlu.github.io/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 02 Apr 2025 11:08:42 +0800</lastBuildDate>
+    <atom:link href="https://xwlu.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WayFormer</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/way_former/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/way_former/</guid>
+      <description>Paper Reading Notes of WayFormer</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://xwlu.github.io/readme/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/readme/</guid>
+      <description>&lt;h2 id=&#34;skills&#34;&gt;Skills&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;C++&lt;/li&gt;&#xA;&lt;li&gt;Python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/XwLu&#34;&gt;looyifan github&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;notes&#34;&gt;Notes&lt;/h2&gt;</description>
+    </item>
+    <item>
+      <title>Robotics Abstract</title>
+      <link>https://xwlu.github.io/post/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/abstract/</guid>
+      <description>The Abstract of Robotics Tech</description>
+    </item>
+  </channel>
+</rss>
