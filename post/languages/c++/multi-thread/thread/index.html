@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Thread - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Thread for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Thread - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Thread for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Thread - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Thread for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/" />
+<meta property="og:site_name" content="Thread" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/">Thread</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      678 Words
                     
 
                   </div>
@@ -194,20 +194,117 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="创建线程">创建线程</h1>
+<pre tabindex="0"><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+using namespace std;
+
+void t1()  //普通的函数，用来执行线程
+{
+  for (int i = 0; i &lt; 20; ++i)
+  {
+    cout &lt;&lt; &#34;t1111\n&#34;;
+  }
+}
+void t2()
+{
+  for (int i = 0; i &lt; 20; ++i)
+  {
+    cout &lt;&lt; &#34;t22222\n&#34;;
+  }
+}
+int main()
+{
+  thread th1(t1);  //实例化一个线程对象th1，使用函数t1构造，然后该线程就开始执行了（t1()）
+  thread th2(t2);
+
+  cout &lt;&lt; &#34;here is main\n\n&#34;;
+
+  return 0;
+}
+</code></pre><h4 id="tip-上面的代码存在一个问题主线程结束之后其他两个线程也会直接结束引起异常报错">Tip: 上面的代码存在一个问题，主线程结束之后，其他两个线程也会直接结束，引起异常报错</h4>
+<hr>
+<h1 id="join方法">join方法</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>join的作用是让主线程在join函数处等待，直到该子线程执行结束，再往后执行
+<pre tabindex="0"><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+using namespace std;
+
+void t1() {
+  for (int i = 0; i &lt; 20; ++i) {
+    cout &lt;&lt; &#34;t1111\n&#34;;
+  }
+}
+void t2() {
+  for (int i = 0; i &lt; 20; ++i) {
+    cout &lt;&lt; &#34;t22222\n&#34;;
+  }
+}
+int main() {
+  thread th1(t1);
+  thread th2(t2);
+
+  th1.join(); //等待th1执行完
+  th2.join(); //等待th2执行完
+
+  cout &lt;&lt; &#34;here is main\n\n&#34;;
+
+  return 0;
+}
+</code></pre></li>
+<li>这样，当两个线程执行完之后，主程序才会执行cout并退出</li>
 </ul>
-<h2 id="links">Links</h2>
+<hr>
+<h1 id="detach方法">detach方法</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>detach是用来和线程对象分离的，这样线程可以独立地执行，不过这样由于没有thread对象指向该线程而失去了对它的控制，当对象析构时线程会继续在后台执行，但是当主程序退出时并不能保证线程能执行完
+<pre tabindex="0"><code>int main() {
+  thread th1(t1);
+  thread th2(t2);
+
+  th1.detach();
+  th2.detach();
+
+  cout &lt;&lt; &#34;here is main\n\n&#34;;
+
+  return 0;
+}
+</code></pre></li>
 </ul>
-<h2 id="notes">Notes</h2>
+<h4 id="tips-如果没有良好的控制机制或者这种后台线程比较重要最好不用detach而应该使用join">Tips: 如果没有良好的控制机制或者这种后台线程比较重要，最好不用detach而应该使用join</h4>
+<hr>
+<h1 id="注意">注意</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>调用 join 或 detach 之前需要调用 joinable() 判断一下线程是否运行. 如果 joinable() 返回 false, 则不需要.</li>
+<li>需要注意的是线程对象执行了join后就不再joinable了，所以只能调用join一次</li>
+</ul>
+<hr>
+<h1 id="调用类内对象">调用类内对象</h1>
+<pre tabindex="0"><code>class Demo {
+Public:
+  Demo(;
+  ~Demo();
+
+  void Run(int a, int b);
+}
+
+int main(char agrc, char** argv) {
+  Demo* pDemo;
+  std::Thread* pT;
+  pDemo = new Demo();
+  pT = std::thread(&amp;Demo::Run, pDemo, 1, 2);
+  //第一个参数是函数,第二个参数是类(如果是在类内创建就用this),  后面就是函数传入的参数
+  if(pT-&gt;joinable()) {
+    pT-&gt;join();//Program will wait here until the end of Run().
+  }
+}
+</code></pre><hr>
+<h1 id="cmakeliststxt">CMakeLists.txt</h1>
+<ul>
+<li>需要链接pthread库，否则编译无法通过:
+<pre tabindex="0"><code>TARGET_LINK_LIBRARIES(your_executable pthread)
+</code></pre></li>
 </ul>
 </article>
               </div>

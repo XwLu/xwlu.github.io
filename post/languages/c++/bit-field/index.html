@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Bit Field - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="bit field for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Bit Field - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="bit field for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Bit Field - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="bit field for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/" />
+<meta property="og:site_name" content="Bit Field" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/">Bit Field</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      424 Words
                     
 
                   </div>
@@ -194,20 +194,49 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="位域">位域</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>显示表明对象尺寸（所占位数）
+<pre tabindex="0"><code>struct Str {
+  bool b1;
+  bool b2;
+};
+
+struct Str2 {
+  bool b1 ： 1;
+  bool b2 ： 1;
+};
+
+int main() {
+  sizeof(Str);  // 2, 2个字节，空间浪费
+  sizeof(Str2);  // 1, 1个字节（中的两位），剩下的6个位闲置
+}
+</code></pre></li>
+<li>多个位域对象可能会被打包存取
+<ul>
+<li>上面的例子中，程序在处理Str2的时候会多执行1个步骤（取一个字节、位操作得到目标位的值），处理Str的时候只需要取对应的一个字节就行</li>
+<li>因此，为了效率用Str，为了省内存用Str2</li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>声明了位域的对象不能取地址，因此不能使用指针或非常量引用进行绑定
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>不能取地址的原因是位域对象不一定在一个字节的开始处</li>
+<li>常量引用可以正常工作
+<pre tabindex="0"><code>struct Str {
+  bool b1 ： 1;
+};
+Str s;
+const auto&amp; ref = s.b1;  // 这里会把s.b1复制到一个字节大小的临时变量里，然后ref绑定到改临时变量
+</code></pre></li>
+<li>这就是为啥遍历vector&lt;bool&gt;的对象只能用&quot;auto&amp;&amp;&ldquo;或&quot;const auto&amp;&rdquo;</li>
 </ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+</li>
+<li>位域指定的大小必须小于其类型的大小
+<pre tabindex="0"><code>char a : 2;  // a的取值是0-3
+char a : 10；  // a的取值还是0-255
+a = 1024;
+std::cout &lt;&lt; a;  // 0
+</code></pre></li>
 </ul>
 </article>
               </div>

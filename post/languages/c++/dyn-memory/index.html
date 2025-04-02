@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Dynamic Memory - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Dynamic memory for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Dynamic Memory - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Dynamic memory for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Dynamic Memory - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Dynamic memory for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/" />
+<meta property="og:site_name" content="Dynamic Memory" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/">Dynamic Memory</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      328 Words
                     
 
                   </div>
@@ -194,22 +194,62 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="sizeof">sizeof</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>sizeof 无法获取动态分配内存的大小, 因为sizeof是在编译期就确定的，而动态内存的大小是在运行期决定的
+<pre tabindex="0"><code>std::vector&lt;int&gt; x;
+x.push_back(10);
+x.push_back(10);
+std::cout &lt;&lt; sizeof(x) &lt;&lt; std::endl;  // 无法获取x的大小
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
+<hr>
+<h1 id="allocator">allocator</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>
+<p>使用allocator来分配内存和释放内存</p>
+<pre tabindex="0"><code>std::allocator&lt;int&gt; al;
+int* ptr = al.allocate(3);
+al.deallocate(ptr, 3);
+</code></pre></li>
+<li>
+<p>缺陷：只能分配固定类型的内存，比如上面的例子只能分配int类型</p>
+</li>
+<li>
+<p>推荐使用allocator，因为allocator是C++标准，malloc，aligned_alloc是C标准</p>
+</li>
 </ul>
-<h2 id="notes">Notes</h2>
+<hr>
+<h1 id="malloc--free">malloc &amp; free</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>
+<p>使用malloc和free来管理内存</p>
+<pre tabindex="0"><code>int* p1 = malloc(4 * sizeof(int));
+int* p2 = malloc(sizeof(int[4]));  // same space
+free(p1);
+free(p2);
+</code></pre></li>
+<li>
+<p>优点：只关注分配类型的大小，不受限于类型</p>
+</li>
+<li>
+<p>缺陷：不能分配对齐内存</p>
+</li>
 </ul>
-</article>
+<hr>
+<h1 id="aligned_alloc">aligned_alloc</h1>
+<ul>
+<li>可以分配对齐内存</li>
+</ul>
+<hr>
+<h1 id="动态内存与异常安全">动态内存与异常安全</h1>
+<pre tabindex="0"><code>int* ptr = new int(3);
+/*
+  异常触发，跳转到异常处理语句，没有执行下面的delete，造成内存泄漏
+  建议使用智能指针，避免该问题
+*/
+delete ptr;
+</code></pre></article>
               </div>
             </div>
           </div>

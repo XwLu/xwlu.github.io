@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Mutex - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Mutex for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Mutex - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Mutex for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Mutex - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Mutex for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/" />
+<meta property="og:site_name" content="Mutex" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/">Mutex</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      885 Words
                     
 
                   </div>
@@ -194,20 +194,126 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="锁基本背景">锁基本背景</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>C++提供了四种锁：互斥锁、条件变量、自旋锁和读写锁</li>
+<li>C++11引入了<strong>std::unique_lock</strong>与<strong>std::lock_guard</strong></li>
+<li>boost库实现了<strong>读写锁</strong></li>
+<li>当一个线程中的函数获取了锁，在锁没有消失(超出作用域)前，另一个线程获取该锁的操作(函数)将无法进行。</li>
 </ul>
-<h2 id="links">Links</h2>
+<hr>
+<h1 id="读写锁">读写锁</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>主要适合在于共享数据更新频率较低，但是读取共享数据频率较高的场合。</li>
+<li>当 data 被线程A读取时，其他线程仍可以进行读取却不能写入
+<ul>
+<li>当线程A获得共享锁时，其他线程仍可以获得共享锁但不能获得独占锁</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+<li>当 data 被线程A写入时，其他线程既不能读取也不能写入
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>当线程A获得独占锁时，其他线程既不能获得共享锁也不能获得独占锁</li>
+</ul>
+<pre tabindex="0"><code>#include &lt;boost/thread/shared_mutex.hpp&gt;
+#include &lt;boost/thread/shared_lock_guard.hpp...
+#include &lt;boost/thread.hpp&gt;
+void demo()
+{
+    typedef boost::shared_lock&lt;boost::shared_mutex&gt; read_lock;
+    typedef boost::unique_lock&lt;boost::shared_mutex&gt; write_lock;
+    boost::shared_mutex read_write_mutex;
+    int32_t data = 1;
+    //线程A,读data
+    {
+        read_lock rlock(read_write_mutex);
+        std::cout &lt;&lt; data &lt;&lt; std:; endl;
+    }
+    //线程B,读data
+    {
+      read_lock rlock(read_write_mutex);
+      std::cout &lt;&lt; data &lt;&lt; std:; endl;
+    }
+    //线程C,写data
+    {
+      write_lock rlock(read_write_mutex);
+      data = 2;
+    }
+}
+</code></pre></li>
+</ul>
+<h3 id="注意上面的锁的作用域就是锁所在的">注意：上面的锁的作用域就是锁所在的</h3>
+<hr>
+<h1 id="互斥锁">互斥锁</h1>
+<ul>
+<li>
+<h3 id="简单用法">简单用法</h3>
+<ul>
+<li>std::lock_guard 和 std::unique_lock一样</li>
+<li>当锁在生命周期之内，可以实现加锁，通常利用花括号控制加锁的范围</li>
+<li>简单使用
+<pre tabindex="0"><code>#include &lt;mutex&gt;          // std::mutex, std::lock_guard
+std::mutex mut;
+void insert_data(){
+  std::lock_guard&lt;std::mutex&gt; lk(mut);
+  queue.push_back(data);
+}
+void process_data(){
+  std::unqiue_lock&lt;std::mutex&gt; lk(mut);
+  queue.pop();
+}
+</code></pre></li>
+</ul>
+</li>
+<li>
+<h3 id="进阶用法">进阶用法</h3>
+<ul>
+<li>std::unique_lock更加灵活，但开销也更大</li>
+<li>具体用法见下一节<strong>条件变量</strong></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="条件变量">条件变量</h1>
+<ul>
+<li>相关的类包括
+<ul>
+<li>std::condition_variable</li>
+<li>std::condition_variable_any</li>
+<li>std::cv_status枚举类型</li>
+<li>std::notify_all_at_thread_exit()</li>
+</ul>
+</li>
+<li>std::condition_variable
+<ul>
+<li>当<strong>std::condition_variable</strong>对象的某个wait 函数被调用的时候，它使用<strong>std::unique_lock</strong>(通过 std::mutex)来锁住当前线程。当前线程会一直被阻塞，直到另外一个线程在相同的 <strong>std::condition_variable</strong> 对象上调用了 <strong>notification</strong> 函数来唤醒当前线程。</li>
+<li><strong>std::condition_variable</strong>对象通常使用<strong>std::unique_lock</strong> 来等待，如果需要使用另外的<strong>lockable</strong>类型，可以使用<strong>std::condition_variable_any</strong>类
+<pre tabindex="0"><code>#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;condition_variable&gt;
+void demo()
+{
+  std::mutex mtx; // 全局互斥锁.
+  std::condition_variable cv; // 全局条件变量.
+  bool ready = false; // 全局标志位.
+
+  //线程A
+  {
+    std::unique_lock &lt;std::mutex&gt; lck(mtx);
+    while(!ready)
+    cv.wait(lck);// 当前线程被阻塞, 当全局标志位变为 true 之后,线程被唤醒, 继续往下执行打印线程编号id.
+    std::cout &lt;&lt; &#34;thread &#34; &lt;&lt; id &lt;&lt; &#39;\n&#39;;
+  }
+
+  //线程B
+  {
+    std::unique_lock &lt;std::mutex&gt; lck(mtx);
+    ready = true;
+    cv.notify_all(); // 唤醒所有线程.
+  }
+}
+</code></pre></li>
+</ul>
+</li>
 </ul>
 </article>
               </div>

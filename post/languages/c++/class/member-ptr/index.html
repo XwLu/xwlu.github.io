@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Member Ptr of Class - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="member ptr for C&#43;&#43; class" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Member Ptr of Class - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="member ptr for C&#43;&#43; class" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Member Ptr of Class - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="member ptr for C&#43;&#43; class" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/" />
+<meta property="og:site_name" content="Member Ptr of Class" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/">Member Ptr of Class</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      548 Words
                     
 
                   </div>
@@ -194,20 +194,77 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="成员指针">成员指针</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>数据成员指针类型示例：int A::*;</li>
+<li>成员函数指针类型示例：int (A::*)(double);
+<pre tabindex="0"><code>class Str {
+public:
+  int x;
+
+  void fun() {};
+  void fun(double) {};
+};
+int main() {
+  int Str::*ptr = &amp;Str::x;  // 数据成员指针
+  // 阅读方法：*表明ptr是个指针，能够访问Str::域内的内容，并且这个成员的类型是int
+
+  int Str::*ptr = &amp;(Str::x);  // 报错，加了括号后含义就变了，就不再是取某个域内的地址了，而是取括号里的内容的地址，这就要求括号内的东西是有定义的，但Str::x目前还没有定义，只是声明，所以会报错
+
+  void (Str::* ptr_fun)() = &amp;Str::fun;  // 成员函数指针
+  // 阅读方法：*表明ptr是个指针，能够访问Str::域内的内容，()表示这个东西是个函数，函数的输入是void(省略了)，输出也是void
+
+  auto ptr_fun = &amp;Str::fun;  // 报错，因为无法确定auto的内容，上面有两个fun函数可以选择
+}
+</code></pre></li>
+<li>成员指针对象赋值：auto ptr = &amp;A::x;
+<ul>
+<li>注意不能加()，上面有原因</li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>成员指针的使用
+<pre tabindex="0"><code>class Str {
+public:
+  int x;
+};
+
+int main() {
+  int Str::*ptr = &amp;Str::x;
+  *ptr = 1;  // 报错，ptr指向的只是个声明，并没有明确的定义，所以就没有一块固定的内存来解引用
+
+  Str obj;
+  obj.*prt = 1;  // 合理
+  Str* p_obj = &amp;obj;
+  p_obj-&gt;*ptr = 3;  // 合理
+}
+</code></pre></li>
+<li>bind交互
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>使用bind + 成员指针构造可调用对象
+<pre tabindex="0"><code>class Str {
+public:
+  int x;
+
+  void fun(double) {};
+};
+
+int main() {
+  auto ptr = &amp;Str::fun();
+
+  Str obj;
+  (obj.*ptr)(100.0);
+
+  auto x = std::bind(ptr, obj, 100.0);  // 没有obj的话会报错 
+  x();  // 调用fun
+
+  auto ptr2 = &amp;Str::x;
+  auto x2 = std::bind(ptr2, obj);
+  x2();  // 返回obj.x
+}
+</code></pre></li>
+<li>注意这种方法也可以基于数据成员指针构造可调用对象(见上面代码中的ptr2)</li>
 </ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+</li>
 </ul>
 </article>
               </div>

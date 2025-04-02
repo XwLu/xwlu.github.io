@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Local Class - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="local class for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Local Class - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="local class for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Local Class - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="local class for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/" />
+<meta property="og:site_name" content="Local Class" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/">Local Class</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      155 Words
                     
 
                   </div>
@@ -194,20 +194,36 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="局部类">局部类</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
-</ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>可以在函数中定义</li>
+<li>可以访问外围函数中定义的类型声明，静态对象与枚举</li>
+<li>可以定义成员函数，但成员函数的定义必须放在类内</li>
+<li>不能定义静态数据成员
+<pre tabindex="0"><code>void fun() {
+  using MyInt = int;
+  int val;
+  struct Helper {
+    MyInt x;
+    int y = val;  // 编译失败
+    inline static int val2 = 100;  // 编译失败 
+
+    int inc();
+    int acc() {  // 编译成功，函数定义在类内部
+      x++;
+    }
+  };
+
+  int Helper::inc() {  // 编译失败，函数内部不能再定义函数
+    returen x++;
+  }
+  Helper h;
+}
+
+int main() {
+  fun();
+}
+</code></pre></li>
 </ul>
 </article>
               </div>

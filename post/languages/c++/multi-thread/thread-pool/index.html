@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>ThreadPool - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="ThreadPool for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="ThreadPool - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="ThreadPool for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="ThreadPool - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="ThreadPool for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/" />
+<meta property="og:site_name" content="ThreadPool" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/">ThreadPool</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      333 Words
                     
 
                   </div>
@@ -194,22 +194,132 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
-<ul>
-<li>C++</li>
-<li>Python</li>
-</ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
-</ul>
-</article>
+                <article class="markdown-body entry-content container-lg"><h1 id="代码">代码</h1>
+<pre tabindex="0"><code>#include &lt;vector&gt;
+#include &lt;queue&gt;
+#include &lt;memory&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+#include &lt;condition_variable&gt;
+#include &lt;future&gt;
+#include &lt;functional&gt;
+#include &lt;stdexcept&gt;
+#include &lt;iostream&gt;
+#include &lt;chrono&gt;
+
+class ThreadPool {
+public:
+  ThreadPool(size_t);
+  template&lt;class F, class... Args&gt;
+  auto enqueue(F&amp;&amp; f, Args&amp;&amp;... args) 
+      -&gt; std::future&lt;typename std::result_of&lt;F(Args...)&gt;::type&gt;;
+  ~ThreadPool();
+private:
+  // need to keep track of threads so we can join them
+  std::vector&lt; std::thread &gt; workers;
+  // the task queue
+  std::queue&lt; std::function&lt;void()&gt; &gt; tasks;
+  
+  // synchronization
+  std::mutex queue_mutex;
+  std::condition_variable condition;
+  bool stop;
+};
+
+inline ThreadPool::ThreadPool(size_t threads) : stop(false)
+{
+  for(size_t i = 0; i &lt; threads; ++i) {
+    workers.emplace_back(
+      [this]
+      {
+        for(;;)
+        {
+          std::function&lt;void()&gt; task;
+          {
+            std::unique_lock&lt;std::mutex&gt; lock(this-&gt;queue_mutex);
+            this-&gt;condition.wait(lock,
+              [this]{ return this-&gt;stop || !this-&gt;tasks.empty(); });
+            if(this-&gt;stop &amp;&amp; this-&gt;tasks.empty())
+              return;
+            task = std::move(this-&gt;tasks.front());
+            this-&gt;tasks.pop();
+          }
+          task();
+        }
+      }
+    );
+  }
+}
+
+// the destructor joins all threads
+inline ThreadPool::~ThreadPool()
+{
+  {
+    std::unique_lock&lt;std::mutex&gt; lock(queue_mutex);
+    stop = true;
+  }
+  condition.notify_all();
+  for(std::thread &amp;worker: workers)
+    worker.join();
+}
+
+// add new work item to the pool
+template&lt;class F, class... Args&gt;
+auto ThreadPool::enqueue(F&amp;&amp; f, Args&amp;&amp;... args) 
+  -&gt; std::future&lt;typename std::result_of&lt;F(Args...)&gt;::type&gt;
+{
+  using return_type = typename std::result_of&lt;F(Args...)&gt;::type;
+
+  auto task = std::make_shared&lt; std::packaged_task&lt;return_type()&gt; &gt;(
+      std::bind(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...)
+    );
+      
+  std::future&lt;return_type&gt; res = task-&gt;get_future();
+  {
+    std::unique_lock&lt;std::mutex&gt; lock(queue_mutex);
+
+    // don&#39;t allow enqueueing after stopping the pool
+    if(stop)
+      throw std::runtime_error(&#34;enqueue on stopped ThreadPool&#34;);
+
+    tasks.emplace([task](){ (*task)(); });
+  }
+  condition.notify_one();
+  return res;
+}
+
+void DataProcessing(std::string&amp; data, const std::string&amp; operation) {
+  data += operation;
+  std::this_thread::sleep_for(std::chrono::seconds(1));
+}
+
+int main(int argc, char** argv) {
+  ThreadPool thread_pool(4);
+  std::string data = &#34;raw&#34;;
+  auto time1 = std::chrono::system_clock::now();
+  std::vector&lt;std::future&lt;void&gt;&gt; futures;
+  for (int i = 0; i &lt; 4; ++i) {
+    futures.emplace_back(thread_pool.enqueue(std::bind(DataProcessing, std::ref(data), std::to_string(i))));
+  }
+  for (auto&amp; future : futures) {
+    try {
+      if (future.valid()) {
+        future.get();
+      } else {
+        std::cerr &lt;&lt; &#34;Future is invalid&#34;;
+      }
+    } catch (const std::future_error&amp; ex) {
+      std::cerr &lt;&lt; &#34;Caught a future error with code[&#34; &lt;&lt; ex.code() &lt;&lt; &#34;] message[&#34; &lt;&lt; ex.what() &lt;&lt; &#34;].&#34;;
+      throw ex;
+    }
+  }
+  auto time2 = std::chrono::system_clock::now();
+  std::chrono::duration&lt;double&gt; diff = time2 - time1;
+  std::cout &lt;&lt; data &lt;&lt; std::endl;
+  std::cout &lt;&lt; &#34;Time Diff = &#34; &lt;&lt; diff.count() * 1000&lt;&lt; &#34; msec.&#34; &lt;&lt; std::endl;
+  return 0;
+}
+</code></pre></article>
               </div>
             </div>
           </div>

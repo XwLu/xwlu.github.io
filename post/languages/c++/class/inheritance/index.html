@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>Inheritance of Class - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="inheritance of C&#43;&#43; class" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Inheritance of Class - My New Hugo Site" />
+<meta name="twitter:description"
+  content="inheritance of C&#43;&#43; class" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Inheritance of Class - My New Hugo Site">
+<meta property="og:description"
+  content="inheritance of C&#43;&#43; class" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/" />
+<meta property="og:site_name" content="Inheritance of Class" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/">Inheritance of Class</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      5712 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="类的继承">类的继承</h1>
+<ul>
+<li>通过类的继承（派生）来引入“是一个”的关系
+<ul>
+<li>通常采用public继承
+<ul>
+<li>class缺省情况下采用的是private继承</li>
+<li>struct缺省情况下采用的是public继承</li>
+</ul>
+</li>
+<li>继承部分不是类的声明，声明的时候直接&quot;class xxx;&ldquo;即可，不可以在声明的时候带上&rdquo;: public base&quot;</li>
+<li>使用基类的指针或引用可以指向派生类对象
+<pre tabindex="0"><code>struct Base {};
+
+struct Derived : public Base {};
+
+int main () {
+  Derived d;
+  Base&amp; ref = d;
+  Base* ptr = &amp;d;
+}
+</code></pre></li>
+<li>静态类型 v.s. 动态类型
+<ul>
+<li>静态类型是编译期确定的变量类型，比如上面的ref静态类型是Base&amp;，ptr静态类型是Base*</li>
+<li>动态类型是运行期变量实际被赋予的类型，比如上面的ref动态类型是Derived&amp;，ptr静态类型是Derived*</li>
+<li>静态类型是给编译器看的，所以变量只能调用静态类型所拥有的成员变量或成员函数</li>
+</ul>
+</li>
+<li>protected限定符：派生类可访问，外部不可访问</li>
+</ul>
+</li>
+<li>类的派生会形成嵌套域
+<ul>
+<li>派生类所在域位于基类内部</li>
+<li>派生类中的名称定义会覆盖基类</li>
+<li>使用域操作符显示访问基类成员
+<pre tabindex="0"><code>struct Base {
+  int val = 2;
+};
+
+class Derived : public Base {
+public:
+  void fun() {
+    std::cout &lt;&lt; val &lt;&lt; std::endl;  // 3, val的值被Derived中的val覆盖
+    std::cout &lt;&lt; Base::val &lt;&lt; std::endl;  // 2, 限定了Base域之后，就会打印Base中val的值
+  }
+
+  int val = 3;
+};
+
+int main() {
+  Derived d;
+  d.fun();
+}
+</code></pre></li>
+<li>在派生类中调用基类的构造函数
+<pre tabindex="0"><code>struct Base {
+  Base(int) {}
+};
+
+class Derived : public Base {
+  Derived(int a) : Base(a) {}  // 必须要在初始化列表中调用Base的初始化函数，如果放在后面的函数体中是无法通过编译的
+}
+
+int main() {
+  Derived d(3);
+}
+</code></pre></li>
+</ul>
+</li>
+<li>虚函数
+<ul>
+<li>通过虚函数与引用（指针）实现动态绑定
+<ul>
+<li>使用关键字virtual引入</li>
+<li>非静态、非构造函数可以声明为虚函数</li>
+<li>虚函数会引入vtable结构
+<ul>
+<li>dynamic_cast</li>
+<li><img src="https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/vtable.png?raw=true" alt="vtable">
+<pre tabindex="0"><code>struct Base {
+  virtual void baseMethod() {}
+  int baseMember;
+};
+
+class myClassDerived : public Base {
+  virtual void derivedMethod() {}
+  int derivedMember;
+};
+
+class myClassDerived2 : public myClassDerived {
+  virtual void derivedMethod2() {}
+  int derivedMember2;
+};
+
+int main() {
+  myClassDerived2 d;
+
+  // 从派生类转换到基类很自然
+  Base* ptr = &amp;d;
+  Base&amp; ref = d;
+
+  // 从基类转换为派生类可能存在风险，安全的做法是使用dynamic_cast
+  // 下面这段代码之所以可以编译并运行就是因为vtable里包含了typeinfo of myClassDerived2
+  myClassDerived2&amp; ref2 = dynamic_cast&lt;myClassDerived2&amp;&gt;(ref);  // 如果ref的typeinfo中记录的确实是myClassDerived2类型的数据，转换就成功，否则这里会抛出异常
+  myClassDerived2* ptr2 = dynamic_cast&lt;myClassDerived2*&gt;(ptr);  // 如果ptr的typeinfo中记录的确实是myClassDerived2类型的数据，转换就成功，否则这里会返回空指针 
+  // 如果把上面的Base class中的虚函数注释掉，编译就会报错，因为vtable没了，typeinfo也就没了
+  // 如果把ptr的类型从Base*变成myClassDerived*，那就要保证myClassDerived的虚函数存在，Base中的虚函数则无关紧要
+  // 换句话说，从基类A转换到派生类B，需要保证A中存在虚函数
+
+  // 注意:下面的转换也是可以的，虽然ref和ptr指向的数据的类型是myClassDerived2，但是myClassDerived2是继承自myClassDerived，所以可以转换
+  myClassDerived&amp; ref3 = dynamic_cast&lt;myClassDerived&amp;&gt;(ref);
+  myClassDerived* ptr3 = dynamic_cast&lt;myClassDerived*&gt;(ptr);
+
+  // 从上面的例子可以看出，dynamic_cast的使用会占用很多动态过程的运算资源，所以在追求性能的场景下慎用
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>虚函数在基类中的定义
+<ul>
+<li>引入缺省逻辑
+<pre tabindex="0"><code>struct Base {
+  virtual void fun() {
+    std::cout &lt;&lt; Base::fun &lt;&lt; std::endl;
+  }
+};
+
+class Derived : public Base {
+  void fun() {
+    std::cout &lt;&lt; Derived::fun &lt;&lt; std::endl;
+  }    
+}
+
+int main() {
+  Derived d;
+  d.fun();  // Derived::fun
+
+  Base&amp; b = d;
+  b.fun();  // Derived::fun
+  // 虽然b的静态类型是Base&amp;，但是b引用(指针)指向的数据内存里的vtable中的fun函数指针指向的是Derived::fun
+  // 但是如果把上面的Base中的virtual关键字去掉，上面还是会打印Derived::fun（因为覆盖作用依然存在）；但是这里就会打印Base::fun，因为vtable不存在了，所有的函数调用会在编译期就被固定下来，而编译器只看静态类型（b的静态类型是Base&amp;），所以b.fun就只会绑定到Base::fun
+}
+</code></pre></li>
+<li>虚函数的意义就在于我们可以通过同一个Base的接口，通过传入不同派生类的对象，实现不同的代码逻辑，也就是<strong>动态多态</strong>（区别于静态多态）</li>
+<li>可以通过=0声明纯虚函数，相应地构造抽象基类</li>
+</ul>
+</li>
+<li>虚函数在派生类中的重写
+<ul>
+<li>函数签名保持不变（唯一可以变的是：返回类型可以是原始返回指针/引用类型的派生指针/引用类型）
+<pre tabindex="0"><code>struct Base {};
+
+struct Derived : public Base {};
+
+struct Base2 {
+  virtual Base&amp; fun() {
+    static Base b;
+    return b;
+  }
+};
+
+struct Derived2 : public Base2 {
+  Derived&amp; fun() {  // 通过，因为Derived继承自Base
+    static Derived inst;
+    return inst;
+  }
+};
+</code></pre></li>
+<li>纯虚函数可以被定义，且可以在派生类中调用基类的纯虚函数。
+<pre tabindex="0"><code>struct Base {
+  virtual void fun() = 0;
+}
+
+void Base::fun() {
+  std::cout &lt;&lt; &#34;Base::fun&#34; &lt;&lt; std::endl;  
+  // 如果基类过于抽象，导致某些函数无法被完整定义，就可以声明为纯虚函数，强制派生类去重写。但是基类的纯虚函数仍然可以被定义，实现一些通用的预处理逻辑，在派生类中被调用。
+}
+
+struct Derived : public Base {
+  void fun() {
+    Base::fun();  // 调用基类的纯虚函数
+    std::cout &lt;&lt; &#34;Derived::fun&#34; &lt;&lt; std::endl;
+  };  
+};
+</code></pre></li>
+<li>虚函数特性保持不变
+<ul>
+<li>Base -&gt; Derived -&gt; Derived2，嵌套继承，Base中的虚函数fun在Derived中被重写后，依然是虚函数，所以Derived2再次重写fun后，还是会保留虚函数的特性</li>
+</ul>
+</li>
+<li>override关键字
+<ul>
+<li>让编译器检查是否基类中的虚函数确实被正确重写了</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>由虚函数所引入的动态绑定属于运行期行为，与编译期行为有所区别
+<ul>
+<li>虚函数的缺省实参只会考虑静态类型
+<pre tabindex="0"><code>struct Base {
+  virtual void fun(int x = 3) {
+    std::cout &lt;&lt; &#34;Base: &#34; &lt;&lt; x &lt;&lt; std::endl;
+  }
+};
+
+struct Derived : public Base {
+  void fun(int x = 4) override final {  // 这里final的含义是，后面继承自Derived的所有派生类都不会再重写fun函数
+    std::cout &lt;&lt; &#34;Derived: &#34; &lt;&lt; x &lt;&lt; std::endl;
+  }    
+};
+
+struct Derived2 final : public Base {};  // 这里final的含义是，Derived2不会有派生类了
+
+void Proc1(Base&amp; ref) {
+  ref.fun();
+}
+
+void Proc2(Base b) {
+  b.fun();
+}
+
+int main() {
+  Derived d;
+  Proc1(d);  // Derived: 3
+  // 由于编译器看到的ref是Base&amp;类型，所以这里的ref.fun()会被翻译成ref.fun(3)，但是运行期调用的是Derived中的fun函数，所以才会出现上面的结果
+
+  Proc2(d);  // Base: 3
+  // 由于b不是d的引用或指针，而是由d构造出来的Base类型的数据，所以只会调用Base的成员函数
+}
+</code></pre></li>
+<li>虚函数的调用成本高于非虚函数
+<ul>
+<li>C++缺省情况下不会把函数声明为虚函数（为了性能），Java所有的函数都是虚函数</li>
+<li>final关键字(见上面的代码)</li>
+</ul>
+</li>
+<li>要使用指针（或引用）引入动态绑定，比较上面代码中的Proc1和Proc2</li>
+<li>在构造函数中调用虚函数要小心，在基类中调用虚函数，这个函数不是派生类的实现
+<pre tabindex="0"><code>struct Base {
+  Base() {
+    fun();
+  }
+
+  virtual void fun() {
+    std::cout &lt;&lt; &#34;Base&#34; &lt;&lt; std::endl;
+  }
+};
+
+struct Derived : public Base {
+  void fun() override {
+    std::cout &lt;&lt; &#34;Derived&#34; &lt;&lt; std::endl;
+  }  
+};
+
+int main() {
+  Derived d;  // Base
+  // 构造Derived的第一步是构造Base，而Base的构造函数中调用了fun，由于此时Base已经构造完成，Derived还没有构造完成，所以这里的fun是Base中的实现
+}
+</code></pre></li>
+<li>派生类的析构函数会隐式调用基类的析构函数</li>
+<li>通常来说要将基类的析构函数声明为virtual的
+<pre tabindex="0"><code>struct Base {
+  ~Base() {
+    std::cout &lt;&lt; &#34;Base&#34; &lt;&lt; std::endl;
+  }
+};
+
+struct Derived final : Base {
+  ~Derived() {
+    std::cout &lt;&lt; &#34;Derived&#34; &lt;&lt; std::endl;
+  }  
+};
+
+int main() {
+  Derived* d = new Derived();
+  Base* b = d;
+  delete b;  // 只会打印&#34;Base&#34;
+  // 因为Base的析构函数不是虚函数，所以delete b这行代码在编译期就会被确定为调用Base的析构函数
+  // 但是这样就出问题了，因为Derived的析构函数没有被正常调用
+  // 解决方案就是将Base的析构函数定义为虚函数: virtual ~Base() {}
+
+  // 但是并非任何情况下都需要将基类的析构函数定义为虚函数，比如下面这样不使用基类指针就行，只不过在大部分时候，我们之所以使用类的继承就是为了用基类的指针去挂载派生类的对象
+  delete d;  // 会打印&#34;Derived&#34; &#34;Base&#34;
+}
+</code></pre></li>
+<li>在派生类中我们可以修改虚函数的访问权限
+<pre tabindex="0"><code>struct Base {
+protected:
+  virtual void fun() {}
+};
+
+struct Derived : Base {
+public:
+  void fun() override {}  
+};
+
+int main() {
+  Derived d;
+  d.fun();  // 可以通过编译，Derived中的fun被重写为public函数了
+
+  Base&amp; b = d;
+  b.fun();  // 编译器只知道b是Base&amp;类型，但fun在Base中是protected函数，当然无法通过编译
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>继承与特殊成员
+<ul>
+<li>派生类的系统自动合成的……
+<ul>
+<li>缺省构造函数会隐式调用基类的缺省构造函数</li>
+<li>拷贝构造函数会隐式调用基类的拷贝构造函数</li>
+<li>赋值函数将隐式调用基类的赋值函数</li>
+</ul>
+</li>
+<li>派生类的析构函数会调用基类的析构函数</li>
+<li>派生类的其他构造函数将隐式调用基类的缺省构造函数
+<ul>
+<li>比如说，如果派生类的拷贝构造函数不是default(系统自动合成)的，而是有显示定义的，那在调用派生类的拷贝构造函数时，不会隐式调用基类的拷贝构造函数，而是调用的缺省构造函数</li>
+</ul>
+</li>
+<li>所有的特殊成员函数在显式定义时都可能需要显示调用基类相关成员
+<ul>
+<li>原因就是上一条描述的内容，调用方式类似于这样：Derived(const Derived&amp; input) : Base(input) {}</li>
+<li>如果没有显示地调用&quot;: Base(input)&quot;，系统默认会调用Base的缺省构造函数，而非这里的拷贝构造函数</li>
+</ul>
+</li>
+<li>构造与销毁顺序
+<ul>
+<li>基类的构造函数会先调用，之后才涉及到派生类中数据成员的构造</li>
+<li>派生类中的数据成员会被先销毁，之后才涉及到基类的析构函数调用</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>补充知识
+<ul>
+<li>public，protected与private继承
+<pre tabindex="0"><code>struct Base {
+public:
+  // 基类、派生类、类外都可以访问
+  int x;
+private:
+  // 基类可访问
+  int y;
+protected:
+  // 基类、派生类可访问
+  int z;
+};
+
+// 无论Derived采用什么继承方式(public, private, protected)，上面的三种访问权限都是不变的。
+// 区别在如下几个点：
+// 1.public继承，Base中的public，protected和private属性在Derived中都保持不变，比如在Derived中x还是public，y还是private，z还是protected。
+// 2.protected继承，Base中的public，protected在Derived中都变成protected，private属性则保持不变。
+// 3.private继承，Base中的public，protected和private属性在Derived中都变成private。
+struct Derived : public Base {};
+</code></pre><ul>
+<li>public继承：描述“是一个”的关系</li>
+<li>private继承：描述“根据基类实现出“的关系，但是有更好的实现方式，就是把Base对象创建为Derived的一个私有成员变量，所以private继承很少用</li>
+<li>protected继承：几乎不会用</li>
+</ul>
+</li>
+<li>using与继承
+<ul>
+<li>使用using改变基类成员的访问权限
+<pre tabindex="0"><code>struct Base {
+public:
+  int x;
+private:
+  int y;
+protected:
+  int z;
+  void fun() {}
+};
+
+struct Derived : public Base {
+public:
+  using Base::z;
+  using Base::fun;  // 所有的fun函数都会变成public，如果fun有重载的话，会作用到所有的fun上
+private:
+  using Base::x;
+};
+
+int main() {
+  Derived d;
+  d.z;  // 有了上面“的using Base::z;”，这里就可以正常调用了
+  d.x;  // 有了上面“的using Base::x;”，这里就会报错
+  d.fun();  // 可以正常调用
+}
+</code></pre><ul>
+<li>注意以下两点！！</li>
+<li>要想通过using改变权限，首先该成员要对派生类可见，比如上面如果想把Base::y改成public或者protected就不行，因为对Derived来说，Base::y就不可见</li>
+<li>无法改变构造函数的访问权限</li>
+</ul>
+</li>
+<li>使用using继承基类的构造函数逻辑
+<ul>
+<li>Base中有多种自定义的构造函数(系统无法自动合成的)，且Derived和Base的数据成员和构造函数的实现逻辑又是一样的，如果再实现一遍就会很耗时，这时候就可以用using来把Base中的实现都复制过来</li>
+</ul>
+</li>
+<li>using与部分重写
+<pre tabindex="0"><code>struct Base {
+protected:
+  virtual void fun() {
+    std::cout &lt;&lt; &#34;1\n&#34;;
+  }
+
+  virtual void fun(int) {
+    std::cout &lt;&lt; &#34;2\n&#34;;
+  }
+};
+
+struct Derived : public Base {
+public:
+  using Base::fun;
+
+  void fun(int) override {
+    std::cout &lt;&lt; &#34;3\n&#34;;
+  }
+};
+
+int main() {
+  Derived d;
+  d.fun();  // 1
+  d.fun(3);  // 3
+}
+</code></pre></li>
+</ul>
+</li>
+<li>继承与友元
+<ul>
+<li>友元关系无法继承，但基类的友元可以访问派生类中的基类的相关成员
+<pre tabindex="0"><code>struct Derived;  // 声明，否则下面编译不通过
+struct Base {
+  friend void fun(const Derived&amp;);
+protected:
+  int x = 10;
+};
+
+struct Derived : public Base {
+private:
+  int y = 20;
+};   
+
+void fun(const Derived&amp; val) {
+  std::cout &lt;&lt; val.x &lt;&lt; std::endl;  // 通过, 基类的友元可以访问派生类中的基类的相关成员
+  std::cout &lt;&lt; val.y &lt;&lt; std::endl;  // 不通过，y不属于Base
+}
+</code></pre></li>
+<li>派生类中的友元无法获得基类中成员的访问权限
+<pre tabindex="0"><code>struct Derived;  // 声明，否则下面编译不通过
+struct Base {
+protected:
+  int x = 10;
+};
+
+struct Derived : public Base {
+  friend void fun(const Derived&amp;);
+  friend void fun(const Base&amp;);
+private:
+  int y = 20;
+};   
+
+void fun(const Base&amp; val) {
+  std::cout &lt;&lt; val.x &lt;&lt; std::endl;  // 不通过, 派生类的友元不可以访问基类中的成员
+}
+
+void fun(const Derived&amp; val) {
+  std::cout &lt;&lt; val.x &lt;&lt; std::endl;  // 不通过, 派生类的友元不可以访问基类中的成员
+  std::cout &lt;&lt; val.y &lt;&lt; std::endl;  // 通过
+}
+// 如果上面的操作允许的话，所谓的protected和private的访问权限就形同虚设了，我只要搞个派生类，定义一个友元，就可以无限制地访问基类中所有成员，显然不合理
+</code></pre></li>
+</ul>
+</li>
+<li>通过基类指针实现在容器中保存不同类型的对象
+<pre tabindex="0"><code>struct Base {
+  virtual double GetValue() = 0;
+  virtual ~Base() = default;
+};
+
+struct Derived : public Base {
+  Derive(int x) : val(x) {}
+  double GetValue() override { return val; }
+private:
+  int val;
+};
+
+struct Derived2 : public Base {
+  Derive2(double x) : val(x) {}
+  double GetValue() override { return val; }
+private:
+  double val;
+};
+
+int main() {
+  std::vector&lt;std::shared_ptr&lt;Base&gt;&gt; vec;
+  vec.emplace_back(new Derived(1));
+  vec.emplace_back(new Derived2(3.14));
+}
+</code></pre></li>
+<li>多重继承
+<ul>
+<li>Derived继承自Base1和Base2，我们就可以使用Base1或者Base2的指针来保存Derived对象</li>
+</ul>
+</li>
+<li>虚继承
+<ul>
+<li>错误示例
+<pre tabindex="0"><code>struct Base {
+  virtual ~Base() = default;
+  int x;
+};
+
+struct Base1 : Base {
+  virtual ~Base1() = default;
+};
+
+struct Base2 : Base {
+  virtual ~Base2() = default;
+};
+
+struct Derived : public Base1, public Base2 {};
+
+int main() {
+  Derived d;
+  std::cout &lt;&lt; &amp;(d.Base1::x) &lt;&lt; &#34;\n&#34;;
+  std::cout &lt;&lt; &amp;(d.Base2::x) &lt;&lt; &#34;\n&#34;;  // 通过，且地址一样的
+  d.x;  // 报错，不知道是Base1中的x还是Base2中的x
+}
+</code></pre></li>
+<li>正确示例
+<pre tabindex="0"><code>struct Base {
+  virtual ~Base() = default;
+  int x;
+};
+
+struct Base1 : virtual Base {
+  virtual ~Base1() = default;
+};
+
+struct Base2 : virtual Base {
+  virtual ~Base2() = default;
+};
+
+struct Derived : public Base1, public Base2 {};
+
+int main() {
+  Derived d;
+  d.x;  // 正确，使用了虚继承
+  std::cout &lt;&lt; &amp;(d.Base1::x) &lt;&lt; &#34;\n&#34;;
+  std::cout &lt;&lt; &amp;(d.Base2::x) &lt;&lt; &#34;\n&#34;;
+  std::cout &lt;&lt; &amp;(d.x) &lt;&lt; &#34;\n&#34;;  // 正确，使用了虚继承
+  // 上面三个地址的输出都是一样的
+}
+</code></pre></li>
+</ul>
+</li>
+<li>空基类优化与[[no unique address]]属性
+<ul>
+<li>未优化代码
+<pre tabindex="0"><code>struct Base {
+  void fun() {}  // 成员函数不会占用类的大小
+};
+// 类所占内存的大小是由成员变量（静态变量除外）决定的，虚函数指针和虚基类指针也属于数据部分，成员函数是不计算在内的。
+// 在编译器处理后，成员变量和成员函数是分离的。成员函数还是以一般的函数一样的存在。
+// a.fun()是通过fun(a.this)来调用的。所谓成员函数只是在名义上是类里的。
+
+struct Derived {
+  int x;
+  Base b;  // 为了调用Base中的一些函数，把Base对象声明为了成员变量
+};
+
+int main() {
+  std::cout &lt;&lt; sizeof(Base) &lt;&lt; std::endl;  // 1，没有fun函数这里还是1
+  std::cout &lt;&lt; sizeof(Derived) &lt;&lt; std::endl;  // 8，本来应该是5，编译器会做padding
+}
+</code></pre></li>
+<li>优化后代码
+<pre tabindex="0"><code>struct Base {
+  void fun() {}
+};
+
+struct Derived : Base {
+  int x;
+};
+
+int main() {
+  std::cout &lt;&lt; sizeof(Base) &lt;&lt; std::endl;  // 1
+  std::cout &lt;&lt; sizeof(Derived) &lt;&lt; std::endl;  // 4，空基类优化，如果基类中不包含任何数据成员，占用的内存会被省去
+}
+</code></pre></li>
+<li>上面的优化代码仍然不够好，因为Derived并不是真的想继承Base（Derived不是一个Base），只是想用Base中的方法。虽然代码功能实现了，但是表达的内容不是那么精确，所以C++20引入了[[no_unique_address]]
+<pre tabindex="0"><code>struct Base {
+  void fun() {}  // 成员函数不会占用类的大小
+};
+
+struct Derived {
+  int x;
+  [[no_unique_address]] Base b;  // 为了调用Base中的一些函数，把Base对象声明为了成员变量
+};
+
+int main() {
+  std::cout &lt;&lt; sizeof(Base) &lt;&lt; std::endl;  // 1，没有fun函数这里还是1
+  std::cout &lt;&lt; sizeof(Derived) &lt;&lt; std::endl;  // 4
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+
+
+
+
+
+
+</html>

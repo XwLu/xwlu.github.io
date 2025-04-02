@@ -55,7 +55,98 @@
       <link>https://xwlu.github.io/readme/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/readme/</guid>
-      <description>&lt;h2 id=&#34;skills&#34;&gt;Skills&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;C++&lt;/li&gt;&#xA;&lt;li&gt;Python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/XwLu&#34;&gt;looyifan github&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;notes&#34;&gt;Notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/robotics/abstract&#34;&gt;Robotics&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/deep_learning/abstract&#34;&gt;Deep Learning&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <description>&lt;h2 id=&#34;skills&#34;&gt;Skills&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;C++&lt;/li&gt;&#xA;&lt;li&gt;Python&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;links&#34;&gt;Links&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Github: &lt;a href=&#34;https://github.com/XwLu&#34;&gt;looyifan github&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h2 id=&#34;notes&#34;&gt;Notes&lt;/h2&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/robotics/abstract&#34;&gt;Robotics&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/deep_learning/abstract&#34;&gt;Deep Learning&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://xwlu.github.io/post/languages/C++/abstract&#34;&gt;C++&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>Array Vector String</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/</guid>
+      <description>array, vector, string for C++</description>
+    </item>
+    <item>
+      <title>Async &amp; Future</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/async-future/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/async-future/</guid>
+      <description>Muti thread skills</description>
+    </item>
+    <item>
+      <title>Bind &amp; Lambda</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/bind-lambda/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/bind-lambda/</guid>
+      <description>Lambda for C++</description>
+    </item>
+    <item>
+      <title>Bit Field</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/</guid>
+      <description>bit field for C++</description>
+    </item>
+    <item>
+      <title>Bugs</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/</guid>
+      <description>bugs I met</description>
+    </item>
+    <item>
+      <title>C&#43;&#43; Abstract</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/abstract/</guid>
+      <description>The Abstract of C++ Notes</description>
+    </item>
+    <item>
+      <title>Class Abstract</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/abstract/</guid>
+      <description>Class Abstract for C++</description>
+    </item>
+    <item>
+      <title>Class Access &amp; Friend</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/</guid>
+      <description>Access rules &amp;amp; friend for C++ class</description>
+    </item>
+    <item>
+      <title>Class Basis</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/basis/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/basis/</guid>
+      <description>Basis for C++ class</description>
+    </item>
+    <item>
+      <title>Compile &amp; Link</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</guid>
+      <description>compile &amp;amp; link for C++</description>
+    </item>
+    <item>
+      <title>Constexpr of Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</guid>
+      <description>constexpr for C++</description>
+    </item>
+    <item>
+      <title>Construction of Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/construct/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/construct/</guid>
+      <description>construction for C++ class</description>
+    </item>
+    <item>
+      <title>Container</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/container/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/container/</guid>
+      <description>container for c++</description>
     </item>
     <item>
       <title>Deep Learning Abstract</title>
@@ -86,6 +177,153 @@
       <description>Knowledges of DL Evaluation</description>
     </item>
     <item>
+      <title>Dynamic Memory</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/</guid>
+      <description>Dynamic memory for C++</description>
+    </item>
+    <item>
+      <title>Eigen</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/eigen/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/eigen/</guid>
+      <description>Eigen for C++</description>
+    </item>
+    <item>
+      <title>Enum</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/enum/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/enum/</guid>
+      <description>enum for C++</description>
+    </item>
+    <item>
+      <title>Exception</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/exception/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/exception/</guid>
+      <description>Exception for C++</description>
+    </item>
+    <item>
+      <title>Expression</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/expression/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/expression/</guid>
+      <description>Expression for C++</description>
+    </item>
+    <item>
+      <title>Function</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/function/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/function/</guid>
+      <description>Function for C++</description>
+    </item>
+    <item>
+      <title>Fundamentals of meta-programming</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/fundamental/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/fundamental/</guid>
+      <description>Fundamentals of meta-programming for C++</description>
+    </item>
+    <item>
+      <title>Generic Algorithm</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/generic-algorithm/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/generic-algorithm/</guid>
+      <description>generic algorithm for C++</description>
+    </item>
+    <item>
+      <title>Inheritance of Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/</guid>
+      <description>inheritance of C++ class</description>
+    </item>
+    <item>
+      <title>IOStream</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/</guid>
+      <description>IOStream for C++</description>
+    </item>
+    <item>
+      <title>Local Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</guid>
+      <description>local class for C++</description>
+    </item>
+    <item>
+      <title>Member Ptr of Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</guid>
+      <description>member ptr for C++ class</description>
+    </item>
+    <item>
+      <title>Meta-programming Abstract</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/abstract/</guid>
+      <description>meta-programming of C++</description>
+    </item>
+    <item>
+      <title>Multi-Thread Abstract</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/abstract/</guid>
+      <description>Multi-Thread Abstract</description>
+    </item>
+    <item>
+      <title>Mutex</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/</guid>
+      <description>Mutex for C++</description>
+    </item>
+    <item>
+      <title>Namespace</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/</guid>
+      <description>namespace for C++</description>
+    </item>
+    <item>
+      <title>Nested Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/nested-class/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/nested-class/</guid>
+      <description>nested class for C++</description>
+    </item>
+    <item>
+      <title>Operator</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</guid>
+      <description>Operator for C++</description>
+    </item>
+    <item>
+      <title>Other knowledges of template</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/others/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/template/others/</guid>
+      <description>other knowledges of template for C++</description>
+    </item>
+    <item>
+      <title>Others</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/others/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/others/</guid>
+      <description>Some other knowledge for C++</description>
+    </item>
+    <item>
+      <title>Requires &amp; Concepts</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</guid>
+      <description>Requires &amp;amp; Concepts for C++</description>
+    </item>
+    <item>
       <title>Robotics Abstract</title>
       <link>https://xwlu.github.io/post/robotics/abstract/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -93,11 +331,88 @@
       <description>The Abstract of Robotics Tech</description>
     </item>
     <item>
+      <title>SharedPtr</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/</guid>
+      <description>shared ptr for C++</description>
+    </item>
+    <item>
+      <title>Singleton</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/</guid>
+      <description>Singleton for C++</description>
+    </item>
+    <item>
+      <title>Template Abstract</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/template/abstract/</guid>
+      <description>Template Abstract</description>
+    </item>
+    <item>
+      <title>Template Class</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/</guid>
+      <description>Template Class for C++</description>
+    </item>
+    <item>
+      <title>Template Function</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/</guid>
+      <description>Template function for C++</description>
+    </item>
+    <item>
+      <title>Thread</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/</guid>
+      <description>Thread for C++</description>
+    </item>
+    <item>
+      <title>ThreadPool</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/</guid>
+      <description>ThreadPool for C++</description>
+    </item>
+    <item>
+      <title>Time Counting</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/time-counting/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/time-counting/</guid>
+      <description>Time counting for C++</description>
+    </item>
+    <item>
       <title>Transformer</title>
       <link>https://xwlu.github.io/post/deep_learning/transformer/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/deep_learning/transformer/</guid>
       <description>Knowledges of Transformer</description>
+    </item>
+    <item>
+      <title>Type</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</guid>
+      <description>Type for C++</description>
+    </item>
+    <item>
+      <title>Union</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/union/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/union/</guid>
+      <description>Union for C++</description>
+    </item>
+    <item>
+      <title>Volatile</title>
+      <link>https://xwlu.github.io/post/languages/c&#43;&#43;/volatile/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/volatile/</guid>
+      <description>Volatile for C++</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>IOStream - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="IOStream for C&#43;&#43;" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="IOStream - My New Hugo Site" />
+<meta name="twitter:description"
+  content="IOStream for C&#43;&#43;" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="IOStream - My New Hugo Site">
+<meta property="og:description"
+  content="IOStream for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/" />
+<meta property="og:site_name" content="IOStream" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/">IOStream</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      3742 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="基础知识">基础知识</h1>
+<ul>
+<li>主要处理两个问题
+<ul>
+<li>表示形式的变化：使用格式化/解析在数据的内部表示与字符序列间转换</li>
+<li>与外部设备的通信：针对不同的外部设备（终端、文件、内存）引入不同的处理逻辑</li>
+</ul>
+</li>
+<li>所涉及到的操作
+<ul>
+<li>第1步：格式化 / 解析</li>
+<li>第2步：缓存
+<ul>
+<li>累积到一定数量再输出，提高程序性能</li>
+</ul>
+</li>
+<li>第3步：编码转换</li>
+<li>第4步：传输</li>
+</ul>
+</li>
+<li>采用模板来封装字符特性，采用继承来封装设备特性
+<ul>
+<li>常用的类型实际上是类模板实例化的结果</li>
+</ul>
+</li>
+</ul>
+<h1 id="输入与输出">输入与输出</h1>
+<ul>
+<li>分为格式化与非格式化两类</li>
+<li>非格式化I/O：不涉及数据表示形式的变化
+<ul>
+<li>常用输入函数：get / read / getline / gcount</li>
+<li>常用输出函数：put / write</li>
+<li>用的比较少，大部分情况下我们都是输入或者输出人能看得懂的数据</li>
+</ul>
+</li>
+<li>格式化I/O：使用移位操作符来进行的输入(&raquo;)与输出(&laquo;)
+<ul>
+<li>C++通过操作符重载以支持内建数据类型的格式化I/O</li>
+<li>可以通过重载操作符以支持自定义类型的格式化I/O</li>
+</ul>
+</li>
+<li>格式控制
+<ul>
+<li>可接受位掩码类型(showpos)、字符类型(fill)与取值相对随意(width)的格式化参数</li>
+<li>注意width方法的特殊性：触发后被重置
+<pre tabindex="0"><code>char a = &#39;0&#39;;
+int x = static_cast&lt;char&gt;(a);
+std::cout.setf(std::ios_base::showpos);  // 显示正负号
+std::cout.width(10);  // 打印的内容占10个字符
+std::cout.fill(&#39;.&#39;);  // 空白处填上&#39;.&#39;
+std::cout &lt;&lt; a &lt;&lt; std::endl;  // 打印出“.........0”，字符没有正负，所以这里没有显示正负号
+std::cout &lt;&lt; x &lt;&lt; std::endl;  // 打印出“+48”，width被重置了
+std::cout.width(10);  // 打印的内容占10个字符
+std::cout &lt;&lt; -x &lt;&lt; std::endl;  // 打印出“.......-48”
+</code></pre></li>
+</ul>
+</li>
+<li>操纵符
+<ul>
+<li>简化格式化参数的设置</li>
+<li>触发实际的插入与提取操作
+<pre tabindex="0"><code>char a = &#39;0&#39;;
+int x = static_cast&lt;char&gt;(a);
+std::cout &lt;&lt; std::showposi &lt;&lt; std::setw(10) &lt;&lt; std::setfill(&#39;.&#39;) &lt;&lt; a &lt;&lt; &#34;\n&#34; &lt;&lt; x &lt;&lt; std::endl;
+</code></pre></li>
+<li>提取会放松对格式的限制
+<ul>
+<li>比如cin输入+0010，它还是能解析为10。</li>
+</ul>
+</li>
+<li>提取C风格字符串时要小心内存越界
+<pre tabindex="0"><code>char x[5] = {};
+std::cin &gt;&gt; x;  // 输入“abcdefg”，程序会崩溃，如果x是std::string类型，就没有这个问题
+std::cin &gt;&gt; std::setw(5) &gt;&gt; x;  // 合法，由于最后一个字符要写&#39;\0&#39;，所以这里会读(5-1)个字符进入x，就不会越界了
+std::cout &lt;&lt; x &lt;&lt; std::endl;
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="文件与内存操作">文件与内存操作</h1>
+<ul>
+<li>文件操作
+<ul>
+<li>
+<p>basic_ifstream / basic_ofstream / basic_fstream</p>
+</li>
+<li>
+<p>文件流可以处于打开/关闭两种状态，处于打开状态时无法再次打开，只有打开时才能I/O</p>
+<pre tabindex="0"><code>// 打开和关闭本质就是是否和一个文件产生了关联
+
+// 自动open，常用
+std::ifstream inFile(&#34;file_name&#34;);
+std::cout &lt;&lt; inFile.is_open() &lt;&lt; std::endl;  // 如果file_name存在，就打印“1”，否则打印“0”
+
+// 手动open，不常用
+std::ifstream inFile2;
+std::cout &lt;&lt; inFile.is_open() &lt;&lt; std::endl;  // &#34;0&#34;
+inFile2.open(&#34;file_name&#34;);
+std::cout &lt;&lt; inFile2.is_open() &lt;&lt; std::endl;  // 如果file_name存在，就打印“1”，否则打印“0”
+
+// 手动关闭
+inFile2.close();
+
+std::ofstream outFile(&#34;file_name&#34;);
+outFile &lt;&lt; &#34;hello\n&#34;;
+outFile.close();  // 除了断开和文件的关联之外，还会把缓存区中剩余的内容传输出去
+// 当outFile对象被销毁的时候，会隐式调用close方法，确保缓存区的内容被传输出去，否则这部分内容就丢失了，所以上面一行代码也可以不要
+</code></pre></li>
+<li>
+<p>文件流的打开模式</p>
+<table>
+  <thead>
+      <tr>
+          <th>标记名</th>
+          <th>作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>in</td>
+          <td>打开以供读取</td>
+      </tr>
+      <tr>
+          <td>out</td>
+          <td>打开以供写入</td>
+      </tr>
+      <tr>
+          <td>ate</td>
+          <td>表示起始位置位于文件末尾</td>
+      </tr>
+      <tr>
+          <td>app</td>
+          <td>附加文件，即总是向文件尾写入</td>
+      </tr>
+      <tr>
+          <td>trunc</td>
+          <td>截断文件，即删除文件中的内容</td>
+      </tr>
+      <tr>
+          <td>binary</td>
+          <td>二进制模式</td>
+      </tr>
+  </tbody>
+</table>
+<ul>
+<li>每种文件流都有缺省的打开方式
+<pre tabindex="0"><code>// ifstream的缺省打开方式是ios_base::in
+// ofstream的缺省打开方式是ios_base::out | ios_base::trunc，trunc会导致在向文件写入的时候，文件里已有的内容会被删除; 可以设定为ios_base::out | ios_base::app来实现追加
+// fstream的缺省打开方式是ios_base::in | ios_base::out
+std::ifstream inFile(&#34;file_name&#34;, std::ios_base::in);  // 这里的ios_base::in也可以不加，因为ifstream对象的缺省打开方式就是这个
+std::ifstream inFile(&#34;file_name&#34;, std::ios_base::in | std::ios_base::ate);  // 从文件末尾开始读取
+</code></pre></li>
+<li>注意ate和app的异同
+<pre tabindex="0"><code>// 下面这种写法还是会清空文件里已有的内容
+std::ofstream outFile(&#34;filename&#34;, std::ios_base::out | std::ios_base::ate);
+
+// 下面这种写法可以追加内容
+std::ofstream outFile(&#34;filename&#34;, std::ios_base::out | std::ios_base::app);
+</code></pre></li>
+<li>binary能禁止系统特定的转换</li>
+<li>避免意义不明确的流使用方式（如ifstream + out）</li>
+<li>推荐的打开方式
+<table>
+  <thead>
+      <tr>
+          <th>打开方式</th>
+          <th>效果</th>
+          <th>加结尾模式标记</th>
+          <th>加二进制模式标记</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>in</td>
+          <td>只读方式打开文本文件</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+      <tr>
+          <td>out|trunc</td>
+          <td>如果文件存在，长度截断为0；否则创建文件供写入</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+      <tr>
+          <td>out</td>
+          <td>如果文件存在，长度截断为0；否则创建文件供写入</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+      <tr>
+          <td>out|app</td>
+          <td>附加：打开或创建文件，仅供文件末尾写入</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+      <tr>
+          <td>in|out</td>
+          <td>打开文件供更新使用(支持读写)</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+      <tr>
+          <td>in|out|trunc</td>
+          <td>如果文件存在，长度截断为0；否则创建文件供更新使用</td>
+          <td>初始文件位置位于文件末尾</td>
+          <td>禁止系统转换</td>
+      </tr>
+  </tbody>
+</table>
+</li>
+</ul>
+</li>
+<li>
+<p>文件读取代码例子</p>
+<pre tabindex="0"><code>//读取方式: 逐词读取, 词之间用空格区分
+void ReadDataFromFileWBW() {
+  ifstream fin(&#34;data.txt&#34;);
+  string s;  // c++的流析取器 &gt;&gt; 从流对象析取内容到右操作数。
+             // 它的默认分隔符是：\t, space, enter.
+  while(fin &gt;&gt; s) {
+    cout &lt;&lt; &#34;Read from file: &#34; &lt;&lt; s &lt;&lt; endl;
+  }
+}
+
+//读取方式: 逐行读取, 将行读入字符数组, 行之间用回车换行区分
+void ReadDataFromFileLBLIntoCharArray() {
+  ifstream fin(&#34;data.txt&#34;);
+  const int LINE_LENGTH = 100; // 一:fstream.getline的第二个参数需要传入字符数，而非字节数，文档中没有明确说明。
+                               // 二:如果单行超过了缓冲，则循环会结束。
+                               // 总结：用getline的时候，一定要保证缓冲区够大，能够容纳各种可能的数据行。切记传入字符数。
+                               // 在此例中则为创建&#34;data.txt&#34;的时候，每一行的字符数不要超过100，否则while循环会结束。
+  char str[LINE_LENGTH];
+  while(fin.getline(str, LINE_LENGTH)) {
+    cout &lt;&lt; &#34;Read from file: &#34; &lt;&lt; str &lt;&lt; endl;
+  }
+}
+
+//读取方式: 逐行读取, 将行读入字符串, 行之间用回车换行区分
+void ReadDataFromFileLBLIntoString() {
+  ifstream fin(&#34;data.txt&#34;);
+  string s;
+  // 这里的getline是C++ string里面的API，和上面的不一样
+  while(getline(fin,s)) {
+    cout &lt;&lt; &#34;Read from file: &#34; &lt;&lt; s &lt;&lt; endl;
+  }
+}
+</code></pre></li>
+</ul>
+</li>
+<li>内存操作
+<ul>
+<li>内存流：basic_istringstream / basic_ostringstream / basic_stringstream</li>
+<li>也会受打开模式：in / out / app的影响，不会受trunc和binary的影响
+<pre tabindex="0"><code>std::ostringstream buf(&#34;test&#34;);
+buf &lt;&lt; &#39;1&#39;;
+std::cout &lt;&lt; buf.str() &lt;&lt; &#34;\n&#34;;  // 输出“1est”
+
+std::ostringstream buf2(&#34;test&#34;, std::ios_base::ate);
+buf2 &lt;&lt; &#39;1&#39;;
+std::cout &lt;&lt; buf2.str() &lt;&lt; &#34;\n&#34;;  // 输出“test1”
+</code></pre></li>
+<li>使用str()方法获取底层所对应的字符串
+<ul>
+<li>小心避免使用str().c_str()的形式获取C风格字符串，因为str()返回的是一个右值，是个临时对象，该行语句执行完就会被销毁，所以拿str()返回值的指针进行操作是一件很危险的事</li>
+<li>可以分两步写，先把str()存在一个局部变量里，再返回该局部对象的c_str()</li>
+</ul>
+</li>
+<li>基于字符串流的字符串拼接优化
+<pre tabindex="0"><code>// 下面这种写法的性能非常差
+// 当x新加入一些字符的时候，它会判断当前x所拥有的内存是否够用，不够用的话，会新开辟一块大内存，把x中已经有的内容和新加入的内存一起放在新的大内存里，再去销毁掉原来占用的小内存
+// 这种操作很像vector.emplace_back过程，不断在开辟和释放内存，非常占资源
+std::string x;
+x += &#34;hello&#34;;
+x += &#34;hello&#34;;
+x += &#34;hello&#34;;
+
+// 改成这样就好很多
+// 因为stream会在内部维护一个缓冲区，只有缓冲区填满了才会写入内存。
+// 由于缓冲区一般比较大，所以相比上面的写法，下面的写法对内存的操作会变少很多。
+std::ostringstream tmp;
+tmp &lt;&lt; &#34;hello&#34;;
+tmp &lt;&lt; &#34;hello&#34;;
+tmp &lt;&lt; &#34;hello&#34;;
+std::string x = tmp.str();
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="流的定位">流的定位</h1>
+<ul>
+<li>获取流位置
+<ul>
+<li>tellg() / tellp()可以用于获取输入(get) / 输出(put)流位置（pos_type类型）</li>
+<li>两个方法可能会失败，此时返回pos_type(-1)</li>
+</ul>
+</li>
+<li>设置流位置
+<ul>
+<li>seekg() / seekp()用于设置输入/输出流的位置</li>
+<li>这两个方法分别有两个重置版本
+<ul>
+<li>设置绝对位置：传入pos_type进行设置</li>
+<li>设置相对位置：通过偏移量（字符格式ios_base::beg）+ 流位置符号的方式设置
+<ul>
+<li>ios_base::beg：流的开头</li>
+<li>ios_base::cur：当前流的位置</li>
+<li>ios_base::end：流的结尾</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="流的同步">流的同步</h1>
+<ul>
+<li>基于flush() / sync() / unibuf的通过
+<ul>
+<li>flush()用于输出流同步，刷新缓冲区
+<pre tabindex="0"><code>// 下面的代码有一个问题，cout的缓冲区要满了才会输出到终端，如果像这里没有满的话，终端上就没有&#34;What&#39;s your name?&#34;，用户就不知道该干嘛
+std::cout &lt;&lt; &#34;What&#39;s your name?&#34;;
+std::string name;
+std::cin &gt;&gt; name;
+
+// 解决方案1
+std::cout &lt;&lt; &#34;What&#39;s your name?&#34; &lt;&lt; std::flush;
+
+// 解决方案2
+std::cout &lt;&lt; &#34;What&#39;s your name?&#34;;
+std::cout.flush();
+
+// 解决方案3，不建议用，性能会受较大影响，缓冲区机制就不存在了
+std::cout &lt;&lt; std::unibuf &lt;&lt; &#34;What&#39;s your name?&#34;;
+</code></pre></li>
+<li>sync()用于输入流同步，其实现逻辑是编译器所定义的</li>
+<li>输出流可以通过设置unibuf来保证每次输出后自动同步</li>
+</ul>
+</li>
+<li>基于绑定(tie)的同步
+<ul>
+<li>绑定的目标一定是个输出流</li>
+<li>流可以绑定到一个输出流上，这样每次输入 / 输出前可以刷新输出流的缓冲区</li>
+<li>比如cin绑定到了cout上</li>
+</ul>
+</li>
+<li>与C语言标准IO库的同步
+<ul>
+<li>cout维护了一个缓冲区，printf也维护了一个缓冲区，如果不同步，那cout和printf的输出顺序就和他们在代码中的执行顺序不一致了</li>
+<li>缺省情况下，C++的输入输出操作会与C的输入输出函数同步</li>
+<li>可以通过sync_with_stdio关闭该同步，因为为了这个同步，系统牺牲了一部分性能</li>
+</ul>
+</li>
+</ul>
+<h1 id="流的状态">流的状态</h1>
+<ul>
+<li>iostate
+<ul>
+<li>failbit: 输入输出操作失败（格式化或者提取错误）
+<pre tabindex="0"><code>// outFile本身就是close状态（没有关联到任何文件），执行close操作会失败
+std::ofstream outFile;
+std::cout &lt;&lt; outFile.fail() &lt;&lt; std::endl;  // 0
+outFile.close();
+std::cout &lt;&lt; outFile.fail() &lt;&lt; std::endl;  // 1
+</code></pre></li>
+<li>badbit: 不可恢复的错误
+<pre tabindex="0"><code>std::ofstream outFile;
+outFile &lt;&lt; &#34;hello&#34;;
+std::cout &lt;&lt; outFile.bad() &lt;&lt; std::endl;  // 1
+</code></pre></li>
+<li>eofbit: 关联的输入序列已抵达文件尾</li>
+<li>goodbit: 无错误</li>
+</ul>
+</li>
+<li>检测流的状态
+<ul>
+<li>good() / fail() / bad() / eof()方法</li>
+<li>流会隐式转换为bool值
+<pre tabindex="0"><code>int x;
+if (std::cin &gt;&gt; x) {
+  std::cout &lt;&lt; &#34;succ&#34; &lt;&lt; std::endl;
+}
+std::cout &lt;&lt; static_cast&lt;bool&gt;(std::cin) &lt;&lt; std::endl;
+</code></pre></li>
+<li><img src="https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/iostate.png?raw=true" alt="iostate"></li>
+</ul>
+</li>
+<li>注意
+<ul>
+<li>转换为bool值时不会考虑eof</li>
+<li>fail与eofkennel会被同时设置，但两者含义不同</li>
+</ul>
+</li>
+<li>通常来说，只要流处于某种错误状态时，后续的插入/提取操作就不会生效</li>
+<li>设置流状态
+<ul>
+<li>clear(iostate): 设置流的状态为一个具体的数值（缺省为goodbit）</li>
+<li>setstate: 将某个状态附加到现有的流状态上</li>
+</ul>
+</li>
+<li>捕获流异常: exceptions方法</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+
+
+
+
+
+
+</html>

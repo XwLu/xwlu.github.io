@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>Template Function - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="Template function for C&#43;&#43;" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Template Function - My New Hugo Site" />
+<meta name="twitter:description"
+  content="Template function for C&#43;&#43;" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Template Function - My New Hugo Site">
+<meta property="og:description"
+  content="Template function for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/" />
+<meta property="og:site_name" content="Template Function" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/">Template Function</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      3323 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="使用template关键字引入模板">使用template关键字引入模板</h1>
+<ul>
+<li>函数模板的声明与定义
+<pre tabindex="0"><code>// 声明
+template&lt;typename T&gt;
+void fun(T);
+
+// 定义
+template&lt;typename T&gt;
+void fun(T input){
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+}
+</code></pre></li>
+<li>typename关键字可以替换为<strong>class</strong>，含义相同</li>
+<li>函数模板中包含了两对参数：函数形参(上面的input)/实参；模版形参(上面的T)/实参
+<ul>
+<li><strong>注意</strong>：函数模版不是函数(不能调用)，我们需要在<strong>编译期</strong>给模版形参赋值相应的实参，才能把函数模版实例化成一个函数(可以去cppinsights里面去看看上面这份代码被预处理后的样子)</li>
+<li>函数形参是<strong>运行期</strong>赋值的</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="函数模板的显示实例化">函数模板的显示实例化</h1>
+<pre tabindex="0"><code>fun&lt;int&gt;(3);  // 会在终端打印出“3”
+</code></pre><ul>
+<li>编译期的两阶段处理
+<ul>
+<li>模板语法检查
+<pre tabindex="0"><code>// 第一阶段只会检查下面这段代码有没有语法错误
+template&lt;typename T&gt;
+void fun(T input){
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+}
+</code></pre></li>
+<li>模板实例化
+<pre tabindex="0"><code>struct Str {};
+// 第二阶段会实例化对应的函数，这里会实例化出来两个函数，其中第二个函数会报错，因为Str没有重载&lt;&lt;运算符
+fun&lt;int&gt;(3);
+fun&lt;Str&gt;(Str{});
+</code></pre></li>
+</ul>
+</li>
+<li>模板必须在实例化时可见——模板函数只需要满足<strong>翻译单元</strong>的一处定义原则(一般函数需要满足<strong>程序</strong>的一处定义原则)</li>
+<li>注意与内联函数的异同
+<pre tabindex="0"><code>// header.h
+template&lt;typename T&gt;
+void fun(T input){
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+}
+
+inline void normal_fun() {}
+
+// main.cc
+#include &#34;header.h&#34;
+
+// source.cc
+#include &#34;header.h&#34;
+</code></pre><ul>
+<li>上面的代码如果normal_fun不加inline，编译会报错重复定义，因为normal_fun需要满足程序的一处定义原则，加上inline后只需要满足翻译单元的一处定义原则即可</li>
+<li>模板函数本身就只需要满足翻译单元的一处定义原则，所以不需要加inline</li>
+<li>当然，模板函数也可以加inline，作用是告诉编译器在实例化函数的时候，顺便替换掉函数的调用，直接把函数逻辑嵌入到实例化的位置</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="函数模板的重载">函数模板的重载</h1>
+<pre tabindex="0"><code>template&lt;typename T&gt;
+void fun(T input){
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+}
+
+template&lt;typename T&gt;
+void fun(T* input){
+  std::cout &lt;&lt; *input &lt;&lt; std::endl;
+}
+
+template&lt;typename T, typename T2&gt;
+void fun(T input, T2 input2){
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+  std::cout &lt;&lt; input2 &lt;&lt; std::endl;
+}
+
+int x = 3;
+fun&lt;int&gt;(&amp;x);
+fun&lt;int&gt;(x);
+</code></pre><hr>
+<h1 id="模版实参的类型推导">模版实参的类型推导</h1>
+<ul>
+<li>如果函数模版在实例化时没有显示制定模版实参，那么系统会尝试进行推导</li>
+<li>推导时基于函数实参（表达式）确定模版实参的过程，其基本原则与auto类型推导类似
+<ul>
+<li>函数形参是左值引用/指针：
+<ul>
+<li>忽略表达式类型中的引用</li>
+<li>将表达式类型与函数形参模式匹配以确定模版实参
+<pre tabindex="0"><code>template&lt;typename T&gt;
+void fun(T&amp; input) {
+  std::cout &lt;&lt; input &lt;&lt; std::endl;
+}
+
+int main() {
+  int x = 3;
+  fun(3);  // fun(int&amp;);
+
+  int&amp; y = x;
+  fun(y);  // fun(int&amp;);
+
+  const int&amp; z = x;
+  fun(z);  // fun(const int&amp;);
+}
+</code></pre></li>
+</ul>
+</li>
+<li>函数的形参是万能引用
+<ul>
+<li>如果实参表达式是右值，那么模版形参被推导为去掉引用的基本类型</li>
+<li>如果实参表达式是左值，那么模版形参被推导为左值引用，触发引用折叠
+<pre tabindex="0"><code>template&lt;typename T&gt;
+void fun(T&amp;&amp; input) {}  // 如果T是一个确定的类型（比如int&amp;&amp;，double&amp;&amp;），那&amp;&amp;就是右值引用
+                        // 编译器在编译的时候，T还没被确定为一个具体的类型，那&amp;&amp;就被当作万能引用
+                        // 既可以引用左值，也可以引用右值
+int main() {
+  int&amp;&amp; x = 3;
+  fun(3);  // fun(int&amp;&amp;)
+  int y = 3;
+  fun(y);  // fun(int&amp;)
+}
+</code></pre></li>
+</ul>
+</li>
+<li>函数形参不包含引用(写起来最简单，模型推导最复杂)
+<ul>
+<li>忽略表达式中的引用</li>
+<li>忽略顶层const</li>
+<li>数组、函数转换成相应的指针类型
+<pre tabindex="0"><code>template&lt;typename T&gt;
+void fun(T input) {}
+
+int main() {
+  fun(3);  // fun(int)
+
+  int x = 3;
+  int&amp; ref = x;
+  fun(ref);  // fun(int)
+
+  const int&amp; ref = x;
+  fun(ref);  // fun(int)
+
+  const int* const ptr = &amp;x;  // 注意，这里的顶层const是后面那个const，直接修饰变量的那个
+                              // 因为变量是拷贝进fun的，所以这个const会失效
+  fun(ptr);  // fun(const int*);
+
+  int x[3];
+  fun(x);  // fun(int*)
+}
+</code></pre></li>
+</ul>
+</li>
+<li>多个T情况
+<pre tabindex="0"><code>// 同样的T
+template&lt;typename T&gt;
+void fun(T input1, T input2) {}
+
+int main() {
+  fun&lt;int&gt;(3, 5.0);  // 通过，不存在模型推导，T显示指定为int
+  fun(3, 5.0);  // 不通过，3推导出T为int，5.0推导出T为double，int和double不是一个类型，报错
+}
+
+// 不同的T
+template&lt;typename T&gt;
+void fun(T1 input1, T2 input2) {}
+
+int main() {
+  fun&lt;int&gt;(3, 5.0);  // 通过，T1显示指定为int，T2隐式指推断为double
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="模版实参并非总是能够推导得到">模版实参并非总是能够推导得到</h1>
+<ul>
+<li>如果模版形参与函数形参无关，则无法推导
+<pre tabindex="0"><code>template &lt;typename T, typename Res&gt;
+Res fun(T input) {}
+
+int main() {
+  fun(3);  // Res无法推导，编译不通过
+}
+</code></pre></li>
+<li>即使相关，也不一定能进行推导，推导成功也可能存在因歧义而无法使用(见上面“同样的T”)
+<pre tabindex="0"><code>template &lt;typename T&gt;
+void fun(typename std::remove_reference&lt;T&gt;::type input) {}
+
+int main() {
+  fun(3);  // 编译器在实例化fun函数的时候，发现std::remove_reference&lt;T&gt;::type的结果是int
+           // T到底是啥不确定，可以是int，也可以是int&amp;，int&amp;&amp;所以编译器报错
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="在无法推导时编译器会选择使用缺省模版实参">在无法推导时，编译器会选择使用缺省模版实参</h1>
+<pre tabindex="0"><code>template &lt;typename T = int&gt;
+void fun(typename std::remove_reference&lt;T&gt;::type input) {}
+
+int main() {
+  fun(3);  // 编译通过，有缺省值
+}
+</code></pre><ul>
+<li>只能处理推导不成功的场景，不能处理歧义而无法使用的场景
+<pre tabindex="0"><code>template&lt;typename T = double&gt;
+void fun(T input1, T input2) {}
+
+int main() {
+  fun(3, 5.0);  // 不通过，当编译器可以从变量推导T的类型的时候，就不会看T的缺省值
+}
+</code></pre></li>
+<li>可以为任意位置的模版形参指定缺省模板实参——注意与函数缺省实参的区别
+<ul>
+<li>函数的缺省实参只能排在最后面
+<pre tabindex="0"><code>void fun(int x = 3.0, int y) {}  //  编译不通过
+
+template &lt;typename Res = double, typename T&gt;  // 编译通过
+Res fun(T input) {}
+
+int main() {
+  fun(3);
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="显示指定部分模版实参">显示指定部分模版实参</h1>
+<ul>
+<li>显示指定的模版实参必须是从最左边开始，依次指定</li>
+<li>模版形参的声明顺序会影响调用的灵活性</li>
+<li>越是需要显示指定的T，就越要放在前面
+<pre tabindex="0"><code>// good case
+template &lt;typename Res, typename T&gt;
+Res fun(T x) {}
+
+int main() {
+  fun&lt;int&gt;(5);  // Res显示指定，T隐式指定
+}
+
+// bad case
+template &lt;typename T, typename Res&gt;
+Res fun(T x) {}
+
+int main() {
+  fun&lt;int&gt;(5);  // T显示指定, Res无法推断
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="函数模板自动推导是会遇到的几种情况">函数模板自动推导是会遇到的几种情况</h1>
+<ul>
+<li>函数形参无法匹配——SFINAE（替换失败并非错误）
+<pre tabindex="0"><code>template &lt;typename T&gt;
+void fun(T x, T y) {}
+
+int main() {
+  fun(3, 5.0);  // 编译不通过，但是不代表template fun有错误，只是找不到合适的匹配模板
+                // 如果重载一个fun(T1, T2)，就没问题了
+                // SFINAE这个概念在元编程的时候很有用
+}
+</code></pre></li>
+<li>模板与非模版同时匹配，匹配等级相同，系统会选择非模版函数</li>
+<li>多个模版同时匹配，此时采用偏序关系确定选择“最特殊”版本
+<pre tabindex="0"><code>template &lt;typename T&gt;
+void fun(T x, float y) {
+  std::cout &lt;&lt; 2 &lt;&lt; std::endl;
+}
+
+template &lt;typename T, typename T2&gt;
+void fun(T x, T2 y) {
+  std::cout &lt;&lt; 1 &lt;&lt; std::endl;
+}
+
+template &lt;typename T&gt;
+void fun(T* x, float y) {
+  std::cout &lt;&lt; 3 &lt;&lt; std::endl;
+}
+
+int main() {
+  fun(3, 5.0);  // 2 
+  int x = 3;
+  fun(&amp;x, 5.0);  // 3
+}
+</code></pre><ul>
+<li>如果一样特殊，那就编译不通过了
+<pre tabindex="0"><code>template &lt;typename T, typename T2&gt;
+void fun(T* x, T2 y) {}
+
+template &lt;typename T, typename T2&gt;
+void fun(T x, T2* y) {}
+
+int main() {
+  int x = 3;
+  fun(&amp;x, &amp;x);
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="模版函数的实例化控制">模版函数的实例化控制</h1>
+<ul>
+<li>只实例化，不调用函数
+<ul>
+<li>某些库中不想给出模版的内部实现逻辑，只给出模版的声明，此时就需要提前实例化用户想要使用的函数</li>
+</ul>
+</li>
+<li>显示实例化定义
+<pre tabindex="0"><code>// header.h
+template &lt;typename T&gt;
+void fun(T x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+template
+void fun&lt;int&gt;(int);  // 实例化
+// 也可以这么写：void fun(int);
+
+// main.cc
+#include &#34;header.h&#34;
+int main() {
+  int x = 3;
+  fun&lt;int&gt;(x);
+}
+</code></pre></li>
+<li>显示实例化声明
+<pre tabindex="0"><code>//header.h
+template &lt;typename T&gt;
+void fun(T x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+// source.cc
+#include &#34;header.h&#34;
+
+template
+void fun&lt;int&gt;(int);
+
+// main.cc
+#include &#34;header.h&#34;
+
+extern template
+void fun&lt;int&gt;(int);  // extern表示已经在别的翻译单元实例化过了，这里不要再实例化一遍
+                     // 链接的时候会直接链到source里面的实例
+
+int main() {
+  int x = 3;
+  fun&lt;int&gt;(x);
+}
+</code></pre></li>
+<li>注意一处定义原则
+<ul>
+<li>隐式实例化可以在多处有实例化，编译器会选择其中一个，删除掉多余的
+<pre tabindex="0"><code>// header.h
+template &lt;typename T&gt;
+void fun(T x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+// source.cc
+#include &#34;header.h&#34;
+
+void fun2() {
+  fun&lt;int&gt;(3);  // source中隐式实例化一次
+}
+
+// main.cc
+#include &#34;header.h&#34;
+
+int main() {
+  int x = 3;
+  fun&lt;int&gt;(x);  // main中隐式实例化一次
+}
+</code></pre></li>
+<li>显示实例化原则上在整个程序中只能有一处，但是有多处的话，编译器也不一定会报错，尽量不要这么写
+<pre tabindex="0"><code>// header.h
+template &lt;typename T&gt;
+void fun(T x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+// source.cc
+#include &#34;header.h&#34;
+
+template
+void fun&lt;int&gt;(int);  // source中显示实例化一次
+
+void fun2() {
+  fun&lt;int&gt;(3);  
+}
+
+// main.cc
+#include &#34;header.h&#34;
+
+template
+void fun&lt;int&gt;(int);  // main中显示实例化一次
+
+int main() {
+  int x = 3;
+  fun&lt;int&gt;(x);
+}
+</code></pre></li>
+</ul>
+</li>
+<li>注意实例化过程中的模版形参推导
+<pre tabindex="0"><code>// 模版1
+template &lt;typename T&gt;
+void fun(T x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+template
+void fun(int* x);  // 显示实例化放在这里会调用模板1，因为程序从上到下执行，还没看到后面的模板2
+
+// 模板2
+template &lt;typename T&gt;
+void fun(T* x) {
+  std::cout &lt;&lt; x &lt;&lt; std::endl;
+}
+
+template
+void fun(int* x);  // 显示实例化放在这里会调用模板2
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="模版函数的完全特化">模版函数的（完全）特化</h1>
+<ul>
+<li>模版函数不支持部分特化</li>
+<li>针对某种模版参数，引入特别的函数版本
+<pre tabindex="0"><code>template &lt;typename T&gt;
+void fun(T x) {
+  // 如果T的实例化类型不是int，执行这里的逻辑
+}
+
+template &lt;&gt;
+void fun(int x) {
+  // 如果传入的参数类型是int，执行这里的逻辑
+}
+</code></pre></li>
+<li>注意与函数模版重载的差异，特化并不引入新的（同名）名称，只是为某个模版函数针对特定的模版实参提供优化算法</li>
+<li>避免使用特化
+<ul>
+<li>特化不参与重载解析，会产生反直觉的效果</li>
+<li>通常使用重载来代替，直接实现相应的函数就行了，比如想对int型的入参引入逻辑优化，直接实现void fun(int)</li>
+<li>有些情况无法通过重载来实现
+<pre tabindex="0"><code>template &lt;typename T, typename Res&gt;
+Res fun(T input) {}
+// 上面这个模板无法实现对应的重载函数，因为Res不在参数列表里，是返回值的类型，Res无法被重载
+</code></pre><ul>
+<li>使用if constexpr来解决
+<pre tabindex="0"><code>template &lt;typename T, typename Res&gt;
+Res fun(T input) {
+  if constexpr(std::is_same_v&lt;Res, int&gt;) {
+    // ...
+  } else {
+    // ...
+  }
+  return Res;
+}
+</code></pre></li>
+<li>引入“假”函数形参
+<pre tabindex="0"><code>template &lt;typename T, typename Res&gt;
+Res fun(T inputi, const Res&amp;) {
+  std::cout &lt;&lt; 1 &lt;&lt; std::endl;
+  return Res{};
+}  // 引入一个Res，函数里不使用
+
+template &lt;typename T&gt;  // 注意，&lt;&gt;里面是有东西的，所以这是重载，不是特化
+int fun(T input, const int&amp;) {
+  std::cout &lt;&lt; 2 &lt;&lt; std::endl;
+  return int{};
+}
+
+int main() {
+  int x = 0;
+  fun(&amp;x, int{});  // 2
+}
+</code></pre></li>
+<li>通过类模版特化来解决问题</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="补充">补充</h1>
+<ul>
+<li>(C++20)函数模板的简化形式：使用auto定义模板参数类型
+<ul>
+<li>优势：书写简洁</li>
+<li>劣势：在函数内部需要间接获取参数类型信息</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+
+
+
+
+
+
+</html>

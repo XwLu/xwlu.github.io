@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>SharedPtr - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="shared ptr for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="SharedPtr - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="shared ptr for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="SharedPtr - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="shared ptr for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/" />
+<meta property="og:site_name" content="SharedPtr" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/">SharedPtr</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      941 Words
                     
 
                   </div>
@@ -194,20 +194,145 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="指定内存回收逻辑">指定内存回收逻辑</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>为shared_ptr指定自定义的回收逻辑，用于回收复杂的自定义结构</li>
+<li>设计内存池的时候，自定义Deletor，可以不用真的执行delete操作，而是直接在Deletor函数中将指针交还给内存池
+<pre tabindex="0"><code>void fun(int* ptr) {
+  std::cout &lt;&lt; &#34;call delete\n&#34;;
+  delete ptr;
+}
+
+int main() {
+  std::shared_ptr&lt;int&gt;x(new int(3), fun);
+  std::unique_ptr&lt;int, decltype(&amp;fun)&gt; x(new int(3), fun);  // 注意，unique_ptr需要传入两个模板参数，这是规定
+}
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
+<hr>
+<h1 id="make_shared">make_shared</h1>
+<pre tabindex="0"><code>std::shared_ptr&lt;int&gt; x = new int(3);
+auto x = std::make_shared&lt;int&gt;(3);
+</code></pre><ul>
+<li>优先使用make_shared，原因如下：
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>任何一个智能指针都包涵两块内存，一块是数据，一块是引用计数</li>
+<li>使用new方式构造的智能指针，这两块内存可能离的非常远</li>
+<li>我们在操作智能指针的时候，经常是访问完引用计数，就要去访问数据，如果离得远，就会造成cache miss</li>
+<li>make_shared会尽量将两块内存放在一起,cache命中率会增高，从而性能提升</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+</ul>
+<hr>
+<h1 id="智能指针数组">智能指针数组</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>
+<p>C++17之前需要自定义Deletor函数执行delete []</p>
+</li>
+<li>
+<p>从C++17开始支持</p>
+<pre tabindex="0"><code>std::shared_ptr&lt;int[]&gt; x(new int[5]);
+</code></pre></li>
+<li>
+<p>从C++20开始支持make_shared&lt;T[]&gt;</p>
+<pre tabindex="0"><code>auto x = std::make_shared&lt;int[5]&gt;();
+auto x = std::make_shared&lt;int[]&gt;(5); // 两者相等
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="shared_ptr初始化陷阱">shared_ptr初始化陷阱</h1>
+<pre tabindex="0"><code>std::shared_ptr&lt;int&gt; x(new int(5));
+std::shared_ptr&lt;int&gt; y(x.get());  // core, x和y互相不知道对方的存在，当x和y分别析构的时候，会delete两次int(5)这块内存
+std::shared_ptr&lt;int&gt; y(x);  // 合法，x和y知道彼此的存在，引用计数会变成2
+</code></pre><hr>
+<h1 id="循环引用">循环引用</h1>
+<ul>
+<li>
+<p>以下是shared_ptr的循环引用举例</p>
+<pre tabindex="0"><code>struct Str{
+  std::shared_ptr&lt;Str&gt; nei;
+  ~Str() {
+    std::cout &lt;&lt; &#34;~Str is called\n&#34;;
+  }
+};
+
+int main() {
+  std::shared_ptr&lt;Str&gt; x(new Str);
+  std::shared_ptr&lt;Str&gt; y(new Str);
+  x-&gt;nei = y;
+  y-&gt;nei = x;  // 循环引用出现，x和y无法正常析构
+}
+</code></pre></li>
+<li>
+<p>引入weak_ptr解决循环引用问题:</p>
+<pre tabindex="0"><code>struct Str{
+  std::weak_ptr&lt;Str&gt; nei;
+  ~Str() {
+    std::cout &lt;&lt; &#34;~Str is called\n&#34;;
+  }
+};
+
+int main() {
+  std::shared_ptr&lt;Str&gt; x(new Str);
+  std::shared_ptr&lt;Str&gt; y(new Str);
+  x-&gt;nei = y;
+  y-&gt;nei = x;
+}
+</code></pre></li>
+</ul>
+<h1 id="weak_ptr的lock方法">weak_ptr的lock方法</h1>
+<ul>
+<li>
+<p>weak_ptr的引入也会引发一些问题</p>
+<pre tabindex="0"><code>struct Str{
+  std::weak_ptr&lt;Str&gt; nei;
+  ~Str() {
+    std::cout &lt;&lt; &#34;~Str is called\n&#34;;
+  }
+};
+
+int main() {
+  std::shared_ptr&lt;Str&gt; x(new Str);
+  {
+    std::shared_ptr&lt;Str&gt; y(new Str);
+    x-&gt;nei = y;  // 语句块结束后，y被释放，此时的weak_ptr指向的内存不存在了
+  }
+}
+</code></pre></li>
+<li>
+<p>为了解决上面的问题，在调用weak_ptr的时候需要调用它的lock方法</p>
+</li>
+<li>
+<p>lock会检查weak_ptr指向的内存是否还在</p>
+</li>
+<li>
+<p>如果不在了，返回shared_ptr&lt;T&gt;()</p>
+</li>
+<li>
+<p>如果还在，返回shared_ptr&lt;T&gt;(*this)</p>
+</li>
+<li>
+<p>最终的正确写法为</p>
+<pre tabindex="0"><code>struct Str{
+  std::weak_ptr&lt;Str&gt; nei;
+  ~Str() {
+    std::cout &lt;&lt; &#34;~Str is called\n&#34;;
+  }
+};
+
+int main() {
+  std::shared_ptr&lt;Str&gt; x(new Str);
+  {
+    std::shared_ptr&lt;Str&gt; y(new Str);
+    x-&gt;nei = y;  // 语句块结束后，y被释放，此时的weak_ptr指向的内存不存在了
+  }
+  if (auto ptr = x-&gt;nei.lock(); ptr) {
+    std::cout &lt;&lt; &#34;true branch\n&#34;;
+  } else {
+    std::cout &lt;&lt; &#34;false branch\n&#34;;
+  }
+}
+</code></pre></li>
 </ul>
 </article>
               </div>

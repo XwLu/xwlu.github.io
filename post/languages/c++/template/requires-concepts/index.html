@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Requires &amp; Concepts - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Requires &amp; Concepts for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Requires &amp; Concepts - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Requires &amp; Concepts for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Requires &amp; Concepts - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Requires &amp; Concepts for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/" />
+<meta property="og:site_name" content="Requires &amp; Concepts" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/">Requires &amp; Concepts</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      1323 Words
                     
 
                   </div>
@@ -194,20 +194,227 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="背景">背景</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>模版的问题：没有很好的方法对模版参数引入相应的限制
+<pre tabindex="0"><code>template &lt;typename T&gt;
+void fun() {
+  std::cout &lt;&lt; T &lt;&lt; std::endl;  // 这一行是否能通过编译需要通过阅读代码才能判断出来
+}
+</code></pre><ul>
+<li>参数能否正常工作，通常需要阅读代码才能理解</li>
+<li>编译报错友好性较差(vector&lt;int&amp;&gt;报错很离谱)</li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>为了解决上面的问题，C++20引入了concepts机制
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>编译期谓词，基于给定的输入，返回true或false</li>
+<li>与constraints(require从句)一起使用限制模版参数</li>
+<li>通常置于表示模版形参的尖括号后面进行限制
+<pre tabindex="0"><code>template &lt;typename T&gt;
+// IsAvail是在编译期求值的
+concept IsAvail = std::is_same_v&lt;T, int&gt; || std::is_same_v&lt;T, float&gt;;
+
+std::cout &lt;&lt; IsAvail&lt;int&gt; &lt;&lt; std::endl;  // 1
+std::cout &lt;&lt; IsAvail&lt;char&gt; &lt;&lt; std::endl;  // 0
+
+template &lt;typename T&gt;
+  requires IsAvail&lt;T&gt;
+void fun(T input) {
+  // ...
+}
+
+int main() {
+  fun(3);  // 编译通过
+  fun(true);  // 编译不通过，报错内容很少，很清晰
+}
+</code></pre></li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+</ul>
+<hr>
+<h1 id="定义与使用">定义与使用</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>包含一个模版参数的concept
+<ul>
+<li>使用requires从句(见上面的代码)</li>
+<li>直接替换template(更加清晰)
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept IsIntOrFloat = std::is_same_v&lt;T, int&gt; || std::is_same_v&lt;T, float&gt;;
+
+template &lt;IsIntOrFloat, T&gt;
+void fun(T input) {}
+</code></pre></li>
+</ul>
+</li>
+<li>包含多个模版参数的concept
+<pre tabindex="0"><code>template &lt;typename T1, typename T2&gt;
+concept IsDiff = !std::is_same_v&lt;T1, T2&gt;;
+
+template &lt;typename T1, typename T2&gt;
+  requires IsDiff&lt;T1, T2&gt;
+void fun(T1 input1, T2 input2) {}
+
+int main() {
+  fun(3, 5);  // 编译失败，类型相同
+}
+</code></pre><ul>
+<li>用作类型constraint时，少传递一个参数，推导出的类型将作为首个参数
+<pre tabindex="0"><code>template &lt;class T, class U&gt;
+concept Derived = std::is_base_of&lt;U, T&gt;::value;
+
+// 这里的Base是程序中前面定义的一个类 
+template&lt;Derived&lt;Base&gt;, T&gt;  // 这里会把T当作Derived的第一个参数
+void f(T);  //  T由Derived&lt;T, Base&gt;约束，也就是说T是Base的派生类则返回真
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="requires表达式">requires表达式</h1>
+<ul>
+<li>区分requires表达式和requires从句
+<ul>
+<li>表达式
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept Addable = requires(T x) { x + x; };
+</code></pre></li>
+<li>从句
+<pre tabindex="0"><code>template &lt;typename T&gt;
+  requires Addable&lt;T&gt;
+T add(T x, T y) { return x+ y; };
+</code></pre></li>
+<li>从句+表达式
+<pre tabindex="0"><code>template &lt;typename T&gt;
+  requires { requires(T x) { x + x; } }  // 这里的表达式只有一行，所以最外面的大括号可以省略
+T add(T x, T y) { return x+ y; };
+</code></pre></li>
+</ul>
+</li>
+<li>分类
+<ul>
+<li>简单要求
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept Addable = requires (T a, T b) {
+  a + b;  // T类型的数据需要满足可加性
+};
+
+template &lt;Addable T&gt;
+auto fun(T x, T y) {
+  return x + y;
+}
+
+int main() {
+  fun(3, 4);  // 通过
+  fun(3, &#34;1223&#34;);  // 不通过
+}
+</code></pre></li>
+<li>类型要求
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept Avail = requires {
+  typename T::inner;  // 要求T::inner是一个合法类型
+};
+
+template &lt;Avail T&gt;
+auto fun(T x) {}
+
+struct Str {
+  using inner = int;
+};
+
+int main() {
+  fun(3);  // 不通过
+  fun(Str{});  // 通过
+}
+</code></pre></li>
+<li>复合要求
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept Avail = requires (T x) {
+  {x + 1} -&gt; int;  // 1.x需要支持+1操作；2.x+1的结果需要可以转换为int类型
+};
+
+template &lt;Avail T&gt;
+auto fun(T x) {}
+
+struct Str {};
+
+int main() {
+  fun(3);  // 通过
+  fun(Str{});  // 不通过
+}
+</code></pre></li>
+<li>嵌套要求</li>
+</ul>
+</li>
+<li>requires从句会影响重载解析与特化版本的选取
+<ul>
+<li>只有requires从句有效且返回为true时相应的模板才会被考虑
+<pre tabindex="0"><code>// 如果没有requires，下面两个模版是一样的，编译器不允许这种存在
+// 引入requires后，系统会选择requires返回为true的模版
+template &lt;typename T&gt;
+  requires std::is_same_v&lt;T, float&gt;
+void fun(T) {
+  std::cout &lt;&lt; 1 &lt;&lt; std::endl;
+}
+
+template &lt;typename T&gt;
+  requires std::is_same_v&lt;T, int&gt;
+void fun(T) {
+  std::cout &lt;&lt; 2 &lt;&lt; std::endl;
+}
+
+int main() {
+  fun (3);  // 2
+}
+</code></pre></li>
+<li>requires所引入的限定具有偏序特性，系统会选择限制最严格的版本</li>
+</ul>
+<pre tabindex="0"><code>template &lt;typename T&gt;
+concept C1 = std::is_same_v&lt;T, int&gt;;
+
+template &lt;typename T&gt;
+concept C2 = std::is_same_v&lt;T, int&gt; || std::is_same_v&lt;T, float&gt;;
+
+template &lt;C1, T&gt;
+void fun(T) {
+  std::cout &lt;&lt; 1 &lt;&lt; std::endl;
+}
+
+template &lt;C2, T&gt;
+void fun(T) {
+  std::cout &lt;&lt; 2 &lt;&lt; std::endl;
+}
+
+int main() {
+  fun(3);  // 1
+}
+</code></pre></li>
+<li>特化小技巧：在声明中引入&quot;A||B&quot;进行限制，之后分别对A和B引入特化
+<pre tabindex="0"><code>template &lt;typename T&gt;
+  requires std::is_integral_v&lt;T&gt; || std::is_floating_point&lt;T&gt;
+class B;
+
+// 完全特化
+template&lt;&gt;
+class B&lt;int&gt; {};
+
+template&lt;&gt;
+class B&lt;float&gt; {};
+
+// 部分特化（偏特化）
+template &lt;typename T&gt;
+  requires std::is_integral_v&lt;T&gt;
+class B&lt;T&gt; {};  // int型偏特化
+
+template &lt;typename T&gt;
+  requires std::is_floating_point&lt;T&gt;
+class B&lt;T&gt; {};  // 浮点型偏特化
+
+int main() {
+  B&lt;double&gt; x;  // 完全特化版本编译不通过，因为没有double类型的完全特化  
+                // 部分特化版本编译通过，有浮点型偏特化
+}
+</code></pre></li>
 </ul>
 </article>
               </div>

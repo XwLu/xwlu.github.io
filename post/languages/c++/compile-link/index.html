@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Compile &amp; Link - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="compile &amp; link for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Compile &amp; Link - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="compile &amp; link for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Compile &amp; Link - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="compile &amp; link for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/" />
+<meta property="og:site_name" content="Compile &amp; Link" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/">Compile &amp; Link</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      517 Words
                     
 
                   </div>
@@ -194,20 +194,76 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="翻译单元">翻译单元</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>源文件 + 头文件（直接/间接）- 应该忽略的预处理语句</li>
+<li>源文件所引用的所有头文件都会展开在该源文件中进行编译</li>
 </ul>
-<h2 id="links">Links</h2>
+<hr>
+<h1 id="一处定义原则">一处定义原则</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>程序级：一般函数</li>
+<li>翻译单元级：内联函数、类、模板(虽然可以在整个程序中有多处定义，但是需要保证一模一样)
+<ul>
+<li>因为编译期是以翻译单元为单位进行编译的，而上面三种类型的代码需要有具体的定义才能正常编译，光有声明是不够的。</li>
+<li>这也是为什么Eigen全是头文件，因为它全是模板类，没办法定义在源文件中。<a href="https://blog.csdn.net/l15799033407/article/details/120411311?spm=1001.2101.3001.6661.1&amp;utm_medium=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120411311-blog-123913519.topnsimilarv1&amp;depth_1-utm_source=distribute.pc_relevant_t0.none-task-blog-2%7Edefault%7ECTRLIST%7ERate-1-120411311-blog-123913519.topnsimilarv1&amp;utm_relevant_index=1">链接</a></li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+</ul>
+<hr>
+<h1 id="流程">流程</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>预处理：file.cc -&gt; file.i
+<ul>
+<li>
+<blockquote>
+<p>gcc -E ./main.cpp -o ./main.i</p></blockquote>
+</li>
+<li>将源文件转换为翻译单元的过程</li>
+<li>防止头文件被循环展开
+<ul>
+<li>ifdef</li>
+<li>pragma once（推荐，用ifdef如果后面的文件宏写错了（比如两个不同h文件的宏写成一样了），那就只会include其中一个头文件）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>编译：file.i -&gt; file.s
+<ul>
+<li>
+<blockquote>
+<p>g++ main.i -S -o main.s</p></blockquote>
+</li>
+<li>将翻译单元转换为相应的汇编语言表示（汇编语言还是有符号表示的）</li>
+<li>编译优化
+<ul>
+<li><a href="https://godbolt.org/z/zh9aqx">https://godbolt.org/z/zh9aqx</a></li>
+</ul>
+</li>
+<li>增量编译 V.S. 全部编译
+<ul>
+<li>有时候只修改了头文件，增量编译不知道需要重新编译，这时候就需要全部编译</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>汇编：file.s -&gt; file.o
+<ul>
+<li>
+<blockquote>
+<p>g++ main.s -c -o main.o</p></blockquote>
+</li>
+<li>将汇编语言进一步转化为机器语言(二进制文件，看不到任何符号表示)</li>
+</ul>
+</li>
+<li>链接：file.o -&gt; file.exe
+<ul>
+<li>g++ main.o -S -o main</li>
+<li>合并多个目标文件，关联声明与定义</li>
+<li>种类：内部链接、外部链接、无链接</li>
+<li>常见错误：找不到定义</li>
+</ul>
+</li>
 </ul>
 </article>
               </div>

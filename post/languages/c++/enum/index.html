@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Enum - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="enum for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/enum/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Enum - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="enum for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Enum - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="enum for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/enum/" />
+<meta property="og:site_name" content="Enum" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/enum/">Enum</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      762 Words
                     
 
                   </div>
@@ -194,20 +194,132 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="枚举">枚举</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>一种取值受限的特殊类型
+<ul>
+<li>无作用域枚举
+<pre tabindex="0"><code>enum Color {  
+  Red,  // Red的作用域不在Color内，而是整个文件，因此main函数中可以直接使用“Red”
+  Yellow
+};
+
+enum Color2 {  
+  Red,  // Red的作用域不在Color内，而是整个文件，因此main函数中可以直接使用“Red”
+  Yellow
+};
+
+namespace ABC {
+  enum Color {
+    Red,  // Red的作用域不在Color内，而是ABC域内
+    Yellow
+  };
+}
+
+class DEF {
+public:
+  enum Color {
+    Red,  // Red的作用域不在Color内，而是DEF类内
+    Yellow
+  };
+};
+int main() {
+  Color x = Red;
+  Color2 x2 = Red;  // 这里的Red和上面的Red产生冲突了，这就是无作用域的坏处
+  ABC::Color y = ABC::Red;
+  DEF::Color z = DEF::Red;
+}
+</code></pre></li>
+<li>有作用域枚举（C++11起）
+<pre tabindex="0"><code>enum class Color {  
+  Red,  // Red的作用域在Color内
+  Yellow
+};
+
+enum class Color2 {  
+  Red,  // Red的作用域在Color2内
+  Yellow
+};
+
+int main() {
+  Color x = Color::Red;
+  Color x2 = Color2::Red;  // 无冲突了
+}
+</code></pre></li>
+<li>枚举项缺省使用0初始化，依次递增，可以使用常量表达式来修改缺省值
+<pre tabindex="0"><code>enum class Color {  
+  Red,
+  Yellow = 100,
+  Green
+};
+
+class A {
+public:
+  enum {x = 3};  // 早期的C++代码通过这种方式在类的内部定义一个编译期常量
+  // constexpr static int x = 3;  // 这种方式更好，但早期C++不包含constexpr，所以用上面的方法代替
+};
+
+int main() {
+  std::cout &lt;&lt; Color::Green &lt;&lt; std::endl;  // 101
+}
+</code></pre></li>
+<li>可以为枚举指定底层类型，表明了枚举项的尺寸
+<pre tabindex="0"><code>enum Color {  
+  Red,
+  Yellow = 100,
+  Green
+};
+
+enum Color2 : char {  
+  Red,
+  Yellow = 100,
+  Green
+};
+
+int main() {
+  std::cout &lt;&lt; sizeof(Color) &lt;&lt; std::endl;  // 4(int)
+  std::cout &lt;&lt; sizeof(Color2) &lt;&lt; std::endl;  // 1
+}
+</code></pre></li>
+<li>无作用域的枚举项可以隐式转换为整数，也可以用static_cast互相转换；有作用域的枚举项不可以
+<pre tabindex="0"><code>enum Color {  
+  Red,
+  Yellow = 100,
+  Green
+};
+
+void fun(Color x) {
+
+}
+
+enum class Color2 {  
+  Red,
+  Yellow = 100,
+  Green
+};
+
+int main() {
+  fun(100);  // 编译失败
+  fun(static_cast&lt;Color&gt;(100));  // 编译成功
+
+  std::cout &lt;&lt; Red &lt;&lt; std::endl;  // 0
+  std::cout &lt;&lt; Color2::Red &lt;&lt; std::endl;  // 编译失败
+  std::cout &lt;&lt; static_cast&lt;int&gt;(Color2::Red) &lt;&lt; std::endl;  // 编译成功
+}
+</code></pre></li>
+<li>注意区分枚举的声明和定义
+<pre tabindex="0"><code>enum Color;
+enum Color2 : int;
+enum class Color3;
+
+int main() {
+  Color x;  // 即使在别的文件中有定义，还是失败；因为在这个翻译单元中，编译器不知道Color的具体大小是int还是char还是其他大小，无法分配内存
+  Color2 x;  // 可以编译，Color2的大小确定
+  Color3 x;  // 可以编译，有作用域的枚举类型默认是int型
+}
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+</li>
 </ul>
 </article>
               </div>

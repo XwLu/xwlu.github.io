@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Constexpr of Class - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="constexpr for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Constexpr of Class - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="constexpr for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Constexpr of Class - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="constexpr for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/" />
+<meta property="og:site_name" content="Constexpr of Class" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/">Constexpr of Class</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      350 Words
                     
 
                   </div>
@@ -194,20 +194,39 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="字面值类">字面值类</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>可以构造编译期常量的类型</li>
+<li>其数据成员需要是字面值类型(string就不可以，因为string不是字面值常量)</li>
+<li>提供constexpr/consteval构造函数
+<pre tabindex="0"><code>class Str {
+public:
+  constexpr Str(int val) : x(val) {}  // constexpr表示该值既可以在编译期调用也可以在运行期调用
+private:
+  int x;
+};  
+
+int main() {
+  constexpr Str a(3);  // Str的构造函数一定要加constexpr修饰，否则报错
+}
+</code></pre><ul>
+<li>小心使用consteval
+<pre tabindex="0"><code>class Str {
+public:
+  consteval Str(int val) : x(val) {}  // consteval表示该值可以在编译期调用
+private:
+  int x;
+};
+
+int main() {
+  int x;
+  Str b(x);  // 在低版本的编译器里可能不会报错，但是高版本的编译器会报错，导致同一份代码的编译结果不一致
+}
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+</li>
+<li>提供constexpr和consteval成员函数（小心使用consteval）</li>
+<li>注意：从C++14起，constexpr/consteval成员函数非const成员函数</li>
 </ul>
 </article>
               </div>

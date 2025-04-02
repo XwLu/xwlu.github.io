@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Bugs - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="bugs I met" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Bugs - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="bugs I met" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Bugs - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="bugs I met" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/" />
+<meta property="og:site_name" content="Bugs" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/">Bugs</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      235 Words
                     
 
                   </div>
@@ -194,20 +194,32 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="sort">sort</h1>
+<pre tabindex="0"><code>#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+
+bool cmp(int a, int b) {
+  return a &gt;= b;  // 不满足strict weak ordering，导致快排中的while循环不停++，越界了
+}
+
+int main() {
+  std::vector&lt;int&gt; vec;
+  for (int i = 0; i &lt; 17; ++i) {  // 17就会稳定core，16就不core
+                                  // 对于std::sort()，当容器里面元素的个数大于_S_threshold 的枚举常量值时
+                                  // 会使用快速排序（stl的这个默认值是16），快速排序中的while循环没有检查越界
+    vec.push_back(1);
+  }
+  std::sort(vec.begin(), vec.end(), cmp);
+  return 0;
+}
+</code></pre><h1 id="eigen--auto">Eigen &amp; auto</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
-</ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li><a href="https://blog.csdn.net/weixin_44327262/article/details/127073001">参考链接</a>
+<pre tabindex="0"><code>// 用auto接受Eigen的对象时会出错，不要使用
+Eigen::VectorXd dir = (-1.0 * func.grad(x));
+// auto dir = (-1.0 * func.grad(x));
+</code></pre></li>
 </ul>
 </article>
               </div>

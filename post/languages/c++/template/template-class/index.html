@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Template Class - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Template Class for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Template Class - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Template Class for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Template Class - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Template Class for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/" />
+<meta property="og:site_name" content="Template Class" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/">Template Class</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      875 Words
                     
 
                   </div>
@@ -194,20 +194,206 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="基础">基础</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>使用template关键字引入模版
+<ul>
+<li>类模版的声明与定义——翻译单元的一处定义原则</li>
+<li>成员函数只有在调用时才会被实例化
+<pre tabindex="0"><code>template &lt;typename T&gt;
+Class B{
+  void fun(T input) {
+    std::cout &lt;&lt; input &lt;&lt; std::endl;
+  }
+
+  auto fun2() {
+    return B{};  // return B&lt;T&gt;{}的简化
+  }
+};
+
+int main() {
+  B&lt;int&gt; x;
+  x.fun(3);
+
+  B&lt;Str&gt; y;
+  y.fun(Str{});  // 如果这行不加，编译通过，没有调用就不会实例化fun(Str input)函数
+                 // 如果这行加了，编译不通过，Str类型没有重载标准输出
+}
+</code></pre></li>
+<li>类内模版名称的简写(见fun2)</li>
+<li>类模版成员函数的定义
+<ul>
+<li>类外
+<pre tabindex="0"><code>template&lt;typename T&gt;
+class B {
+public:
+  void fun();
+};
+
+template&lt;typename T&gt;
+void B&lt;T&gt;::fun() {
+  // 上面的template&lt;typename T&gt;和&lt;T&gt;都不能省略
+}
+</code></pre></li>
+<li>类内相对简单，不多说了</li>
 </ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+</ul>
+<hr>
+<h1 id="成员函数模板">成员函数模板</h1>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>类的成员函数模版
+<pre tabindex="0"><code>class B {
+public:
+  template &lt;typename T&gt;
+  void fun() {}  // 类内
+
+  template &lt;typename T&gt;
+  void fun2();
+};
+
+template &lt;typename T&gt;
+void B::fun2() {}  // 类外
+
+int main() {
+  B x;
+  x.fun&lt;int&gt;();
+  x.fun2&lt;int&gt;();
+}
+</code></pre></li>
+<li>类模版的成员函数模板
+<pre tabindex="0"><code>template &lt;typename T&gt;
+class B {
+public:
+  template &lt;typename T2&gt;
+  void fun() {}  // 类内定义
+
+  template &lt;typename T2&gt;
+  void fun2();
+}
+
+template &lt;typename T&gt;
+template &lt;typename T2&gt;
+void B&lt;T&gt;::fun2() {}  // 类外定义
+
+int main() {
+  B&lt;int&gt; x;
+  x.fun&lt;float&gt;();
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="友元函数模版">友元函数（模版）</h1>
+<ul>
+<li>类（模版）的友元
+<pre tabindex="0"><code>template &lt;typename T&gt;
+class B {
+  friend auto operator + (B input1, B input2) {
+    B res;
+    res.x = input1.x + input2.x;
+    return res;
+  }
+  int x = 3;
+};
+
+int main() {
+  B&lt;int&gt; val1;
+  B&lt;int&gt; val2;
+  B&lt;int&gt; res = val1 + val2;
+}
+</code></pre></li>
+<li>可以声明一个函数模版为某个类（模版）的友元
+<pre tabindex="0"><code>template &lt;typename T2&gt;
+void fun();  // 声明，用于类内的友元声明
+
+template &lt;typename T&gt;
+class B {
+  template &lt;typename T2&gt;
+  friend void fun();
+
+  int x;
+};
+
+template &lt;typename T2&gt;
+void fun() {
+  B&lt;int&gt; tmp1;
+  tmp1.x;
+
+  B&lt;float&gt; tmp2;
+  tmp2.x;
+}
+</code></pre></li>
+<li>C++11支持声明模版参数为友元
+<pre tabindex="0"><code>template &lt;typename T&gt;
+class B {
+  friend T;
+};
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="类模版的实例化">类模版的实例化</h1>
+<ul>
+<li>与函数实例化很像</li>
+<li>可以实例化整个类，或者类中的某个成员函数</li>
+</ul>
+<hr>
+<h1 id="类模版的完全特化部分特化偏特化">类模版的（完全）特化/部分特化（偏特化）</h1>
+<ul>
+<li>函数模版的特化不建议使用，但是类模版的特化不一样，是一个非常重要的技术</li>
+<li>特化版本和基础版本可以有完全不同的实现
+<pre tabindex="0"><code>// 完全特化
+template &lt;typename T&gt;
+struct B {
+  void fun() {}
+};
+
+template &lt;&gt;
+struct B&lt;int&gt; {
+  void fun2() {}  // 这里直接重新定义了一个新的函数
+};
+</code></pre></li>
+<li>部分特化
+<pre tabindex="0"><code>template &lt;typename T, typename T2&gt;
+struct B {
+  void fun() {}
+};
+
+template &lt;typename T&gt;  // 这里的T对应上面的T2
+struct B&lt;int, T&gt; {
+  void fun2() {}
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="类模版的实参推导c17开始">类模版的实参推导(C++17开始)</h1>
+<ul>
+<li>基于构造函数的实参推导
+<pre tabindex="0"><code>template &lt;typename T&gt;
+struct B {
+  B(T input) {}  // 构造函数
+};
+
+int main() {
+  B x(3);
+}
+</code></pre></li>
+<li>用户自定义的推导指引</li>
+<li>注意，引入实参推导并不意味着降低了类型限制
+<pre tabindex="0"><code>std::pair x(3, 3.14);  // std::pair&lt;int, double&gt; x(3, 3.14);
+x.first = &#34;123&#34;;  // 报错，int类型变量不可以用string赋值
+</code></pre></li>
+<li>C++17之前的解决方案：引入辅助模版函数
+<pre tabindex="0"><code>template &lt;typename T1, typename T2&gt;
+std::pair&lt;T1, T2&gt; make_pair(T1 first, T2 second) {
+  return std::pair&lt;T1, T2&gt;(first, second);
+}
+
+int main() {
+  auto res = make_pair(3, 3.14);
+}
+</code></pre></li>
 </ul>
 </article>
               </div>

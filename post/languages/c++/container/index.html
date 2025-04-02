@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>Container - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    
+    
+
+    
+    <meta name="description"
+  content="container for c&#43;&#43;" />
+<meta name="keywords"
+  content='' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/container/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Container - My New Hugo Site" />
+<meta name="twitter:description"
+  content="container for c&#43;&#43;" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Container - My New Hugo Site">
+<meta property="og:description"
+  content="container for c&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/container/" />
+<meta property="og:site_name" content="Container" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 10:32:39 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="https://xwlu.github.io/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/"></a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/container/">Container</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 10:32:39 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 10:32:39 &#43;0800</relative-time>
+
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      3764 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h1 id="容器分类">容器分类</h1>
+<ul>
+<li>pair &amp; tuple</li>
+<li>序列容器：对象有序排列，使用整数值进行索引</li>
+<li>关联容器：对像顺序不重要，利用键进行索引</li>
+<li>适配器：调整原有容器行为，使其对外展现出新的类型、接口或返回新的元素</li>
+<li>生成器：构造元素序列</li>
+</ul>
+<hr>
+<h1 id="迭代器">迭代器</h1>
+<ul>
+<li>获取迭代器
+<ul>
+<li>begin, end</li>
+<li>rbegin, rend</li>
+<li>crbegin, crend</li>
+</ul>
+</li>
+<li>迭代器分类
+<ul>
+<li>Input Iterator</li>
+<li>Output Iterator</li>
+<li>Forward Iterator = Input Iterator + Output Iterator，只能往前挪</li>
+<li>Bidirection Iterator，可以双向挪动</li>
+<li>Random Access Iterator，支持iter+N</li>
+</ul>
+</li>
+<li>支持迭代器的容器统称为range</li>
+</ul>
+<hr>
+<h1 id="pair--tuple">pair &amp; tuple</h1>
+<ul>
+<li>tuple &amp; tie
+<ul>
+<li>tuple
+<ul>
+<li>tuple是类似pair的模板</li>
+<li>每个pair都恰好有两个成员,tuple可以有任意数量的成员</li>
+<li>我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。</li>
+<li>std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。</li>
+<li>生成方式多样
+<pre tabindex="0"><code>auto my_tuple0 = std::make_tuple(&#34;Peter&#34;, 10, &#34;1024&#34;};
+std::tuple&lt;std::string, size_t, std::string&gt; my_tuple1{&#34;Mike&#34;, 20, &#34;24&#34;};
+std::tuple&lt;std::string, size_t, std::string&gt; my_tuple2{my_tuple0};
+</code></pre></li>
+<li>tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
+<pre tabindex="0"><code>my_tuple2.swap (my_tuple1);
+</code></pre></li>
+<li>函数模板 get&lt;&gt;() 可以返回 tuple 中的一个元素的<strong>引用值</strong>。
+<pre tabindex="0"><code>auto my_tuple = std::make_tuple (Name {&#34;Peter&#34;,&#34;Piper&#34;}, 42, std::string {&#34;914 626 7890&#34;});
+std::cout &lt;&lt; std::get&lt;0&gt;(my_tuple)&lt;&lt; &#34;age = &#34;&lt;&lt;std::get&lt;1&gt;(my_tuple)&lt;&lt; &#34; tel: &#34; &lt;&lt; std::get&lt;2&gt;(my_tuple) &lt;&lt; std::endl;
+</code></pre></li>
+<li>也可以用基于类型的 get&lt;&gt;() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
+<pre tabindex="0"><code>auto my_tuple = std::make_tuple(Name{&#34;Peter&#34;, &#34;Piper&#34;}, 42, std::string {&#34;914 626 7890&#34;});
+std::cout &lt;&lt; std::get&lt;Name&gt;(my_tuple)&lt;&lt;&#34; age = &#34; &lt;&lt; std::get&lt;int&gt; (my_tuple)&lt;&lt; &#34; tel: &#34; &lt;&lt;std::get&lt;std::string&gt;(my_tuple) &lt;&lt; std::endl;
+</code></pre></li>
+</ul>
+</li>
+<li>tie
+<ul>
+<li>tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
+<pre tabindex="0"><code>tuple&lt;int,double,string&gt; t3 = {1, 2.0, &#34;3&#34;};
+int i; double d; string s;
+tie(i, d, s) = t3;
+tie(i, d, s) = {1, 2.0, &#34;3&#34;};//这一行会报错，因为tie只能解构tuple
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="序列容器">序列容器</h1>
+<ul>
+<li>array:元素个数固定的序列容器，不支持添加和删除
+<ul>
+<li>定义时必须用<strong>常量</strong>指定array的大小，因为大小是模板参数之一，不可忽略</li>
+<li>当容器中的元素是连续存储的时候，容器都会有一个data()接口，返回指向第一个元素的指针</li>
+<li>swap的实现是元素复制，效率很低</li>
+</ul>
+</li>
+<li>vector:元素连续存储的序列容器
+<ul>
+<li>vector也有data()接口</li>
+<li>swap是指针交换，效率很高</li>
+<li>emplace_back()相比push_back()少了一次对象的拷贝或者移动，因此当对象是string或者自定义结构数据时，用emplace_back效率更高
+<ul>
+<li>(emplace_back vs push_back)[https://zhuanlan.zhihu.com/p/183861524]</li>
+</ul>
+</li>
+<li>insert和emplace是在vector中间插入元素，但效率很低；emplace和insert的差异与上面的emplace_back和push_back的差异一致</li>
+<li>会导致iter失效的操作：swap、push_back等写操作</li>
+</ul>
+</li>
+<li>list:双向链表的容器
+<ul>
+<li>插入和删除成本较低，随机访问成本较高</li>
+<li>支持pop_front, push_front操作，但是不支持[]访问</li>
+<li>提供了splice接口，A.splice(it, B)：将list B插入到A的it位置</li>
+<li>写操作通常不改变iter有效性</li>
+<li>如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用list或forward_list</li>
+</ul>
+</li>
+<li>forward_list:基于单向链表的容器
+<ul>
+<li>只支持递增，无rbegin</li>
+<li>不支持size</li>
+<li>不支持push_back, pop_back</li>
+<li>提供了xxx_after操作</li>
+</ul>
+</li>
+<li>deque:vector与list的折衷，它会将整个容器分成若干段，段内是连续存储，段间是链表
+<ul>
+<li>push_back和push_front比较快</li>
+<li>在序列中间插入删除比较慢</li>
+<li>通常情况下我们不会想要用deque，随机访问速度不如vector，插入删除不如list</li>
+<li>只有在我们想要得到类似于vector的功能，但又希望push_front比较快的时候才会使用deque</li>
+</ul>
+</li>
+<li>basic_string:提供了对字符串的专门支持
+<ul>
+<li>提供了数值与字符串转换的接口</li>
+<li>短字符串优化，(short string optimization: SSO)[https://tigercosmos.xyz/post/2022/06/c++/sso/]</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="关联容器">关联容器</h1>
+<ul>
+<li>按底层实现分为两类
+<ul>
+<li>set/map/multiset/multimap
+<ul>
+<li>底层用红黑树实现</li>
+</ul>
+</li>
+<li>unordered_xxx
+<ul>
+<li>底层用hash表实现</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>set
+<ul>
+<li>元素需要支持使用&lt;比较大小，如果是自定义的元素，需要定义比较函数并在初始化的时候传入std::set&lt;MyType, Cmp&gt;
+<pre tabindex="0"><code>#include &lt;set&gt;
+#include &lt;type_traits&gt;
+
+struct MyType {
+    int x;
+};
+
+bool MyCmp(const MyType&amp; lhs, const MyType&amp; rhs) {
+    return lhs.x &lt; rhs.x;
+}
+
+int main() {
+    std::set&lt;MyType, decltype(&amp;MyCmp)&gt; s({MyType{1}, MyType{2}}, MyCmp);
+    return 0;
+}
+</code></pre></li>
+<li>插入insert/emplace/emplace_hint
+<ul>
+<li>emplace_hint可以给出一些插入的提示，从而加速插入的速度，但是如果hint给错了，反而增加耗时
+<pre tabindex="0"><code>std::set&lt;MyType, decltype(&amp;MyCmp)&gt; s({MyType{3}, MyType{5}}, MyCmp);
+s.insert(MyType{100});
+s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
+</code></pre></li>
+</ul>
+</li>
+<li>提供了extract来修改元素(C++17)，但是操作很复杂。</li>
+<li>set的迭代器是只读的，不能用于修改元素。</li>
+</ul>
+</li>
+<li>map
+<ul>
+<li>每个节点是个std::pair，其中pair.first是const类型，不能修改</li>
+<li>key需要支持使用&lt;比较大小，也支持自定义比较函数</li>
+<li>支持k，v分别获取
+<pre tabindex="0"><code>std::map&lt;int, bool&gt; m{{3, true}};
+for (auto&amp; [k, v] : m) {
+  std::cout &lt;&lt; k &lt;&lt; &#34; &#34; &lt;&lt; v &lt;&lt; std::endl;
+}
+</code></pre></li>
+<li>访问元素：find/contain/[]/at
+<ul>
+<li>map.at(key)若key不存在，会抛出异常</li>
+<li>map[key]若key不存在，会插入一个新的pair&lt;key,T()&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>multiset/multimap
+<ul>
+<li>允许重复key</li>
+<li>元素访问：
+<ul>
+<li>find：返回首个查到的元素</li>
+<li>count：返回元素个数</li>
+<li>lower_bound/upper_bound/equal_range：返回查找到的区间
+<pre tabindex="0"><code>std::multiset&lt;int&gt; s{1, 3, 1};
+auto [b, e] = s.equal_range(100);
+for (auto iter = b; iter != e; ++iter) {
+  // ...
+}
+auto b = s.lower_bound(100);
+auto e = s.upper_bound(100);
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>unordered_xxx
+<ul>
+<li>底层实现：
+<ul>
+<li>新建一个size=N的bucket vector</li>
+<li>对于新插入的元素，将其key转换为hash值n，index = n % N，往bucket vector[index]中维护的链表的尾部插入该元素</li>
+<li>每一个bucket中都维护了一个链表，一般来说大部分bucket中的链表元素的长度都比较小</li>
+</ul>
+</li>
+<li>与set,map相比，查找性能更好，转换成hash后找对应的bucket，如果其中的链表元素个数是1，直接返回；即使大于1，也一般都比较小，做几次判断即可。</li>
+<li>插入操作一些情况下会慢，比如一个bucket中包含的链表元素过多了，就会出发rehash，这个过程就比较耗时了</li>
+<li>key需要支持两种操作
+<ul>
+<li>转换为hash</li>
+<li>判等</li>
+</ul>
+</li>
+<li>除了!=和==，不支持容器级别的关系运算；同时!=和==的计算很慢，因为当一个bucket中的链表元素较多时，为了判断两个set是否相等，需要将两条链表判断是否相等</li>
+<li>自定义hash转换
+<ul>
+<li>方法1
+<pre tabindex="0"><code>struct Str {
+  int x;
+};
+
+size_t MyHash(const Str&amp; val) {
+    return val.x;
+}
+
+bool MyEqual(const Str&amp; lhs, const Str&amp; rhs) {
+  return lhs.x = rhs.x;
+}
+std::unordered_set&lt;Str, decltype(&amp;MyHash), decltype(&amp;MyEqual)&gt; s{1, MyHash, MyEqual};  // 1 是bucket vector的size，最小为1
+</code></pre></li>
+<li>方法2(推荐)
+<pre tabindex="0"><code>class Str {
+  int x;
+  bool operate==(const Str&amp; s) const {
+    return (this-&gt;x == s.x);
+  }
+};
+
+class MyHasFunction {
+public:
+  size_t operator(const Str&amp; s) const {
+    return s.x;
+  }
+};
+
+std::unordered_set&lt;Str, MyHasFunction&gt; s;
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="适配器">适配器</h1>
+<ul>
+<li>类型适配器
+<ul>
+<li>basic_string_view (C++17)
+<ul>
+<li>代码demo
+<pre tabindex="0"><code>void fun(std::string_view str) {  // 这里不需要引用，因为string_view只记录了string开头和结尾的位置，无论字符串本身有多长，它的内存都很小
+  if (!str.empty()) {
+    std::cout &lt;&lt; str[0] &lt;&lt; std::endl;
+  }
+}
+
+fun(&#34;1234&#34;);  // fun(char[6])
+fun(std::string(&#34;1234&#34;));  // fun(std::string)
+
+std::string s(&#34;12345&#34;);
+fun(std::string_view(s.begin(), s.begin() + 3));  // 只传入&#34;123&#34;
+</code></pre></li>
+<li>提供较低成本的操作接口
+<ul>
+<li>比如std::string的substr会开辟一段新的内存来存放截取到的字符串，但std::string_view的substr只会初始化一个新的string_view来记录截取的字符串，string_view只占16个字节，所以很轻量</li>
+</ul>
+</li>
+<li>不能进行写操作</li>
+<li>一般string_view只作为函数的输入，作为输出的时候需要小心，函数中的临时变量销毁导致string_view记录的指针位置失效</li>
+</ul>
+</li>
+<li>span (C++20)
+<ul>
+<li>span就是string_view的功能在其他类型的容器上的扩展，用于提升代码的性能</li>
+<li>只能处理连续存储的容器，比如vector、array</li>
+<li>支持写操作，这与string_view不同</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>接口适配器
+<ul>
+<li>stack
+<ul>
+<li>stack中维护了一个底层容器，然后封装了它的接口，只保留了push，pop，top这三个操作
+<pre tabindex="0"><code>std::stack&lt;int&gt; s;
+std::stack&lt;int, std::vector&lt;int&gt;&gt; s;  // 指定使用vector作为stack的底层容器
+</code></pre></li>
+</ul>
+</li>
+<li>queue</li>
+<li>priority_queue
+<ul>
+<li>输入的元素需要支持比较操作（比较操作用于确定优先级）</li>
+<li>支持自定义比较函数</li>
+<li>输入元素和queue一致，但输出的元素一定是所有元素中优先级最高的元素</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数值适配器(C++20)
+<ul>
+<li>std::ranges::XXX_view, std::ranges::views::XXX, std::views::XXX</li>
+<li>可以将一个输出区间中的值变换后输出
+<ul>
+<li>demo1
+<pre tabindex="0"><code>std::vector&lt;int&gt; v{1, 2, 3, 4, 5};
+
+
+int Square(int i) {
+  return i * i;
+}
+for (auto p : std::ranges::transform_view(v, Square)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 打印出1, 4, 9, 16, 25
+}
+std::cout &lt;&lt; std::endl;
+
+
+bool IsEven(int i) {
+  return i % 2 == 0;
+}
+// 用法1
+for (auto p : std::ranges::filter_view(v, isEven)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 只打印出偶数
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法2
+auto x = std::views::filter(IsEven);
+for (auto p : x(v)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 只打印出偶数
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法3
+auto x2 = std::views::filter(IsEven);
+auto y = std::views::transform(Square);
+for (auto p : v | x2 | y) {  // 按位或，模拟linux bash中的pipe功能，这里可以无限后缀新操作 v | x2 | y | k
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法4
+auto operate = std::views::filter(IsEven) ｜ std::views::transform(Square);
+for (auto p : v | operate) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+</code></pre></li>
+</ul>
+</li>
+<li>数值适配器可以组合，引入复杂的数值适配逻辑</li>
+<li>view这种算法和之前讨论的泛型算法有两点核心区别
+<ul>
+<li>view没有对输入的东西立即进行计算，而是需要的时候才进行计算, 这样可以提高性能（比如10000个数据，只有前几个元素会被view计算，后面的计算就省掉了）</li>
+<li>view模糊了算法和容器的概念，它可以被称作容器，也可以被称作算法</li>
+<li>配合ranges还可以灵活组织程序逻辑</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>生成器(C++20)
+<ul>
+<li>std::ranges::itoa_view
+<pre tabindex="0"><code>for (int i : std::ranges::itoa_view{1, 10}) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+for (int i : std::views::itoa(1, 10)) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// std::views::itoa(...)，如果这里的...只有一个元素，就表示生成一个以该元素为开头的无限长的容器，后面的take(n)表示取容器中的前9个元素
+for (int i : std::views::itoa(1) | std::views::take(9)) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// 上面三种写法的输出都是1，2，3，4，5，6，7，8，9
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="注意事项">注意事项</h1>
+<ul>
+<li>尽量使用at方法来访问元素
+<ul>
+<li>运算符[]不会对索引值进行检查，像调用myarray[-1]是不会报错的</li>
+<li>使用at()，将在运行期间捕获非法索引，默认将程序中断</li>
+</ul>
+</li>
+</ul>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+
+
+
+
+
+
+</html>

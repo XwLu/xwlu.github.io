@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Array Vector String - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="array, vector, string for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Array Vector String - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="array, vector, string for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Array Vector String - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="array, vector, string for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/" />
+<meta property="og:site_name" content="Array Vector String" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/">Array Vector String</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      1683 Words
                     
 
                   </div>
@@ -194,20 +194,227 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="数组">数组</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>数组初始化方式
+<ul>
+<li>缺省初始化</li>
+<li>聚合初始化
+<pre tabindex="0"><code>int a[3] = {1, 2};
+int b[3] = {1, 2, 3};
+int c[] = {1, 2, 3};  // c的类型是int[3]
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>注意
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>不能使用auto来声明数组类型
+<pre tabindex="0"><code>#include &lt;typeinfo&gt;
+#include &lt;iostream&gt;
+
+int main() {
+  auto b = {1, 2, 3};
+  std::cout &lt;&lt; typeid(b).name() &lt;&lt; std::endl;  // ./exe | c++filt -t 得到std::initializer_list&lt;int&gt;
+}
+</code></pre></li>
+<li>数组不能复制
+<pre tabindex="0"><code>int b[] = {1, 2};
+auto a = b;  // a的类型是int*，发生了类型退化
+auto&amp; c = b;  // auto&amp;可以防止类型退化，c的类型是int(&amp;)[3]
+int d[3];
+d = b;  // 报错
+</code></pre></li>
+<li>元素个数必须是一个常量表达式（编译期可计算的值），且值必须大于0
+<pre tabindex="0"><code>int a[3];  // a是一个数组，类型是int[3]
+int x;
+std::cin &gt;&gt; x;
+int b[x];  // C语言从C99开始支持variable length array，但C++标准不支持
+// 虽然C++标准不支持，但clang++或g++的部分版本的编译器实现中还是支持该方法，但不建议使用，在代码跨平台移植的时候会出问题
+</code></pre></li>
+<li>int和int[1]是两个不同的类型</li>
+<li>字符串数组的特殊性
+<pre tabindex="0"><code>int main() {
+  char str[] = &#34;Hello&#34;;  // 类型是char[6]，隐式地在字符串最后加一个&#39;\0&#39;
+  char str[] = {&#39;H&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;};  // 类型是char[5]
+}
+</code></pre></li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+<li>数组的复杂声明
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>指针数组与数组指针
+<pre tabindex="0"><code>int* a[3];  // a是个数组，存了3个int*指针，类型是int*[3]
+int (*a)[3];  // a是个指针，指向一个int[3]类型的数组，类型是int(*)[3]
+</code></pre></li>
+<li>声明数组的引用
+<pre tabindex="0"><code>int a[3];
+int (&amp;b)[3] = a;  // b是a的引用
+// auto&amp; b = a;  // 同上
+int x1;
+int&amp; c[1] = {x1};  // C++不支持引用的数组
+</code></pre></li>
+</ul>
+</li>
+<li>数组到指针的隐式转换
+<ul>
+<li>会丢失一些信息，比如数组的长度</li>
+<li>可以通过声明引用来避免隐式类型转换</li>
+<li>注意：不要用extern指针来声明数组
+<ul>
+<li>unknown bounded array声明
+<pre tabindex="0"><code>// source.cc
+int array[5] = {1, 2};
+int array1[5] = {1, 2};
+
+// main.cc
+extern int array[];  // unknown bounded array
+extern int* array1;
+
+int main() {
+  array[0];  // 编译通过，运行正常
+  array1[0];  // 编译通过，运行不正常，强行用指针解释数组的内容，会出屎
+}
+</code></pre></li>
+</ul>
+</li>
+<li>获得指向数组开头和结尾的指针
+<pre tabindex="0"><code>// 这里的array不可以是指针
+// extern int array[];  // 不可以是unknown bounded array
+extern int array[4];  // 这个声明可以
+std::begin(array);  // int*
+std::cbegin(array);  // const int*
+std::end(array);  // int*
+std::cend(array);  // const int*
+</code></pre></li>
+<li>指针算数
+<ul>
+<li>增加、减少、比较</li>
+<li>求距离</li>
+<li>解引用</li>
+<li>指针索引</li>
+</ul>
+<pre tabindex="0"><code>int a[3] = {1, 2, 3};
+auto ptr = a;
+*ptr;
+*a;
+ptr[1];
+</code></pre></li>
+</ul>
+</li>
+<li>其他操作
+<ul>
+<li>求元素的个数
+<pre tabindex="0"><code>extern int array[];  // 下面的三个方法都无法处理这种imcomplete type
+int a[3];
+sizeof(a);  // 12，int占四个字节，这里的a不会退化为指针，C语言的方法，编译期计算
+std::size(a);  // 3， 推荐使用该方法，C++方法，编译期计算
+std::end(a) - std::begin(a);  // 3，运行期计算
+</code></pre></li>
+<li>元素遍历
+<pre tabindex="0"><code>int a[3];
+// 方法1
+size_t i = 0;
+while (i &lt; std::size(a)) {
+  a[i];
+  ++i;
+}
+// 方法2
+auto ptr =  std::cbegin(a);
+while (ptr != std::cend(a)) {
+  ++ptr;
+}
+// 方法3
+for (int x : a) {}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="c字符串">C字符串</h1>
+<ul>
+<li>本质上是数组char[]</li>
+<li>C语言提供了额外的操作
+<pre tabindex="0"><code>#include &lt;cstring&gt;
+char str[] = &#34;Hello&#34;;
+strlen(str);
+// strcmp
+</code></pre></li>
+</ul>
+<h1 id="多维数组">多维数组</h1>
+<ul>
+<li>类型推导
+<pre tabindex="0"><code>#include &lt;type_traits&gt;
+int x[3][4];  // x是一个数组，包含了3个 int[4]类型的元素
+std::is_same_v(decltype(x[0], int(&amp;)[4]));  // true，x[0]是个表达式，decltype(表达式)会加上引用
+auto ptr = x;  // 类型退化只发生在第一维，ptr类型是int(*)[4]，只有这样在执行ptr+1的时候才知道要往后移动多少位
+
+using A = int[4];  // 使用类型别名简化初始化
+A x2[3];  // int x2[3][4]
+A* ptr = x2;
+</code></pre></li>
+<li>初始化
+<pre tabindex="0"><code>int x[2][3] = {1, 2, 3, 4};  // {123}{400}
+int x[2][3] = \{\{1, 2, 3\}, \{4, 5, 6\}\};  // {123}{456}
+int x[2][3] = \{\{1, 2, 3\}, \{4, 5\}\};  // // {123}{450}
+int x[2][3] = \{\{1, 2\}, \{4, 5\}\};  // // {120}{450}
+int x[][3] = {1, 2, 3, 4, 5};  // x的类型是int[2][3]
+int x[][] = \{\{1, 2, 3\}, \{4, 5, 6\}\};  // 报错，只有第一个[]里面的size可以自动推导，后面的都得显示标明
+</code></pre></li>
+<li>遍历
+<ul>
+<li>二维数组遍历的时候，尽量按行遍历，因为一行的元素往往存在同一块内存，cache命中的概率比较高</li>
+</ul>
+<pre tabindex="0"><code>int x[2][3] = {1, 2, 3, 4};
+for (auto&amp; p : x) {  // 这里的&amp;不能少，如果没有&amp;，p会从int(&amp;)[3]退化为int*，无法进入下面的循环
+  for (auto&amp; q : p) {
+    // ...
+  }
+}
+</code></pre></li>
+</ul>
+<h1 id="vector">Vector</h1>
+<ul>
+<li>是内建数组的代替品</li>
+<li>与数组比，更注重易用性
+<ul>
+<li>可复制</li>
+<li>可在运行期改变元素个数</li>
+</ul>
+</li>
+<li>初始化
+<pre tabindex="0"><code>std::vector&lt;int&gt; x(3);
+std::vector&lt;int&gt; x(3, 1);  // 1, 1, 1
+std::vector&lt;int&gt; x{3, 1};  // 3, 1
+std::vector&lt;int&gt; x = {1, 2, 3};
+</code></pre></li>
+<li>索引与遍历
+<pre tabindex="0"><code>std::vector&lt;int&gt; x = {1, 2, 3};
+std::cout &lt;&lt; x[20] &lt;&lt; std::endl;  // 编译通过，运行可能不会报错
+std::cout &lt;&lt; x.at(20) &lt;&lt; std::endl;  // 编译通过，运行报错，所以这种写法更好
+</code></pre></li>
+<li>迭代器
+<ul>
+<li>模拟指针的行为</li>
+<li>包含多种类别，每种类别支持的操作不同</li>
+<li>vector对应随机访问迭代器
+<ul>
+<li>解引用与下标访问</li>
+<li>移动</li>
+<li>相减求距离</li>
+<li>两个迭代器比较</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他
+<ul>
+<li>添加元素会导致迭代器失效</li>
+</ul>
+</li>
+</ul>
+<h1 id="string">String</h1>
+<ul>
+<li>是内建字符串的代替品</li>
+<li>string其实是std::basic_string&lt;char&gt;的类型别名，basic_string是一个类模板</li>
 </ul>
 </article>
               </div>

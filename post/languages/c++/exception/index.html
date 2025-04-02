@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Exception - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Exception for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/exception/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Exception - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Exception for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Exception - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Exception for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/exception/" />
+<meta property="og:site_name" content="Exception" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/exception/">Exception</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      2283 Words
                     
 
                   </div>
@@ -194,20 +194,319 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="基础">基础</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>通过关键字try/catch/throw引入异常处理机制
+<pre tabindex="0"><code>void f1() {
+  int x;
+  double y;  // y先被销毁，x后被销毁
+  throw 1;  // 此处抛出异常
+  std::cout &lt;&lt; &#34;1&#34; &lt;&lt; std::endl;
+}
+
+int f2() {
+  int x;
+  double y;  // f1函数中的局部对象被销毁后，开始销毁f2中的局部对象
+  try {
+    f1();
+  } catch(double) {
+    // f1抛出的异常不会在这里被捕获，int和double类型不匹配
+    std::cout &lt;&lt; &#34;exception catched 2: &#34; &lt;&lt; e &lt;&lt; std::endl; 
+  }
+  std::cout &lt;&lt; &#34;other logic in f2&#34; &lt;&lt; std::endl;  // 不会执行
+}
+
+int f3() {
+  try {
+    f2();
+  } catch(int e) {
+    std::cout &lt;&lt; &#34;exception catched 3: &#34; &lt;&lt; e &lt;&lt; std::endl;
+  }
+  std::cout &lt;&lt; &#34;other logic in f3&#34; &lt;&lt; std::endl;  // 会执行
+}
+
+int main() {
+  try {
+    f3();
+  } catch(int) {  // 异常已经被处理了，这里不会捕获到异常
+    std::cout &lt;&lt; &#34;exception catched 2!&#34; &lt;&lt; std::endl; 
+  } catch(double) {
+    // ...
+  }
+}
+</code></pre></li>
+<li>异常触发时的系统行为——栈展开
+<ul>
+<li>上面代码中的f1抛出异常后，会一层一层往上一个栈帧找catch匹配代码，找不到就抛弃对应栈帧</li>
+<li>抛出异常后续的代码不会被执行</li>
+<li>局部对象会按照构造相反的顺序自动销毁</li>
+<li>系统尝试匹配相应的catch代码段
+<ul>
+<li>如果匹配则执行其中的逻辑，之后执行catch后续的代码</li>
+<li>如果不匹配则继续进行栈展开，直到“跳出”main函数，触发terminate结束运行</li>
 </ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+<li>异常对象
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>系统会使用抛出的异常拷贝初始化一个临时对象，称为异常对象</li>
+<li>异常对象会在栈展开过程中被保留，并最终传递给匹配的catch语句</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="trycatch语句块">try/catch语句块</h1>
+<ul>
+<li>一个try语句块后面可以跟一个到多个catch语句块
+<pre tabindex="0"><code>try {
+  f3();
+} catch(int) {
+  // ...
+} catch(double) {
+  // ...
+}
+</code></pre></li>
+<li>每个catch语句块用于匹配一种类型的异常对象</li>
+<li>catch语句块的匹配按照从上到下进行
+<pre tabindex="0"><code>// demo 1
+void f0() {
+  throw 1;
+}
+
+void f1() {
+  try {
+    f0();
+  } catch(double) {
+    std::cout &lt;&lt; &#34;double&#34; &lt;&lt; std::endl;
+  } catch(int) {
+    std::cout &lt;&lt; &#34;int&#34; &lt;&lt; std::endl;  // 会被该catch捕获
+  }
+}
+
+
+// demo 2
+struct Base {};
+struct Derive : Base {};
+
+void f2() {
+  throw Derive{};  
+}
+
+void f3() {
+  try {
+    f2();
+  } catch(Base&amp; e) {
+    // 异常会被该catch捕获，系统会使用Derive尝试初始化Base类型的e，发现可以初始化，就被捕获了
+    // 只有派生类-&gt;基类、数组-&gt;指针、函数-&gt;指针可以被匹配，int-&gt;double这种不行
+    std::cout &lt;&lt; &#34;base&#34; &lt;&lt; std::endl;
+  } catch(Derive&amp; e) {
+    std::cout &lt;&lt; &#34;derive&#34; &lt;&lt; std::endl;
+  }
+}
+</code></pre></li>
+<li>使用catch(&hellip;)匹配任意异常，通常放在多个catch语句块的最后，兜底</li>
+<li>可以在catch中调用throw抛出相同类型的异常
+<pre tabindex="0"><code>void f0() {
+  throw Str{};
+}
+
+void f1() {
+  try {
+    f0();
+  } catch(...) {
+    throw;  // 把捕获到的异常继续向下一层栈帧抛出
+  }
+}
+
+int main() {
+  try {
+    f1();
+  } catch(Str&amp; e) {
+    // 捕获到最初由f0抛出的异常
+  }
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="一个异常未处理完成未被捕获时抛出新的异常会导致程序崩溃">一个异常未处理完成(未被捕获)时抛出新的异常会导致程序崩溃</h1>
+<ul>
+<li>不要在析构函数或者operator delete函数重载版本中抛出异常</li>
+<li>通常来说，catch所接收的异常类型为引用类型
+<ul>
+<li>如果不加&amp;，就是用的拷贝初始化，而拷贝初始化过程可以抛出异常，所以存在程序崩溃风险</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="异常与构造析构函数">异常与构造&amp;析构函数</h1>
+<ul>
+<li>使用function-try-block来保护初始化逻辑
+<pre tabindex="0"><code>struct Str {
+  Str() { throw 100; }
+};
+
+class Cla {
+public:
+  Cla()
+  try : mem() {  // 这里的&#34;: mem()&#34;可以删掉，编译器会隐式初始化mem，不需要用户显示指明
+    // init logic
+  } catch(int) {
+    std::cout &lt;&lt; &#34;exception catched in Cla::Cla&#34; &lt;&lt; std::endl;
+    // 编译器会在这里隐式地加一句&#34;throw;&#34;
+  }
+  int xxx;
+private:
+  Str mem;
+};
+
+int main() {
+  try {
+    Cla cla;
+    cla.xxx;
+  } catch(int) {
+    // 下面这一行也会执行，因为C++规定，如果是在构造函数内捕获的异常，编译器会隐式地在catch语句块最后加上&#34;throw;&#34;命令
+    // 这样做的原因是:
+    // 如果不继续向外吐出捕获，程序就会执行到上面的&#34;cla.xxx;&#34;指令，由于cla的初始化并没有成功，执行这条指令的行为是未定义的。
+    std::cout &lt;&lt; &#34;exception catched in main&#34; &lt;&lt; std::endl;
+  }
+}
+</code></pre></li>
+<li>function-try-block也支持一般函数
+<pre tabindex="0"><code>void fun()
+try {
+  throw 123;  
+} catch(...) {
+
+}
+</code></pre></li>
+<li>在构造函数中抛出异常时，已经构造的成员会被销毁，但析构函数不会被调用
+<ul>
+<li>构造函数没执行完，有些变量还没初始化，直接调用析构函数就存在未定义行为了</li>
+<li>对于已经构造出来的变量，如果需要手动清理的话，应该在构造函数的catch语句块中进行销毁处理</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="描述函数是否会抛出异常">描述函数是否会抛出异常</h1>
+<ul>
+<li>如果函数不会抛出异常，则应表明，为系统提供更多的优化空间
+<ul>
+<li>C++98的方式：
+<ul>
+<li>throw()：不会抛出异常</li>
+<li>throw(int, char)：可能会抛出异常</li>
+</ul>
+</li>
+<li>C++11后的改进：
+<ul>
+<li>noexcept：不会抛出异常</li>
+<li>noexcept(false)：可能会抛出异常</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>noexcept
+<ul>
+<li>限定符：接受false/true表示是否会抛出异常</li>
+<li>操作符：接受一个表达式，根据表达式是否可能抛出异常返回false/true
+<pre tabindex="0"><code>void fun() noexcept(false) {}
+void fun1() noexcept(noexcept(fun())) {
+  fun();
+}
+int main() {
+  std::cout &lt;&lt; noexcept(fun()) &lt;&lt; std::endl;  // 0
+}
+</code></pre></li>
+<li>在声明了noexcept的函数中抛出异常会导致terminate被调用，程序终止，这里的异常无法在外部被捕获</li>
+<li>不作为函数重载依据，但函数指针、虚拟函数重写时要保持形式兼容
+<pre tabindex="0"><code>void fun() {}
+int main() {
+  void (*ptr)() noexcept = fun;  // 报错，fun可能会抛出异常，这里的函数指针明确了不能抛出异常，冲突了
+  (*ptr)();
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="标准异常">标准异常</h1>
+<h2 id="异常类型">异常类型</h2>
+<ul>
+<li><img src="https://github.com/XwLu/xwlu.github.io/blob/master/images/wiki/languages/C++/std-exception.png?raw=true" alt="std-exception"></li>
+<li>exception:异常
+<ul>
+<li>runtime_error: 运行期异常
+<ul>
+<li>overflow_error</li>
+<li>underflow_error</li>
+</ul>
+</li>
+<li>logic_error: 逻辑异常
+<ul>
+<li>invalid_argument</li>
+<li>length_error</li>
+<li>out_of_range</li>
+</ul>
+</li>
+<li>bad_alloc</li>
+<li>bad_cast</li>
+<li>bad_type_id</li>
+<li>bad_exception</li>
+</ul>
+</li>
+</ul>
+<h2 id="尽量使用c提供的标准异常">尽量使用C++提供的标准异常</h2>
+<pre tabindex="0"><code>#include &lt;stdexcept&gt;
+void fun() {
+  // throw 123;
+  throw std::runtime_error(&#34;Invalid Input!&#34;);
+}
+
+int main() {
+  try {
+    fun();
+  } catch (const std::runtime_error&amp; e) {
+    std::cout &lt;&lt; e.what() &lt;&lt; &#34;\n&#34;;  // what是exception（基类）的虚函数
+  } catch (const std::bad_alloc&amp; e) {
+    // 如果在这里捕获到异常，意味着发生了内存分配失败的问题 
+  }
+  // 之所以标准定义了这么多种类的异常，就是让你在写代码的时候一眼就可以看出来异常类型和对应的处理逻辑
+  // 你也可以自己定义异常
+}
+</code></pre><h1 id="正确对待异常">正确对待异常</h1>
+<ul>
+<li>不要滥用：异常的成本非常高
+<ul>
+<li>异常是用于处理程序不应该发生的逻辑，正常的跳转不要用</li>
+</ul>
+</li>
+<li>不要不用：对真正的异常场景，异常处理是相对高效、简洁的处理方式</li>
+<li>编写异常安全的代码
+<ul>
+<li>不安全的例子
+<pre tabindex="0"><code>void fun() {
+  int* ptr = new int[3];
+  throw std::runtime_error(&#34;Invalid Input!&#34;);  // 栈展开了，ptr被销毁，但指向的内存没有被释放，泄露了
+  delete []ptr;
+}
+</code></pre></li>
+<li>需要注意的点：
+<ul>
+<li>避免裸的资源分配（如上代码）
+<ul>
+<li>内存：使用智能指针</li>
+<li>文件：使用C++提供的fstream</li>
+</ul>
+</li>
+<li>接口设计
+<ul>
+<li>stack的pop只返回void，top返回的是内容，这样设计就是为了异常安全</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </article>
               </div>

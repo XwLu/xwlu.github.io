@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Union - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Union for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/union/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Union - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Union for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Union - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Union for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/union/" />
+<meta property="og:site_name" content="Union" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/union/">Union</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      328 Words
                     
 
                   </div>
@@ -194,20 +194,90 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="联合">联合</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>引入union的目的是节省内存
+<pre tabindex="0"><code>struct Str {
+  int x;
+  int y;
+};
+
+union Str2 {
+  int x;
+  int y;
+};
+
+union Str3 {
+  char x;
+  int y;
+};
+
+int main() {
+  std::cout &lt;&lt; sizeof(Str) &lt;&lt; std::endl;  // 8
+  std::cout &lt;&lt; sizeof(Str2) &lt;&lt; std::endl;  // 4
+  Str2 obj;
+  obj.x = 100;
+  std::cout &lt;&lt; obj.y &lt;&lt; std::endl;  // 100， x和y就是同一片内存
+  std::cout &lt;&lt; sizeof(Str3) &lt;&lt; std::endl;  // 4， 会选择int和char中较大的那个，这样两者都可以表示
+}
+</code></pre></li>
+<li>通常与枚举一起使用
+<ul>
+<li>错误使用方法
+<pre tabindex="0"><code>union Str {
+  char x;
+  int y;
+};
+
+int main() {
+  Str obj;
+  obj.x = &#39;c&#39;;
+  std::cout &lt;&lt; obj.y &lt;&lt; std::endl;  // 99
+  // 这里的obj.y会得到多少，是未定义的，因为x只有一个字节，x的内容存在4个字节的Str对象中，具体存在哪个字节里是编译器决定的。不同编译器标准不一样
+}
+</code></pre></li>
+<li>正确使用方法
+<pre tabindex="0"><code>struct S {
+  enum Type {
+    Char,
+    Int
+  };
+  union Str {
+    char x;
+    int y;
+  };
+  Type t;
+  Str obj;
+};
+
+int main() {
+  S s;
+  s.t = S::Char;
+  s.obj = &#39;c&#39;;
+}
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+</li>
+<li>匿名联合
+<pre tabindex="0"><code>struct S {
+  enum Type {
+    Char,
+    Int
+  };
+  union {
+    char x;
+    int y;
+  };
+  Type t;
+};
+
+int main() {
+  S s;
+  s.t = S::Char;
+  s.x = &#39;c&#39;;
+}
+</code></pre></li>
+<li>在联合中包含非内建类型(C++11起)</li>
 </ul>
 </article>
               </div>

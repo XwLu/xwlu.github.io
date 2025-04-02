@@ -29,6 +29,45 @@
     <loc>https://xwlu.github.io/readme/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/async-future/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/bind-lambda/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/bit-field/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/bugs/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/abstract/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/abstract/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/basis/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/constexpr/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/construct/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/container/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/deep_learning/abstract/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
@@ -41,10 +80,106 @@
     <loc>https://xwlu.github.io/post/deep_learning/evaluation/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/eigen/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/enum/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/exception/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/expression/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/function/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/fundamental/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/generic-algorithm/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/local-class/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/abstract/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/abstract/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/mutex/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/nested-class/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/operator/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/others/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/others/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/robotics/abstract/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/abstract/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-class/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/time-counting/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/deep_learning/transformer/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/union/</loc>
+    <lastmod>2025-04-02T10:32:39+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/volatile/</loc>
     <lastmod>2025-04-02T10:32:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/categories/</loc>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Namespace - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="namespace for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Namespace - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="namespace for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Namespace - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="namespace for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/" />
+<meta property="og:site_name" content="Namespace" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/namespace/">Namespace</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      379 Words
                     
 
                   </div>
@@ -194,20 +194,66 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="嵌套名字空间">嵌套名字空间</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>名字空间可以嵌套，嵌套名字空间形成嵌套域</li>
+<li>注意同样的名字空间定义可以出现在程序多处，以向同一个名字空间中增加声明或定义
+<pre tabindex="0"><code>namespace A {
+  int x;
+}
+
+namespace A {
+  int y;
+}
+
+int main() {
+  A::x;
+  A::y;
+}
+</code></pre></li>
+<li>C++17开始可以简化嵌套名字空间的定义
+<pre tabindex="0"><code>namespace A {
+  int x;
+}
+
+namespace A::B {  // C++17才支持这种写法
+  int y;
+}
+
+int main() {
+  A::x;
+  A::B::y;
+}
+</code></pre></li>
 </ul>
-<h2 id="links">Links</h2>
+<h1 id="匿名名字空间">匿名名字空间</h1>
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>用于构造仅翻译单元可见的内容
+<pre tabindex="0"><code>// main.cc
+namespace {
+  int y;
+}
+
+int main() {
+}
+
+// source.cc
+namespace {
+  int y;  // 这里的y和mian中的y都是对各自的cc文件可见，不冲突，在内存中是两个不同的地址；如果去掉匿名空间，链接的时候就会报错
+}
+</code></pre></li>
+<li>想要构造仅翻译单元可见的内容还可以用static代替
+<pre tabindex="0"><code>static int x;  // 这里的xyz都是仅对当前翻译单元可见
+static int y;  // 但这样的写法太啰嗦，每个变量都要写一遍static
+static int z;
+</code></pre></li>
+<li>匿名名字空间可以作为嵌套空间
+<pre tabindex="0"><code>namespace A {
+  namespace {  // 这里加匿名空间意义是让A::x这个对象只在当前翻译单元可见，在其他文件访问不到A::x
+    int x;
+  }
+}
+</code></pre></li>
 </ul>
 </article>
               </div>

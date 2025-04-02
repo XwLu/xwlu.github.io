@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Singleton - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Singleton for C&#43;&#43;" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Singleton - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Singleton for C&#43;&#43;" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Singleton - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Singleton for C&#43;&#43;" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/" />
+<meta property="og:site_name" content="Singleton" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/singleton/">Singleton</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      467 Words
                     
 
                   </div>
@@ -194,20 +194,106 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="apollo-singleton-macro">Apollo Singleton Macro</h1>
+<pre tabindex="0"><code>#ifndef CYBER_COMMON_MACROS_H_
+#define CYBER_COMMON_MACROS_H_
+
+#include &lt;iostream&gt;
+#include &lt;memory&gt;
+#include &lt;mutex&gt;
+#include &lt;type_traits&gt;
+#include &lt;utility&gt;
+
+#include &#34;cyber/base/macros.h&#34;
+
+DEFINE_TYPE_TRAIT(HasShutdown, Shutdown)
+
+template &lt;typename T&gt;
+typename std::enable_if&lt;HasShutdown&lt;T&gt;::value&gt;::type CallShutdown(T *instance) {
+  instance-&gt;Shutdown();
+}
+
+template &lt;typename T&gt;
+typename std::enable_if&lt;!HasShutdown&lt;T&gt;::value&gt;::type CallShutdown(
+    T *instance) {
+  (void)instance;
+}
+
+// There must be many copy-paste versions of these macros which are same
+// things, undefine them to avoid conflict.
+#undef UNUSED
+#undef DISALLOW_COPY_AND_ASSIGN
+
+#define UNUSED(param) (void)param
+
+#define DISALLOW_COPY_AND_ASSIGN(classname) \
+  classname(const classname &amp;) = delete;    \
+  classname &amp;operator=(const classname &amp;) = delete;
+
+#define DECLARE_SINGLETON(classname)                                      \
+public:                                                                  \
+  static classname *Instance(bool create_if_needed = true) {              \
+    static classname *instance = nullptr;                                 \
+    if (!instance &amp;&amp; create_if_needed) {                                  \
+      static std::once_flag flag;                                         \
+      std::call_once(flag,                                                \
+                    [&amp;] { instance = new (std::nothrow) classname(); }); \
+    }                                                                     \
+    return instance;                                                      \
+  }                                                                       \
+                                                                          \
+  static void CleanUp() {                                                 \
+    auto instance = Instance(false);                                      \
+    if (instance != nullptr) {                                            \
+      CallShutdown(instance);                                             \
+    }                                                                     \
+  }                                                                       \
+                                                                          \
+private:                                                                 \
+  classname();                                                            \
+  DISALLOW_COPY_AND_ASSIGN(classname)
+
+#endif  // CYBER_COMMON_MACROS_H_
+</code></pre><hr>
+<h2 id="细节分析">细节分析</h2>
 <ul>
-<li>C++</li>
-<li>Python</li>
-</ul>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>
+<p>为了能够让程序员显式的禁用某个函数，C++11 标准引入了一个新特性：&quot;=delete&quot;函数。程序员只需在函数声明后上“=delete;”，就可将该函数禁用。</p>
+<pre tabindex="0"><code>class X3
+{
+public:
+    X3();
+    X3(const X3&amp;) = delete;  // 声明拷贝构造函数为 deleted 函数
+    X3&amp; operator = (const X3 &amp;) = delete; // 声明拷贝赋值操作符为 deleted 函数
+};
+</code></pre></li>
+<li>
+<p>在多线程编程中，有一个常见的情景是某个任务只需要执行一次。在C++11中提供了很方便的辅助类once_flag，call_once。</p>
+<pre tabindex="0"><code>#include &lt;iostream&gt;
+#include &lt;thread&gt;
+#include &lt;mutex&gt;
+
+std::once_flag flag;
+
+void do_once() {
+    //也可以写在这里。要记住static，一旦flag被销毁了就不能保证只执行一次了
+    //static std::once_flag flag;
+    std::call_once(flag, [](){ std::cout &lt;&lt; &#34;Called once&#34; &lt;&lt; std::endl; });
+}
+
+int main() {
+    std::thread t1(do_once);
+    std::thread t2(do_once);
+    std::thread t3(do_once);
+    std::thread t4(do_once);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+}
+//可以看到，只会输出一行Called once
+</code></pre></li>
 </ul>
 </article>
               </div>

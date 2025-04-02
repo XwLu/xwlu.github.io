@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Class Access &amp; Friend - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='https://xwlu.github.io/images/favicon.ico'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Access rules &amp; friend for C&#43;&#43; class" />
 <meta name="keywords"
   content='' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Class Access &amp; Friend - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
+  content="Access rules &amp; friend for C&#43;&#43; class" />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Class Access &amp; Friend - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning C&#43;&#43; " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="Access rules &amp; friend for C&#43;&#43; class" />
+<meta property="og:url" content="https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/" />
+<meta property="og:site_name" content="Class Access &amp; Friend" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/class/access-friend/">Class Access &amp; Friend</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -182,7 +182,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      12 Words
+                      948 Words
                     
 
                   </div>
@@ -194,20 +194,118 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h1 id="访问限定符与友元">访问限定符与友元</h1>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>使用public/private/protected限定类成员的访问权限
+<ul>
+<li>类与结构体缺省访问权限的区别：类默认是private，结构体默认是public</li>
 </ul>
-<h2 id="links">Links</h2>
+</li>
+<li>使用友元打破访问权限限制——关键字friend
 <ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
+<li>
+<p>声明某个类或者某个函数是当前类的友元——慎用！</p>
+</li>
+<li>
+<p>friend声明放在哪都行(public/private/protected都可以)</p>
+</li>
+<li>
+<p>在类内首次声明友元类或者友元函数（下面代码中最开头的“声明函数或类”部分可以删掉，可以直接把Str类中的“friend int main();”视作main函数的声明）</p>
+<ul>
+<li>注意使用限定名称引入友元并非友元类（友元函数）的声明
+<ul>
+<li>比如把Str中的代码改为“friend int ::main();”，编译就不通过了</li>
+<li>因为::main()不能被解析为函数的声明，而::main()函数在这之前又没有声明，所以就无法通过编译了</li>
+<li>解决方案就是在最前面加上“void main();”，或者把“friend int ::main();”改回“friend int main();”</li>
 </ul>
-<h2 id="notes">Notes</h2>
+</li>
+</ul>
+<pre tabindex="0"><code>// 声明函数或类
+int main();
+class Str2;
+
+class Str {
+  // 声明main函数和Str2类是当前类的友元
+  friend int main();
+  friend Str2;  // friend class Str2也可以
+
+  // 默认是private
+  inline static int x;
+};
+
+class Str2 {
+  void fun() {
+    std::cout &lt;&lt; Str::x &lt;&lt; std::endl;  // 合法访问
+  }
+};
+
+int main() {
+  std::cout &lt;&lt; Str::x &lt;&lt; std::endl;  // 合法访问，声明了友元
+}
+</code></pre></li>
+<li>
+<p>友元函数的类内类外定义（注意：友元类不可以类内定义）</p>
 <ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
+<li>类外定义
+<pre tabindex="0"><code>// 类外定义
+class Str {
+  inline static int x;
+  int y;
+  friend void fun();
+};
+
+void fun() {
+  Str val;
+  std::cout &lt;&lt; val.y &lt;&lt; std::endl;
+}
+</code></pre></li>
+<li>类内定义（隐藏友元hidden friend）
+<ul>
+<li>错误示例
+<pre tabindex="0"><code>// 类内定义
+class Str {
+  inline static int x;
+  int y;
+
+  // fun函数不是Str的成员函数，它是Str友元函数，所以fun的作用域是Str外部的全局域
+  // 但是fun函数在外部又无法调用，因为fun函数的定义在Str内部，有定义而无声明
+  friend void fun() {
+    Str val;
+    std::cout &lt;&lt; val.y &lt;&lt; std::endl;
+  }
+};
+
+int main() {
+  fun();  // 编译失败，常规的名称查找是查找不到fun的
+}
+</code></pre></li>
+<li>隐藏友元的正确打开方式
+<pre tabindex="0"><code>// 常规的名称查找找不到fun，Argument-Depende-Lookup(ADL)可以）
+
+// 类内定义
+class Str {
+  inline static int x;
+  int y;
+
+  friend void fun2(const Str&amp; val) {
+    std::cout &lt;&lt; val.y &lt;&lt; std::endl;
+  }
+};
+
+int main() {
+  Str val;
+  fun2(val);  // 编译成功
+  // 我们在调用fun2的时候传入了val，其类型是Str
+  // 所以编译器在执行这条语句的时候除了常规的名称查找，还会进行实参类型的依赖查找
+  // 就会扫描Str内部的内容，就会找到fun2
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </article>
               </div>
