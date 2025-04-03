@@ -10,7 +10,7 @@
     <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
     <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
-    <title> - My New Hugo Site</title>
+    <title>Vscode Vim Configuration - My New Hugo Site</title>
     
     <link rel="icon" type="image/x-icon" href='/images/github.png'>
     
@@ -21,17 +21,17 @@
 
     
     <meta name="description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning Reinforcement Learning Optimization C&#43;&#43; Tools " />
+  content="The Notes of Vscode Vim Conf." />
 <meta name="keywords"
   content='blog, robotics' />
 <meta name="robots" content="noodp" />
-<link rel="canonical" href="https://xwlu.github.io/readme/" />
+<link rel="canonical" href="https://xwlu.github.io/post/tools/vscode_vim/" />
 
 
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content=" - My New Hugo Site" />
+<meta name="twitter:title" content="Vscode Vim Configuration - My New Hugo Site" />
 <meta name="twitter:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning Reinforcement Learning Optimization C&#43;&#43; Tools " />
+  content="The Notes of Vscode Vim Conf." />
 <meta name="twitter:site" content="https://xwlu.github.io/" />
 <meta name="twitter:creator" content="" />
 <meta name="twitter:image"
@@ -39,11 +39,11 @@
 
 
 <meta property="og:type" content="article" />
-<meta property="og:title" content=" - My New Hugo Site">
+<meta property="og:title" content="Vscode Vim Configuration - My New Hugo Site">
 <meta property="og:description"
-  content="Skills C&#43;&#43; Python Links Github: looyifan github Notes Robotics Deep Learning Reinforcement Learning Optimization C&#43;&#43; Tools " />
-<meta property="og:url" content="https://xwlu.github.io/readme/" />
-<meta property="og:site_name" content="" />
+  content="The Notes of Vscode Vim Conf." />
+<meta property="og:url" content="https://xwlu.github.io/post/tools/vscode_vim/" />
+<meta property="og:site_name" content="Vscode Vim Configuration" />
 <meta property="og:image"
   content="https://xwlu.github.io/">
 <meta property="og:image:width" content="2048">
@@ -145,7 +145,7 @@
                   </span>
                   <span class="path-divider">/</span>
                   <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
-                    <a href="https://xwlu.github.io/readme/"></a>
+                    <a href="https://xwlu.github.io/post/tools/vscode_vim/">Vscode Vim Configuration</a>
                   </strong>
                 </h1>
                 <div class="note m-0">
@@ -155,9 +155,9 @@
 
                   
                   <span class="file-info-divider"></span>
-                  Modified <relative-time datetime="Thu, 03 Apr 2025 18:24:07 &#43;0800"
+                  Modified <relative-time datetime="Thu, 03 Apr 2025 18:16:22 &#43;0800"
                     class="no-wrap">
-                    Thu, 03 Apr 2025 18:24:07 &#43;0800</relative-time>
+                    Thu, 03 Apr 2025 18:16:22 &#43;0800</relative-time>
                   
                 </div>
               </div>
@@ -187,7 +187,7 @@
                         </div>
                       </div>
                     </details-menu>
-                      16 Words
+                      394 Words
                     
 
                   </div>
@@ -199,27 +199,109 @@
 
 
               <div class="Box-body px-5 pb-5" style="z-index: 1">
-                <article class="markdown-body entry-content container-lg"><h2 id="skills">Skills</h2>
+                <article class="markdown-body entry-content container-lg"><h3 id="背景">背景</h3>
 <ul>
-<li>C++</li>
-<li>Python</li>
+<li>vscode vim插件的个人简单配置模版</li>
 </ul>
 <hr>
-<h2 id="links">Links</h2>
-<ul>
-<li>Github: <a href="https://github.com/XwLu">looyifan github</a></li>
-</ul>
-<hr>
-<h2 id="notes">Notes</h2>
-<ul>
-<li><a href="/post/robotics/abstract">Robotics</a></li>
-<li><a href="/post/deep_learning/abstract">Deep Learning</a></li>
-<li><a href="/post/reinforcement_learning/abstract">Reinforcement Learning</a></li>
-<li><a href="/post/optimization/abstract">Optimization</a></li>
-<li><a href="/post/languages/C++/abstract">C++</a></li>
-<li><a href="/post/tools/abstract">Tools</a></li>
-</ul>
-</article>
+<h3 id="配置内容">配置内容</h3>
+<pre tabindex="0"><code>{
+  // vim config
+  &#34;editor.lineNumbers&#34;: &#34;relative&#34;,
+  &#34;workbench.list.automaticKeyboardNavigation&#34;: false,
+  // 绑定vim前导键
+  &#34;vim.leader&#34;: &#34;&lt;space&gt;&#34;,
+  // 启用easymotion插件
+  &#34;vim.easymotion&#34;: true,
+  // 启用系统粘贴板作为vim寄存器
+  &#34;vim.useSystemClipboard&#34;: true,
+  // 由vim接管ctrl+any的按键，而不是vscode
+  &#34;vim.useCtrlKeys&#34;: true,
+  // 突出显示与当前搜索匹配的所有文本
+  &#34;vim.hlsearch&#34;: true,
+   // 普通模式下的非递归按键绑定
+  &#34;vim.normalModeKeyBindingsNonRecursive&#34;: [
+    // zz展开收起括号内的内容
+    {
+      &#34;before&#34;: [&#34;z&#34;, &#34;z&#34;],
+      &#34;commands&#34;: [&#34;editor.toggleFold&#34;]
+    },
+    // 保存&amp;退出当前文本
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;s&#34;],
+      &#34;commands&#34;:[&#34;:w!&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;q&#34;],
+      &#34;commands&#34;: [&#34;:q!&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;sq&#34;],
+      &#34;commands&#34;: [&#34;:wq!&#34;]
+    },
+    // 上下跳5行
+    {
+      &#34;before&#34;: [&#34;&lt;C-j&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;j&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-k&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;k&#34;]
+    },
+    // 行首行尾
+    {
+      &#34;before&#34;: [&#34;&lt;C-h&gt;&#34;],
+      &#34;after&#34;: [&#34;^&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-l&gt;&#34;],
+      &#34;after&#34;: [&#34;$&#34;]
+    },
+    // 部分格式化
+    {
+      &#34;before&#34;: [&#34;f&#34;, &#34;f&#34;],
+      &#34;commands&#34;: [&#34;editor.action.formatSelection&#34;]
+    },
+  ],
+  // 插入模式下的非递归按键绑定
+  &#34;vim.insertModeKeyBindings&#34;: [],
+  // 命令模式下的非递归按键绑定
+  &#34;vim.commandLineModeKeyBindingsNonRecursive&#34;: [],
+  // 可视模式下的非递归按键绑定
+  &#34;vim.visualModeKeyBindings&#34;: [
+    // 上下跳5行
+    {
+      &#34;before&#34;: [&#34;&lt;C-j&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;j&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-k&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;k&#34;]
+    },
+    // 行首行尾
+    {
+      &#34;before&#34;: [&#34;&lt;C-h&gt;&#34;],
+      &#34;after&#34;: [&#34;^&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-l&gt;&#34;],
+      &#34;after&#34;: [&#34;$&#34;]
+    },
+    // 部分格式化
+    {
+      &#34;before&#34;: [&#34;f&#34;, &#34;f&#34;],
+      &#34;commands&#34;: [&#34;editor.action.formatSelection&#34;]
+    },
+  ],
+  // 下面定义的按键将交由vscode进行处理，而不是vscode-vim插件
+  &#34;vim.handleKeys&#34;: {
+    &#34;&lt;C-a&gt;&#34;: false,
+    &#34;&lt;C-f&gt;&#34;: false,
+    &#34;&lt;C-p&gt;&#34;: false,
+   // &#34;&lt;C-k&gt;&#34;: false
+  },
+}
+</code></pre></article>
               </div>
             </div>
           </div>
