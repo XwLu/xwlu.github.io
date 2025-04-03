@@ -2,11 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/bezier-curve-optimization/</loc>
+    <lastmod>2025-04-03T16:42:13+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/car_planner/</loc>
     <lastmod>2025-04-02T15:42:49+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/common/</loc>
+    <lastmod>2025-04-03T16:49:38+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/cross-entropy-motion-planning/</loc>
+    <lastmod>2025-04-03T16:50:49+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/diffusion_drive/</loc>
     <lastmod>2025-04-02T15:29:09+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/dijkstra-astar/</loc>
+    <lastmod>2025-04-03T16:53:02+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/e2e/abstract/</loc>
+    <lastmod>2025-04-03T17:03:05+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/game_former/</loc>
     <lastmod>2025-04-02T15:21:04+08:00</lastmod>
@@ -14,20 +29,38 @@
     <loc>https://xwlu.github.io/post/robotics/e2e/gen_ad/</loc>
     <lastmod>2025-04-02T15:00:14+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/jps/</loc>
+    <lastmod>2025-04-03T16:53:48+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/</loc>
-    <lastmod>2025-04-02T22:30:26+08:00</lastmod>
+    <lastmod>2025-04-03T17:58:06+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/optimization/</loc>
+    <lastmod>2025-04-03T16:55:01+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/osqp/</loc>
+    <lastmod>2025-04-03T16:56:27+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/abstract/</loc>
+    <lastmod>2025-04-03T16:46:54+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/pluto/</loc>
     <lastmod>2025-04-02T14:39:38+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/</loc>
-    <lastmod>2025-04-02T22:30:26+08:00</lastmod>
+    <lastmod>2025-04-03T17:58:06+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/prm/</loc>
+    <lastmod>2025-04-03T16:57:09+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/robotics/path_planning/rrt/</loc>
+    <lastmod>2025-04-03T16:59:55+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/robotics/e2e/way_former/</loc>
     <lastmod>2025-04-02T13:55:49+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/readme/</loc>
-    <lastmod>2025-04-02T17:17:19+08:00</lastmod>
+    <lastmod>2025-04-03T17:08:31+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/array-vector-string/</loc>
     <lastmod>2025-04-02T16:29:40+08:00</lastmod>
@@ -62,6 +95,9 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/basis/</loc>
     <lastmod>2025-04-02T16:42:17+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/common/</loc>
+    <lastmod>2025-04-03T17:58:06+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</loc>
     <lastmod>2025-04-02T16:32:30+08:00</lastmod>
   </url><url>
@@ -75,16 +111,19 @@
     <lastmod>2025-04-02T16:42:39+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/optimization/constrained_optimization/</loc>
-    <lastmod>2025-04-02T18:12:55+08:00</lastmod>
+    <lastmod>2025-04-03T17:17:10+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/construct/</loc>
-    <lastmod>2025-04-02T16:43:03+08:00</lastmod>
+    <lastmod>2025-04-03T17:15:09+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/container/</loc>
     <lastmod>2025-04-02T16:32:59+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/deep_learning/abstract/</loc>
     <lastmod>2025-04-02T15:58:13+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/dqn/</loc>
+    <lastmod>2025-04-03T17:11:01+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/deep_learning/attention/</loc>
     <lastmod>2025-04-02T16:11:27+08:00</lastmod>
@@ -98,6 +137,9 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/</loc>
     <lastmod>2025-04-02T16:33:26+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/dynamic-planning/</loc>
+    <lastmod>2025-04-03T17:19:16+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/eigen/</loc>
     <lastmod>2025-04-02T16:33:58+08:00</lastmod>
   </url><url>
@@ -105,10 +147,10 @@
     <lastmod>2025-04-02T16:34:23+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/exception/</loc>
-    <lastmod>2025-04-02T16:34:40+08:00</lastmod>
+    <lastmod>2025-04-03T17:11:44+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/expression/</loc>
-    <lastmod>2025-04-02T16:35:08+08:00</lastmod>
+    <lastmod>2025-04-03T17:12:04+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/function/</loc>
     <lastmod>2025-04-02T16:35:27+08:00</lastmod>
@@ -120,10 +162,10 @@
     <lastmod>2025-04-02T17:02:27+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/inheritance/</loc>
-    <lastmod>2025-04-02T16:43:30+08:00</lastmod>
+    <lastmod>2025-04-03T17:16:08+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/iostream/</loc>
-    <lastmod>2025-04-02T16:36:10+08:00</lastmod>
+    <lastmod>2025-04-03T17:14:03+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/optimization/kkt/</loc>
     <lastmod>2025-04-02T18:23:35+08:00</lastmod>
@@ -140,11 +182,20 @@
     <loc>https://xwlu.github.io/post/optimization/ldqp/</loc>
     <lastmod>2025-04-02T19:15:10+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/markov-decision-processes/</loc>
+    <lastmod>2025-04-03T17:24:56+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</loc>
     <lastmod>2025-04-02T16:44:14+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/abstract/</loc>
     <lastmod>2025-04-02T16:46:21+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/model-based-rl/</loc>
+    <lastmod>2025-04-03T17:31:16+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/monte-carlo-sampling/</loc>
+    <lastmod>2025-04-03T17:35:11+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/abstract/</loc>
     <lastmod>2025-04-02T16:47:55+08:00</lastmod>
@@ -182,11 +233,17 @@
     <loc>https://xwlu.github.io/post/optimization/phr_alm/</loc>
     <lastmod>2025-04-02T22:20:53+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/policy-gradient/</loc>
+    <lastmod>2025-04-03T17:41:01+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/abstract/</loc>
+    <lastmod>2025-04-03T17:09:13+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</loc>
     <lastmod>2025-04-02T16:51:07+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/robotics/abstract/</loc>
-    <lastmod>2025-04-02T15:42:07+08:00</lastmod>
+    <lastmod>2025-04-03T17:03:31+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/shared-ptr/</loc>
     <lastmod>2025-04-02T17:03:33+08:00</lastmod>
@@ -209,6 +266,12 @@
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/template/template-function/</loc>
     <lastmod>2025-04-02T16:51:51+08:00</lastmod>
   </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/temporal-difference/</loc>
+    <lastmod>2025-04-03T17:55:22+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/temporal-difference-lambda/</loc>
+    <lastmod>2025-04-03T17:49:51+08:00</lastmod>
+  </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/</loc>
     <lastmod>2025-04-02T16:49:38+08:00</lastmod>
   </url><url>
@@ -220,6 +283,9 @@
   </url><url>
     <loc>https://xwlu.github.io/post/deep_learning/transformer/</loc>
     <lastmod>2025-04-02T16:20:08+08:00</lastmod>
+  </url><url>
+    <loc>https://xwlu.github.io/post/reinforcement_learning/trust-region-based-drl/</loc>
+    <lastmod>2025-04-03T17:57:13+08:00</lastmod>
   </url><url>
     <loc>https://xwlu.github.io/post/languages/c&#43;&#43;/type/</loc>
     <lastmod>2025-04-02T16:38:45+08:00</lastmod>

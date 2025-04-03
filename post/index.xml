@@ -6,8 +6,15 @@
     <description>Recent content in Posts on My New Hugo Site</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 02 Apr 2025 22:30:26 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 03 Apr 2025 17:58:06 +0800</lastBuildDate>
     <atom:link href="https://xwlu.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Bezier Curve Optimization</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/bezier-curve-optimization/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/bezier-curve-optimization/</guid>
+      <description>description of Bezier Curve Optimization</description>
+    </item>
     <item>
       <title>CarPlanner</title>
       <link>https://xwlu.github.io/post/robotics/e2e/car_planner/</link>
@@ -16,11 +23,39 @@
       <description>Paper Reading Notes of CarPlanner</description>
     </item>
     <item>
+      <title>Common Knowledges on Path Planning</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/common/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/common/</guid>
+      <description>description of path planing</description>
+    </item>
+    <item>
+      <title>Cross-entropy Motion Planning</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/cross-entropy-motion-planning/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/cross-entropy-motion-planning/</guid>
+      <description>description of Cross-entropy motion planning</description>
+    </item>
+    <item>
       <title>DiffusionDrive</title>
       <link>https://xwlu.github.io/post/robotics/e2e/diffusion_drive/</link>
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
       <guid>https://xwlu.github.io/post/robotics/e2e/diffusion_drive/</guid>
       <description>Paper Reading Notes of DiffusionDrive</description>
+    </item>
+    <item>
+      <title>Dijkstra and A*</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/dijkstra-astar/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/dijkstra-astar/</guid>
+      <description>description of Dijkstra and A*</description>
+    </item>
+    <item>
+      <title>E2E Paper Reading</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/abstract/</guid>
+      <description>notes of e2e paper reading</description>
     </item>
     <item>
       <title>GameFormer</title>
@@ -37,11 +72,53 @@
       <description>Paper Reading Notes of GenAD</description>
     </item>
     <item>
+      <title>Jump Point Search</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/jps/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/jps/</guid>
+      <description>description of JPS</description>
+    </item>
+    <item>
+      <title>Optimization</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/optimization/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/optimization/</guid>
+      <description>description of optimization of path planning</description>
+    </item>
+    <item>
+      <title>OSQP</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/osqp/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/osqp/</guid>
+      <description>tutorials of OSQP</description>
+    </item>
+    <item>
+      <title>Path Planing</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/abstract/</guid>
+      <description>wiki on path planning</description>
+    </item>
+    <item>
       <title>Pluto</title>
       <link>https://xwlu.github.io/post/robotics/e2e/pluto/</link>
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
       <guid>https://xwlu.github.io/post/robotics/e2e/pluto/</guid>
       <description>Paper Reading Notes of Pluto</description>
+    </item>
+    <item>
+      <title>Probabilistic Road Map</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/prm/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/prm/</guid>
+      <description>description of RMP</description>
+    </item>
+    <item>
+      <title>Rapidly-exploring Random Tree</title>
+      <link>https://xwlu.github.io/post/robotics/path_planning/rrt/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/path_planning/rrt/</guid>
+      <description>description of RRT &amp;amp; RRT*</description>
     </item>
     <item>
       <title>WayFormer</title>
@@ -128,6 +205,13 @@
       <description>Basis for C++ class</description>
     </item>
     <item>
+      <title>Common Knowledges on Reinforcement Learning</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/common/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/common/</guid>
+      <description>wiki on Reinforcement Learning</description>
+    </item>
+    <item>
       <title>Compile &amp; Link</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/compile-link/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -184,6 +268,13 @@
       <description>The Abstract of Deep Learning Notes</description>
     </item>
     <item>
+      <title>Deep Q Learning</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/dqn/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/dqn/</guid>
+      <description>wiki on deep q Learning</description>
+    </item>
+    <item>
       <title>DL Attention</title>
       <link>https://xwlu.github.io/post/deep_learning/attention/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -210,6 +301,13 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/dyn-memory/</guid>
       <description>Dynamic memory for C++</description>
+    </item>
+    <item>
+      <title>Dynamic Planning</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/dynamic-planning/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/dynamic-planning/</guid>
+      <description>wiki on dp</description>
     </item>
     <item>
       <title>Eigen</title>
@@ -310,6 +408,13 @@
       <description>Low-Dimensional qp for constrained optimization</description>
     </item>
     <item>
+      <title>Markov Decision Processes</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/markov-decision-processes/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/markov-decision-processes/</guid>
+      <description>wiki on Markov Decision Processes</description>
+    </item>
+    <item>
       <title>Member Ptr of Class</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/class/member-ptr/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -322,6 +427,20 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/languages/c&#43;&#43;/meta-programming/abstract/</guid>
       <description>meta-programming of C++</description>
+    </item>
+    <item>
+      <title>Model based RL</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/model-based-rl/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/model-based-rl/</guid>
+      <description>wiki on Model based RL</description>
+    </item>
+    <item>
+      <title>Monte-Carlo Sampling</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/monte-carlo-sampling/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/monte-carlo-sampling/</guid>
+      <description>wiki on MC</description>
     </item>
     <item>
       <title>Multi-Thread Abstract</title>
@@ -408,6 +527,20 @@
       <description>Powell-Hestenes-Rockafellar Method for Equality- Constrained Cases</description>
     </item>
     <item>
+      <title>Policy Gradient</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/policy-gradient/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/policy-gradient/</guid>
+      <description>wiki on PG</description>
+    </item>
+    <item>
+      <title>Reinforcement Learning</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/abstract/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/abstract/</guid>
+      <description>wiki on Reinforcement Learning</description>
+    </item>
+    <item>
       <title>Requires &amp; Concepts</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/template/requires-concepts/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -471,6 +604,20 @@
       <description>Template function for C++</description>
     </item>
     <item>
+      <title>Temporal Difference</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/temporal-difference/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/temporal-difference/</guid>
+      <description>wiki on TD</description>
+    </item>
+    <item>
+      <title>Temporal Difference Lambda</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/temporal-difference-lambda/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/temporal-difference-lambda/</guid>
+      <description>wiki on TD Lambda</description>
+    </item>
+    <item>
       <title>Thread</title>
       <link>https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread/</link>
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
@@ -497,6 +644,13 @@
       <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
       <guid>https://xwlu.github.io/post/deep_learning/transformer/</guid>
       <description>Knowledges of Transformer</description>
+    </item>
+    <item>
+      <title>Trust Region based DRL</title>
+      <link>https://xwlu.github.io/post/reinforcement_learning/trust-region-based-drl/</link>
+      <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/reinforcement_learning/trust-region-based-drl/</guid>
+      <description>wiki on trust region</description>
     </item>
     <item>
       <title>Type</title>

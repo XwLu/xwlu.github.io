@@ -1,0 +1,1529 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='http://localhost:1313/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='http://localhost:1313/css/frameworks.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github.min.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/github-style.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/light.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/dark.css' />
+    <link rel="stylesheet" href='http://localhost:1313/css/syntax.css' />
+    <title>Path-Planning - My New Hugo Site</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    <link rel="stylesheet" href="http://localhost:1313/css/custom.css">
+    <script type="text/javascript" src="http://localhost:1313/js/custom.js"></script>
+
+    
+    <meta name="description"
+  content="" />
+<meta name="keywords"
+  content='blog, robotics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="http://localhost:1313/categories/path-planning/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Path-Planning - My New Hugo Site" />
+<meta name="twitter:description"
+  content="" />
+<meta name="twitter:site" content="http://localhost:1313/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="http://localhost:1313/">
+
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Path-Planning - My New Hugo Site">
+<meta property="og:description"
+  content="" />
+<meta property="og:url" content="http://localhost:1313/categories/path-planning/" />
+<meta property="og:site_name" content="Path-Planning" />
+<meta property="og:image"
+  content="http://localhost:1313/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+
+
+
+<link href="/categories/path-planning/index.xml" rel="alternate" type="application/rss+xml" title="My New Hugo Site" />
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="http://localhost:1313/">
+        <img class="octicon" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:http://localhost:1313/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="http://localhost:1313/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  
+
+
+<div class="mt-4 position-sticky top-0 d-none d-md-block bg-white width-full border-bottom color-border-secondary"
+  style="z-index:3;">
+  <div class="container-xl px-3 px-md-4 px-lg-5">
+    <div class="gutter-condensed gutter-lg flex-column flex-md-row d-flex">
+      <div class="flex-shrink-0 col-12 col-md-3 mb-4 mb-md-0">
+      </div>
+      <div class="flex-shrink-0 col-12 col-md-9 mb-4 mb-md-0">
+        <div class="UnderlineNav width-full box-shadow-none hx_UnderlineNav-with-profile-color-modes-banner">
+          <nav class="UnderlineNav-body">
+            <a class="UnderlineNav-item " href="http://localhost:1313/">
+              <svg class="octicon octicon-book UnderlineNav-octicon hide-sm" height="16" viewBox="0 0 16 16"
+                version="1.1" width="16">
+                <path fill-rule="evenodd"
+                  d="M0 1.75A.75.75 0 01.75 1h4.253c1.227 0 2.317.59 3 1.501A3.744 3.744 0 0111.006 1h4.245a.75.75 0 01.75.75v10.5a.75.75 0 01-.75.75h-4.507a2.25 2.25 0 00-1.591.659l-.622.621a.75.75 0 01-1.06 0l-.622-.621A2.25 2.25 0 005.258 13H.75a.75.75 0 01-.75-.75V1.75zm8.755 3a2.25 2.25 0 012.25-2.25H14.5v9h-3.757c-.71 0-1.4.201-1.992.572l.004-7.322zm-1.504 7.324l.004-5.073-.002-2.253A2.25 2.25 0 005.003 2.5H1.5v9h3.757a3.75 3.75 0 011.994.574z">
+                </path>
+              </svg>
+              Overview
+            </a>
+            <a class="UnderlineNav-item " href="http://localhost:1313/post">
+              <svg class="octicon octicon-repo UnderlineNav-octicon hide-sm" height="16" viewBox="0 0 16 16"
+                version="1.1" width="16">
+                <path fill-rule="evenodd"
+                  d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z">
+                </path>
+              </svg>
+              Posts
+              <span class="Counter">84</span>
+            </a>
+          </nav>
+          <div class="profile-color-modes js-promo-color-modes-banner-profile isInitialToggle">
+            <svg width="106" height="60" viewBox="0 0 106 60" fill="none" stroke-width="3" stroke-linecap="round"
+              stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+              <g class="profile-color-modes-illu-group profile-color-modes-illu-red">
+                <path d="M37.5 58.5V57.5C37.5 49.768 43.768 43.5 51.5 43.5V43.5C59.232 43.5 65.5 49.768 65.5 57.5V58.5">
+                </path>
+              </g>
+              <g class="profile-color-modes-illu-group profile-color-modes-illu-orange">
+                <path
+                  d="M104.07 58.5C103.401 55.092 97.7635 54.3869 95.5375 57.489C97.4039 54.6411 99.7685 48.8845 94.6889 46.6592C89.4817 44.378 86.1428 50.1604 85.3786 54.1158C85.9519 50.4768 83.7226 43.294 78.219 44.6737C72.7154 46.0534 72.7793 51.3754 74.4992 55.489C74.169 54.7601 72.4917 53.3567 70.5 52.8196">
+                </path>
+              </g>
+              <g class="profile-color-modes-illu-group profile-color-modes-illu-purple">
+                <path
+                  d="M5.51109 58.5V52.5C5.51109 41.4543 14.4654 32.5 25.5111 32.5C31.4845 32.5 36.8464 35.1188 40.5111 39.2709C40.7212 39.5089 40.9258 39.7521 41.1245 40">
+                </path>
+                <path d="M27.511 49.5C29.6777 49.5 28.911 49.5 32.511 49.5"></path>
+                <path d="M27.511 56.5C29.6776 56.5 26.911 56.5 30.511 56.5"></path>
+              </g>
+              <g class="profile-color-modes-illu-group profile-color-modes-illu-green">
+                <circle cx="5.5" cy="12.5" r="4"></circle>
+                <circle cx="18.5" cy="5.5" r="4"></circle>
+                <path d="M18.5 9.5L18.5 27.5"></path>
+                <path d="M18.5 23.5C6 23.5 5.5 23.6064 5.5 16.5"></path>
+              </g>
+              <g class="profile-color-modes-illu-group profile-color-modes-illu-blue">
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M40.6983 31.5C40.5387 29.6246 40.6456 28.0199 41.1762 27.2317C42.9939 24.5312 49.7417 26.6027 52.5428 30.2409C54.2551 29.8552 56.0796 29.6619 57.9731 29.6619C59.8169 29.6619 61.5953 29.8452 63.2682 30.211C66.0833 26.5913 72.799 24.5386 74.6117 27.2317C75.6839 28.8246 75.0259 33.7525 73.9345 37.5094C74.2013 37.9848 74.4422 38.4817 74.6555 39">
+                  </path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M41.508 31.5C41.6336 31.2259 41.7672 30.9582 41.9085 30.6968C40.7845 26.9182 40.086 21.8512 41.1762 20.2317C42.9939 17.5312 49.7417 19.6027 52.5428 23.2409C54.2551 22.8552 56.0796 22.6619 57.9731 22.6619C59.8169 22.6619 61.5953 22.8452 63.2682 23.211C66.0833 19.5913 72.799 17.5386 74.6117 20.2317C75.6839 21.8246 75.0259 26.7525 73.9345 30.5094C75.1352 32.6488 75.811 35.2229 75.811 38.2283C75.811 38.49 75.8058 38.7472 75.7957 39">
+                  </path>
+                  <path d="M49.4996 33V35.6757"></path>
+                  <path d="M67.3375 33V35.6757"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M41.508 31.5C41.6336 31.2259 41.7672 30.9582 41.9085 30.6968C40.7845 26.9182 40.086 21.8512 41.1762 20.2317C42.9939 17.5312 49.7417 19.6027 52.5428 23.2409C54.2551 22.8552 56.0796 22.6619 57.9731 22.6619C59.8169 22.6619 61.5953 22.8452 63.2682 23.211C66.0833 19.5913 72.799 17.5386 74.6117 20.2317C75.6839 21.8246 75.0259 26.7525 73.9345 30.5094C75.1352 32.6488 75.811 35.2229 75.811 38.2283C75.811 38.49 75.8058 38.7472 75.7957 39">
+                  </path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M41.508 31.5C41.6336 31.2259 41.7672 30.9582 41.9085 30.6968C40.7845 26.9182 40.086 21.8512 41.1762 20.2317C42.9939 17.5312 49.7417 19.6027 52.5428 23.2409C54.2551 22.8552 56.0796 22.6619 57.9731 22.6619C59.8169 22.6619 61.5953 22.8452 63.2682 23.211C66.0833 19.5913 72.799 17.5386 74.6117 20.2317C75.6839 21.8246 75.0259 26.7525 73.9345 30.5094C75.1352 32.6488 75.811 35.2229 75.811 38.2283C75.811 38.49 75.8058 38.7472 75.7957 39">
+                  </path>
+                  <path d="M49.4996 33V35.6757"></path>
+                  <path d="M67.3375 33V35.6757"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M41.508 31.5C41.6336 31.2259 41.7672 30.9582 41.9085 30.6968C40.7845 26.9182 40.086 21.8512 41.1762 20.2317C42.9939 17.5312 49.7417 19.6027 52.5428 23.2409C54.2551 22.8552 56.0796 22.6619 57.9731 22.6619C59.8169 22.6619 61.5953 22.8452 63.2682 23.211C66.0833 19.5913 72.799 17.5386 74.6117 20.2317C75.6839 21.8246 75.0259 26.7525 73.9345 30.5094C75.1352 32.6488 75.811 35.2229 75.811 38.2283C75.811 38.49 75.8058 38.7472 75.7957 39">
+                  </path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M41.508 31.5C41.6336 31.2259 41.7672 30.9582 41.9085 30.6968C40.7845 26.9182 40.086 21.8512 41.1762 20.2317C42.9939 17.5312 49.7417 19.6027 52.5428 23.2409C54.2551 22.8552 56.0796 22.6619 57.9731 22.6619C59.8169 22.6619 61.5953 22.8452 63.2682 23.211C66.0833 19.5913 72.799 17.5386 74.6117 20.2317C75.6839 21.8246 75.0259 26.7525 73.9345 30.5094C75.1352 32.6488 75.811 35.2229 75.811 38.2283C75.811 38.49 75.8058 38.7472 75.7957 39">
+                  </path>
+                  <path d="M49.4996 33V35.6757"></path>
+                  <path d="M67.3375 33V35.6757"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M73.4999 40.2236C74.9709 38.2049 75.8108 35.5791 75.8108 32.2283C75.8108 29.2229 75.1351 26.6488 73.9344 24.5094C75.0258 20.7525 75.6838 15.8246 74.6116 14.2317C72.7989 11.5386 66.0832 13.5913 63.2681 17.211C61.5952 16.8452 59.8167 16.6619 57.973 16.6619C56.0795 16.6619 54.2549 16.8552 52.5427 17.2409C49.7416 13.6027 42.9938 11.5312 41.176 14.2317C40.0859 15.8512 40.7843 20.9182 41.9084 24.6968C41.003 26.3716 40.4146 28.3065 40.2129 30.5">
+                  </path>
+                  <path d="M82.9458 30.5471L76.8413 31.657"></path>
+                  <path d="M76.2867 34.4319L81.8362 37.7616"></path>
+                  <path d="M49.4995 27.8242V30.4999"></path>
+                  <path d="M67.3374 27.8242V30.4998"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M45.3697 34.2658C41.8877 32.1376 39.7113 28.6222 39.7113 23.2283C39.7113 20.3101 40.3483 17.7986 41.4845 15.6968C40.3605 11.9182 39.662 6.85125 40.7522 5.23168C42.5699 2.53117 49.3177 4.6027 52.1188 8.24095C53.831 7.85521 55.6556 7.66186 57.5491 7.66186C59.3929 7.66186 61.1713 7.84519 62.8442 8.21095C65.6593 4.59134 72.375 2.5386 74.1877 5.23168C75.2599 6.82461 74.6019 11.7525 73.5105 15.5094C74.7112 17.6488 75.3869 20.2229 75.3869 23.2283C75.3869 28.6222 73.2105 32.1376 69.7285 34.2658C70.8603 35.5363 72.6057 38.3556 73.3076 40">
+                  </path>
+                  <path d="M49.0747 19.8242V22.4999"></path>
+                  <path
+                    d="M54.0991 28C54.6651 29.0893 55.7863 30.0812 57.9929 30.0812C59.0642 30.0812 59.8797 29.8461 60.5 29.4788">
+                  </path>
+                  <path d="M66.9126 19.8242V22.4999"></path>
+                  <path d="M33.2533 20.0237L39.0723 22.1767"></path>
+                  <path d="M39.1369 25.0058L33.0935 27.3212"></path>
+                  <path d="M81.8442 19.022L76.0252 21.1751"></path>
+                  <path d="M75.961 24.0041L82.0045 26.3196"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M73.4999 40.2236C74.9709 38.2049 75.8108 35.5791 75.8108 32.2283C75.8108 29.2229 75.1351 26.6488 73.9344 24.5094C75.0258 20.7525 75.6838 15.8246 74.6116 14.2317C72.7989 11.5386 66.0832 13.5913 63.2681 17.211C61.5952 16.8452 59.8167 16.6619 57.973 16.6619C56.0795 16.6619 54.2549 16.8552 52.5427 17.2409C49.7416 13.6027 42.9938 11.5312 41.176 14.2317C40.0859 15.8512 40.7843 20.9182 41.9084 24.6968C41.003 26.3716 40.4146 28.3065 40.2129 30.5">
+                  </path>
+                  <path d="M82.9458 30.5471L76.8413 31.657"></path>
+                  <path d="M76.2867 34.4319L81.8362 37.7616"></path>
+                  <path d="M49.4995 27.8242V30.4999"></path>
+                  <path d="M67.3374 27.8242V30.4998"></path>
+                </g>
+                <g class="profile-color-modes-illu-frame">
+                  <path
+                    d="M40.6983 31.5C40.5387 29.6246 40.6456 28.0199 41.1762 27.2317C42.9939 24.5312 49.7417 26.6027 52.5428 30.2409C54.2551 29.8552 56.0796 29.6619 57.9731 29.6619C59.8169 29.6619 61.5953 29.8452 63.2682 30.211C66.0833 26.5913 72.799 24.5386 74.6117 27.2317C75.6839 28.8246 75.0259 33.7525 73.9345 37.5094C74.2013 37.9848 74.4422 38.4817 74.6555 39">
+                  </path>
+                </g>
+              </g>
+            </svg>
+            <span class="profile-color-modes-toggle js-promo-color-modes-toggle no-select" tabindex="0"
+              onclick="switchTheme()">
+              <div class="profile-color-modes-toggle-track no-select"></div>
+              <div class="profile-color-modes-toggle-thumb js-promo-color-modes-thumb">
+                <svg style="fill: var(--color-profile-color-modes-toggle-moon); margin: 7px 0 0 7px;" width="14"
+                  height="13" viewBox="0 0 14 13" xmlns="http://www.w3.org/2000/svg">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+                  </path>
+                </svg>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-xl px-3 px-md-4 px-lg-5">
+  <div class="gutter-condensed gutter-lg flex-column flex-md-row d-flex">
+    <div class="flex-shrink-0 col-12 col-md-3 mb-4 mb-md-0">
+      <div class="h-card mt-md-n5" style="margin-top:24px">
+        <div class="user-profile-sticky-bar js-user-profile-sticky-bar d-none d-md-block" id="headerStuck">
+          <div class="user-profile-mini-vcard d-table">
+            <span class="user-profile-mini-avatar d-table-cell v-align-middle lh-condensed-ultra pr-2">
+              
+              <img class="rounded-1 avatar-user" height="32" width="32" src="/images/avatar.png">
+              
+            </span>
+            <span class="d-table-cell v-align-middle lh-condensed">
+              <strong>looyifan</strong>
+            </span>
+          </div>
+        </div>
+        <div class="clearfix d-flex d-md-block flex-items-center mb-4 mb-md-0">
+          <div class="position-relative d-inline-block col-2 col-md-12 mr-3 mr-md-0 flex-shrink-0" style="z-index:4;">
+            
+            <a href="/images/avatar.png">
+              <img style="height:auto;" alt="Avatar" width="260" height="260" id="headerImg"
+                class="avatar avatar-user width-full border bg-white" src="/images/avatar.png">
+            </a>
+            
+            
+            <div class="user-status-container position-relative hide-sm hide-md">
+              <div class="f5 user-status-circle-badge-container">
+                <div class="user-status-circle-badge d-inline-block lh-condensed-ultra p-2">
+                  <div class="d-flex flex-items-center flex-items-stretch">
+                    <div class="f6 lh-condensed user-status-header d-inline-flex user-status-emoji-only-header circle">
+                      <div class="user-status-emoji-container flex-shrink-0 mr-2 d-flex flex-items-center flex-justify-center ">
+                        <div><g-emoji class="g-emoji">😀</g-emoji></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+
+          <div
+            class="vcard-names-container float-left col-10 col-md-12 pt-1 pt-md-3 pb-1 pb-md-3 js-sticky js-user-profile-sticky-fields"
+            data-original-top="0px" style="position: sticky;">
+            <h1 class="vcard-names pl-2 pl-md-0">
+              <span class="p-name vcard-fullname d-block overflow-hidden">looyifan</span>
+              
+              <span class="p-nickname vcard-username d-block">xwlu</span>
+              
+            </h1>
+          </div>
+        </div>
+
+        <div class="p-note user-profile-bio mb-3 js-user-profile-bio f4">
+          <div>日拱一卒</div>
+        </div>
+
+        <div class="d-flex flex-column">
+          <div class="js-profile-editable-area d-flex flex-column d-md-block">
+            <ul class="vcard-details">
+              
+              <li class="vcard-detail pt-1 css-truncate css-truncate-target hide-sm hide-md">
+                <svg class="octicon octicon-location" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                  <path fill-rule="evenodd"
+                    d="M11.536 3.464a5 5 0 010 7.072L8 14.07l-3.536-3.535a5 5 0 117.072-7.072v.001zm1.06 8.132a6.5 6.5 0 10-9.192 0l3.535 3.536a1.5 1.5 0 002.122 0l3.535-3.536zM8 9a2 2 0 100-4 2 2 0 000 4z">
+                  </path>
+                </svg>
+                <span class="p-label">China</span>
+              </li>
+              
+
+              
+              <li class="vcard-detail pt-1 css-truncate css-truncate-target ">
+                <svg class="octicon octicon-mail" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                  <path fill-rule="evenodd"
+                    d="M1.75 2A1.75 1.75 0 000 3.75v.736a.75.75 0 000 .027v7.737C0 13.216.784 14 1.75 14h12.5A1.75 1.75 0 0016 12.25v-8.5A1.75 1.75 0 0014.25 2H1.75zM14.5 4.07v-.32a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25v.32L8 7.88l6.5-3.81zm-13 1.74v6.441c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V5.809L8.38 9.397a.75.75 0 01-.76 0L1.5 5.809z">
+                  </path>
+                </svg>
+                <a class="u-email link-gray-dark " href="mailto:looyifan@gmail.com">looyifan@gmail.com</a>
+              </li>
+              
+
+              <li class="vcard-detail pt-1 css-truncate css-truncate-target ">
+                <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16">
+                  <path fill-rule="evenodd"
+                    d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z">
+                  </path>
+                </svg>
+                
+                <a rel="nofollow me" class="link-gray-dark" href="https://xwlu.github.io">https://xwlu.github.io</a>
+                
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="border-top color-border-secondary pt-3 mt-3 clearfix hide-sm hide-md">
+          <h2 class="mb-2 h4">Organizations</h2>
+          <div style="display:flex;justify-content:flex-start;flex-wrap:wrap;margin-bottom:3px;">
+          
+          <a style="margin: 0 10px 10px 0;" href="https://github.com/xwlu">
+            <svg id="github-icon" viewBox="0 0 16 16" version="1.1" width="32" height="32" fill="#24292e">
+              <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+              </path>
+            </svg>
+          </a>
+          
+
+          
+          <a style="margin: 0 10px 10px 0;" href="https://twitter.com/looyifan">
+            <svg  width="32" height="32" viewBox="0 0 1200 1227" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path id="twitter-icon" d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z" fill="white"/>
+            </svg>
+          </a>
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+
+          
+          
+          
+          <a style="margin: 0 10px 10px 0;" href="https://xwlu.github.io">
+            <img alt="@Link" width="32" height="32" src='http://localhost:1313/images/link.png' class="avatar">
+          </a>
+          
+          
+          
+          <a style="margin: 0 10px 10px 0;" href="https://xwlu.github.io">
+            <img alt="@Link2" width="32" height="32" src="https://xwlu.github.io/images/avatar.png" class="avatar">
+          </a>
+          
+          
+          
+
+          
+          <a style="margin: 0 10px 10px 0;" href="http://localhost:1313/index.xml">
+            <img alt="@rss" width="32" height="32" src="http://localhost:1313/images/rss.png" class="avatar">
+          </a>
+          
+         </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex-shrink-0 col-12 col-md-9 mb-4 mb-md-0">
+      
+
+<div class="UnderlineNav user-profile-nav d-block d-md-none position-sticky top-0 pl-3 ml-n3 mr-n3 pr-3 bg-white"
+  style="z-index:3;">
+  <nav class="UnderlineNav-body">
+    <a class="UnderlineNav-item " href="http://localhost:1313/">
+      <svg class="octicon octicon-book UnderlineNav-octicon hide-sm" height="16" viewBox="0 0 16 16" version="1.1"
+        width="16">
+        <path fill-rule="evenodd"
+          d="M0 1.75A.75.75 0 01.75 1h4.253c1.227 0 2.317.59 3 1.501A3.744 3.744 0 0111.006 1h4.245a.75.75 0 01.75.75v10.5a.75.75 0 01-.75.75h-4.507a2.25 2.25 0 00-1.591.659l-.622.621a.75.75 0 01-1.06 0l-.622-.621A2.25 2.25 0 005.258 13H.75a.75.75 0 01-.75-.75V1.75zm8.755 3a2.25 2.25 0 012.25-2.25H14.5v9h-3.757c-.71 0-1.4.201-1.992.572l.004-7.322zm-1.504 7.324l.004-5.073-.002-2.253A2.25 2.25 0 005.003 2.5H1.5v9h3.757a3.75 3.75 0 011.994.574z">
+        </path>
+      </svg>
+      Overview
+    </a>
+    <a class='UnderlineNav-item  '
+      href="http://localhost:1313/post">
+      <svg class="octicon octicon-repo UnderlineNav-octicon hide-sm" height="16" viewBox="0 0 16 16" version="1.1"
+        width="16">
+        <path fill-rule="evenodd"
+          d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z">
+        </path>
+      </svg>
+      Posts
+      <span class="Counter ">84</span>
+    </a>
+  </nav>
+</div>
+
+      
+      
+<div>
+  <div class="position-relative">
+    <div>
+      
+        
+      
+      <ul>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/common/">Common Knowledges on Path Planning</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="知名研究机构">知名研究机构</h1>
+<h2 id="university-of-pennsylvania">University of Pennsylvania</h2>
+<ul>
+<li>
+<h3 id="grasp-labvijay-kumar">GRASP Lab,Vijay Kumar</h3>
+<ul>
+<li>
+<h4 id="research-interests-planning-control-swarm">Research Interests: planning, control, swarm</h4>
+</li>
+<li>
+<h4 id="homepage"><a href="(www.kumarrobotics.org)">HomePage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="massachusetts-institute-of-technology">Massachusetts Institute of Technology</h2>
+<ul>
+<li>
+<h3 id="jonathan-how">Jonathan How</h3>
+<ul>
+<li>
+<h4 id="research-interests-modelling-control-planning">Research Interests: modelling, control, planning</h4>
+</li>
+<li>
+<h4 id="homepage-1"><a href="www.mit.edu/~jhow">HomePage</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="nicholas-roy">Nicholas Roy</h3>
+<ul>
+<li>
+<h4 id="research-interests-perception-learning">Research Interests: perception, learning</h4>
+</li>
+<li>
+<h4 id="homepage-2"><a href="groups.csail.mit.edu/rrg">HomePage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="carnegie-mellon-university">Carnegie Mellon University</h2>
+<ul>
+<li>
+<h3 id="nathan-michael">Nathan Michael</h3>
+<ul>
+<li>
+<h4 id="homepage-3"><a href="www.rislab.org">HomePage</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="sebastian-scherer">Sebastian Scherer</h3>
+<ul>
+<li>
+<h4 id="research-interests-perception-planning">Research Interests: perception, planning</h4>
+</li>
+<li>
+<h4 id="homepage-4"><a href="theairlab.org">HomePage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="university-of-california-berkeley">University of California, Berkeley</h2>
+<ul>
+<li>
+<h3 id="markus-mueller">Markus Mueller</h3>
+<ul>
+<li>
+<h4 id="research-interests-control-planning">Research Interests: control, planning</h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="eth-zurich">ETH Zurich</h2>
+<ul>
+<li>
+<h3 id="asl-team-roland-siegwart">ASL Team, Roland Siegwart</h3>
+<ul>
+<li>
+<h4 id="research-interests-perception-control">Research Interests: perception, control</h4>
+</li>
+<li>
+<h4 id="homepage-5"><a href="asl.ethz.ch">Homepage</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="raffaello-dandrea">Raffaello D’Andrea</h3>
+<ul>
+<li>
+<h4 id="research-interests--control-swarm">Research Interests : control, swarm</h4>
+</li>
+<li>
+<h4 id="homepage-6"><a href="raffaello.name">Homepage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="university-of-zurich">University of Zurich</h2>
+<ul>
+<li>
+<h3 id="davide-scaramuzza">Davide Scaramuzza</h3>
+<ul>
+<li>
+<h4 id="research-interests--perception-control">Research Interests : perception, control</h4>
+</li>
+<li>
+<h4 id="homepage-7"><a href="rpg.ifi.uzh.ch">Homepage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="hong-kong-university-of-science-technology">Hong Kong University of Science Technology</h2>
+<ul>
+<li>
+<h3 id="shaojie-shen">Shaojie Shen</h3>
+<ul>
+<li>
+<h4 id="research-interests--uav">Research Interests : UAV</h4>
+</li>
+<li>
+<h4 id="homepage-8"><a href="uav.ust.hk">Homepage</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="ming-liu">Ming Liu</h3>
+<ul>
+<li>
+<h4 id="research-interests--ugv">Research Interests : UGV</h4>
+</li>
+<li>
+<h4 id="homepage-9"><a href="ram-lab.com">Homepage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="年轻学者">年轻学者</h1>
+<ul>
+<li>
+<h3 id="helen-oleynikova">Helen Oleynikova</h3>
+<ul>
+<li>
+<h4 id="homepage-10"><a href="helenol.github.io">HomePage</a></h4>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="sikang-liu">Sikang Liu</h3>
+<ul>
+<li>
+<h4 id="homepage-11"><a href="github.com/sikang">HomePage</a></h4>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="路径规划技术图谱">路径规划技术图谱</h1>
+<ul>
+<li>
+<h2 id="前端搜索">前端搜索</h2>
+<ul>
+<li>
+<h3 id="search-based-path-finding">SEARCH-BASED PATH FINDING</h3>
+<ul>
+<li>Graph Search Basis</li>
+<li>Dijkstra and A*</li>
+<li>Jump Point Search</li>
+</ul>
+</li>
+<li>
+<h3 id="sampling-based-path-finding">SAMPLING-BASED PATH FINDING</h3>
+<ul>
+<li>Probabilistic Road Map</li>
+<li>Rapidly-exploring Random Tree (RRT)</li>
+<li>Optimal Sampling-based Methods</li>
+<li>Advanced Sampling-based Methods</li>
+</ul>
+</li>
+<li>
+<h3 id="kinodynamic-path-finding">KINODYNAMIC PATH FINDING</h3>
+<ul>
+<li>State-state Boundary Value Optimal Control Problem</li>
+<li>State Lattice Search</li>
+<li>Kinodynamic RRT*</li>
+<li>Hybrid A*</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="后端优化">后端优化</h2>
+<ul>
+<li>
+<h3 id="minimum-snap-trajectory-generation">MINIMUM SNAP TRAJECTORY GENERATION</h3>
+<ul>
+<li>Differential Flatness</li>
+<li>Minimum Snap Optimization</li>
+<li>Closed-form Solution to Minimum Snap</li>
+<li>Time Allocation</li>
+<li></li>
+</ul>
+</li>
+<li>
+<h3 id="soft-and-hard-constrained-trajectory-optimization">SOFT AND HARD CONSTRAINED TRAJECTORY OPTIMIZATION</h3>
+<ul>
+<li>Soft Constrained Trajectory Optimization</li>
+<li>Hard Constrained Trajectory Optimization</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="地图">地图</h1>
+<h2 id="地图种类">地图种类</h2>
+<ul>
+<li>
+<h3 id="占据栅格图occupancy-grid-map">占据栅格图(Occupancy grid map)</h3>
+<ul>
+<li>最稠密</li>
+<li>结构化好</li>
+<li>直接索引</li>
+<li><a href="https://github.com/ANYbotics/grid_map">源码链接</a></li>
+</ul>
+</li>
+<li>
+<h3 id="八叉树地图octo-map">八叉树地图(Octo-map)</h3>
+<ul>
+<li>稀疏</li>
+<li>结构化好</li>
+<li>非直接索引</li>
+</ul>
+</li>
+<li>
+<h3 id="体素哈希地图voxel-hashing">体素哈希地图(Voxel hashing)</h3>
+<ul>
+<li>最稀疏</li>
+<li>结构化好</li>
+<li>非直接索引</li>
+<li><a href="https://github.com/niessner/VoxelHashing">源码链接</a></li>
+</ul>
+</li>
+<li>
+<h3 id="点云地图point-cloud-map">点云地图(Point cloud map)</h3>
+<ul>
+<li><a href="http://pointclouds.org/">PCL</a></li>
+</ul>
+</li>
+<li>
+<h3 id="截断的符号距离场地图truncated-signed-distance-functions-map-tsdf">截断的符号距离场地图(Truncated Signed Distance Functions map, TSDF)</h3>
+<ul>
+<li><a href="https://github.com/personalrobotics/OpenChisel">源码链接</a></li>
+</ul>
+</li>
+<li>
+<h3 id="欧几里得符号距离场地图euclidean-signed-distance-functions-map-esdf">欧几里得符号距离场地图(Euclidean Signed Distance Functions map, ESDF)</h3>
+<ul>
+<li><a href="https://github.com/ethz-asl/voxblox">VoxBlox</a></li>
+<li><a href="https://github.com/HKUST-Aerial-Robotics/FIESTA">FIESTA</a></li>
+<li><a href="https://github.com/HKUST-Aerial-Robotics/Teach-Repeat-Replan">TRR’s Local Map</a></li>
+</ul>
+</li>
+<li>
+<h3 id="free-space-roadmap">Free-space Roadmap</h3>
+<ul>
+<li><a href="https://github.com/HKUST-Aerial-Robotics/Teach-Repeat-Replan">源码链接</a></li>
+</ul>
+</li>
+<li>
+<h3 id="维诺图voronoi-diagram-map">维诺图(Voronoi Diagram map)</h3>
+<ul>
+<li><a href="https://github.com/ethz-asl/mav_voxblox_planning">源码链接</a></li>
+</ul>
+</li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/cross-entropy-motion-planning/">Cross-entropy Motion Planning</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="cross-entropy-motion-planning">Cross-entropy Motion Planning</h1>
+<ul>
+<li><a href="http://www.roboticsproceedings.org/rss07/p22.pdf">论文连接</a></li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/dijkstra-astar/">Dijkstra and A*</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h3 id="可视化链接"><a href="http://qiao.github.io/PathFinding.js/visual/">可视化链接</a></h3>
+<h1 id="dijkstra">Dijkstra</h1>
+<ul>
+<li>优势：完备性、最优性得到保证</li>
+<li>劣势：节点扩展时没有方向的引导</li>
+</ul>
+<hr>
+<h1 id="a">A*</h1>
+<ul>
+<li>增加了启发值的Dijkstra</li>
+<li>启发值H(n)一般是指当前节点n到终点的距离(曼哈顿距离、欧氏距离)，<strong>H(n)一定要比真实的n到终点距离小(admissible)</strong>，否则A*算法不是最优解</li>
+<li>曼哈顿距离不一定是admissible、欧氏距离一定是admissible</li>
+</ul>
+<h1 id="weighted-a">Weighted A*</h1>
+<ul>
+<li>f = g + w×h，w&gt;1。</li>
+<li>通过调节w，可以让搜索时间加快，但是最优性不能得到保证</li>
+</ul>
+<h1 id="启发函数的设计技巧">启发函数的设计技巧</h1>
+<ul>
+<li>要尽可能接近当前节点n到终点的真实距离(tight)
+<ul>
+<li>在栅格环境下，可斜对角运动时，Diagonal Heuristic &gt; Euclidean Heuristic &gt; Manhattan Heuristic</li>
+</ul>
+</li>
+<li>Tie Breaker
+<ul>
+<li>很多节点的f是一样的，增加了搜索量。通过修改h，可以让他们有细微的差别：h = h*(1.0+p)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="hybrid-a">Hybrid A*</h1>
+<ul>
+<li>
+<h2 id="核心思路">核心思路</h2>
+<ul>
+<li>A*是直接将grid的中点作为路径点，Hybrid A*在每个grid里面维护一个具体的点</li>
+<li>可以用A*的搜索结果作为启发值，更加tight</li>
+<li>扩展邻节点的时候，不是向四周扩展，而是向车辆的运动方向，在满足运动约束的运动范围内扩展</li>
+<li>当接近终点时，以一定的概率触发one-shot heuristic，就是直接从当前节点到终点求解obvp，只要无碰撞就算是找到最优路径了。</li>
+</ul>
+</li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/jps/">Jump Point Search</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="jps">JPS</h1>
+<ul>
+<li>JPS的算法框架和A*是一样的，但是节点的扩展规则不一样。A*是无差别扩展每个节点的邻节点。而JPS是跳跃着扩展。</li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/optimization/">Optimization</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="优化目标">优化目标</h1>
+<ul>
+<li>
+<h2 id="minimum-snap-optimization">Minimum Snap Optimization</h2>
+<ul>
+<li>轨迹的能量消耗最小</li>
+<li>7次多项式拟合</li>
+</ul>
+</li>
+<li>
+<h2 id="minimum-jerk-optimization">Minimum Jerk Optimization</h2>
+<ul>
+<li>轨迹的舒适度最高</li>
+<li>5次多项式拟合</li>
+</ul>
+</li>
+</ul>
+<h1 id="约束">约束</h1>
+<ul>
+<li>
+<h2 id="约束项">约束项</h2>
+<ul>
+<li>起点终点状态约束</li>
+<li>中间点位置约束</li>
+<li>连续性约束</li>
+<li>障碍物避碰（带入非凸性)</li>
+</ul>
+</li>
+<li>
+<h2 id="约束类型">约束类型</h2>
+<ul>
+<li>
+<h2 id="硬约束">硬约束</h2>
+<ul>
+<li>一旦优化过程中出现不满足约束条件的状态，问题就不可解</li>
+<li>对所有安全空间同等对待</li>
+<li>对噪声非常敏感</li>
+</ul>
+</li>
+<li>
+<h2 id="软约束">软约束</h2>
+<ul>
+<li>即使出现不满足约束条件的状态，依然可以继续求解最优解</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="时间分配">时间分配</h1>
+<ul>
+<li>在轨迹优化的过程中，相邻两个全局离散点中间的运动时间是需要事先设定的。</li>
+<li>时间分配将很大程度影响到轨迹的形状</li>
+<li>
+<h2 id="简单方法">简单方法</h2>
+<ul>
+<li>假设两点间的运动都是加速到最大，减速到0的过程，计算消耗时间</li>
+<li>假设两点间的运动是期望速度的匀速运动</li>
+<li>
+<h4 id="简单方法看起来很傻但是在基于飞行走廊的轨迹优化中效果很好因为飞行走廊实际上给了中间点位置调整的空间">简单方法看起来很傻，但是在基于飞行走廊的轨迹优化中效果很好，因为飞行走廊实际上给了中间点位置调整的空间。</h4>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="最优方法">最优方法</h2>
+<ul>
+<li>将整条轨迹总时间加入优化目标</li>
+<li>将每一段所分配的时间加入待优化目标中</li>
+<li>求解优化结果</li>
+</ul>
+</li>
+</ul>
+<h1 id="凸优化问题解决方法">凸优化问题解决方法</h1>
+<ul>
+<li>
+<h2 id="方法">方法</h2>
+<ul>
+<li>闭式解</li>
+<li>Linear Programming (LP)</li>
+<li>Quadratic Programming (QP)</li>
+<li>Quadratically Constrained QP (QCQP)</li>
+<li>Second-Order Cone Programming (SOCP)</li>
+</ul>
+</li>
+<li>
+<h2 id="库">库</h2>
+<ul>
+<li>CVX(matlab)</li>
+<li>Mosek(可以解决几乎所有的凸优化问题，非常鲁棒，只提供x86执行文件)</li>
+<li>OOQP(可求解二次规划，非常快速，代码开源)</li>
+<li>GLPK(可求解线性规划，非常快速，代码开源)</li>
+<li>OSQP(百度Apollo用的二次规划求解器)</li>
+<li><a href="https://yalmip.github.io/allsolvers/">优化器大全</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="数值稳定性">数值稳定性</h1>
+<ul>
+<li>
+<h2 id="normalization">Normalization</h2>
+<ul>
+<li>
+<h3 id="time-normalization">Time normalization</h3>
+<ul>
+<li>在对全局路径点进行分段优化的时候，每一段起点的时间Tn都设为0，终点时间Tn+1 = Tn+1 - Tn</li>
+</ul>
+</li>
+<li>
+<h3 id="problem-scale-spatial-normalization">Problem scale (spatial) normalization</h3>
+<ul>
+<li>假如轨迹优化是在一个大尺度场景下进行，路点的坐标在数值会有巨大的差异，需要通过某些手段将坐标值进行预处理</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="一些工程问题">一些工程问题</h1>
+<ul>
+<li>
+<h2 id="对三个轴同时优化好还是分别优化好">对三个轴同时优化好还是分别优化好？</h2>
+<ul>
+<li>分别优化更加稳定和快速</li>
+</ul>
+</li>
+<li>
+<h2 id="闭式解永远是更好的吗">闭式解永远是更好的吗？</h2>
+<ul>
+<li>当矩阵运算非常消耗资源时，数值优化更加鲁棒些</li>
+<li>Mosek非常非常的稳定</li>
+</ul>
+</li>
+<li>
+<h2 id="多项式可以在任何场合下作为最优轨迹的表达式吗">多项式可以在任何场合下作为最优轨迹的表达式吗？</h2>
+<ul>
+<li>大部分时候可以，但也有例外</li>
+<li>当优化目标不是单一的平方项的时候(jerk*jerk + snap*snap)，多项式形式就不是轨迹的最优解形式了</li>
+</ul>
+</li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/osqp/">OSQP</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="基本信息">基本信息</h1>
+<ul>
+<li><a href="https://osqp.org/docs/get_started/sources.html">官网</a></li>
+<li>二次规划库，同OOQP</li>
+</ul>
+<h1 id="使用方式">使用方式</h1>
+<ul>
+<li>
+<h2 id="问题描述">问题描述</h2>
+</li>
+<li>
+<p><img src="https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/osqp-demo.png" alt="source-codes-demo"></p>
+</li>
+<li>
+<h2 id="python代码">Python代码</h2>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl">    <span class="kn">import</span> <span class="nn">osqp</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Define problem data</span>
+</span></span><span class="line"><span class="cl">    <span class="n">P</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">([[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">A</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">csc_matrix</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Create an OSQP object</span>
+</span></span><span class="line"><span class="cl">    <span class="n">prob</span> <span class="o">=</span> <span class="n">osqp</span><span class="o">.</span><span class="n">OSQP</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Setup workspace and change alpha parameter</span>
+</span></span><span class="line"><span class="cl">    <span class="n">prob</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Solve problem</span>
+</span></span><span class="line"><span class="cl">    <span class="n">res</span> <span class="o">=</span> <span class="n">prob</span><span class="o">.</span><span class="n">solve</span><span class="p">()</span>
+</span></span></code></pre></div><ul>
+<li>简单易懂</li>
+</ul>
+<hr>
+<ul>
+<li>
+<h2 id="cc代码">C/C++代码</h2>
+</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-c++" data-lang="c++"><span class="line"><span class="cl">    <span class="cp">#include</span> <span class="cpf">&#34;osqp.h&#34;</span><span class="cp">
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl">    <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="c1">// Load problem data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">c_float</span> <span class="n">P_x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="p">};</span><span class="c1">//目标矩阵的非零值
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">c_int</span> <span class="n">P_nnz</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>                   <span class="c1">//目标矩阵的非零值的个数
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">c_int</span> <span class="n">P_i</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="p">};</span>        <span class="c1">//目标矩阵的非零值所在的row，与P_x一一对应
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">      <span class="c1">//P_p[i]=n,P_p[i+1]=m, 表示
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">//for k from n to m:
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="c1">//  将P_x[k]填在第i列，P_i[k]行
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">c_int</span> <span class="n">P_p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">};</span>        <span class="c1">//每一列的第一个非零元素所对应的P_x数组的indice，最后一个值肯定是P_nnz
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_float</span> <span class="n">q</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_float</span> <span class="n">A_x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_int</span> <span class="n">A_nnz</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_int</span> <span class="n">A_i</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_int</span> <span class="n">A_p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_float</span> <span class="n">l</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_float</span> <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="p">};</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">c_int</span> <span class="n">m</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Exitflag
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">c_int</span> <span class="n">exitflag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Workspace structures
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">OSQPWorkspace</span> <span class="o">*</span><span class="n">work</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="n">OSQPSettings</span>  <span class="o">*</span><span class="n">settings</span> <span class="o">=</span> <span class="p">(</span><span class="n">OSQPSettings</span> <span class="o">*</span><span class="p">)</span><span class="n">c_malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">OSQPSettings</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">      <span class="n">OSQPData</span>      <span class="o">*</span><span class="n">data</span>     <span class="o">=</span> <span class="p">(</span><span class="n">OSQPData</span> <span class="o">*</span><span class="p">)</span><span class="n">c_malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">OSQPData</span><span class="p">));</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Populate data
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">n</span> <span class="o">=</span> <span class="n">n</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">m</span> <span class="o">=</span> <span class="n">m</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">P</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span> <span class="n">data</span><span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span> <span class="n">P_nnz</span><span class="p">,</span> <span class="n">P_x</span><span class="p">,</span> <span class="n">P_i</span><span class="p">,</span> <span class="n">P_p</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">A</span> <span class="o">=</span> <span class="n">csc_matrix</span><span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">m</span><span class="p">,</span> <span class="n">data</span><span class="o">-&gt;</span><span class="n">n</span><span class="p">,</span> <span class="n">A_nnz</span><span class="p">,</span> <span class="n">A_x</span><span class="p">,</span> <span class="n">A_i</span><span class="p">,</span> <span class="n">A_p</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">l</span> <span class="o">=</span> <span class="n">l</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="n">data</span><span class="o">-&gt;</span><span class="n">u</span> <span class="o">=</span> <span class="n">u</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Define solver settings as default
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="n">settings</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="n">osqp_set_default_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">settings</span><span class="o">-&gt;</span><span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span> <span class="c1">// Change alpha parameter
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Setup workspace
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">exitflag</span> <span class="o">=</span> <span class="n">osqp_setup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">work</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">settings</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Solve Problem
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="n">osqp_solve</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="c1">// Cleanup
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">A</span><span class="p">)</span> <span class="n">c_free</span><span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">A</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">P</span><span class="p">)</span> <span class="n">c_free</span><span class="p">(</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">P</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">        <span class="n">c_free</span><span class="p">(</span><span class="n">data</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="p">(</span><span class="n">settings</span><span class="p">)</span> <span class="n">c_free</span><span class="p">(</span><span class="n">settings</span><span class="p">);</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">exitflag</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">};</span>
+</span></span></code></pre></div><hr>
+<ul>
+<li>
+<h2 id="apollo基于osqp的minimum-jerk-path-optimization">Apollo基于osqp的minimum jerk path optimization</h2>
+</li>
+</ul>
+<pre tabindex="0"><code>    void PiecewiseJerkPathProblem::CalculateKernel(std::vector&lt;c_float&gt;* P_data,
+                                                  std::vector&lt;c_int&gt;* P_indices,
+                                                  std::vector&lt;c_int&gt;* P_indptr) {
+      const int n = static_cast&lt;int&gt;(num_of_knots_);
+      const int num_of_variables = 3 * n;
+      const int num_of_nonzeros = num_of_variables + (n - 1);
+      std::vector&lt;std::vector&lt;std::pair&lt;c_int, c_float&gt;&gt;&gt; columns(num_of_variables);
+      int value_index = 0;
+
+      // x(i)^2 * (w_x + w_x_ref)
+      for (int i = 0; i &lt; n - 1; ++i) {
+        columns[i].emplace_back(
+            i, (weight_x_ + weight_x_ref_) / (scale_factor_[0] * scale_factor_[0]));
+        ++value_index;
+      }
+      // x(n-1)^2 * (w_x + w_x_ref + w_end_x)
+      columns[n - 1].emplace_back(
+          n - 1, (weight_x_ + weight_x_ref_ + weight_end_state_[0]) /
+                    (scale_factor_[0] * scale_factor_[0]));
+      ++value_index;
+
+      // x(i)&#39;^2 * w_dx
+      for (int i = 0; i &lt; n - 1; ++i) {
+        columns[n + i].emplace_back(
+            n + i, weight_dx_ / (scale_factor_[1] * scale_factor_[1]));
+        ++value_index;
+      }
+      // x(n-1)&#39;^2 * (w_dx + w_end_dx)
+      columns[2 * n - 1].emplace_back(2 * n - 1,
+                                      (weight_dx_ + weight_end_state_[1]) /
+                                          (scale_factor_[1] * scale_factor_[1]));
+      ++value_index;
+
+      auto delta_s_square = delta_s_ * delta_s_;
+      // x(i)&#39;&#39;^2 * (w_ddx + 2 * w_dddx / delta_s^2)
+      columns[2 * n].emplace_back(2 * n,
+                                  (weight_ddx_ + weight_dddx_ / delta_s_square) /
+                                      (scale_factor_[2] * scale_factor_[2]));
+      ++value_index;
+      for (int i = 1; i &lt; n - 1; ++i) {
+        columns[2 * n + i].emplace_back(
+            2 * n + i, (weight_ddx_ + 2.0 * weight_dddx_ / delta_s_square) /
+                          (scale_factor_[2] * scale_factor_[2]));
+        ++value_index;
+      }
+      columns[3 * n - 1].emplace_back(
+          3 * n - 1,
+          (weight_ddx_ + weight_dddx_ / delta_s_square + weight_end_state_[2]) /
+              (scale_factor_[2] * scale_factor_[2]));
+      ++value_index;
+
+      // -2 * w_dddx / delta_s^2 * x(i)&#39;&#39; * x(i + 1)&#39;&#39;
+      for (int i = 0; i &lt; n - 1; ++i) {
+        columns[2 * n + i].emplace_back(2 * n + i + 1,
+                                        (-2.0 * weight_dddx_ / delta_s_square) /
+                                            (scale_factor_[2] * scale_factor_[2]));
+        ++value_index;
+      }
+
+      CHECK_EQ(value_index, num_of_nonzeros);
+
+      int ind_p = 0;
+      for (int i = 0; i &lt; num_of_variables; ++i) {
+        P_indptr-&gt;push_back(ind_p);
+        for (const auto&amp; row_data_pair : columns[i]) {
+          P_data-&gt;push_back(row_data_pair.second * 2.0);
+          P_indices-&gt;push_back(row_data_pair.first);
+          ++ind_p;
+        }
+      }
+      P_indptr-&gt;push_back(ind_p);
+    }
+</code></pre>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/prm/">Probabilistic Road Map</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="probabilistic-road-map">Probabilistic Road Map</h1>
+<ul>
+<li>
+<h2 id="介绍">介绍</h2>
+<ul>
+<li>结构：学习+查询</li>
+<li>学习
+<ul>
+<li>在状态空间内撒点</li>
+<li>删掉障碍物内的点</li>
+<li>针对每个点，将其与周围一定半径内的其他点连接起来</li>
+<li>若两点间的线段与障碍物发生碰撞，删除该连接</li>
+</ul>
+</li>
+<li>查询
+<ul>
+<li>利用Dijstra或者A*算法进行搜索</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="优劣势">优劣势</h2>
+<ul>
+<li>概率完备</li>
+<li>效率低</li>
+</ul>
+</li>
+<li>
+<h2 id="改进方式">改进方式</h2>
+<ul>
+<li>Lazy collision-checking
+<ul>
+<li>撒点和构建两点之间的连接时不检查是否与障碍物碰撞</li>
+<li>在路径已经搜索出来之后，查看当前路径有哪些路段发生了碰撞，删除碰撞路段</li>
+<li>重新搜索</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="http://localhost:1313/post/robotics/path_planning/rrt/">Rapidly-exploring Random Tree</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                <h1 id="rapidly-exploring-random-tree">Rapidly-exploring Random Tree</h1>
+<ul>
+<li>
+<h2 id="介绍">介绍</h2>
+<ul>
+<li>通过在状态空间内随机撒点，控制路径树的生长点和生长方向</li>
+</ul>
+</li>
+<li>
+<h2 id="算法流程">算法流程</h2>
+</li>
+</ul>
+<pre tabindex="0"><code>  输入：x_init, x_goal, Map
+  Tree.init()
+  for i = 1 to n
+    x_rand = Sample(Map)
+    x_near = Near(x_rand, Tree)
+    x_new = Steer(x_near, x_rand, StepSize)
+    e[i] = Edge(x_new, x_steer)
+    if CollisionFree(Map, e[i])
+      Tree.addNode(x_new)
+      Tree.addEdge(e[i])
+    if x_new == x_goal
+      Success()
+</code></pre><ul>
+<li>
+<h2 id="优劣势">优劣势</h2>
+<ul>
+<li>比RMP更加具有方向性</li>
+<li>非最优解</li>
+<li>效率低</li>
+<li>在整个空间中采样</li>
+</ul>
+</li>
+<li>
+<h2 id="改进方式">改进方式</h2>
+<ul>
+<li>用KDTree存储路径树中的点，加速查找x_near</li>
+<li>Bidirectional RRT，从起点终点一起生长，直到两者相交</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="rrt">RRT*</h1>
+<ul>
+<li>
+<h2 id="算法流程-1">算法流程</h2>
+</li>
+</ul>
+<pre tabindex="0"><code>  输入：x_init, x_goal, Map
+  Tree.init()
+  for i = 1 to n
+    x_rand = Sample(Map)
+    x_near = Near(x_rand, Tree)
+    x_new = Steer(x_near, x_rand, StepSize)
+    if CollisionFree(Map, e[i])
+      xs_near = NearC(Tree, x_new)
+      x_min = ChooseParent(xs_near)
+      e[i] = Edge(x_new, x_min)
+      Tree.addNode(x_new)
+      Tree.addEdge(e[i])
+      Tree.rewire()
+    if x_new == x_goal
+      Success()
+</code></pre><ul>
+<li>
+<h2 id="细节展示">细节展示</h2>
+</li>
+<li>ChooseParent，如图所示，x_new是由x_2生长出来的，但不是直接将x_2作为x_new的父，而是从一个固定的半径范围内选择到达x_new的总路程最短的节点作为父节点。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/xwlu/xwlu.github.io/master/images/wiki/path-planning/rrt-choose-parent1.png" alt="ChooseParent"></p>
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
+                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
+                Mon, 01 Jan 0001 00:00:00 &#43;0000
+              </relative-time>
+            </div>
+          </div>
+        </li>
+        
+      </ul>
+      <div class="paginate-container">
+        <div class="BtnGroup">
+          
+          <button class="btn btn-outline BtnGroup-item" disabled="disabled">Previous</button>
+          
+          
+          <button class="btn btn-outline BtnGroup-item" disabled="disabled">Next</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      
+    </div>
+  </div>
+</div>
+<script>
+window.onscroll = function (e) {
+  const headerImg = document.querySelector('#headerImg');
+  const headerStuck = document.querySelector('#headerStuck');
+  if (headerImg.getBoundingClientRect().bottom <= 0) {
+    headerStuck.classList.add('is-stuck');
+    if (window.innerWidth >= 1280) {
+      headerStuck.setAttribute('style', 'top: 12px;')
+    } else {
+      headerStuck.setAttribute('style', 'top: 0;')
+    }
+  } else {
+    headerStuck.classList.remove('is-stuck');
+  }
+};
+
+var style = localStorage.getItem('data-color-mode')
+githubIconElement = document.getElementById('github-icon')
+twitterIconElement = document.getElementById('twitter-icon')
+if (style == 'light') {
+  if (githubIconElement) githubIconElement.setAttribute('fill', '#24292e')
+  if (twitterIconElement) twitterIconElement.setAttribute('fill', 'black')
+}
+else {
+  if (githubIconElement) {
+    githubIconElement.removeAttribute('fill')
+    githubIconElement.setAttribute('class', 'octicon')
+    githubIconElement.setAttribute('color', '#f0f6fc')
+  }
+  if (twitterIconElement)  twitterIconElement.setAttribute('fill', 'white') 
+}
+</script>
+
+  
+
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="http://localhost:1313/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="http://localhost:1313/js/github-style.js"></script>
+
+
+
+
+
+
+
+</html>
