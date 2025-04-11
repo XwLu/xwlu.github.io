@@ -6,7 +6,7 @@
     <description>Recent content on 朝花夕拾</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 11 Apr 2025 15:40:51 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 11 Apr 2025 15:53:26 +0800</lastBuildDate>
     <atom:link href="https://xwlu.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bezier Curve Optimization</title>
@@ -72,6 +72,13 @@
       <description>Paper Reading Notes of GenAD</description>
     </item>
     <item>
+      <title>GoalFlow</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/goal_flow/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/goal_flow/</guid>
+      <description>Paper Reading Notes of GoalFlow</description>
+    </item>
+    <item>
       <title>Jump Point Search</title>
       <link>https://xwlu.github.io/post/robotics/path_planning/jps/</link>
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
@@ -119,13 +126,6 @@
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
       <guid>https://xwlu.github.io/post/robotics/path_planning/rrt/</guid>
       <description>description of RRT &amp;amp; RRT*</description>
-    </item>
-    <item>
-      <title>WayFormer</title>
-      <link>https://xwlu.github.io/post/robotics/e2e/goal_flow/</link>
-      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
-      <guid>https://xwlu.github.io/post/robotics/e2e/goal_flow/</guid>
-      <description>Paper Reading Notes of WayFormer</description>
     </item>
     <item>
       <title>WayFormer</title>
