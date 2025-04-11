@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script type="application/javascript" src='https://xwlu.github.io/js/theme-mode.js'></script>
+    <link rel="stylesheet" href='https://xwlu.github.io/css/frameworks.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github.min.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/github-style.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/light.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/dark.css' />
+    <link rel="stylesheet" href='https://xwlu.github.io/css/syntax.css' />
+    <title>WayFormer - 朝花夕拾</title>
+    
+    <link rel="icon" type="image/x-icon" href='/images/github.png'>
+    
+    <meta name="theme-color" content="#1e2327">
+
+    <link rel="stylesheet" href="https://xwlu.github.io/css/custom.css">
+    <script type="text/javascript" src="https://xwlu.github.io/js/custom.js"></script>
+
+    
+    <meta name="description"
+  content="Paper Reading Notes of WayFormer" />
+<meta name="keywords"
+  content='blog, robotics' />
+<meta name="robots" content="noodp" />
+<link rel="canonical" href="https://xwlu.github.io/post/robotics/e2e/goal_flow/" />
+
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="WayFormer - 朝花夕拾" />
+<meta name="twitter:description"
+  content="Paper Reading Notes of WayFormer" />
+<meta name="twitter:site" content="https://xwlu.github.io/" />
+<meta name="twitter:creator" content="" />
+<meta name="twitter:image"
+  content="https://xwlu.github.io/">
+
+
+<meta property="og:type" content="article" />
+<meta property="og:title" content="WayFormer - 朝花夕拾">
+<meta property="og:description"
+  content="Paper Reading Notes of WayFormer" />
+<meta property="og:url" content="https://xwlu.github.io/post/robotics/e2e/goal_flow/" />
+<meta property="og:site_name" content="WayFormer" />
+<meta property="og:image"
+  content="https://xwlu.github.io/">
+<meta property="og:image:width" content="2048">
+<meta property="og:image:height" content="1024">
+
+<meta property="article:published_time" content="2025-04-02 11:08:42 &#43;0800 CST" />
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+
+<body>
+  <div style="position: relative">
+  <header class="Header js-details-container Details px-3 px-md-4 px-lg-5 flex-wrap flex-md-nowrap open Details--on">
+    <div class="Header-item mobile-none" style="margin-top: -4px; margin-bottom: -4px;">
+      <a class="Header-link" href="https://xwlu.github.io/">
+        <img class="octicon" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item d-md-none">
+      <button class="Header-link btn-link js-details-target" type="button"
+        onclick="document.querySelector('#header-search').style.display = document.querySelector('#header-search').style.display == 'none'? 'block': 'none'">
+        <svg height="24" class="octicon octicon-three-bars" viewBox="0 0 16 16" version="1.1" width="24">
+          <path fill-rule="evenodd" d="M1 2.75A.75.75 0 011.75 2h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 2.75zm0 5A.75.75 0 011.75 7h12.5a.75.75 0 110 1.5H1.75A.75.75 0 011 7.75zM1.75 12a.75.75 0 100 1.5h12.5a.75.75 0 100-1.5H1.75z">
+          </path>
+        </svg>
+      </button>
+    </div>
+    <div style="display: none;" id="header-search"
+      class="Header-item Header-item--full flex-column flex-md-row width-full flex-order-2 flex-md-order-none mr-0 mr-md-3 mt-3 mt-md-0 Details-content--hidden-not-important d-md-flex">
+      <div
+        class="Header-search header-search flex-auto js-site-search position-relative flex-self-stretch flex-md-self-auto mb-3 mb-md-0 mr-0 mr-md-3 scoped-search site-scoped-search js-jump-to">
+        <div class="position-relative">
+          
+          <form target="_blank" action="https://www.google.com/search" accept-charset="UTF-8" method="get"
+            autocomplete="off">
+            <label
+              class="Header-search-label form-control input-sm header-search-wrapper p-0 js-chromeless-input-container header-search-wrapper-jump-to position-relative d-flex flex-justify-between flex-items-center">
+              <input type="text"
+                class="Header-search-input form-control input-sm header-search-input jump-to-field js-jump-to-field js-site-search-focus js-site-search-field is-clearable"
+                name="q" value="" placeholder="Search" autocomplete="off">
+              <input type="hidden" name="q" value="site:https://xwlu.github.io/">
+            </label>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+
+    <div class="Header-item Header-item--full flex-justify-center d-md-none position-relative">
+      <a class="Header-link " href="https://xwlu.github.io/">
+        <img class="octicon octicon-mark-github v-align-middle" height="32" width="32" src="/images/github-mark-white.png">
+      </a>
+    </div>
+    <div class="Header-item" style="margin-right: 0;">
+      <a href="javascript:void(0)" class="Header-link no-select" onclick="switchTheme()">
+        <svg style="fill: var(--color-profile-color-modes-toggle-moon);" class="no-select" viewBox="0 0 16 16"
+          version="1.1" width="16" height="16">
+          <path fill-rule="evenodd" clip-rule="evenodd"
+            d="M4.52208 7.71754C7.5782 7.71754 10.0557 5.24006 10.0557 2.18394C10.0557 1.93498 10.0392 1.68986 10.0074 1.44961C9.95801 1.07727 10.3495 0.771159 10.6474 0.99992C12.1153 2.12716 13.0615 3.89999 13.0615 5.89383C13.0615 9.29958 10.3006 12.0605 6.89485 12.0605C3.95334 12.0605 1.49286 10.001 0.876728 7.24527C0.794841 6.87902 1.23668 6.65289 1.55321 6.85451C2.41106 7.40095 3.4296 7.71754 4.52208 7.71754Z">
+          </path>
+        </svg>
+      </a>
+    </div>
+  </header>
+</div>
+
+  <div id="search-result" class="container-lg px-3 new-discussion-timeline" style="display: none;">
+</div>
+
+  
+<div class="application-main">
+  <div>
+  <main>
+    <div class="gisthead pagehead bg-gray-light pb-0 pt-3 mb-4">
+      <div class="px-0">
+        <div class="mb-3 d-flex px-3 px-md-3 px-lg-5">
+          <div class="flex-auto min-width-0 width-fit mr-3">
+            <div class="d-flex">
+              <div class="d-none d-md-block">
+                <a class="avatar mr-2 flex-shrink-0" href="https://xwlu.github.io/">
+                  <img class=" avatar-user"
+                    src="/images/avatar.png"
+                    width="32" height="32"></a>
+              </div>
+              <div class="d-flex flex-column">
+                <h1 class="break-word f3 text-normal mb-md-0 mb-1">
+                  <span class="author">
+                    <a href="https://xwlu.github.io/">looyifan</a>
+                  </span>
+                  <span class="path-divider">/</span>
+                  <strong class="css-truncate css-truncate-target mr-1" style="max-width: 410px">
+                    <a href="https://xwlu.github.io/post/robotics/e2e/goal_flow/">WayFormer</a>
+                  </strong>
+                </h1>
+                <div class="note m-0">
+                  Created <relative-time datetime="Wed, 02 Apr 2025 11:08:42 &#43;0800"
+                    class="no-wrap">
+                    Wed, 02 Apr 2025 11:08:42 &#43;0800</relative-time>
+
+                  
+                  <span class="file-info-divider"></span>
+                  Modified <relative-time datetime="Fri, 11 Apr 2025 15:40:51 &#43;0800"
+                    class="no-wrap">
+                    Fri, 11 Apr 2025 15:40:51 &#43;0800</relative-time>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-lg px-3 new-discussion-timeline">
+      <div class="repository-content gist-content">
+        <div>
+          <div class="js-gist-file-update-container js-task-list-container file-box">
+            <div id="file-pytest" class="file my-2">
+              <div id="post-header" class="file-header d-flex flex-md-items-center flex-items-start sticky-header" style="z-index: 2">
+                <div class="file-info d-flex flex-md-items-center flex-items-start flex-order-1 flex-auto">
+                  <div class="text-mono f6 flex-auto pr-3 flex-order-2 flex-md-order-1 mt-2 mt-md-0">
+                    
+                    <summary id="toc-toggle" onclick="clickToc()" class="btn btn-octicon m-0 mr-2 p-2">
+                      <svg aria-hidden="true" viewBox="0 0 16 16" height="16" width="16" class="octicon octicon-list-unordered">
+                        <path fill-rule="evenodd" d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z"></path>
+                      </svg>
+                    </summary>
+                    <details-menu class="SelectMenu" id="toc-details" style="display: none;">
+                      <div class="SelectMenu-modal rounded-3 mt-1" style="max-height: 340px;">
+                        <div class="SelectMenu-list SelectMenu-list--borderless p-2" style="overscroll-behavior: contain;" id="toc-list">
+                        </div>
+                      </div>
+                    </details-menu>
+                      6752 Words
+                    
+
+                  </div>
+                  <div class="file-actions flex-order-2 pt-0">
+                    
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="Box-body px-5 pb-5" style="z-index: 1">
+                <article class="markdown-body entry-content container-lg"><h2 id="贡献">贡献</h2>
+<ul>
+<li>设计了一种创新的目标点确立方法，通过实验验证了其在引导生成模型进行轨迹生成方面的有效性。</li>
+<li>我们将flow matching技术首次引入端到端自动驾驶系统，实现了与目标点引导机制的无缝融合。</li>
+<li>开发了基于影子轨迹的创新轨迹选择机制，通过虚拟轨迹分析有效缓解潜在目标点偏差问题。</li>
+<li>在Navsim仿真平台上，本方法取得了当前最优的测试结果。</li>
+</ul>
+<h2 id="方案">方案</h2>
+<h3 id="预备知识">预备知识</h3>
+<ul>
+<li>相较于扩散模型专注于学习逐步逆向消除时序叠加噪声以恢复数据，flow matching着力于学习数据分布间的可逆映射变换。设\(\pi_{0}\)表示简单分布（通常为标准正态分布\(p(x)=N(x|0,I)\)），\(\pi_{1}\)表示目标分布。设\(x_{0}\)采样自\(\pi_{0}\)分布，\(x_{1}\)采样自\(\pi_{1}\)分布，时间参数\(t\in\lbrack0,1\rbrack\)。定义\(x_{0}\)到\(x_{1}\)的传输路径为直线形式，即中间状态\(x_{t}=(1−t)x_{0}+tx_{1}\)，其演化方向始终由\(x_{1}−x_{0}\)确定。通过构建神经网络\(v_{\theta}\)基于当前状态\(x_{t}\)与时序参数\(t\)预测方向量\(x_{1}−x_{0}\)，可优化\(v_{\theta}(x_{t},t)\)与\(x_{1}−x_{0}\)间的损失函数，从而获得从初始分布\(\pi_{0}\)到目标分布\(\pi_{1}\)的传输路径。</li>
+<li>在此框架下，rectified flow(Flow straight and fast: Learning to generate and transfer data with rectified flow)通过最优传输位移量构建路径，该方法兼具简洁性与高效性。</li>
+</ul>
+<h3 id="概述">概述</h3>
+<ul>
+<li>GoalFlow整体架构包含三个核心模块：在感知模块中，通过融合摄像头图像\(I\)与激光雷达点云\(L\)，提取蕴含环境信息的BEV特征\(F_{bev}\)；目标点构建模块专注于生成精确的轨迹引导信息，通过构建目标点词典并采用评分\(V=\lbrace g_{i}\rbrace^{N}\)机制筛选最优目标点\(g\)；轨迹规划模块首先生成多模态轨迹集合\(T=\lbrace \hat{\tau_{i}} \rbrace^{M}\)，随后通过轨迹评分机制确定最优轨迹\(\tau\)。
+<img src="/images/robotics/e2e/goal_flow/1.png" alt="pic"></li>
+</ul>
+<h3 id="感知模块">感知模块</h3>
+<ul>
+<li>在第一步多模态数据融合中，我们融合图像与激光雷达数据生成BEV特征\(F_{bev}\)以捕获丰富的道路信息。单一传感器存在信息缺失问题：例如激光雷达无法获取交通灯状态，而摄像头难以精确定位物体。</li>
+<li>本工作采用Transfuser架构实现模态融合。前视、左视、右视摄像头视角拼接为单张图像\(I\in R^{3\times H_{1}\times W_{1}}\)，激光雷达点云数据构建为张量\(L\in R^{K\times 3}\)。两类数据经过独立主干网络提取特征后，通过多级Transformer模块进行跨模态特征融合，最终生成全面表征场景的BEV特征\(F_{bev}\)。为确保自车与周边物体及地图信息的有效交互，我们基于高精地图与边界框提供的损失函数对BEV特征实施辅助监督。</li>
+</ul>
+<h3 id="目标点构建模块">目标点构建模块</h3>
+<ul>
+<li>在本模块中，我们通过构建精确目标点为轨迹生成过程提供引导。无约束的基于扩散方法常导致轨迹过度发散，增加轨迹选择复杂度。我们的核心发现在于：目标点包含对短期未来位置的精准描述，可为生成模型施加强约束。因此，将传统规划模块拆分为两步执行：首先构建精确目标点，其次通过规划生成轨迹。</li>
+<li><strong>目标点库</strong>：受VADv2启发，我们通过对轨迹终点空间进行离散化构建候选目标点集，实现不依赖高精地图的解决方案。具体而言，在训练数据中对轨迹端点\(p_{i}=(x_{i},y_{i},\theta_{i})\)进行聚类得到\(N\)个聚类中心，形成目标点词典\(V\)。为确保词典能表征细粒度的空间位置，通常将\(N\)设置为较大数值（4096或8192）。</li>
+</ul>
+<h3 id="目标点选择模块">目标点选择模块</h3>
+<ul>
+<li>高质量轨迹通常具备以下特征：与真实轨迹距离接近且位于可行驶区域内。为此，我们通过距离评分\(\hat{\delta}^{dis}\)与可行驶区域合规评分\(\hat{\delta}^{dac}\)对目标点词典\(V\)中的每个候选点\(g_{i}\)进行双重评估。距离评分衡量目标点\(g_{i}\)与真实轨迹终点\(g^{gt}\)的接近程度，采用连续值表示，取值范围\(\hat{\delta}^{dis}\in\lbrack0,1\rbrack\)，数值越大表示与\(g^{gt}\)越接近；可行驶区域合规评分确保目标点位于合法驾驶区域，采用二元值\(\hat{\delta}^{dac}\in\lbrace 0,1\rbrace\)，1表示目标点符合可行驶区域要求，0则表示处于非驾驶区域。</li>
+<li>为构建目标距离评分\(\hat{\delta_{i}}^{dis}\)，我们采用softmax函数将目标点\(g_{i}\)与真实目标点\(g^{gt}\)之间的欧氏距离映射至\(\lbrack0,1\rbrack\)区间：</li>
+</ul>
+<p>$$\hat{\delta_{i}}^{dis}=\frac{exp(-\Vert g_{i}-g^{gt}\Vert_{2})}{\sum_{j} exp(-\Vert g_{j}-g^{gt}\Vert_{2})}$$</p>
+<ul>
+<li>针对可行驶区域合规评分\(\hat{\delta_{i}}^{dac}\)的构建，我们引入影子车辆概念——其边界框根据目标点\(g_{i}\)的位置与航向角\((x_{i},y_{i},\theta_{i})\)以及自车几何参数确定。设\(\lbrace p^{j}\rbrace^{4}\)表示影子车辆四个角点的位置集合，\(DA \)为表征可行驶区域的多边形区域，则合规评分定义为：</li>
+</ul>
+<p>$$\hat{\delta_{i}}^{dac}=\begin{cases}
+1 &amp;\text{if } \forall j,p^{j} \in DA \
+0 &amp;\text{if } otherwise
+\end{cases}$$</p>
+<ul>
+<li>我们通过综合\(\hat{\delta_{i}}^{dis}\)与\(\hat{\delta_{i}}^{dac}\)计算最终评分，选取最终评分最高的目标点作为轨迹生成依据。</li>
+</ul>
+<p>$$\hat{\delta_{i}}^{final}=w_{1}log\hat{\delta_{i}}^{dis}+w_{2}log\hat{\delta_{i}}^{dac}$$</p>
+<ul>
+<li>如图3(a)所示，基于Transformer的评分解码器以特征向量\(F_{v}\)与\(F_{ego}\)的加和结果作为查询向量，BEV特征\(F_{bev}\)作为键/值向量。解码输出经两个独立的多层感知机(MLP)处理后，为词典\(V\)中各候选点生成\(\hat{\delta}^{dis}\)与\(\hat{\delta}^{dac}\)评分。图3(b)展示了双评分分布可视化结果，其中暖色调点表示更高评分。实验观测表明：\(\hat{\delta}^{dis}\)有效指示期望未来位置，而\(\hat{\delta}^{dac}\)可精准识别目标点是否位于可行驶区域</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/2.png" alt="pic"></p>
+<h3 id="轨迹规划模块">轨迹规划模块</h3>
+<ul>
+<li>在轨迹规划模块中，我们通过生成模型产生受约束的高质量轨迹候选集，并基于评分机制筛选最优轨迹。基于扩散方法的生成模型如DDPM和DDIM通常需要复杂的去噪路径，导致推理阶段产生显著时间开销，难以满足自动驾驶等实时系统的需求。相比之下，基于flow matching中最优传输路径的rectified flow仅需少量推理步骤即可获得理想结果。本工作采用rectified flow作为生成模型，以BEV特征\(F_{bev}\)与目标点\(g\)为条件，生成多模态轨迹集合。</li>
+<li>我们通过建模从噪声分布到目标轨迹分布的迁移过程生成多模态轨迹。在此分布迁移过程中，给定当前状态\(x_{t}\)及时序参数\(t\)预测轨迹偏移量\(v_{t}\)。</li>
+</ul>
+<p>$$v_{t}=\tau^{norm}-x_{0}$$</p>
+<p>$$x_{t} = (1-t)x_{0}+t\tau^{norm}$$</p>
+<p>$$\tau^{norm} = \cal H(\tau^{gt})$$</p>
+<ul>
+<li>其中\(\tau^{gt}\)是轨迹GT，\(\tau^{norm}\)是它的归一化形式。定义\(\cal H(\cdot)\)为轨迹归一化运算。\(x_{0}\)变量表征噪声分布，服从\(x_{0}\thicksim N(0,\sigma^{2}I)\)。通过\(x_{0}\)与\(\tau^{norm}\)的线性插值获得中间状态\(x_{t}\)。</li>
+<li>如图4所示，通过级联编码器提取多维度特征：\(x_{t}\)经线性层编码，时序参数\(t\)与目标点通过正弦编码转化为特征向量，BEV特征\(F_{bev}\)与自车特征\(F_{ego}\)经环境编码器融合获得环境特征\(F_{env}\)。</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/3.png" alt="pic"></p>
+<p>$$F_{env}=E_{env}(Q,(F_{BEV}+F_{ego}),(F_{BEV}+F_{ego}))$$</p>
+<ul>
+<li>其中，\(E_{env}\)指基于Transformer架构的编码器，\( Q\)表示可学习嵌入向量，\(F_{ego}\)表征自车状态特征，其中编码了自车的运动学信息（如速度、加速度等）。</li>
+<li>通过将环境特征\(F_{env}\)、目标点特征\(F_{goal}\)、轨迹特征\(F_{traj}\)及时序特征\(F_{t}\)进行特征拼接，形成综合特征\(F_{all}\)——该特征集成当前状态、时序信息及场景上下文。组合特征随后输入多层注意力网络，最终预测分布迁移量\(v_{t}\)。</li>
+</ul>
+<p>$$\hat{v_{t}}=\cal G(F_{all},F_{all},F_{all})$$</p>
+<p>$$F_{all} = Concat(F_{env}, F_{goal}, F_{traj}, F_{t})$$</p>
+<ul>
+<li>其中，网络\(\cal G\)由\(N\)层注意力模块构成。我们基于噪声分布\(x_{0}\)与预测迁移量\(\hat{v_{t}}\)重构轨迹分布。具体而言，通过修正流执行多次推理步骤，逐步将噪声分布\(x_{0}\)转换为目标分布\(\tau^{norm}\)，最终对\(\tau^{norm}\)实施去归一化处理得到最终轨迹\(\hat{\tau}\)</li>
+</ul>
+<p>$$\hat{\tau} = \cal H^{-1}(\hat{\tau}^{norm})$$</p>
+<p>$$\hat{\tau}^{norm}=x_{0}+\frac{1}{n}\sum_{i}^n\hat{v} _{t _{i}}$$</p>
+<ul>
+<li>式中，\(n\)表示总推理步数，\(t_{i}\)为第\(i\)步采样的时间步参数，满足\(t_{i}\in\lbrack0,1\rbrack\)。\(\cal H^{-1}(\cdot)\)表示去归一化运算，将归一化轨迹恢复至实际物理尺度。</li>
+<li>在轨迹选择环节，SparseDrive与Diffusion-ES等方法需对生成轨迹进行运动学仿真，预测其与周边交通参与者的潜在碰撞风险以筛选最优轨迹，该过程显著增加推理耗时。本方法通过目标点引导实现轨迹选择的流程简化：综合考虑轨迹与目标点的距离偏差及自车行驶进度，借助轨迹评分器完成最优轨迹选择。<em>TODO：没有显示碰撞检测了，只关注导航进度和轨迹终点约束，真的能选出合理的轨迹吗?</em></li>
+</ul>
+<p>$$f(\hat{x} _{i})=-\lambda _{1}\Phi(f _{dis}(\hat{\tau} _{i}))+\lambda _{2}\Phi(f _{pg}(\hat{\tau} _{i}))$$</p>
+<ul>
+<li>式中，\(\Phi(\cdot)\)表示极小极大运算。\(f_{dis}( \hat{\tau_{i}} )\)计算轨迹\(\hat{\tau_{i}}\)与目标点\(g\)的\(L2\)距离偏差，\(f_{pg}(\hat{\tau_{i}})\)评估轨迹\(\hat{\tau_{i}}\)形势进度的\(L_{2}\)距离指标。</li>
+<li>此外，预测目标点可能存在偏差误导轨迹生成。为此，我们在生成阶段对目标点进行屏蔽处理，构建影子轨迹。若影子轨迹与主轨迹呈现显著偏离，则判定该目标点不可靠，转而采用影子轨迹作为最终输出。<em>影子轨迹应该就是没有goal引导的情况下得到的一条fallback轨迹</em></li>
+</ul>
+<h3 id="训练loss">训练Loss</h3>
+<ul>
+<li>首先，我们专门优化感知特征提取器，施加多感知监督损失，包括高精地图交叉熵损失\(L_{HD}\)、3D边界框分类损失\(L_{bbox}\)以及边界框位置回归的\(L_{1}\)损失\(L_{loc}\)。该阶段旨在通过多感知监督增强BEV特征的信息表征能力。具体损失函数定义如下：</li>
+</ul>
+<p>$$L_{perception}=w_{1}L_{HD}+w_{2}L_{bbox}+w_{3}L_{loc}$$</p>
+<ul>
+<li>其中，\(w_{1}=10,w_{2}=1,w_{3}=10\)。对目标生成器的distance score(\(L_{dis}\)) 和 DAC score(\(L_{Ldac}\))采用cross entropy loss，\(w_{4}=1,w_{5}=0.005\)。</li>
+</ul>
+<p>$$L_{goal} = w_{4} L_{dis} + w_{5} L_{dac}$$</p>
+<p>$$L_{dis}=-\sum_{i=i}^{N} \delta_{i}^{dis}log(\hat{\delta}_{i}^{dis})$$</p>
+<p>$$L_{dac} = −\delta^{dac}log\hat{\delta}^{dac}−(1−\delta^{dac})log(1−\hat{\delta}^{dac})$$</p>
+<ul>
+<li>对多模态规划器施加\(L_{1}\)loss</li>
+</ul>
+<p>$$L_{planner} = \vert v_{t} − \hat{v}_{t}\vert$$</p>
+<h2 id="实验">实验</h2>
+<h3 id="数据集">数据集</h3>
+<ul>
+<li>本实验在Openscene数据集完成验证。该数据集包含120小时自动驾驶数据，其端到端仿真环境Navsim采用1192个训练验证场景与136个测试场景，共计超10万样本（采样频率2Hz）。每个样本包含：8个视角的摄像头图像、5个激光雷达的融合点云、自车状态信息以及高精地图与目标物的标注信息。</li>
+</ul>
+<h3 id="评价指标">评价指标</h3>
+<ul>
+<li>在Navsim仿真环境中，生成的2Hz、4秒时长的初始轨迹通过LQR控制器进行插值处理，得到10Hz、4秒时长的平滑轨迹。通过以下闭环指标对轨迹进行综合评分：无责任碰撞率(\(S_{NC}\))、可行驶区域合规率(\(S_{DAC}\))、带边界约束的碰撞时间(\(S_{TTC}\))、自车行驶进度(\(S_{EP}\))、舒适性指数(\(S_{CF}\))及行驶方向合规率(\(S_{DDC}\))。最终评分通过加权聚合上述指标获得。由于实际约束条件限制，\(S_{DDC}\)指标未纳入最终评分计算。</li>
+</ul>
+<p>$$S_{PDM}=S_{NC}\times S_{DAC}\times S_{TTC}\times (\frac{5\times S_{EP} + 5 \times S_{CF} + 2\times S_{DDC} }{12})$$</p>
+<h3 id="基线算法">基线算法</h3>
+<ul>
+<li>恒定速度模型(Constant Velocity)：假设自车保持当前速度匀速前进</li>
+<li>自车状态MLP(Ego Status MLP)：仅以自车当前状态为输入，通过多层感知机生成轨迹</li>
+<li>PDM-Closed：以真实感知为输入，通过基于规则的IDM方法生成多条轨迹，并由PDM评分器筛选最优轨迹</li>
+<li> Transfuser：融合摄像头与激光雷达输入，通过Transformer生成BEV特征用于轨迹生成</li>
+<li>LTF：Transfuser的轻量版本，将激光雷达主干网络替换为可学习嵌入向量，在NavSim中取得与Transfuser相近效果</li>
+<li>UniAD：采用多组Transformer架构差异化处理信息，通过查询机制实现规划专用信息传递</li>
+<li>PARA-Drive：基于BEV特征并行执行地图构建、路径规划、运动预测及占用预测任务，相较UniAD实现方案创新</li>
+</ul>
+<h3 id="模型参数设置">模型参数设置</h3>
+<ul>
+<li>rectified flow的训练遵循无分类器引导范式，通过在条件集中随机掩码特征以增强模型鲁棒性。训练阶段使用真实轨迹的终点指导流匹配过程，测试阶段则通过目标点词典中筛选最高评分点确定轨迹生成目标。采样过程采用非线性重缩放时间步长平滑方法（替代均匀间隔采样）。每次推理生成128/256条候选轨迹，经轨迹评分器筛选确定最优解。所有实验均在4个计算节点上完成，每个节点配置8块RTX 4090或RTX 3090显卡。</li>
+</ul>
+<h3 id="实验结果">实验结果</h3>
+<ul>
+<li>如表1所示，我们将本方法与当前端到端自动驾驶领域多种前沿算法进行对比（最优指标以加粗显示）。Navsim环境测试表明，GoalFlow在综合评分上持续超越其他方法。具体而言，本方法在可行驶区域合规率(DAC)指标上较次优方法提升5.5分，自车行驶进度(EP)指标提升5.7分，证明GoalFlow对车辆行驶区域的约束力更强，有效提升系统安全性。此外，本方法在保障安全的前提下实现了更高的行驶速度。补充实验中，将预测目标点替换为真实轨迹终点时，评分达到92.1分（接近人类驾驶轨迹的94.8分），显著验证目标点在自动驾驶中的强引导能力。</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/4.png" alt="pic"></p>
+<ul>
+<li><strong>消融实验</strong>：
+<ul>
+<li>如表2所示，我们通过消融实验验证各组件对系统性能的影响。其中，M0表示仅采用修正流生成轨迹的基础模型。实验结果显示，M0在Navsim平台上持续超越基线方法，尤其在可行驶区域合规率(DAC)与碰撞时间(TTC)指标表现突出，表明基于流匹配的基础模型有效学习了与地图信息及周边交通参与者的交互规律，验证了流模型自身具备强大的场景建模能力。</li>
+<li>M1在M0基础上引入距离评分分布建模，筛选最高分目标点指导修正流。实验显示该方法带来最显著的性能提升，证实了将轨迹规划任务解耦为&quot;目标点预测→目标点引导轨迹生成&quot;两阶段策略的有效性。具体而言，通过将复杂任务分解为两个更简单的子任务（目标点预测与目标点引导轨迹生成），系统性能获得显著优化。</li>
+<li>M2在M1基础上增加可行驶区域合规评分(DAC)分布预测。主要改进体现在DAC指标上，通过引入多视角评估器，模型得益于更鲁棒的评估体系，从而提升整体表现。</li>
+<li>M3进一步整合包含轨迹选择与目标点验证机制的轨迹评分器，使GoalFlow系统可靠性得到全面提升。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/5.png" alt="pic"></p>
+<ul>
+<li><strong>推理步骤影响分析</strong>
+<ul>
+<li>如表3所示，我们测试了不同去噪步数对系统性能的影响。实验表明：当推理步数从20步递减至1步时，各项评分保持稳定。值得注意的是，即使仅执行单步推理，系统仍能保持优异性能。这凸显了流匹配相较扩散模型的优势——流匹配采用直线型传输路径，在推理阶段仅需少量步骤即可完成噪声分布到目标分布的迁移。当推理步数从20步减至1步时，单样本去噪时间降至原始时间的6%，这种高效推理特性对实时性要求严苛的自动驾驶系统至关重要。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/6.png" alt="pic"></p>
+<ul>
+<li><strong>初始噪声影响研究</strong>
+<ul>
+<li>实验中，初始噪声服从高斯分布\(N(0,\sigma^{2}I)\)。如表4所示，我们探究了噪声方差对轨迹生成的影响。结果表明：噪声设置对评分具有显著影响。当噪声方差过高（\(\sigma=0.3\)时），生成轨迹呈现过度抖动特性，舒适度评分骤降至2.23，表明轨迹形态失去连贯性；反之，当噪声方差过低时，流匹配易退化为回归模型，导致可供筛选的轨迹多样性降低，进而影响整体评分表现。</li>
+</ul>
+</li>
+</ul>
+<p><img src="/images/robotics/e2e/goal_flow/7.png" alt="pic"></p>
+</article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script type="application/javascript" src='https://xwlu.github.io/js/toc.js'></script>
+<link rel="stylesheet" href='https://xwlu.github.io/css/toc.css' />
+
+  
+<div id="gitalk-container" class="gitalk-container"></div>
+<link rel="stylesheet" href='https://xwlu.github.io/css/gitalk.css'>
+<script src='https://xwlu.github.io/js/gitalk.min.js'></script>
+<script>
+  const gitalk = new Gitalk({
+    clientID: '',
+    clientSecret: '',
+    repo: '',
+    owner: '',
+    admin: [''],
+    id: eval( null ), 
+    distractionFreeMode: false 
+  });
+  (function() {
+    gitalk.render('gitalk-container');
+  })();
+</script>
+
+</div>
+
+  <div class="footer container-xl width-full p-responsive">
+  <div
+    class="position-relative d-flex flex-row-reverse flex-lg-row flex-wrap flex-lg-nowrap flex-justify-center flex-lg-justify-between flex-sm-items-center pt-6 pb-2 mt-6 f6 text-gray border-top border-gray-light ">
+    <a aria-label="Homepage" title="GitHub" class="footer-octicon d-none d-lg-block mr-lg-4" href="https://xwlu.github.io/">
+      <svg height="24" class="octicon octicon-mark-github" viewBox="0 0 16 16" version="1.1" width="24">
+        <path fill-rule="evenodd"
+          d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z">
+        </path>
+      </svg>
+    </a>
+    <ul class="list-style-none d-flex flex-wrap col-12 flex-justify-center flex-lg-justify-between mb-2 mb-lg-0">
+      
+      <li class="mr-3 mr-lg-0">Theme by <a href='https://github.com/MeiK2333/github-style'>github-style</a></li>
+      
+      <li class="mr-3 mr-lg-0">GitHub and the Invertocat logo are trademarks of <a href="https://github.com/">GitHub, Inc.</a></li>
+    </ul>
+  </div>
+  <div class="d-flex flex-justify-center pb-6">
+    <span class="f6 text-gray-light"></span>
+  </div>
+
+
+</div>
+
+</body>
+
+<script type="application/javascript" src="https://xwlu.github.io/js/github-style.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"
+  integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"
+  integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+  integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+
+</html>

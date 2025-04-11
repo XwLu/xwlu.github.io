@@ -6,7 +6,7 @@
     <description>Recent content in Posts on 朝花夕拾</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 03 Apr 2025 18:22:41 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 11 Apr 2025 15:40:51 +0800</lastBuildDate>
     <atom:link href="https://xwlu.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Bezier Curve Optimization</title>
@@ -119,6 +119,13 @@
       <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
       <guid>https://xwlu.github.io/post/robotics/path_planning/rrt/</guid>
       <description>description of RRT &amp;amp; RRT*</description>
+    </item>
+    <item>
+      <title>WayFormer</title>
+      <link>https://xwlu.github.io/post/robotics/e2e/goal_flow/</link>
+      <pubDate>Wed, 02 Apr 2025 11:08:42 +0800</pubDate>
+      <guid>https://xwlu.github.io/post/robotics/e2e/goal_flow/</guid>
+      <description>Paper Reading Notes of WayFormer</description>
     </item>
     <item>
       <title>WayFormer</title>

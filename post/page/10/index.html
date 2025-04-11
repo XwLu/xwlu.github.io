@@ -154,7 +154,7 @@
                 </path>
               </svg>
               Posts
-              <span class="Counter">100</span>
+              <span class="Counter">101</span>
             </a>
           </nav>
           <div class="profile-color-modes js-promo-color-modes-banner-profile isInitialToggle">
@@ -455,7 +455,7 @@
         </path>
       </svg>
       Posts
-      <span class="Counter ">100</span>
+      <span class="Counter ">101</span>
     </a>
   </nav>
 </div>
@@ -469,6 +469,32 @@
         
       
       <ul>
+        
+        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
+          <div class="col-12 d-inline-block">
+            <div class="d-inline-block mb-1">
+              <h3 class="wb-break-all">
+                <a href="https://xwlu.github.io/post/languages/c&#43;&#43;/multi-thread/thread-pool/">ThreadPool</a>
+              </h3>
+            </div>
+
+            <div>
+              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
+                ThreadPool for C++
+              </div>
+            </div>
+
+            <div class="f6 text-gray mt-2">
+              
+
+              Created
+              <relative-time datetime=" Wed, 02 Apr 2025 10:32:39 &#43;0800" class="no-wrap"
+                title=" Wed, 02 Apr 2025 10:32:39 &#43;0800">
+                Wed, 02 Apr 2025 10:32:39 &#43;0800
+              </relative-time>
+            </div>
+          </div>
+        </li>
         
         <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
           <div class="col-12 d-inline-block">
@@ -704,147 +730,6 @@
           </div>
         </li>
         
-        <li class="col-12 d-flex width-full py-4 border-bottom color-border-secondary public source">
-          <div class="col-12 d-inline-block">
-            <div class="d-inline-block mb-1">
-              <h3 class="wb-break-all">
-                <a href="https://xwlu.github.io/post/tools/tmux_config/">Tmux Configuration</a>
-              </h3>
-            </div>
-
-            <div>
-              <div class="col-12 d-inline-block text-gray mb-2 pr-4">
-                <h2 id="tmux工作方式">tmux工作方式</h2>
-<ul>
-<li>
-<h3 id="tmux最上级的组织是session操作如下">tmux最上级的组织是session,操作如下:</h3>
-</li>
-</ul>
-<pre tabindex="0"><code>tmux new-session -d -s S -n W1 #构建一个叫S的会话且默认窗口名为W1,S:0或者S:W1都可以访问到该窗口,-d代表在后台运行,不加就会直接在终端显示
-tmux detach #退出当前会话,依然在后台运行
-tmux ls #列出所有会话i
-tmux kill-session -t S #杀掉一个叫S的会话
-</code></pre><ul>
-<li>
-<h3 id="第二层组织是windows构建方式如下">第二层组织是windows,构建方式如下:</h3>
-</li>
-</ul>
-<pre tabindex="0"><code>tmux new-window -t S:1 -n W2 #在S会话下,新建一个窗口S:1,重命名为W2,访问的时候S:1和S:W2都可以访问到该窗口
-tmux select-window -t S:0 #选中第一个窗口
-tmux select-window -t S:W1 #效果同上
-tmux kill-window -t S:W2 #杀掉S会话的W2窗口
-</code></pre><ul>
-<li>
-<h3 id="第三层组织是pane操作方式如下">第三层组织是pane,操作方式如下:</h3>
-</li>
-</ul>
-<pre tabindex="0"><code>tmux selectp -t 0 #选中当前窗口下的第0个pane
-tmux splitw -h -p 50 #从当前pane(编号0)向右按照50:50的比例分裂出新的pane(编号1)
-tmux selectp -t 0 #选中当前窗口下的第0个pane
-tmux splitw -v -p 50 #从当前plane向下按照50:50的比例分裂出新的pane(编号1,原先的编号1--&gt;2)
-tmux selectp -t 0 #选中第0个pane
-tmux send-keys -t &#34;roscore&#34; C-m #在当前选中的pane运行roscore命令
-tmux kill-pane -t 2 #杀掉第2个pane
-</code></pre><h2 id="基本命令如果个性化配置后crtlb要根据自己的配置修改">基本命令(如果个性化配置后,crtl+b要根据自己的配置修改)</h2>
-<ul>
-<li>Ctrl+b &quot; — 水平分割标签</li>
-<li>Ctrl+b % — 竖直分割标签</li>
-<li>Ctrl+b 方向键 — 选择标签</li>
-<li>按住 Ctrl+b不放，并且按方向键 — 调整标签大小</li>
-<li>Ctrl+b c — 创建 (c)reate 一个新窗口</li>
-<li>Ctrl+b n — 转到下一个 (n)ext 窗口</li>
-<li>Ctrl+b p — 转到之前的 (p)revious 窗口</li>
-<li>ctrl+b &amp; — 杀掉当前窗口</li>
-</ul>
-<hr>
-<h2 id="tmux-自启动修改bashrc">tmux 自启动(修改.bashrc)</h2>
-<pre tabindex="0"><code>if [ $TERM != &#34;screen-256color&#34; ] &amp;&amp; [  $TERM != &#34;screen&#34; ]; then
-    tmux attach || tmux new; exit
-fi 
-</code></pre><h2 id="改造tmux">改造tmux</h2>
-<pre tabindex="0"><code>cd ~
-vim .tmux.conf
-</code></pre><h3 id="1更改前缀ctrlb---ctrla">1.更改前缀(ctrl+b -&gt; ctrl+a)</h3>
-<pre tabindex="0"><code>unbind C-b
-set -g prefix C-a
-</code></pre><h3 id="2alt方向键选择标签">2.Alt+方向键选择标签</h3>
-<pre tabindex="0"><code>bind -n M-Left select-pane -L
-bind -n M-Right select-pane -R
-bind -n M-Up select-pane -U
-bind -n M-Down select-pane -D
-</code></pre><h3 id="3活动监听">3.活动监听</h3>
-<h4 id="如果你开了多个窗口可能想当别的窗口发生什么的时候你能收到通知粘贴这段命令">如果你开了多个窗口，可能想当别的窗口发生什么的时候你能收到通知。粘贴这段命令：</h4>
-<pre tabindex="0"><code>setw -g monitor-activity on
-set -g visual-activity on
-</code></pre><h3 id="4用指定的颜色高亮显示当前窗口">4.用指定的颜色高亮显示当前窗口</h3>
-<pre tabindex="0"><code>set-window-option -g window-status-current-bg yellow
-setw -g monitor-activity on
-</code></pre><hr>
-<h2 id="一键启动脚本demo">一键启动脚本demo:</h2>
-<ul>
-<li>
-<h3 id="文件名startsh">文件名<strong>start.sh</strong></h3>
-</li>
-</ul>
-<pre tabindex="0"><code># 创建会话和窗口
-tmux new-session -d -s pickman -n control
-tmux select-window -t pickman:control
-
-# 先构建pane的布局
-tmux selectp -t 0
-tmux splitw -h -p 50
-tmux selectp -t 0
-tmux splitw -v -p 50
-tmux selectp -t 2
-tmux splitw -v -p 50
-tmux selectp -t 2
-tmux splitw -h -p 50
-
-
-# 再ctrl+x q查看一下pane的编号,往对应编号的pane里写指令
-tmux selectp -t 0
-tmux send-keys &#34;roscore&#34; C-m
-tmux selectp -t 1
-tmux send-keys &#34;sleep 1;rosbag play /home/luyifan/BAG/BUG.bag --clock -s 20 -r 1.0&#34; C-m
-tmux selectp -t 2
-tmux send-keys &#34;sleep 2;rosrun rviz rviz -d /home/luyifan/Project/PathPlanning/pickman_ws/src/rviz/pickman.rviz&#34; C-m
-tmux selectp -t 3
-tmux send-keys &#34;sleep 3;rosrun create_map create_map&#34; C-m
-tmux selectp -t 4
-tmux send-keys &#34;sleep 3;rosrun dstar dstar&#34; C-m
-
-# 控制rosbag的播放
-tmux selectp -t 1
-
-tmux attach -t pickman
-</code></pre><ul>
-<li>
-<h3 id="tips用脚本来启动tmux和各类指令的时候需要先-d再attach出来否则指令不运行">Tips:用脚本来启动tmux和各类指令的时候,需要先-d再attach出来,否则指令不运行</h3>
-</li>
-</ul>
-<h2 id="一键清除脚本demo">一键清除脚本demo</h2>
-<ul>
-<li>
-<h3 id="文件名killsh">文件名<strong>kill.sh</strong></h3>
-</li>
-</ul>
-<pre tabindex="0"><code>tmux kill-session -t tiggo
-</code></pre>
-              </div>
-            </div>
-
-            <div class="f6 text-gray mt-2">
-              
-
-              Created
-              <relative-time datetime=" Mon, 01 Jan 0001 00:00:00 &#43;0000" class="no-wrap"
-                title=" Mon, 01 Jan 0001 00:00:00 &#43;0000">
-                Mon, 01 Jan 0001 00:00:00 &#43;0000
-              </relative-time>
-            </div>
-          </div>
-        </li>
-        
       </ul>
       <div class="paginate-container">
         <div class="BtnGroup">
@@ -852,7 +737,7 @@ tmux attach -t pickman
           <a rel="nofollow" class="btn btn-outline BtnGroup-item" href="/post/page/9/">Previous</a>
           
           
-          <button class="btn btn-outline BtnGroup-item" disabled="disabled">Next</button>
+          <a rel="nofollow" class="btn btn-outline BtnGroup-item" href="/post/page/11/">Next</a>
           
         </div>
       </div>
