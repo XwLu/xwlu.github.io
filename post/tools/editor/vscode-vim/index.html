@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="The Notes of Vscode Vim Conf.">
+<title>Vscode Vim Configuration</title>
+
+
+<link rel="canonical" href="https://example.org/post/tools/editor/vscode-vim/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Vscode Vim Configuration">
+<meta property='og:description' content="The Notes of Vscode Vim Conf.">
+<meta property='og:url' content='https://example.org/post/tools/editor/vscode-vim/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='vscode' /><meta property='article:tag' content='vim' /><meta property='article:tag' content='editor' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Vscode Vim Configuration">
+<meta name="twitter:description" content="The Notes of Vscode Vim Conf.">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#背景">背景</a></li>
+        <li><a href="#配置内容">配置内容</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/tools/" style="background-color: hsl(252, 60%, 84%); color: hsl(252, 60%, 15%);">
+                Tools
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/tools/editor/vscode-vim/">Vscode Vim Configuration</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#背景">背景</a></li>
+        <li><a href="#配置内容">配置内容</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h3 id="背景">背景
+</h3><ul>
+<li>vscode vim插件的个人简单配置模版</li>
+</ul>
+<hr>
+<h3 id="配置内容">配置内容
+</h3><pre tabindex="0"><code>{
+  // vim config
+  &#34;editor.lineNumbers&#34;: &#34;relative&#34;,
+  &#34;workbench.list.automaticKeyboardNavigation&#34;: false,
+  // 绑定vim前导键
+  &#34;vim.leader&#34;: &#34;&lt;space&gt;&#34;,
+  // 启用easymotion插件
+  &#34;vim.easymotion&#34;: true,
+  // 启用系统粘贴板作为vim寄存器
+  &#34;vim.useSystemClipboard&#34;: true,
+  // 由vim接管ctrl+any的按键，而不是vscode
+  &#34;vim.useCtrlKeys&#34;: true,
+  // 突出显示与当前搜索匹配的所有文本
+  &#34;vim.hlsearch&#34;: true,
+   // 普通模式下的非递归按键绑定
+  &#34;vim.normalModeKeyBindingsNonRecursive&#34;: [
+    // zz展开收起括号内的内容
+    {
+      &#34;before&#34;: [&#34;z&#34;, &#34;z&#34;],
+      &#34;commands&#34;: [&#34;editor.toggleFold&#34;]
+    },
+    // 保存&amp;退出当前文本
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;s&#34;],
+      &#34;commands&#34;:[&#34;:w!&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;q&#34;],
+      &#34;commands&#34;: [&#34;:q!&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;leader&gt;&#34;, &#34;sq&#34;],
+      &#34;commands&#34;: [&#34;:wq!&#34;]
+    },
+    // 上下跳5行
+    {
+      &#34;before&#34;: [&#34;&lt;C-j&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;j&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-k&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;k&#34;]
+    },
+    // 行首行尾
+    {
+      &#34;before&#34;: [&#34;&lt;C-h&gt;&#34;],
+      &#34;after&#34;: [&#34;^&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-l&gt;&#34;],
+      &#34;after&#34;: [&#34;$&#34;]
+    },
+    // 部分格式化
+    {
+      &#34;before&#34;: [&#34;f&#34;, &#34;f&#34;],
+      &#34;commands&#34;: [&#34;editor.action.formatSelection&#34;]
+    },
+  ],
+  // 插入模式下的非递归按键绑定
+  &#34;vim.insertModeKeyBindings&#34;: [],
+  // 命令模式下的非递归按键绑定
+  &#34;vim.commandLineModeKeyBindingsNonRecursive&#34;: [],
+  // 可视模式下的非递归按键绑定
+  &#34;vim.visualModeKeyBindings&#34;: [
+    // 上下跳5行
+    {
+      &#34;before&#34;: [&#34;&lt;C-j&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;j&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-k&gt;&#34;],
+      &#34;after&#34;: [&#34;5&#34;, &#34;k&#34;]
+    },
+    // 行首行尾
+    {
+      &#34;before&#34;: [&#34;&lt;C-h&gt;&#34;],
+      &#34;after&#34;: [&#34;^&#34;]
+    },
+    {
+      &#34;before&#34;: [&#34;&lt;C-l&gt;&#34;],
+      &#34;after&#34;: [&#34;$&#34;]
+    },
+    // 部分格式化
+    {
+      &#34;before&#34;: [&#34;f&#34;, &#34;f&#34;],
+      &#34;commands&#34;: [&#34;editor.action.formatSelection&#34;]
+    },
+  ],
+  // 下面定义的按键将交由vscode进行处理，而不是vscode-vim插件
+  &#34;vim.handleKeys&#34;: {
+    &#34;&lt;C-a&gt;&#34;: false,
+    &#34;&lt;C-f&gt;&#34;: false,
+    &#34;&lt;C-p&gt;&#34;: false,
+   // &#34;&lt;C-k&gt;&#34;: false
+  },
+}
+</code></pre>
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/vscode/">Vscode</a>
+        
+            <a href="/tags/vim/">Vim</a>
+        
+            <a href="/tags/editor/">Editor</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

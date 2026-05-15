@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="X-Cache 发现跨生成片段的 block 残差复用，以零训练代价实现 2.6-2.7 倍世界模型推理加速">
+<title>X-Cache</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/x-cache/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="X-Cache">
+<meta property='og:description' content="X-Cache 发现跨生成片段的 block 残差复用，以零训练代价实现 2.6-2.7 倍世界模型推理加速">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/x-cache/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='E2E-AD' /><meta property='article:tag' content='WorldModel' /><meta property='article:tag' content='DiffusionModel' /><meta property='article:tag' content='InferenceAcceleration' /><meta property='article:tag' content='AutonomousDriving' /><meta property='article:tag' content='Xpeng' /><meta property='article:published_time' content='2026-04-30T00:00:00&#43;08:00'/><meta property='article:modified_time' content='2026-04-30T00:00:00&#43;08:00'/>
+<meta name="twitter:title" content="X-Cache">
+<meta name="twitter:description" content="X-Cache 发现跨生成片段的 block 残差复用，以零训练代价实现 2.6-2.7 倍世界模型推理加速">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#-一句话总结">🎯 一句话总结</a></li>
+    <li><a href="#-核心问题为什么世界模型推理太慢">📌 核心问题：为什么世界模型推理太慢？</a>
+      <ul>
+        <li><a href="#为什么旧方法不管用">为什么旧方法不管用？</a></li>
+        <li><a href="#-x-cache-的顿悟时刻">💡 X-Cache 的顿悟时刻</a></li>
+      </ul>
+    </li>
+    <li><a href="#-方法详解x-cache-是怎么工作的">🔧 方法详解：X-Cache 是怎么工作的？</a>
+      <ul>
+        <li><a href="#基础设定三个下标刻画每次计算">基础设定：三个下标刻画每次计算</a></li>
+        <li><a href="#21-跨片段残差缓存核心灵魂">2.1 跨片段残差缓存（核心灵魂）</a></li>
+        <li><a href="#22-双指标门控机制聪明地决定跳不跳">2.2 双指标门控机制：聪明地决定&quot;跳不跳&quot;</a></li>
+        <li><a href="#-余弦相似度为什么取最小值">📐 余弦相似度：为什么取最小值？</a></li>
+        <li><a href="#-最大-token-偏差捕捉局部突变">📊 最大 Token 偏差：捕捉局部突变</a></li>
+        <li><a href="#23-自适应阈值会自我调节的松紧度">2.3 自适应阈值：会自我调节的&quot;松紧度&quot;</a></li>
+        <li><a href="#24-四重安全机制强制重算的边界条件">2.4 四重安全机制：强制重算的边界条件</a></li>
+      </ul>
+    </li>
+    <li><a href="#-实验结果在真实赛道上跑一跑">🧪 实验结果：在真实赛道上跑一跑</a>
+      <ul>
+        <li><a href="#实验设置">实验设置</a></li>
+        <li><a href="#核心结果">核心结果</a></li>
+        <li><a href="#误差分布分析">误差分布分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#-消融实验拆开零件逐个测">🔬 消融实验：拆开零件逐个测</a></li>
+    <li><a href="#-技术细节问答">❓ 技术细节问答</a>
+      <ul>
+        <li><a href="#q1余弦相似度中位数和-75-分位数都是-10这合理吗">Q1：余弦相似度中位数和 75 分位数都是 1.0，这合理吗？</a></li>
+        <li><a href="#q2chunk-是什么">Q2：Chunk 是什么？</a></li>
+      </ul>
+    </li>
+    <li><a href="#-局限性诚实的声明">🚧 局限性：诚实的声明</a></li>
+    <li><a href="#-结论与思考">📝 结论与思考</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/x-cache/">X-Cache</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-04-30T00:00:00&#43;08:00'>Thursday, April 30, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#-一句话总结">🎯 一句话总结</a></li>
+    <li><a href="#-核心问题为什么世界模型推理太慢">📌 核心问题：为什么世界模型推理太慢？</a>
+      <ul>
+        <li><a href="#为什么旧方法不管用">为什么旧方法不管用？</a></li>
+        <li><a href="#-x-cache-的顿悟时刻">💡 X-Cache 的顿悟时刻</a></li>
+      </ul>
+    </li>
+    <li><a href="#-方法详解x-cache-是怎么工作的">🔧 方法详解：X-Cache 是怎么工作的？</a>
+      <ul>
+        <li><a href="#基础设定三个下标刻画每次计算">基础设定：三个下标刻画每次计算</a></li>
+        <li><a href="#21-跨片段残差缓存核心灵魂">2.1 跨片段残差缓存（核心灵魂）</a></li>
+        <li><a href="#22-双指标门控机制聪明地决定跳不跳">2.2 双指标门控机制：聪明地决定&quot;跳不跳&quot;</a></li>
+        <li><a href="#-余弦相似度为什么取最小值">📐 余弦相似度：为什么取最小值？</a></li>
+        <li><a href="#-最大-token-偏差捕捉局部突变">📊 最大 Token 偏差：捕捉局部突变</a></li>
+        <li><a href="#23-自适应阈值会自我调节的松紧度">2.3 自适应阈值：会自我调节的&quot;松紧度&quot;</a></li>
+        <li><a href="#24-四重安全机制强制重算的边界条件">2.4 四重安全机制：强制重算的边界条件</a></li>
+      </ul>
+    </li>
+    <li><a href="#-实验结果在真实赛道上跑一跑">🧪 实验结果：在真实赛道上跑一跑</a>
+      <ul>
+        <li><a href="#实验设置">实验设置</a></li>
+        <li><a href="#核心结果">核心结果</a></li>
+        <li><a href="#误差分布分析">误差分布分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#-消融实验拆开零件逐个测">🔬 消融实验：拆开零件逐个测</a></li>
+    <li><a href="#-技术细节问答">❓ 技术细节问答</a>
+      <ul>
+        <li><a href="#q1余弦相似度中位数和-75-分位数都是-10这合理吗">Q1：余弦相似度中位数和 75 分位数都是 1.0，这合理吗？</a></li>
+        <li><a href="#q2chunk-是什么">Q2：Chunk 是什么？</a></li>
+      </ul>
+    </li>
+    <li><a href="#-局限性诚实的声明">🚧 局限性：诚实的声明</a></li>
+    <li><a href="#-结论与思考">📝 结论与思考</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="x-cache-cross-chunk-block-caching-for-few-step-autoregressive-world-models-inference">X-Cache: Cross-Chunk Block Caching for Few-Step Autoregressive World Models Inference
+</h1><hr>
+<h2 id="-一句话总结">🎯 一句话总结
+</h2><p>X-Cache 发现了一个<strong>此前从未被利用的冗余维度</strong>——跨生成片段的 block 残差复用，在生产世界模型上以<strong>零训练代价</strong>实现了 <strong>2.6–2.7 倍加速</strong>，71% block 跳过率，画质无感知损失。</p>
+<hr>
+<h2 id="-核心问题为什么世界模型推理太慢">📌 核心问题：为什么世界模型推理太慢？
+</h2><p>自动驾驶正越来越依赖<strong>世界模型</strong>——一种能根据车辆动作，实时生成逼真未来场景视频的 AI 系统。它相当于给汽车造了一个<strong>虚拟的沙盘世界</strong>，用来做强化学习训练和闭环评估。</p>
+<p>但问题来了：这些模型推理<strong>太慢了</strong>！不够实时，就没法真正投入使用。</p>
+<h3 id="为什么旧方法不管用">为什么旧方法不管用？
+</h3><p>已有的扩散加速方法（如 DeepCache、FlowCache、SCOPE）都是利用<strong>同一个视频片段、相邻去噪步骤之间</strong>的特征冗余来跳过计算。但小鹏的世界模型已经被蒸馏成&quot;少步模型&quot;（仅 <strong>4 步去噪</strong>），每一步都在做<strong>实质性的结构更新</strong>，几乎没有可复用的冗余，强行复用只会破坏画质。</p>
+<p>此外，交互式场景还有两个额外的拦路虎：</p>
+<ul>
+<li><strong>驾驶动作不连续</strong>：刹车、转向在每个片段边界可能突变，破坏了&quot;特征平滑&quot;假设</li>
+<li><strong>无法并行</strong>：必须先生成当前帧、等决策系统给出下一步动作，才能生成下一帧</li>
+</ul>
+<h3 id="-x-cache-的顿悟时刻">💡 X-Cache 的顿悟时刻
+</h3><p>研究者发现了一个新的冗余维度：<strong>真实世界的场景在相邻片段之间变化是缓慢而平滑的！</strong></p>
+<p>汽车从一帧到下一帧，路面、建筑、天空基本没变。因此，DiT（扩散变换器）中每个模块在&quot;相同去噪步骤、相同模块编号&quot;位置的输入，相邻片段之间<strong>高度相似</strong>。</p>
+<p>这种&quot;跨片段冗余&quot;来自<strong>物理世界的连续性</strong>，而不是去噪过程，因此完全<strong>不受少步蒸馏影响</strong>——是个全新的可利用轴！</p>
+<hr>
+<h2 id="-方法详解x-cache-是怎么工作的">🔧 方法详解：X-Cache 是怎么工作的？
+</h2><h3 id="基础设定三个下标刻画每次计算">基础设定：三个下标刻画每次计算
+</h3><p>模型用三个下标刻画每次计算：</p>
+<ul>
+<li><strong>n</strong>：当前在生成第几个 chunk（视频片段）</li>
+<li><strong>t</strong>：当前在第几步去噪</li>
+<li><strong>b</strong>：当前在处理 DiT 的第几个 block</li>
+</ul>
+<p>每个 block 做的事情是：<code>新输出 = 旧输入 + block计算出的残差</code>。X-Cache 的核心就是：<strong>把这个&quot;残差&quot;缓存下来，下次能用就直接复用，不用重算。</strong></p>
+<hr>
+<h3 id="21-跨片段残差缓存核心灵魂">2.1 跨片段残差缓存（核心灵魂）
+</h3><p>思路极其简洁：</p>
+<ul>
+<li>当第 n 个片段的 (t, b) 位置计算完，把残差 <code>r</code> 存入缓存</li>
+<li>到第 n+1 个片段的同一位置，如果判断&quot;输入和上一次差不多&quot;，就直接用缓存残差，跳过整个 block 的计算</li>
+</ul>
+<p>第一个片段（n=0）是**&ldquo;热身阶段&rdquo;**，所有 block 都老老实实完整计算，把缓存填满，为后续复用打下基础。</p>
+<hr>
+<h3 id="22-双指标门控机制聪明地决定跳不跳">2.2 双指标门控机制：聪明地决定&quot;跳不跳&quot;
+</h3><p>不能无脑跳，得先判断当前输入和上一次是不是真的&quot;差不多&quot;。X-Cache 设计了一套**紧凑指纹（fingerprint）**来快速评估。</p>
+<h4 id="指纹怎么提取">指纹怎么提取？
+</h4><p>block 的输入是一个巨大的张量（帧数 × 高 × 宽 × 通道），全比太贵。于是按三维空间网格<strong>均匀采样 32 个 token</strong>，在帧、高、宽三个维度上按比例分配。</p>
+
+    <blockquote>
+        <p><strong>关键设计</strong>：不是沿着扁平 token 序列均匀采样，而是在三维空间里分别均匀采样！</p>
+<p>为什么要这样？因为 1D 均匀采样对三个维度是&quot;盲目的&quot;——步长和维度大小的数值关系决定了采样会系统性地偏向某些坐标值。</p>
+<p><strong>一个灾难性例子</strong>：假设 F=2帧，H=4高，W=16宽，采样 K=8 个点。1D 均匀采样步长是 128÷8 = 16，恰好等于 W。结果所有采样点的 w 值<strong>全是 0</strong>——永远落在最左边一列，w=1 到 w=15 完全没被采样到！</p>
+
+    </blockquote>
+<p>正确的做法是按照三个维度的比例分别分配采样数量：</p>
+<p>$$k_F : k_H : k_W \approx F : H : W, \quad k_F \cdot k_H \cdot k_W \approx K$$</p>
+<p>这样每个维度都有<strong>保证的覆盖</strong>，不会因为数字巧合而整体偏向某一侧。</p>
+<h4 id="两个辅助频道">两个辅助频道
+</h4><p>指纹还拼接两个&quot;辅助频道&quot;：</p>
+<ul>
+<li><strong>全局均值频道</strong>：整个输入的均值，用来捕捉整体漂移</li>
+<li><strong>动作条件频道</strong>：把当前驾驶动作向量（油门、转向等）也放进指纹，让系统能直接感知&quot;这次动作和上次有没有变&quot;——这很关键，因为动作是通过 adaLN-Zero 注入每个 block 的，光看输入张量察觉不到</li>
+</ul>
+<h4 id="两个指标联合判断">两个指标联合判断
+</h4><p>有了指纹，再用<strong>两个指标</strong>联合判断是否跳过：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指标</th>
+          <th>计算方式</th>
+          <th>捕捉什么变化</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>余弦相似度</strong></td>
+          <td>取所有视角中的<strong>最小值</strong></td>
+          <td>整体方向的漂移</td>
+      </tr>
+      <tr>
+          <td><strong>最大 token 偏差</strong></td>
+          <td>取所有视角的<strong>最大值</strong></td>
+          <td>局部突变的异常点</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>只有当<strong>两个指标都通过</strong>，才允许跳过这个 block。这是一种&quot;保守聚合&quot;的安全设计。</p>
+<hr>
+<h3 id="-余弦相似度为什么取最小值">📐 余弦相似度：为什么取最小值？
+</h3><h4 id="什么是余弦相似度">什么是余弦相似度？
+</h4><p>余弦相似度的本质，是衡量两个向量<strong>方向有多一致</strong>，而不是它们有多&quot;大&quot;。</p>
+<p>公式：
+$$s = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}| \cdot |\vec{B}|}$$</p>
+<p>分子是点积，分母是模长相乘——这个操作恰好等于两个向量夹角的余弦值。</p>
+<ul>
+<li>方向完全相同 → 值为 1</li>
+<li>方向垂直 → 值为 0</li>
+<li>方向相反 → 值为 -1</li>
+</ul>
+<p><strong>为什么不用欧氏距离？</strong> 一个经典例子：</p>
+<ul>
+<li>A = [1, 2]，B = [100, 200]，C = [2, 1]</li>
+<li>A 和 B 的欧氏距离很远（差了 100 倍），但余弦相似度 = 1，因为方向完全相同</li>
+<li>A 和 C 的欧氏距离很近，但余弦相似度 &lt; 1，因为方向有偏差</li>
+</ul>
+<p>在神经网络的特征空间里，<strong>特征的&quot;意义&quot;更多藏在方向里，而不是幅度里</strong>。</p>
+<h4 id="为什么取最小值">为什么取最小值？
+</h4><p>场景还原：X-Cache 的世界是 <strong>7 个摄像头</strong>，分成 3 个视角组，每个视角组独立计算一个余弦相似度值。</p>
+<p>假设 7 个摄像头里，6 个的余弦相似度都是 0.999，但有 1 个（比如左后摄像头）突然出现了一辆加速超车的摩托车，相似度掉到了 0.80。</p>
+<ul>
+<li><strong>取平均</strong>：≈ 0.97，可能还是超过阈值，系统认为&quot;没问题，跳过吧&quot;——但实际上左后视角已经发生了显著变化</li>
+<li><strong>取最小值</strong>：直接拿到 0.80，远低于阈值，系统正确地判断&quot;不能跳，必须重算&quot;</li>
+</ul>
+<p>本质逻辑：这个 block 的计算是针对<strong>所有摄像头一起做的</strong>，它们共享同一个 (t, b) 位置的计算。如果<strong>任何一个视角</strong>发生了显著变化，整个 block 的输出都会受影响——因为网络内部的注意力机制会跨摄像头交互信息。</p>
+
+    <blockquote>
+        <p><strong>生活类比</strong>：检查家里所有门窗是否都锁好了，判断标准不是&quot;平均锁好程度&quot;，而是&quot;有没有一扇是开的&quot;——只要有一扇没锁，整体就不安全。</p>
+
+    </blockquote>
+<hr>
+<h3 id="-最大-token-偏差捕捉局部突变">📊 最大 Token 偏差：捕捉局部突变
+</h3><p>公式：
+$$d_{\max} = \frac{\max\left|\phi(\mathbf{x}^{(n)}) - \phi(\mathbf{x}^{(n-1)})\right|}{\text{mean}\left|\phi(\mathbf{x}^{(n-1)})\right| + \epsilon}$$</p>
+<p>计算流程：</p>
+<ol>
+<li>对 32 个采样位置，每个位置算当前片段和上一片段的<strong>特征差值</strong></li>
+<li>找出差值<strong>最大的那一个位置</strong></li>
+<li>用上一片段特征的均值做归一化，得到相对偏差</li>
+</ol>
+<h4 id="为什么要关注最大的那个位置">为什么要关注&quot;最大&quot;的那个位置？
+</h4><p>一个典型场景：画面大部分区域（背景道路、天空）几乎没变，但某个局部位置（比如前方突然出现一辆急刹的卡车）发生了剧烈变化。</p>
+<ul>
+<li><strong>余弦相似度</strong>：因为大多数位置都很稳定，整体方向差异不大，可能不会触发报警</li>
+<li><strong>最大 token 偏差</strong>：那个&quot;卡车突然出现&quot;的位置偏差极大，直接把最大值拉高，触发强制重算</li>
+</ul>
+<p>所以两个指标是<strong>互补的</strong>：</p>
+<ul>
+<li>余弦相似度防的是&quot;温水煮青蛙式的整体漂移&quot;</li>
+<li>最大 token 偏差防的是&quot;局部突然爆炸式的异常变化&quot;</li>
+</ul>
+<hr>
+<h3 id="23-自适应阈值会自我调节的松紧度">2.3 自适应阈值：会自我调节的&quot;松紧度&quot;
+</h3><p>固定一个全局阈值太粗暴——有些 block 天生就变化小（可以激进地跳），有些天生变化大（要保守）。</p>
+<p>X-Cache 为每个 (t, b) 位置单独维护一个<strong>指数移动平均（EMA）</strong>，记录这个位置历史上的余弦相似度，然后把阈值设为略低于 EMA 的值（差一个边距 m=0.02）。</p>
+<p>效果是：</p>
+<ul>
+<li>跨片段几乎不变的模块 → 阈值越来越高，越来越激进地跳</li>
+<li>变化较大的模块 → 阈值会自动保守</li>
+</ul>
+<p>同时设定一个硬性安全底线（τ_floor=0.97），不管 EMA 多高，阈值都不会低于这个值。</p>
+<hr>
+<h3 id="24-四重安全机制强制重算的边界条件">2.4 四重安全机制：强制重算的边界条件
+</h3><p>即使指纹通过了测试，也有几种特殊情况必须&quot;强制重算&quot;：</p>
+<h4 id="-去噪步骤-t0-保护可选">① 去噪步骤 t=0 保护（可选）
+</h4><p>第 0 步的输入充满高斯噪声，条件信号（动作、文本等）对输出的影响最大，而且每次更新 KV 缓存时噪声都会重采样，导致相邻片段的 t=0 余弦相似度天然偏低。默认关闭跳过，确保条件信号能被充分吸收。</p>
+
+    <blockquote>
+        <p>消融实验表明：开启保护后跳过率从 71.3% 降到 53.5%，但画质<strong>毫无变化</strong>。自适应阈值已经能自己判断好 t=0 的情况。但研究者保留了这个开关，作为夜间、暴雨或极端轨迹变化下的额外安全边际。</p>
+
+    </blockquote>
+<h4 id="-锚块anchor-blocks保护">② 锚块（Anchor Blocks）保护
+</h4><p>默认让第 0 个 block（前锚）永远不跳过。它的输出变化会像多米诺骨牌一样级联到后续 block，天然地迫使后续 block 重新计算它们自己的指纹——这是个优雅的级联保护机制。</p>
+<h4 id="-kv-更新帧保护最重要">③ KV 更新帧保护（最重要！）
+</h4><p>自回归生成时，每隔一段时间会有一个&quot;KV 更新帧&quot;，把当前生成的干净帧写入持久 KV 缓存，供未来所有片段的 cross-attention 使用。</p>
+<p>如果这次写入的 KV 带有缓存误差，未来<strong>所有</strong>帧都会受到污染，错误会永久传播！</p>
+
+    <blockquote>
+        <p>消融实验证明：关掉 KV 更新帧保护，PSNR 从 53.4 dB <strong>崩塌到 21.5 dB</strong>，LPIPS 暴涨 3 个数量级——图像完全崩了！这是<strong>唯一不可妥协的硬性安全要求</strong>。</p>
+
+    </blockquote>
+<h4 id="-最大过期次数">④ 最大过期次数
+</h4><p>如果某个 (t, b) 位置连续跳过次数超过阈值 M，强制重算一次，防止缓存太陈旧。</p>
+<hr>
+<h2 id="-实验结果在真实赛道上跑一跑">🧪 实验结果：在真实赛道上跑一跑
+</h2><h3 id="实验设置">实验设置
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>详情</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>硬件</strong></td>
+          <td>阿里 T-Head 真武（Zhenwu）810E AI 加速器，96GB HBM2e，BF16 精度</td>
+      </tr>
+      <tr>
+          <td><strong>模型</strong></td>
+          <td>小鹏自研 X-World（基于 WAN 2.2），7 个摄像头，12 帧/秒，4 步去噪</td>
+      </tr>
+      <tr>
+          <td><strong>数据集</strong></td>
+          <td>城市道路（7条）、高速公路（3条）、城市掉头（3条）</td>
+      </tr>
+      <tr>
+          <td><strong>视频长度</strong></td>
+          <td>每条 264 帧（约 22 秒）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="核心结果">核心结果
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>场景</th>
+          <th>PSNR</th>
+          <th>SSIM</th>
+          <th>LPIPS</th>
+          <th>跳过率</th>
+          <th>加速比</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>城市道路</td>
+          <td>51.37 dB</td>
+          <td>0.9990</td>
+          <td>3.3e-4</td>
+          <td>71.4%</td>
+          <td><strong>2.65×</strong></td>
+      </tr>
+      <tr>
+          <td>高速</td>
+          <td>54.67 dB</td>
+          <td>0.9991</td>
+          <td>1.9e-4</td>
+          <td>71.6%</td>
+          <td><strong>2.66×</strong></td>
+      </tr>
+      <tr>
+          <td>掉头</td>
+          <td>52.04 dB</td>
+          <td>0.9990</td>
+          <td>3.1e-4</td>
+          <td>71.3%</td>
+          <td><strong>2.70×</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>加速效果稳如磐石</strong>：三种场景的跳过率只差 0.3 个百分点，推理时间只差 30ms——加速是由 DiT 的结构（block 位置）决定的，不是场景决定的。</p>
+<p><strong>掉头反而比城市道路画质更好？</strong> 看似反直觉，但有合理解释：掉头片段中大部分时间其实在直行；转弯时摄像头里物体本来就有运动模糊，高频纹理本来就少，缓存误差更难在像素上显现。</p>
+<h3 id="误差分布分析">误差分布分析
+</h3><p>所有场景下：</p>
+<ul>
+<li>Blocks 1-19 的跨片段余弦相似度都在 <strong>0.95 以上</strong></li>
+<li>Blocks 20-26 降到约 <strong>0.90</strong>（这个模式完全由模型结构决定，与场景无关）</li>
+</ul>
+<p>跳过率对应地：</p>
+<ul>
+<li>Blocks 1-19 稳定在约 0.75（1 个热身 chunk 对应的 4 个 chunk 复用窗口）</li>
+<li>Blocks 20-26 降到约 0.69</li>
+</ul>
+<hr>
+<h2 id="-消融实验拆开零件逐个测">🔬 消融实验：拆开零件逐个测
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>实验</th>
+          <th>效果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>t=0 保护开启</strong></td>
+          <td>跳过率 71.3% → 53.5%，加速 2.59× → 1.84×，画质不变（自适应阈值已能自行判断）</td>
+      </tr>
+      <tr>
+          <td><strong>KV 更新帧保护关闭</strong></td>
+          <td>PSNR 53.4 dB → <strong>21.5 dB</strong>（崩塌！），LPIPS 暴涨 3 个数量级</td>
+      </tr>
+      <tr>
+          <td><strong>前锚块 Fn=0（关闭）</strong></td>
+          <td>跳过率多 1.9%，每 chunk 省 70ms，画质几乎不变（但保留为安全边际）</td>
+      </tr>
+      <tr>
+          <td><strong>τ_floor 从 0.90 → 0.96</strong></td>
+          <td>所有指标<strong>完全不变</strong>（当前数据集中几乎没有 token 落在这个区间）</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="-技术细节问答">❓ 技术细节问答
+</h2><h3 id="q1余弦相似度中位数和-75-分位数都是-10这合理吗">Q1：余弦相似度中位数和 75 分位数都是 1.0，这合理吗？
+</h3><p><strong>完全合理！</strong></p>
+<p>物理世界连续性决定了：车辆以正常速度行驶时，相邻两个 chunk 之间可能只过了零点几秒：</p>
+<ul>
+<li>远处的建筑、天空、道路线几乎<strong>纹丝不动</strong></li>
+<li>前方车辆可能只移动了几厘米</li>
+<li>大量摄像头画面的大部分区域<strong>像素级别上都几乎一样</strong></li>
+</ul>
+<p>神经网络的特征是从像素里提取的——如果输入像素都没怎么变，特征自然也不会变。</p>
+<p>测试集的高速公路和城市直行占了绝大多数时间，&ldquo;场景几乎静止&quot;的 chunk 占了绝大多数，对应的余弦相似度自然集中在 1.0。</p>
+
+    <blockquote>
+        <p>这个现象反过来印证了 X-Cache 的核心前提：驾驶世界模型的跨 chunk 冗余极高，不是&quot;大概差不多&rdquo;，而是&quot;大多数情况下特征根本就没变&quot;。</p>
+
+    </blockquote>
+<h3 id="q2chunk-是什么">Q2：Chunk 是什么？
+</h3><p>Chunk 就是<strong>世界模型每次生成的一小段视频片段</strong>。</p>
+<p>世界模型不是一口气把整段视频全生成出来的，而是像说话一样<strong>一段一段往外&quot;吐&quot;</strong>：</p>
+<pre tabindex="0"><code>chunk 1 → chunk 2 → chunk 3 → chunk 4 → ...
+</code></pre><p>每个 chunk 包含若干帧画面，生成完后交给决策模块，决策模块根据画面决定下一步动作（转向、油门），再把动作传回来，生成下一个 chunk。</p>
+<p>这就是<strong>闭环交互</strong>：</p>
+<pre tabindex="0"><code>生成 chunk n → 决策系统观察 → 发出动作 → 生成 chunk n+1 → ...
+</code></pre><p>每个 chunk 内部还有去噪过程：</p>
+<pre tabindex="0"><code>噪声 →[t=0]→[t=1]→[t=2]→[t=3]→ 清晰画面
+</code></pre><p>所以论文里有两个嵌套的循环：</p>
+<ul>
+<li><strong>外层</strong>：chunk n → chunk n+1 → &hellip;（自回归生成）← X-Cache 利用这个轴的冗余</li>
+<li><strong>内层</strong>：去噪步骤 t=0 → t=1 → t=2 → t=3（扩散去噪）← 旧方法盯着这个轴，但 4 步去噪里几乎没有冗余</li>
+</ul>
+<hr>
+<h2 id="-局限性诚实的声明">🚧 局限性：诚实的声明
+</h2><p>论文非常诚实地列出了边界条件：</p>
+<ul>
+<li>所有测试只在 22 秒以内的片段、X-World 训练分布内的场景上做过——夜间、暴雨、激进驾驶、长时间高速巡航等场景<strong>尚未验证</strong></li>
+<li>超参数是针对单个 held-out 片段调的，选择的是&quot;安全而非激进&quot;的配置，当前 PSNR 约 53 dB、SSIM&gt;0.999 实际上有相当余量</li>
+<li>Pareto 前沿尚未探索，降低 τ_floor、放松 τ_dev、减少前锚等操作<strong>可以换取更高跳过率</strong></li>
+</ul>
+<hr>
+<h2 id="-结论与思考">📝 结论与思考
+</h2><p>X-Cache 的创新点在于找到了一个<strong>与现有方法正交、互补</strong>的冗余维度：</p>
+<ul>
+<li>现有方法：跨去噪步骤缓存（适用于多步扩散）</li>
+<li>X-Cache：跨生成片段缓存（适用于少步蒸馏后的模型）</li>
+</ul>
+<p>两个轴可以叠加使用，而不是竞争关系。</p>
+<p><strong>关键启示</strong>：</p>
+<ol>
+<li>工程优化要从数据本身的特性出发——物理世界连续性是真正可靠的冗余来源</li>
+<li>安全机制要分层设计——KV 更新帧保护是硬性要求，其他是软性安全边际</li>
+<li>自适应机制让系统在不同场景下自动调节行为，减少人工调参负担</li>
+</ol>
+<p>这是一篇来自工业界、非常接地气的系统优化工作：<strong>发现了一个被学术界忽略的新冗余维度，用一套精心设计的安全机制把它安全地用起来，在真实生产系统上拿到了 2.6 倍的加速</strong>。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/e2e-ad/">E2e-Ad</a>
+        
+            <a href="/tags/worldmodel/">WorldModel</a>
+        
+            <a href="/tags/diffusionmodel/">DiffusionModel</a>
+        
+            <a href="/tags/inferenceacceleration/">InferenceAcceleration</a>
+        
+            <a href="/tags/autonomousdriving/">AutonomousDriving</a>
+        
+            <a href="/tags/xpeng/">Xpeng</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/world-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WorldDrive</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/fast-wam/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Fast-WAM - 世界动作模型在推理时真的需要&#34;脑补&#34;未来吗？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/le-world-model/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeWorldModel - 稳定的端到端联合嵌入预测架构世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Paper Reading Notes of CarPlanner">
+<title>CarPlanner</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/car-planner/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="CarPlanner">
+<meta property='og:description' content="Paper Reading Notes of CarPlanner">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/car-planner/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T11:08:42&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T11:08:42&#43;08:00'/>
+<meta name="twitter:title" content="CarPlanner">
+<meta name="twitter:description" content="Paper Reading Notes of CarPlanner">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#强化学习基本范式">强化学习基本范式</a></li>
+    <li><a href="#向量化的状态表征">向量化的状态表征</a></li>
+    <li><a href="#问题建模">问题建模</a></li>
+    <li><a href="#规划器架构">规划器架构</a>
+      <ul>
+        <li><a href="#map编码">Map编码</a></li>
+        <li><a href="#agent-编码">Agent 编码</a></li>
+        <li><a href="#非交互式的状态转移模型">非交互式的状态转移模型</a></li>
+        <li><a href="#模式选择器">模式选择器</a></li>
+        <li><a href="#轨迹生成器">轨迹生成器</a></li>
+        <li><a href="#规则后处理">规则后处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#训练">训练</a></li>
+    <li><a href="#实验">实验</a>
+      <ul>
+        <li><a href="#仿真平台"><strong>仿真平台</strong></a></li>
+        <li><a href="#基准测试集与评估指标"><strong>基准测试集与评估指标</strong></a></li>
+        <li><a href="#实验细节"><strong>实验细节</strong></a></li>
+        <li><a href="#sota对比">SOTA对比</a></li>
+        <li><a href="#消融实验">消融实验</a></li>
+        <li><a href="#与il的对比">与IL的对比</a></li>
+        <li><a href="#场景化定性分析"><strong>场景化定性分析</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/car-planner/">CarPlanner</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T11:08:42&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#强化学习基本范式">强化学习基本范式</a></li>
+    <li><a href="#向量化的状态表征">向量化的状态表征</a></li>
+    <li><a href="#问题建模">问题建模</a></li>
+    <li><a href="#规划器架构">规划器架构</a>
+      <ul>
+        <li><a href="#map编码">Map编码</a></li>
+        <li><a href="#agent-编码">Agent 编码</a></li>
+        <li><a href="#非交互式的状态转移模型">非交互式的状态转移模型</a></li>
+        <li><a href="#模式选择器">模式选择器</a></li>
+        <li><a href="#轨迹生成器">轨迹生成器</a></li>
+        <li><a href="#规则后处理">规则后处理</a></li>
+      </ul>
+    </li>
+    <li><a href="#训练">训练</a></li>
+    <li><a href="#实验">实验</a>
+      <ul>
+        <li><a href="#仿真平台"><strong>仿真平台</strong></a></li>
+        <li><a href="#基准测试集与评估指标"><strong>基准测试集与评估指标</strong></a></li>
+        <li><a href="#实验细节"><strong>实验细节</strong></a></li>
+        <li><a href="#sota对比">SOTA对比</a></li>
+        <li><a href="#消融实验">消融实验</a></li>
+        <li><a href="#与il的对比">与IL的对比</a></li>
+        <li><a href="#场景化定性分析"><strong>场景化定性分析</strong></a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="carplanner-consistent-auto-regressive-trajectory-planning-for-large-scale-reinforcement-learning-in-autonomous-driving">CarPlanner: Consistent Auto-regressive Trajectory Planning for Large-scale Reinforcement Learning in Autonomous Driving
+</h1><h1 id="摘要">摘要
+</h1><ul>
+<li>本文提出CarPlanner——一种基于强化学习生成多模态轨迹的一致性自回归规划器。</li>
+<li>其自回归结构支持高效的大规模强化学习训练，而引入的一致性机制通过保持跨时间步长的时序一致性，确保了策略学习的稳定性。此外，CarPlanner采用生成-选择框架，结合专家引导的奖励函数与不变视角模块，既简化了强化学习训练流程，又提升了策略性能。</li>
+<li>有效解决了训练效率与性能提升的双重挑战。</li>
+<li>首次证明了基于强化学习的规划器能够在具有挑战性的大规模真实世界数据集nuPlan上超越基于模仿学习（IL）和基于规则的最先进方法（SOTA）</li>
+</ul>
+<h1 id="相关工作">相关工作
+</h1><ul>
+<li>IL存在分布偏移与因果混淆问题</li>
+<li>RL存在1）训练效率低下 2)性能表现不足的问题</li>
+<li>当前生成多步轨迹的方法主要分为两类：“初始化-优化”模型与“自回归模型”
+<ul>
+<li>方法A通过生成初始轨迹估计，并利用迭代式强化学习进行优化。然而，最新研究（如Gen-Drive）表明，该方法仍落后于基于模仿学习与规则的最优规划器。该框架的显著缺陷在于忽视了轨迹规划任务内在的时序因果性。此外，直接在高维轨迹空间进行优化所引发的复杂性，会制约强化学习算法的性能表现。</li>
+<li>方法B采用自回归模型，通过在状态转移模型内运用单步策略循环生成自车位姿序列形成完整规划轨迹。由于考量了时序因果关系，现有自回归模型能够生成交互式驾驶行为。但此类方法的共性局限在于依赖从动作分布中自回归随机采样来生成多模态轨迹，这种基础自回归流程可能损害长期一致性并过度扩展强化学习的探索空间，最终导致性能下降。
+<img alt="pic" class="gallery-image" data-flex-basis="243px" data-flex-grow="101" height="852" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/1.png" srcset="/post/robotics/e2e/car-planner/1_hu_950ea448ceed3478.png 800w, /post/robotics/e2e/car-planner/1.png 864w" width="864"></li>
+</ul>
+</li>
+<li>针对自回归模型的固有缺陷，将一致性模式表征作为自回归的条件约束。
+<ul>
+<li>采用纵向-横向分解模式表示法：纵向模式通过标量参数捕获平均速度特征，横向模式则基于自车当前状态与地图信息生成所有可行路径集合。此类模式在轨迹生成的时间维度上保持恒定，为策略采样过程提供稳定一致的行为引导。</li>
+</ul>
+</li>
+<li>设计了适用于大规模多样化场景的通用奖励函数。
+<ul>
+<li>专家引导项：通过量化规划轨迹与专家轨迹的位移误差（结合一致性模式表征），有效缩小策略探索空间。</li>
+<li>任务导向项：集成碰撞规避、可行驶区域约束等驾驶常识性指标。</li>
+</ul>
+</li>
+<li>此外，我们引入不变视角模块（Invariant-View Module, IVM），通过将智能体状态与横向模式信息转换至自车当前坐标系，并裁剪远端无关信息，为策略网络提供与时间无关的标准化输入，从而简化特征学习过程并增强泛化能力。</li>
+</ul>
+<h1 id="方案">方案
+</h1><h2 id="强化学习基本范式">强化学习基本范式
+</h2><p><img alt="pic" class="gallery-image" data-flex-basis="997px" data-flex-grow="415" height="140" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/2.png" width="582"></p>
+<ul>
+<li>\(S\)：状态空间</li>
+<li>\(A\)：动作空间</li>
+<li>\(P\)：状态转移概率</li>
+<li>\(R\)：奖励函数</li>
+<li>\(T\)：规划时长</li>
+<li>\(\gamma\)：奖励衰减系数</li>
+<li>\(\pi\)：动作采样策略</li>
+<li>\(a_{t}\)： \(t\)时刻采样的动作</li>
+<li>\(s_{t}\)： \(t\)时刻状态</li>
+<li>\(\tau\)：状态-动作序列（轨迹）</li>
+<li>目标是最大化奖励</li>
+</ul>
+<h2 id="向量化的状态表征">向量化的状态表征
+</h2><ul>
+<li>\(s_{t}\)
+<ul>
+<li>map
+<ul>
+<li>道路拓扑、 交通信号灯（通过polylines和polygons表示）</li>
+</ul>
+</li>
+<li>agent
+<ul>
+<li>历史状态</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="问题建模">问题建模
+</h2><ul>
+<li>将自回归模型解耦为policy model 和 transition model（本质上就是周围其他agent的轨迹预测模型）</li>
+<li>将动作定义为下一个时刻的状态 \(a_{t} = s_{t+1}^{0}\)</li>
+</ul>
+<p><img alt="pic" class="gallery-image" data-flex-basis="425px" data-flex-grow="177" height="434" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/3.png" width="770"></p>
+<ul>
+<li>从上面公式可以看到典型自回归方法相关的固有问题：动作来源于从策略分布中随机采样，进而导致前后帧的不一致行为。为了解决该问题，引入前后帧一致的模式信息 \(c\)</li>
+</ul>
+<p><img alt="pic" class="gallery-image" data-flex-basis="635px" data-flex-grow="264" height="374" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/4.png" srcset="/post/robotics/e2e/car-planner/4_hu_d9de82795d9699fc.png 800w, /post/robotics/e2e/car-planner/4.png 990w" width="990"></p>
+<ul>
+<li>上面的公式展示了一个“生成-选择”架构的运行逻辑。模式选择器根据初始状态 \(s_{0}\)对候选模式进行打分，轨迹生成器根据模式的指导生成多模态轨迹</li>
+</ul>
+<h2 id="规划器架构">规划器架构
+</h2><p><img alt="pic" class="gallery-image" data-flex-basis="842px" data-flex-grow="351" height="562" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/5.png" srcset="/post/robotics/e2e/car-planner/5_hu_6daf758119b3762d.png 800w, /post/robotics/e2e/car-planner/5_hu_307b82014b76b431.png 1600w, /post/robotics/e2e/car-planner/5.png 1974w" width="1974"></p>
+<ul>
+<li>四个部分组成
+<ul>
+<li>非交互的状态转移模型</li>
+<li>模式选择器</li>
+<li>轨迹生成器</li>
+<li>规则增强选择器</li>
+</ul>
+</li>
+</ul>
+<h3 id="map编码">Map编码
+</h3><ul>
+<li>每个lane通过polyline表示，包含 \(3N_{p}\)个点，中心点、左边界点、右边界点；每个点特征 \(D_{m}=9\)（x,  y, heading, speed limit, category）。</li>
+<li>intersections, crosswalks, stop lines通过polygon表示</li>
+<li>通过PointNet提取特征后concat在一起得到 \(N_{m}*D\)</li>
+</ul>
+<h3 id="agent-编码">Agent 编码
+</h3><ul>
+<li>每个障碍物保留过去 \(H\)帧的状态，每个状态特征 \(D_{a}=10\)（x,  y, heading, vel, bbox, timestamp, category）。</li>
+<li>通过PointNet提取特征后concat在一起得到 \(N_{a}*D\)</li>
+</ul>
+<h3 id="非交互式的状态转移模型">非交互式的状态转移模型
+</h3><ul>
+<li>状态转移模型负责给环境中所有agent生成下一个时刻的状态（就是每个time step给所有agent做一次推演）。这个过程比较耗时，并且相比直接拿历史信息一次性生成整段预测轨迹的无交互预测模型并没有引入性能上的优化，所以实际实现的时候这边直接用了一个预测模型给除自车外的agent一次性生成整段多模轨迹。（本质是一个decoder从BEV feature中生成障碍物预测轨迹）</li>
+<li>TODO：ego和obs的交互自洽如何满足？</li>
+</ul>
+<h3 id="模式选择器">模式选择器
+</h3><ul>
+<li>该模块以初始状态s₀及纵向-横向分解模式信息为输入，输出各模式的概率分布。</li>
+</ul>
+<h4 id="路径-速度解耦模式表征"><strong>路径-速度解耦模式表征</strong>
+</h4><ul>
+<li>为捕捉纵向行为特征，我们生成 \(N_{lon}\)个表征轨迹平均速度的模式。每个纵向模式 \(c_{lon,j}\)定义为标量值 \(\frac{j}{N_{lon}}\)，沿维度 \(D\)重复扩展，形成维度为纵向 \(N_{lon}\times D\)模式的矩阵。针对横向行为，我们通过图搜索算法从地图中提取 \(N_{lat}\)条可行路径，对应自车可用车道。原始路径表征维度为 \(N_{lat}\times N_{r} \times D_{m}\)（ \(N_{r}\)为路径点数， \(D_{m}\)为特征维度）。采用PointNet点云网络聚合路径点特征，生成维度 \(N_{lat}\times D\)的横向模式。将纵向与横向模式拼接后形成维度 \(N_{lat}\times N_{lon} \times 2D\)的复合模式表征 \(c\)，经线性层映射至 \(N_{lat}\times N_{lon} \times D\)以对齐特征空间，最终模式总数 \(N_{mode}=N_{lat}N_{lon}\)。</li>
+</ul>
+<h4 id="基于查询的transformer解码器"><strong>基于查询的Transformer解码器</strong>
+</h4><ul>
+<li>该解码器融合模式特征与 \(s_{0}\)中包含的地图/智能体特征。工作机制如下：以模式特征作为query，地图与智能体信息作为key-value。更新后的模式特征经MLP解码得到各模式评分，最终通过softmax归一化。</li>
+</ul>
+<h3 id="轨迹生成器">轨迹生成器
+</h3><ul>
+<li>该模块以自回归方式运行，基于当前状态 \(s_{t}\)与恒定模式信息 \(c\)，循环解码自车下一时刻位姿 \(a_{t}\)。</li>
+</ul>
+<h4 id="不变视角模块ivm"><strong>不变视角模块（IVM）</strong>
+</h4><ul>
+<li>每个time step对下个时刻的自车位姿进行估计之前都要执行该操作：对模式与状态输入网络前进行预处理以消除时间信息
+<ul>
+<li><strong>近邻筛选</strong>：对状态 \(s_{t}\)中的地图与智能体信息，选择距离自车当前位姿最近的K近邻（KNN）作为输入（K分别取地图/智能体元素总数的50%）</li>
+<li><strong>路径裁剪</strong>：针对表征横向行为的路线，以距离自车当前位置最近的路径点为起点，保留 \(K_{r}\)个点（ \(K_{r}\)=单条路线 \(N_{r}\)点数的25%）</li>
+<li><strong>坐标系对齐</strong>：将路线、智能体及地图位姿转换至ego当前时刻 \(t\)的坐标系下</li>
+<li><strong>时序标准化</strong>：将历史时间步 \(t-H:t\)转换为相对当前时刻 \(t\)的 \([-H:0]\)区间</li>
+</ul>
+</li>
+</ul>
+<h4 id="基于查询的transformer解码器-1"><strong>基于查询的Transformer解码器</strong>
+</h4><ul>
+<li>采用与模式选择器相同的主干网络架构，但query维度不一样（因为IVM的作用，同一时刻下不同模态的下自车坐标系内环境信息是不同的，所以无法共享）：
+<ul>
+<li>Query： \(1 \times D\)维度（单模式特征）</li>
+<li>Key-Value： \((N+Nₘ)\times D\)维度（ \(N\)智能体+ \(N_{m}\)地图要素）</li>
+<li>输出特征： \(1 \times D\)维度（保持与查询维度一致）  </li>
+</ul>
+</li>
+</ul>
+<h4 id="策略输出层"><strong>策略输出层</strong>
+</h4><ul>
+<li>模式特征通过两个不同的head进行处理（A2C方法）：
+<ol>
+<li>policy head（Actor网络）：通过MLP生成动作分布参数（高斯分布）
+<ul>
+<li>训练阶段：从分布中采样动作以促进探索</li>
+<li>推理阶段：直接采用分布均值作为确定性输出</li>
+</ul>
+</li>
+<li>value head（Critic网络）：通过独立MLP估计状态价值  
+<ul>
+<li>数学建模：动作分布建模为 \(\mu + \sigma\)的高斯形式，策略优化基于PPO等强化学习算法实现。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h3 id="规则后处理">规则后处理
+</h3><ol>
+<li><strong>多模态输入</strong>：接收初始状态 \(s_{0}\)、自车多模态规划轨迹集、周边智能体预测轨迹</li>
+<li><strong>规则化评估</strong>：基于预设规则计算
+<ul>
+<li>安全性：轨迹与障碍物的最小距离</li>
+<li>行进效率：轨迹终点纵向位移</li>
+<li>舒适度：加速度/加加速度的L2范数</li>
+</ul>
+</li>
+<li><strong>综合评分</strong>：将规则得分与模式选择器的模式评分加权求和</li>
+<li><strong>最优选择</strong>：选取综合评分最高的轨迹作为规划器最终输出</li>
+</ol>
+<h2 id="训练">训练
+</h2><ul>
+<li>采用分阶段训练架构，核心流程如下：</li>
+</ul>
+<ol>
+<li><strong>状态转移模型预训练</strong>
+<ul>
+<li>优先训练非交互式的状态转移模型（预测任务预训练）</li>
+<li>训练模式选择器与轨迹生成器时冻结状态转移模型参数</li>
+</ul>
+</li>
+<li><strong>模式选择&amp;轨迹生成</strong>
+<ul>
+<li>
+<p>不输入所有模式给到轨迹生成模型，只输入正样本模式</p>
+</li>
+<li>
+<p>正样本模式确定方法：  </p>
+<p><em>横向模式</em>：根据真实轨迹终点所在路径段确定  </p>
+<p><em>纵向模式</em>：将轨迹起点至终点的纵向距离等分为 \(N_{lon}\)区间，匹配对应模式</p>
+</li>
+</ul>
+</li>
+<li><strong>损失函数设计</strong>
+<ul>
+<li>
+<p>模式选择损失：  </p>
+<p>▫ 正样本模式交叉熵损失（负对数似然）  </p>
+<p>▫ 辅助任务：真实轨迹回归损失</p>
+</li>
+<li>
+<p>轨迹生成损失：PPO算法三要素  </p>
+<p>▫ 策略改进项（Policy Improvement）  </p>
+<p>▫ 价值估计项（Value Estimation）  </p>
+<p>▫ 熵正则项（Entropy Regularization）</p>
+</li>
+</ul>
+</li>
+<li><strong>奖励函数构建</strong>
+<ul>
+<li>
+<p>基础奖励：自车未来位姿与真实轨迹的负位移误差（DE）</p>
+</li>
+<li>
+<p>增强约束：  </p>
+<p>▫ 碰撞检测：发生碰撞时奖励-1  </p>
+<p>▫ 可行驶区域合规性：越界时奖励-1  </p>
+<p>▫ 正常行驶时奖励保持0</p>
+</li>
+</ul>
+</li>
+<li><strong>模式丢失正则化</strong>
+<ul>
+<li>动机：防止Transformer结构中的残差连接导致对mode或route过于依赖</li>
+<li>实现：训练时随机屏蔽部分路径信息（mask概率=20%）</li>
+<li>效果：增强模型对局部信息缺失的鲁棒性</li>
+</ul>
+</li>
+</ol>
+<h2 id="实验">实验
+</h2><h3 id="仿真平台"><strong>仿真平台</strong>
+</h3><ul>
+<li>采用nuPlan仿真器
+<ul>
+<li>
+<p><strong>交通参与者行为模式</strong>：  </p>
+<p>▫ 非反应模式：日志回放（log-replay）  </p>
+<p>▫ 反应模式：IDM策略（智能驾驶员模型）</p>
+</li>
+<li>
+<p><strong>自车控制架构</strong>：用户规划器生成轨迹 → LQR控制器跟踪生成控制指令</p>
+</li>
+<li>
+<p><strong>仿真参数</strong>：15秒时长/10Hz更新频率</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="基准测试集与评估指标"><strong>基准测试集与评估指标</strong>
+</h3><ul>
+<li>采用两大基准测试集：
+<ul>
+<li><strong>Test14-Random</strong>（来自PlanTF）：261个场景</li>
+<li><strong>Reduced-Val14</strong>（来自PDM）：318个场景</li>
+</ul>
+</li>
+<li>评估采用nuPlan官方闭环综合评分（CLS），包含：
+<ul>
+<li><strong>安全指标</strong>：碰撞率（S-CR）、碰撞时间（S-TTC）</li>
+<li><strong>可行驶区域合规性</strong>（S-Area）</li>
+<li><strong>行进效率</strong>（S-PR）</li>
+<li><strong>舒适度指标</strong>  </li>
+</ul>
+</li>
+</ul>
+<h3 id="实验细节"><strong>实验细节</strong>
+</h3><ol>
+<li><strong>数据划分</strong>（遵循PDM标准）：
+<ul>
+<li>训练集：176,218个场景（14类×4,000场景）</li>
+<li>验证集：1,118个场景（14类×100场景）</li>
+</ul>
+</li>
+<li><strong>训练配置</strong>：
+<ul>
+<li>硬件：2×NVIDIA 3090 GPU</li>
+<li>训练轮次：50 epochs</li>
+<li>批量大小：64/GPU</li>
+<li>优化器：AdamW（初始学习率1×10⁻⁴，验证损失停滞时学习率衰减因子0.3）</li>
+</ul>
+</li>
+<li><strong>强化学习参数</strong>：
+<ul>
+<li>折扣因子γ=0.1</li>
+<li>GAE参数λ=0.9</li>
+<li>损失权重：价值损失3，策略损失100，熵损失0.001</li>
+</ul>
+</li>
+<li><strong>模式参数</strong>：
+<ul>
+<li>纵向模式数：12</li>
+<li>最大横向模式数：5</li>
+</ul>
+</li>
+</ol>
+<h3 id="sota对比">SOTA对比
+</h3><h4 id="方法分类与对比基准">方法分类与对比基准
+</h4><ul>
+<li>基于轨迹生成器类型，我们将现有方法划分为规则驱动（Rule）、模仿学习（IL）与强化学习（RL）三大类：
+<ol>
+<li><strong>PDM</strong>：2023年nuPlan挑战赛冠军
+<ul>
+<li><em>PDM-Closed</em>：IL+规则混合框架，采用IDM生成候选轨迹，基于安全/效率/舒适度的规则选择器优选轨迹</li>
+<li><em>PDM-Open</em>：纯规则驱动版本</li>
+</ul>
+</li>
+<li><strong>PLUTO</strong>：生成-选择框架，结合对比模仿学习（Contrastive IL）与数据增强技术训练生成器</li>
+<li><strong>GenDrive</strong>：预训练-微调流程，先通过IL预训练扩散模型规划器，再基于AI偏好训练的奖励模型进行RL微调去噪过程</li>
+</ol>
+</li>
+</ul>
+<p><strong>实验结果分析</strong></p>
+<p>如表1（Test14-Random）与表2（Reduced-Val14）所示，CarPlanner在无交互场景（障碍物不对自车行为作出反应）中展现显著优势：</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="212px" data-flex-grow="88" height="1120" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/6.png" srcset="/post/robotics/e2e/car-planner/6_hu_b97160704085de56.png 800w, /post/robotics/e2e/car-planner/6.png 992w" width="992"></p>
+<ul>
+<li>
+<p><strong>无交互式场景（CLS-NR）</strong>：  </p>
+<p>▫ 全指标领先，较PDM-Closed与PLUTO分别提升4.02与2.15分  </p>
+<p>▫ 行进效率（S-PR）显著优于PDM-Closed（表2对比）  </p>
+<p>▫ 碰撞率（S-CR）与基准方法持平，验证安全驾驶保障能力  </p>
+<p><em>技术亮点</em>：未使用数据增强、驾驶历史掩码等IL常用技术，彰显闭环任务解决能力</p>
+</li>
+<li>
+<p><strong>交互式场景（CLS-R）</strong>：  </p>
+<p>▫ 性能略逊于PDM-Closed  </p>
+<p><em>原因分析</em>：模型仅在无交互式场景训练，未接触IDM策略驱动的动态交互环境，导致对反应式智能体扰动鲁棒性不足</p>
+</li>
+</ul>
+<h4 id="总结">总结
+</h4><ol>
+<li><strong>RL方法潜力验证</strong>：在无交互式场景全面超越IL与规则方法</li>
+<li><strong>效率-安全平衡</strong>：在保持碰撞率水平的同时显著提升行进效率</li>
+<li><strong>场景泛化局限</strong>：反应式场景性能揭示跨模式训练必要性</li>
+</ol>
+<h3 id="消融实验">消融实验
+</h3><p><img alt="pic" class="gallery-image" data-flex-basis="969px" data-flex-grow="404" height="482" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/7.png" srcset="/post/robotics/e2e/car-planner/7_hu_36b98f9613e7784.png 800w, /post/robotics/e2e/car-planner/7_hu_c7a0e47166f212be.png 1600w, /post/robotics/e2e/car-planner/7.png 1948w" width="1948"></p>
+<h4 id="奖励项作用"><strong>奖励项作用</strong>
+</h4><ol>
+<li><strong>只生效质量奖励（Quality Only： collision check + drivable area check）</strong>：
+<ul>
+<li>规划器倾向于生成静态轨迹，行进效率（S-PR）显著降低</li>
+<li><em>成因分析</em>：自车初始处于安全可行驶状态，前行将面临碰撞/越界风险，导致策略陷入局部最优</li>
+</ul>
+</li>
+<li><strong>质量+位移误差奖励（Quality+DE）</strong>：
+<ul>
+<li>碰撞率（S-CR）从97.49→99.22，提升1.73%</li>
+<li>可行驶区域合规性（S-Area）从96.91→99.22，提升2.31%</li>
+</ul>
+</li>
+</ol>
+<h4 id="ivm模块有效性验证">IVM模块有效性验证
+</h4><ul>
+<li>坐标变换技术&amp;KNN近邻筛选对最终表现的优化有较大收益</li>
+</ul>
+<h3 id="与il的对比">与IL的对比
+</h3><p><img alt="pic" class="gallery-image" data-flex-basis="725px" data-flex-grow="302" height="654" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/8.png" srcset="/post/robotics/e2e/car-planner/8_hu_2f3f82072dd7f306.png 800w, /post/robotics/e2e/car-planner/8_hu_fd6d8881053b4ed8.png 1600w, /post/robotics/e2e/car-planner/8.png 1978w" width="1978"></p>
+<ul>
+<li>mode dropout和selector side task对IL和RL训练都有较大的帮助</li>
+<li>ego-history dropout
+<ul>
+<li>对IL帮助较大，提升碰撞率（S-CR）与可行驶区域合规性（S-Area），
+<ul>
+<li>随机屏蔽历史位姿与当前速度，缓解因果混淆问题</li>
+</ul>
+</li>
+<li>对RL则不是很重要
+<ul>
+<li>较大程度影响生成器loss中的value评估部分，闭环性能下降</li>
+<li>原因：RL通过奖励信号自动挖掘因果关系，无需人工干预</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>backbone  sharing
+<ul>
+<li>常用于IL场景，通过特征共享，提升泛化能力</li>
+<li>在RL场景起到反作用，引发不同任务之间的梯度冲突，轨迹生成器和模式选择器损失上升</li>
+<li>TODO：轨迹生成那边是循环生成下一帧轨迹的，前后帧感觉无法共享特征？</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景化定性分析"><strong>场景化定性分析</strong>
+</h3><ul>
+<li>
+<p>自车右转避让行人的复杂场景</p>
+</li>
+<li>
+<p>规则方法</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1246px" data-flex-grow="519" height="372" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/9.png" srcset="/post/robotics/e2e/car-planner/9_hu_c08378400df994bb.png 800w, /post/robotics/e2e/car-planner/9_hu_ab35bfba98e5bfd0.png 1600w, /post/robotics/e2e/car-planner/9.png 1932w" width="1932"></p>
+<ul>
+<li>未能预判行人动态，采取紧急制动仍与行人轨迹交叠</li>
+</ul>
+</li>
+<li>
+<p>IL方法</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1335px" data-flex-grow="556" height="346" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/10.png" srcset="/post/robotics/e2e/car-planner/10_hu_415d4d4f58a813b0.png 800w, /post/robotics/e2e/car-planner/10_hu_9e495afc5ab8ef2d.png 1600w, /post/robotics/e2e/car-planner/10.png 1926w" width="1926"></p>
+<ul>
+<li>感知到行人运动趋势，及时启动制动操作，但与行人保持纵向距离不足（&lt;0.5m）</li>
+</ul>
+</li>
+<li>
+<p>RL方法</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1357px" data-flex-grow="565" height="342" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/car-planner/11.png" srcset="/post/robotics/e2e/car-planner/11_hu_c2c8cad764a58c4e.png 800w, /post/robotics/e2e/car-planner/11_hu_dcba4dc7b70a9a87.png 1600w, /post/robotics/e2e/car-planner/11.png 1934w" width="1934"></p>
+<ul>
+<li>提前横向避让，构建横向安全缓冲区（1.2m），行进效率与安全指标均达最优</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

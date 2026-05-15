@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="自动驾驶规划面临一个经典的两难困境：多样性 vs 质量">
+<title>DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/diffusion-drive-v2/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving">
+<meta property='og:description' content="自动驾驶规划面临一个经典的两难困境：多样性 vs 质量">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/diffusion-drive-v2/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='扩散模型' /><meta property='article:tag' content='强化学习' /><meta property='article:tag' content='GRPO' /><meta property='article:tag' content='轨迹规划' /><meta property='article:published_time' content='2026-03-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving">
+<meta name="twitter:description" content="自动驾驶规划面临一个经典的两难困境：多样性 vs 质量">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题">核心问题</a></li>
+        <li><a href="#diffusiondrivev2-的答案">DiffusionDriveV2 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心方法三招绝学">二、核心方法：三招绝学</a>
+      <ul>
+        <li><a href="#第一招尺度自适应乘法噪声--让脑洞更顺滑">第一招：尺度自适应乘法噪声 —— 让&quot;脑洞&quot;更顺滑</a></li>
+        <li><a href="#第二招intra-anchor-grpo--窝里斗选优胜者">第二招：Intra-Anchor GRPO —— 窝里斗，选优胜者</a></li>
+        <li><a href="#第三招inter-anchor-truncated-grpo--守底线撞车必罚">第三招：Inter-Anchor Truncated GRPO —— 守底线，撞车必罚</a></li>
+      </ul>
+    </li>
+    <li><a href="#三mode-selector最后拍板的那个人">三、Mode Selector：最后拍板的那个人</a>
+      <ul>
+        <li><a href="#1-怎么选-综合多维度打分">1. 怎么选？—— 综合多维度打分</a></li>
+        <li><a href="#2-技术实现">2. 技术实现</a></li>
+        <li><a href="#3-训练标准">3. 训练标准</a></li>
+      </ul>
+    </li>
+    <li><a href="#四grpo-vs-dpo两种教导方式的对比">四、GRPO vs DPO：两种&quot;教导方式&quot;的对比</a></li>
+    <li><a href="#五reward-函数交规考试式的打分">五、Reward 函数：交规考试式的打分</a>
+      <ul>
+        <li><a href="#具体规则">具体规则</a></li>
+        <li><a href="#为什么不用神经网络打分">为什么不用神经网络打分？</a></li>
+      </ul>
+    </li>
+    <li><a href="#六技术演进三代扩散模型的对比">六、技术演进：三代扩散模型的对比</a>
+      <ul>
+        <li><a href="#生动理解三代的区别">生动理解三代的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#七架构拓扑从模糊到精确">七、架构拓扑：从模糊到精确</a>
+      <ul>
+        <li><a href="#diffusionplanner模糊的一段式monolithic">DiffusionPlanner：模糊的一段式（Monolithic）</a></li>
+        <li><a href="#diffusiondrive-v1清晰的二段式perception-then-plan">DiffusionDrive V1：清晰的二段式（Perception-then-Plan）</a></li>
+        <li><a href="#diffusiondrivev2精密的多级反馈二段式">DiffusionDriveV2：精密的&quot;多级反馈&quot;二段式</a></li>
+      </ul>
+    </li>
+    <li><a href="#八传感器融合如何构建-bev">八、传感器融合：如何构建 BEV？</a>
+      <ul>
+        <li><a href="#v2-的技术细节">V2 的技术细节</a></li>
+      </ul>
+    </li>
+    <li><a href="#九规划逻辑的信息流">九、规划逻辑的信息流</a>
+      <ul>
+        <li><a href="#三重交互机制">三重交互机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#十前后帧一致性如何拒绝精神分裂">十、前后帧一致性：如何拒绝&quot;精神分裂&quot;？</a>
+      <ul>
+        <li><a href="#1-时序特征融合">1. 时序特征融合</a></li>
+        <li><a href="#2-anchors-作为定海神针">2. Anchors 作为&quot;定海神针&quot;</a></li>
+        <li><a href="#3-截断扩散的功劳">3. 截断扩散的功劳</a></li>
+        <li><a href="#4-grpo-带来的决断力">4. GRPO 带来的&quot;决断力&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#十一实验结果">十一、实验结果</a></li>
+    <li><a href="#十二关键技术实现multi-head-attention">十二、关键技术实现：Multi-Head Attention</a>
+      <ul>
+        <li><a href="#为什么要用多头">为什么要用多头？</a></li>
+        <li><a href="#核心代码逻辑">核心代码逻辑</a></li>
+      </ul>
+    </li>
+    <li><a href="#十三个人思考与疑问">十三、个人思考与疑问</a>
+      <ul>
+        <li><a href="#值得学习的亮点">值得学习的亮点</a></li>
+        <li><a href="#待探索的问题">待探索的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/diffusion-drive-v2/">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-17T00:00:00Z'>Tuesday, March 17, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题">核心问题</a></li>
+        <li><a href="#diffusiondrivev2-的答案">DiffusionDriveV2 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心方法三招绝学">二、核心方法：三招绝学</a>
+      <ul>
+        <li><a href="#第一招尺度自适应乘法噪声--让脑洞更顺滑">第一招：尺度自适应乘法噪声 —— 让&quot;脑洞&quot;更顺滑</a></li>
+        <li><a href="#第二招intra-anchor-grpo--窝里斗选优胜者">第二招：Intra-Anchor GRPO —— 窝里斗，选优胜者</a></li>
+        <li><a href="#第三招inter-anchor-truncated-grpo--守底线撞车必罚">第三招：Inter-Anchor Truncated GRPO —— 守底线，撞车必罚</a></li>
+      </ul>
+    </li>
+    <li><a href="#三mode-selector最后拍板的那个人">三、Mode Selector：最后拍板的那个人</a>
+      <ul>
+        <li><a href="#1-怎么选-综合多维度打分">1. 怎么选？—— 综合多维度打分</a></li>
+        <li><a href="#2-技术实现">2. 技术实现</a></li>
+        <li><a href="#3-训练标准">3. 训练标准</a></li>
+      </ul>
+    </li>
+    <li><a href="#四grpo-vs-dpo两种教导方式的对比">四、GRPO vs DPO：两种&quot;教导方式&quot;的对比</a></li>
+    <li><a href="#五reward-函数交规考试式的打分">五、Reward 函数：交规考试式的打分</a>
+      <ul>
+        <li><a href="#具体规则">具体规则</a></li>
+        <li><a href="#为什么不用神经网络打分">为什么不用神经网络打分？</a></li>
+      </ul>
+    </li>
+    <li><a href="#六技术演进三代扩散模型的对比">六、技术演进：三代扩散模型的对比</a>
+      <ul>
+        <li><a href="#生动理解三代的区别">生动理解三代的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#七架构拓扑从模糊到精确">七、架构拓扑：从模糊到精确</a>
+      <ul>
+        <li><a href="#diffusionplanner模糊的一段式monolithic">DiffusionPlanner：模糊的一段式（Monolithic）</a></li>
+        <li><a href="#diffusiondrive-v1清晰的二段式perception-then-plan">DiffusionDrive V1：清晰的二段式（Perception-then-Plan）</a></li>
+        <li><a href="#diffusiondrivev2精密的多级反馈二段式">DiffusionDriveV2：精密的&quot;多级反馈&quot;二段式</a></li>
+      </ul>
+    </li>
+    <li><a href="#八传感器融合如何构建-bev">八、传感器融合：如何构建 BEV？</a>
+      <ul>
+        <li><a href="#v2-的技术细节">V2 的技术细节</a></li>
+      </ul>
+    </li>
+    <li><a href="#九规划逻辑的信息流">九、规划逻辑的信息流</a>
+      <ul>
+        <li><a href="#三重交互机制">三重交互机制</a></li>
+      </ul>
+    </li>
+    <li><a href="#十前后帧一致性如何拒绝精神分裂">十、前后帧一致性：如何拒绝&quot;精神分裂&quot;？</a>
+      <ul>
+        <li><a href="#1-时序特征融合">1. 时序特征融合</a></li>
+        <li><a href="#2-anchors-作为定海神针">2. Anchors 作为&quot;定海神针&quot;</a></li>
+        <li><a href="#3-截断扩散的功劳">3. 截断扩散的功劳</a></li>
+        <li><a href="#4-grpo-带来的决断力">4. GRPO 带来的&quot;决断力&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#十一实验结果">十一、实验结果</a></li>
+    <li><a href="#十二关键技术实现multi-head-attention">十二、关键技术实现：Multi-Head Attention</a>
+      <ul>
+        <li><a href="#为什么要用多头">为什么要用多头？</a></li>
+        <li><a href="#核心代码逻辑">核心代码逻辑</a></li>
+      </ul>
+    </li>
+    <li><a href="#十三个人思考与疑问">十三、个人思考与疑问</a>
+      <ul>
+        <li><a href="#值得学习的亮点">值得学习的亮点</a></li>
+        <li><a href="#待探索的问题">待探索的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <hr>
+<h2 id="一这篇论文在讲什么">一、这篇论文在讲什么？
+</h2><h3 id="核心问题">核心问题
+</h3><p>自动驾驶规划面临一个经典的两难困境：<strong>多样性 vs 质量</strong></p>
+<ul>
+<li><strong>太保守</strong>：只会&quot;死记硬背&quot;人类司机的走法，遇到新情况就傻眼</li>
+<li><strong>太发散</strong>：想象力太丰富，画出各种会撞车的方案</li>
+</ul>
+<h3 id="diffusiondrivev2-的答案">DiffusionDriveV2 的答案
+</h3>
+    <blockquote>
+        <p>用<strong>扩散模型</strong>生成多条候选路径（多样性），再用<strong>强化学习</strong>像严厉的教练一样筛选（质量）</p>
+
+    </blockquote>
+<p>形象的比喻：<strong>射箭比赛</strong></p>
+<ul>
+<li><strong>以前的模型</strong>：只盯着靶心射一箭，射偏了就没招了</li>
+<li><strong>DiffusionDriveV2</strong>：一次性朝靶心周围射出一把箭（多样性），然后剪掉那些射到观众席的箭（质量约束），最后选出最准的一支</li>
+</ul>
+<hr>
+<h2 id="二核心方法三招绝学">二、核心方法：三招绝学
+</h2><h3 id="第一招尺度自适应乘法噪声--让脑洞更顺滑">第一招：尺度自适应乘法噪声 —— 让&quot;脑洞&quot;更顺滑
+</h3><p><strong>以前的做法（加法噪声）</strong>：在路径上乱加干扰，结果路径变得像毛刺一样，车开起来会剧烈抖动</p>
+<p><strong>V2 的创新</strong>：
+$$\tau&rsquo; = (1 + \epsilon_{mul})\tau$$</p>
+<p><strong>生动理解</strong>：</p>
+<ul>
+<li>近处（车头）：抖动小，因为车头方向需要精确控制</li>
+<li>远处（目标点）：抖动大，因为远处的路径本身就有不确定性</li>
+</ul>
+<p>这符合开车时&quot;微调方向、远方模糊&quot;的真实物理规律。</p>
+<h3 id="第二招intra-anchor-grpo--窝里斗选优胜者">第二招：Intra-Anchor GRPO —— 窝里斗，选优胜者
+</h3><p><strong>核心逻辑</strong>：不比绝对高低，只比相对好坏</p>
+<p><strong>流程</strong>：</p>
+<ol>
+<li>针对同一个意图模板（比如&quot;左转&quot;），生成 8 条略有不同的路径</li>
+<li>裁判给这 8 条路径打分（是否撞车、是否开出马路、乘客稳不稳）</li>
+<li>计算&quot;相对优势&quot;：$A = \frac{\text{你的分数} - \text{平均分}}{\text{差异度}}$</li>
+<li>表现比平均好的，优势值为正；比平均差的，为负</li>
+</ol>
+<p><strong>为什么要&quot;组内&quot;比？</strong></p>
+
+    <blockquote>
+        <p>&ldquo;左转&quot;和&quot;直行&quot;的分数没有可比性。左转天生就比直行难。如果放在一起比，模型可能会为了拿高分而只学直行（<strong>模式崩溃</strong>）。</p>
+
+    </blockquote>
+<p><strong>临摹字帖的比喻</strong>：</p>
+<p>想象你在练书法，桌上有 64 张不同的字帖（Anchors）：一张是&quot;一&quot;字，一张是&quot;之&quot;字，一张是&quot;永&quot;字……</p>
+<ul>
+<li><strong>生成过程</strong>：你拿一张&quot;永&quot;字的字帖，临摹了 8 遍。虽然每遍写得都有点细微差别（加了随机噪声），但因为你都是照着&quot;永&quot;字写的，这 8 张纸就被归为 <strong>&ldquo;永字组&rdquo;</strong></li>
+<li><strong>组内 GRPO</strong>：老师（Reward）过来看这 8 张&quot;永&quot;字，选出写得最漂亮的一张，给你奖励</li>
+<li><strong>拒绝跨组比较</strong>：老师不会拿你写的&quot;永&quot;字去和隔壁桌写的&quot;一&quot;字比谁更漂亮，因为它们根本不是一个字，没法比</li>
+</ul>
+<h3 id="第三招inter-anchor-truncated-grpo--守底线撞车必罚">第三招：Inter-Anchor Truncated GRPO —— 守底线，撞车必罚
+</h3><p>虽然&quot;窝里斗&quot;能选出最好的左转方案，但如果所有的左转方案都会撞上护栏怎么办？</p>
+<p>这一招建立了<strong>全局底线</strong>：不管你是哪种意图，只要撞车，通通判死刑（给极低的负分）。</p>
+<hr>
+<h2 id="三mode-selector最后拍板的那个人">三、Mode Selector：最后拍板的那个人
+</h2><p>Intra-Anchor GRPO 确保了每个意图都能产生高质量的路径，但车只能选一条路走。谁来拍板？</p>
+<p><strong>Mode Selector</strong> 就是那个&quot;主裁判&rdquo;，它的工作是：</p>
+<h3 id="1-怎么选-综合多维度打分">1. 怎么选？—— 综合多维度打分
+</h3><p>结合三类关键信息进行&quot;面试&quot;：</p>
+<ul>
+<li><strong>路径本身</strong>：弯曲程度如何？是否平滑？</li>
+<li><strong>环境背景（BEV Features）</strong>：通过交叉注意力，看看路附近有没有障碍物、马路牙子或红绿灯</li>
+<li><strong>任务目标</strong>：导航让你左转，那左转组的路径天生得到更高的&quot;意图分&quot;</li>
+</ul>
+<h3 id="2-技术实现">2. 技术实现
+</h3><ul>
+<li><strong>MLP 打分</strong>：经过特征融合后，通过 MLP 给每条路径打分</li>
+<li><strong>粗选+精选（Coarse-to-fine）</strong>：先快看一眼，淘汰明显不行的；剩下的再仔细对比</li>
+</ul>
+<h3 id="3-训练标准">3. 训练标准
+</h3><ul>
+<li><strong>BCE Loss（对错分）</strong>：告诉它哪条路最接近人类司机的真值</li>
+<li><strong>Margin-Rank Loss（排序分）</strong>：不要求算出绝对好坏分，而是要求能排对顺序</li>
+</ul>
+
+    <blockquote>
+        <p>如果没有这个 Mode Selector，光有 GRPO，车子可能会在&quot;左转&quot;和&quot;直行&quot;之间反复横跳，不知道该听谁的。</p>
+
+    </blockquote>
+<hr>
+<h2 id="四grpo-vs-dpo两种教导方式的对比">四、GRPO vs DPO：两种&quot;教导方式&quot;的对比
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">DPO (直接偏好优化)</th>
+          <th style="text-align: left">GRPO (组相对策略优化)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>数据形式</strong></td>
+          <td style="text-align: left">成对数据（A &gt; B）</td>
+          <td style="text-align: left">组数据（A, B, C, D&hellip;）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>学习方式</strong></td>
+          <td style="text-align: left">离线学习</td>
+          <td style="text-align: left">在线探索</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>核心逻辑</strong></td>
+          <td style="text-align: left">隐式奖励</td>
+          <td style="text-align: left">显式奖励</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>比喻</strong></td>
+          <td style="text-align: left">看录像带学习</td>
+          <td style="text-align: left">队内选拔赛</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>为什么论文选 GRPO 而不是 DPO？</strong></p>
+<ol>
+<li><strong>解决模式崩溃</strong>：GRPO 通过组内归一化，强制保留每个意图的独特性</li>
+<li><strong>不需要 Critic 网络</strong>：GRPO 利用&quot;组平均分&quot;代替了评论员，更简单、更省内存</li>
+<li><strong>动态进化</strong>：在扩散模型复杂的生成空间里，GRPO 能让模型不断发现&quot;原来这样走比刚才那样走更好&quot;</li>
+</ol>
+<hr>
+<h2 id="五reward-函数交规考试式的打分">五、Reward 函数：交规考试式的打分
+</h2><p>GRPO 的 Reward 是<strong>人工定义的规则</strong>计算的，不需要神经网络：</p>
+<h3 id="具体规则">具体规则
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">指标</th>
+          <th style="text-align: left">含义</th>
+          <th style="text-align: left">判定方式</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>NC (No Collision)</strong></td>
+          <td style="text-align: left">碰撞惩罚</td>
+          <td style="text-align: left">如果撞到车/行人/护栏，给巨大负分</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>DAC (Drivable Area Compliance)</strong></td>
+          <td style="text-align: left">合规性</td>
+          <td style="text-align: left">车轮是否压到马路牙子、是否逆行</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>EP (Ego Progress)</strong></td>
+          <td style="text-align: left">进度得分</td>
+          <td style="text-align: left">鼓励往前走，走得越远且符合限速，得分越高</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>C (Comfort)</strong></td>
+          <td style="text-align: left">舒适度</td>
+          <td style="text-align: left">路径平滑度、加速度和急转弯程度</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>TTC (Time To Collision)</strong></td>
+          <td style="text-align: left">时间到碰撞</td>
+          <td style="text-align: left">离前车的距离和相对速度是否安全</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="为什么不用神经网络打分">为什么不用神经网络打分？
+</h3><ul>
+<li><strong>客观标准明确</strong>：自动驾驶&quot;撞没撞车&quot;是物理事实，用规则算比用模型猜更准确、可靠</li>
+<li><strong>计算速度快</strong>：规则计算只是几行物理公式，不需要运行庞大的神经网络</li>
+<li><strong>避开&quot;幻觉&quot;</strong>：AI 模型可能产生幻觉觉得撞车也挺好，但物理规则是铁律</li>
+</ul>
+<hr>
+<h2 id="六技术演进三代扩散模型的对比">六、技术演进：三代扩散模型的对比
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">DiffusionPlanner</th>
+          <th style="text-align: left">DiffusionDrive V1</th>
+          <th style="text-align: left">DiffusionDriveV2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>起始状态</strong></td>
+          <td style="text-align: left">纯随机噪声（从 0 到 1 创造）</td>
+          <td style="text-align: left">预定义锚点（从半成品加工）</td>
+          <td style="text-align: left">锚点 + 尺度自适应噪声</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>去噪步数</strong></td>
+          <td style="text-align: left">多步（通常 10+ 步，慢）</td>
+          <td style="text-align: left">极少步（1-2 步，快）</td>
+          <td style="text-align: left">极少步（1-2 步，快）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>多样性保证</strong></td>
+          <td style="text-align: left">扩散模型天然属性（不稳定）</td>
+          <td style="text-align: left">64 个锚点强制分区（稳定）</td>
+          <td style="text-align: left">锚点分区 + GRPO 保护意图</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>学习范式</strong></td>
+          <td style="text-align: left">模仿学习 (IL)</td>
+          <td style="text-align: left">模仿学习 (IL)</td>
+          <td style="text-align: left">模仿学习 + 强化学习 (RL)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>存在痛点</strong></td>
+          <td style="text-align: left">算得慢、容易模式崩溃</td>
+          <td style="text-align: left">容易产生会撞车的低质轨迹</td>
+          <td style="text-align: left">系统复杂度高（训练难）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="生动理解三代的区别">生动理解三代的区别
+</h3><p><strong>A. 关于&quot;噪声&quot;的艺术</strong></p>
+<ul>
+<li>DiffusionPlanner：在沙堆里找金子，范围太大，容易迷失</li>
+<li>DiffusionDrive：给沙堆围了 64 个小栅栏，让你在栅栏里找，效率高了，但栅栏里可能混进了石头</li>
+<li>DiffusionDriveV2：不仅有栅栏，还发明了&quot;乘法噪声&quot;，近处抖动小，远处抖动大，符合开车物理规律</li>
+</ul>
+<p><strong>B. 关于&quot;教导方式&quot;的变革</strong></p>
+<ul>
+<li>前两代：看人画画，只知道老师没往墙上撞，不知道为什么不撞</li>
+<li>V2 时代：引入&quot;警察罚款&quot;，如果你画到墙上，GRPO 教练会狠狠扣分</li>
+</ul>
+<hr>
+<h2 id="七架构拓扑从模糊到精确">七、架构拓扑：从模糊到精确
+</h2><h3 id="diffusionplanner模糊的一段式monolithic">DiffusionPlanner：模糊的一段式（Monolithic）
+</h3><pre tabindex="0"><code>传感器数据 → 特征提取 → 扩散解码器
+</code></pre><p>像一个&quot;黑盒&quot;，缺乏中间变量，人类很难理解它为什么要这么开。</p>
+<h3 id="diffusiondrive-v1清晰的二段式perception-then-plan">DiffusionDrive V1：清晰的二段式（Perception-then-Plan）
+</h3><pre tabindex="0"><code>传感器 → BEV 特征图 + 目标检测 → 锚点扩散
+</code></pre><p>有了明确的分工。先通过感知算法把世界变成&quot;鸟瞰图&quot;，规划器再在这张图上&quot;画画&quot;。</p>
+<h3 id="diffusiondrivev2精密的多级反馈二段式">DiffusionDriveV2：精密的&quot;多级反馈&quot;二段式
+</h3><pre tabindex="0"><code>传感器 → 高精度 BEV → 组内并行扩散（GRPO） → 模式选择
+</code></pre><p>在 V1 基础上增加了&quot;选优级&quot;，形成了&quot;感知 → 粗规划 → 精规划&quot;的三级跳。</p>
+<hr>
+<h2 id="八传感器融合如何构建-bev">八、传感器融合：如何构建 BEV？
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">DiffusionPlanner</th>
+          <th style="text-align: left">DiffusionDrive V1</th>
+          <th style="text-align: left">DiffusionDriveV2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>输入源</strong></td>
+          <td style="text-align: left">单视角或视角特征拼接</td>
+          <td style="text-align: left">多相机环视（6 颗摄像头）</td>
+          <td style="text-align: left">相机 + LiDAR（多模态对齐）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>特征空间</strong></td>
+          <td style="text-align: left">图像空间</td>
+          <td style="text-align: left">BEV 空间（LSS 方案）</td>
+          <td style="text-align: left">时序对齐 BEV（ResNet-34）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>融合方式</strong></td>
+          <td style="text-align: left">简单的特征拼接</td>
+          <td style="text-align: left">空间投影</td>
+          <td style="text-align: left">时空注意力融合</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="v2-的技术细节">V2 的技术细节
+</h3><ul>
+<li><strong>骨干网络</strong>：对齐的 ResNet-34，通过 LSS（Lift-Splat-Shoot）把 6 颗摄像头的图像&quot;拍扁&quot;到地面</li>
+<li><strong>时序对齐</strong>：把过去 2 秒的 BEV 特征根据自车运动进行&quot;空间平移&quot;，让不同时间点的特征在同一个坐标系下重叠</li>
+</ul>
+<hr>
+<h2 id="九规划逻辑的信息流">九、规划逻辑的信息流
+</h2><h3 id="三重交互机制">三重交互机制
+</h3><ol>
+<li><strong>DCA（全景扫描）</strong>：轨迹看 BEV 特征图，快速定位周围是大街还是小巷</li>
+<li><strong>Agent-Wise Attention</strong>：轨迹与 50 个障碍物 Query 进行 1 对 1 谈话，进行厘米级碰撞检测</li>
+<li><strong>Map-Wise Attention</strong>：轨迹与车道线向量对齐，确保遵守交通规则</li>
+</ol>
+
+    <blockquote>
+        <p><strong>生动比喻</strong>：</p>
+<ul>
+<li>BEV 交互是让你&quot;别撞墙&quot;</li>
+<li>Map 交互是让你&quot;守交规&quot;</li>
+</ul>
+
+    </blockquote>
+<hr>
+<h2 id="十前后帧一致性如何拒绝精神分裂">十、前后帧一致性：如何拒绝&quot;精神分裂&quot;？
+</h2><h3 id="1-时序特征融合">1. 时序特征融合
+</h3><p>输入包含过去几帧（比如过去 2 秒）的图像或点云，通过 Temporal Attention 把过去的特征&quot;存&quot;在当前特征向量里。</p>
+
+    <blockquote>
+        <p>比喻：你开车时，脑子里其实存着前 2 秒路口的样子，你看的是一部&quot;连贯的电影&quot;。</p>
+
+    </blockquote>
+<h3 id="2-anchors-作为定海神针">2. Anchors 作为&quot;定海神针&quot;
+</h3><p>64 个锚点（直行、左转等模板）是固定不变的。每一帧都从相同的锚点出发，起步点不乱跳。</p>
+<h3 id="3-截断扩散的功劳">3. 截断扩散的功劳
+</h3><p>推理时只走 2 步（甚至 1 步），步数越少，生成过程就越接近确定性逻辑。</p>
+<h3 id="4-grpo-带来的决断力">4. GRPO 带来的&quot;决断力&quot;
+</h3><p>通过组内对比，极大拉开了&quot;好路径&quot;和&quot;坏路径&quot;的分数差距，让决策变得非常&quot;笃定&quot;。</p>
+<hr>
+<h2 id="十一实验结果">十一、实验结果
+</h2><p>在自动驾驶界最有名的考场 <strong>NAVSIM</strong> 进行考试：</p>
+<ul>
+<li><strong>PDMS 分数</strong>：91.2，刷新世界纪录</li>
+<li><strong>骨干网络</strong>：即使使用较小的 ResNet-34，表现也超过了拥有巨大骨干网络的模型</li>
+</ul>
+<hr>
+<h2 id="十二关键技术实现multi-head-attention">十二、关键技术实现：Multi-Head Attention
+</h2><h3 id="为什么要用多头">为什么要用多头？
+</h3><p><strong>单头注意力</strong>：像一把手电筒，盯着行人看，可能就没注意到红绿灯</p>
+<p><strong>多头注意力</strong>：像一个专家顾问团</p>
+<ul>
+<li>1号头（安全专家）：盯着障碍物和距离</li>
+<li>2号头（导航专家）：盯着车道线和路标</li>
+<li>3号头（舒适专家）：盯着路面平整度和坡度</li>
+</ul>
+<h3 id="核心代码逻辑">核心代码逻辑
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 多头拆分：把 [batch, seq_len, d_model] 变成 [batch, num_heads, seq_len, head_dim]</span>
+</span></span><span style="display:flex;"><span>Q <span style="color:#f92672">=</span> Q<span style="color:#f92672">.</span>view(batch_size, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, num_heads, head_dim)<span style="color:#f92672">.</span>transpose(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 计算注意力分数</span>
+</span></span><span style="display:flex;"><span>scores <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>matmul(Q, K<span style="color:#f92672">.</span>transpose(<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">/</span> math<span style="color:#f92672">.</span>sqrt(d_k)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 为什么除以 sqrt(d_k)？</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 防止分数值过大，导致 Softmax 进入饱和区（梯度消失）</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 就像&#34;音量调节旋钮&#34;，让模型保持&#34;理智&#34;</span>
+</span></span></code></pre></div><hr>
+<h2 id="十三个人思考与疑问">十三、个人思考与疑问
+</h2><h3 id="值得学习的亮点">值得学习的亮点
+</h3><ol>
+<li><strong>锚点机制</strong>：把扩散模型的&quot;混沌&quot;约束在 64 个意图分区里，既保证多样性又控制计算量</li>
+<li><strong>GRPO 的巧妙应用</strong>：借用 DeepSeek-R1 的技术，解决了模仿学习&quot;不识好歹&quot;的问题</li>
+<li><strong>乘法噪声</strong>：一个看似微小的数学改变，却让轨迹在物理平滑度上直接降维打击前代</li>
+</ol>
+<h3 id="待探索的问题">待探索的问题
+</h3><ol>
+<li><strong>GRPO 的组大小如何选择</strong>？8 条还是 16 条？对性能和效率的影响如何？</li>
+<li><strong>Mode Selector 是否可以引入时序记忆</strong>，进一步稳定决策？</li>
+<li><strong>如何处理极端场景</strong>（如突然出现的障碍物）？</li>
+</ol>
+<hr>
+<h2 id="参考链接">参考链接
+</h2><ul>
+<li>论文原文：DiffusionDriveV2</li>
+<li>相关工作：DiffusionPlanner, DiffusionDriveV1, DeepSeek-R1 (GRPO)</li>
+</ul>
+<hr>
+<p><em>本笔记基于 AI 辅助的论文讨论整理而成，保留了讨论中的生动比喻和技术细节。</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">扩散模型</a>
+        
+            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">强化学习</a>
+        
+            <a href="/tags/grpo/">GRPO</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/hi-p-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/res-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ResAD: Normalized Residual Trajectory Modeling for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/uad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">End-to-End Autonomous Driving without Costly Modularization and 3D Manual Annotation</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

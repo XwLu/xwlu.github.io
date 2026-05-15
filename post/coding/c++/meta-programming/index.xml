@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Meta-programming Abstract on 朝花夕拾</title>
+        <link>https://example.org/post/coding/c&#43;&#43;/meta-programming/</link>
+        <description>Recent content in Meta-programming Abstract on 朝花夕拾</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Wed, 02 Apr 2025 10:32:39 +0800</lastBuildDate><atom:link href="https://example.org/post/coding/c++/meta-programming/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>Fundamentals of meta-programming</title>
+            <link>https://example.org/post/coding/c&#43;&#43;/meta-programming/fundamental/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/coding/c&#43;&#43;/meta-programming/fundamental/</guid>
+            <description>&lt;h1 id=&#34;元编程的引入&#34;&gt;元编程的引入&#xA;&lt;/h1&gt;&lt;ul&gt;&#xA;&lt;li&gt;从泛型编程到元编程&#xA;&lt;ul&gt;&#xA;&lt;li&gt;泛型编程：一套代码处理不同类型&lt;/li&gt;&#xA;&lt;li&gt;对于一些特殊的类型需要引入额外的处理逻辑——引入&lt;strong&gt;操纵程序的程序&lt;/strong&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;vector&amp;lt;bool&amp;gt;，bool只需要1个bit就可以表示，但是计算机中最小的单位是1个byte，因此，vector对bool类型做了特化&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;元编程与编译期计算&#xA;&lt;ul&gt;&#xA;&lt;li&gt;很多语言都有元编程&lt;/li&gt;&#xA;&lt;li&gt;C++的元编程本质上就是编译期计算&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;第一个元编程示例&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a class=&#34;link&#34; href=&#34;http://www.erwin-unruh.de/primorig.html&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;Erwin Unruh, 1994&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;这段代码能够在编译错误中产生质数，也就意味着编译的时候，就有计算被引入其中了，拉开了元编程的序幕&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;使用编译期运算辅助运行期计算&#xA;&lt;ul&gt;&#xA;&lt;li&gt;不是简单的将整个计算一分为二&lt;/li&gt;&#xA;&lt;li&gt;需要详细设计一下，哪些内容可以放到编译期，哪些内容放到运行期&#xA;&lt;ul&gt;&#xA;&lt;li&gt;如果某种信息需要在运行期确定，那么通常无法利用编译期计算&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;hr&gt;&#xA;&lt;h1 id=&#34;元编程的编写&#34;&gt;元编程的编写&#xA;&lt;/h1&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;</description>
+        </item></channel>
+</rss>

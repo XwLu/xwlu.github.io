@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="现在的端到端自动驾驶（E2E-AD）界有个普遍的怪现象：&ldquo;应试教育&quot;满分，&ldquo;实战上路&quot;拉胯。">
+<title>HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/hi-p-ad/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention">
+<meta property='og:description' content="现在的端到端自动驾驶（E2E-AD）界有个普遍的怪现象：&ldquo;应试教育&quot;满分，&ldquo;实战上路&quot;拉胯。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/hi-p-ad/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='轨迹规划' /><meta property='article:tag' content='注意力机制' /><meta property='article:tag' content='解码器' /><meta property='article:tag' content='多粒度规划' /><meta property='article:published_time' content='2026-03-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention">
+<meta name="twitter:description" content="现在的端到端自动驾驶（E2E-AD）界有个普遍的怪现象：&ldquo;应试教育&quot;满分，&ldquo;实战上路&quot;拉胯。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题ai司机的偏科痛点">核心问题：AI司机的&quot;偏科&quot;痛点</a></li>
+        <li><a href="#问题根源">问题根源</a></li>
+        <li><a href="#hip-ad-的答案">HiP-AD 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心方法老司机的三大独门绝技">二、核心方法：老司机的三大独门绝技</a>
+      <ul>
+        <li><a href="#绝技一多把量尺看世界--分层与多粒度规划">绝技一：多把量尺看世界 —— 分层与多粒度规划</a></li>
+        <li><a href="#绝技二指哪打哪的目光--规划可变形注意力pda">绝技二：指哪打哪的目光 —— 规划可变形注意力（PDA）</a></li>
+        <li><a href="#绝技三超级大脑圆桌会议--统一解码器unified-decoder">绝技三：超级大脑圆桌会议 —— 统一解码器（Unified Decoder）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三伪代码实现老司机的脑神经">三、伪代码实现：老司机的脑神经</a>
+      <ul>
+        <li><a href="#伪代码里的三个高光时刻">伪代码里的三个&quot;高光时刻&rdquo;</a></li>
+      </ul>
+    </li>
+    <li><a href="#四秘密训练法对齐匹配align-matching">四、秘密训练法：对齐匹配（Align Matching）</a></li>
+    <li><a href="#五战绩揭晓实验结果">五、战绩揭晓（实验结果）</a>
+      <ul>
+        <li><a href="#闭环终极测验bench2drive-数据集">闭环终极测验（Bench2Drive 数据集）</a></li>
+        <li><a href="#特殊技能考核">特殊技能考核</a></li>
+        <li><a href="#开环基础测验nuscenes-数据集">开环基础测验（nuScenes 数据集）</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结与局限">六、总结与局限</a>
+      <ul>
+        <li><a href="#一句话总结">一句话总结</a></li>
+        <li><a href="#局限性论文坦诚">局限性（论文坦诚）</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/hi-p-ad/">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-17T00:00:00Z'>Tuesday, March 17, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题ai司机的偏科痛点">核心问题：AI司机的&quot;偏科&quot;痛点</a></li>
+        <li><a href="#问题根源">问题根源</a></li>
+        <li><a href="#hip-ad-的答案">HiP-AD 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二核心方法老司机的三大独门绝技">二、核心方法：老司机的三大独门绝技</a>
+      <ul>
+        <li><a href="#绝技一多把量尺看世界--分层与多粒度规划">绝技一：多把量尺看世界 —— 分层与多粒度规划</a></li>
+        <li><a href="#绝技二指哪打哪的目光--规划可变形注意力pda">绝技二：指哪打哪的目光 —— 规划可变形注意力（PDA）</a></li>
+        <li><a href="#绝技三超级大脑圆桌会议--统一解码器unified-decoder">绝技三：超级大脑圆桌会议 —— 统一解码器（Unified Decoder）</a></li>
+      </ul>
+    </li>
+    <li><a href="#三伪代码实现老司机的脑神经">三、伪代码实现：老司机的脑神经</a>
+      <ul>
+        <li><a href="#伪代码里的三个高光时刻">伪代码里的三个&quot;高光时刻&rdquo;</a></li>
+      </ul>
+    </li>
+    <li><a href="#四秘密训练法对齐匹配align-matching">四、秘密训练法：对齐匹配（Align Matching）</a></li>
+    <li><a href="#五战绩揭晓实验结果">五、战绩揭晓（实验结果）</a>
+      <ul>
+        <li><a href="#闭环终极测验bench2drive-数据集">闭环终极测验（Bench2Drive 数据集）</a></li>
+        <li><a href="#特殊技能考核">特殊技能考核</a></li>
+        <li><a href="#开环基础测验nuscenes-数据集">开环基础测验（nuScenes 数据集）</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结与局限">六、总结与局限</a>
+      <ul>
+        <li><a href="#一句话总结">一句话总结</a></li>
+        <li><a href="#局限性论文坦诚">局限性（论文坦诚）</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考来源">参考来源</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <hr>
+<h2 id="一这篇论文在讲什么">一、这篇论文在讲什么？
+</h2><h3 id="核心问题ai司机的偏科痛点">核心问题：AI司机的&quot;偏科&quot;痛点
+</h3><p>现在的端到端自动驾驶（E2E-AD）界有个普遍的怪现象：<strong>&ldquo;应试教育&quot;满分，&ldquo;实战上路&quot;拉胯。</strong></p>
+<ul>
+<li><strong>开环测试（开卷考试）</strong>：给一段历史视频，让 AI 画出未来的行驶轨迹（Waypoints）。大家都画得很好，碰撞率（Collision Rate）极低，甚至能降到 0.1%。</li>
+<li><strong>闭环测试（实车上路）</strong>：把 AI 扔进仿真软件（比如 Bench2Drive）里真刀真枪地开。结果呢？成功率不到 35%！遇到路口就犹豫不决（超时死机），遇到突发情况就抓瞎。</li>
+</ul>
+<h3 id="问题根源">问题根源
+</h3><p>作者一针见血地指出：目前的 AI 在&quot;规划（Planning）&ldquo;时，和&quot;感知（Perception）&ldquo;的交互太弱了！而且预测出来的轨迹太单调（只有稀疏的几个点），根本不够用来做精细的车辆控制。</p>
+<h3 id="hip-ad-的答案">HiP-AD 的答案
+</h3>
+    <blockquote>
+        <p>用 <strong>&ldquo;分层多粒度预测&rdquo; + &ldquo;顺着轨迹看图像（PDA）&rdquo; + &ldquo;三合一圆桌会议（统一解码器）&rdquo;</strong>，彻底打通感知与规划的任督二脉</p>
+
+    </blockquote>
+<hr>
+<h2 id="二核心方法老司机的三大独门绝技">二、核心方法：老司机的三大独门绝技
+</h2><h3 id="绝技一多把量尺看世界--分层与多粒度规划">绝技一：多把量尺看世界 —— 分层与多粒度规划
+</h3><p>以前的 AI 预测轨迹，就是每秒打几个点（时间路点，Temporal Waypoints）。这就好比司机只知道&quot;我 3 秒后要到那个路口&rdquo;，但他不知道这 3 秒内方向盘该打几度。</p>
+<p>HiP-AD 彻底改变了玩法，它不仅预测时间，还把轨迹拆解成了 <strong>三大维度（模态）</strong>，并且每个维度都有 <strong>不同的颗粒度</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模态</th>
+          <th>关注点</th>
+          <th>颗粒度划分</th>
+          <th>用途</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>空间路点</strong></td>
+          <td>&ldquo;路径&quot;怎么走</td>
+          <td>密集（2m一个点）&amp; 稀疏（5m一个点）</td>
+          <td>密集点做精准方向盘微调（横向控制），稀疏点看宏观大局</td>
+      </tr>
+      <tr>
+          <td><strong>时间路点</strong></td>
+          <td>&ldquo;什么时候到哪&rdquo;</td>
+          <td>高频（5Hz）&amp; 低频（2Hz）</td>
+          <td>高频应对紧急情况，低频规划长程</td>
+      </tr>
+      <tr>
+          <td><strong>驾驶风格路点</strong></td>
+          <td>&ldquo;车速和动作&rdquo;</td>
+          <td>慢/中/快（0-4, 4-10, 10+ m/s）</td>
+          <td>应对超车、紧急刹车等复杂场景</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>控车策略</strong>：AI 会用空间路点控制方向盘（横向），用时间和驾驶风格路点控制油门刹车（纵向），完美解决由于轨迹点太稀疏导致的&quot;车辆犹豫&quot;问题！</p>
+<hr>
+<h3 id="绝技二指哪打哪的目光--规划可变形注意力pda">绝技二：指哪打哪的目光 —— 规划可变形注意力（PDA）
+</h3><p>以前的 AI 规划器在看周围环境时，是&quot;全局乱瞟&rdquo;（Global Attention），不仅计算量大，还容易抓不到重点。</p>
+<p><strong>HiP-AD 的做法极其聪明</strong>——它利用了几何学物理规律：</p>
+<ol>
+<li>先把系统预测出的 3D 未来轨迹点（Waypoints），通过相机参数，<strong>投影映射到 2D 的多视角环视图像上</strong></li>
+<li>然后，只在这些 <strong>&ldquo;车轮即将压过&rdquo;</strong> 的图像物理位置附近，去采样提取图像特征</li>
+</ol>
+<p><strong>生动比喻</strong>：</p>
+
+    <blockquote>
+        <p>这就像老司机在开车时，目光会死死盯住自己即将开过去的那条车道线和前方的障碍物，而不是去看天上的云彩。</p>
+
+    </blockquote>
+<p><strong>数学表达</strong>：
+$$\text{PDA}(Q_p, F) = \sum_{i \in \mathcal{V}} \text{DeformAttn}(Q_p, \mathcal{P}(A_p), F_i)$$</p>
+<p>规划主脑有一条预测出的未来 3D 轨迹（$A_p$）。它把这条未来轨迹用函数 $\mathcal{P}$ 投影到多视角的图像（$F$）上，然后只在&quot;未来车轮即将压过的图像像素点&quot;周围提取特征！</p>
+<hr>
+<h3 id="绝技三超级大脑圆桌会议--统一解码器unified-decoder">绝技三：超级大脑圆桌会议 —— 统一解码器（Unified Decoder）
+</h3><p>传统的框架是流水线作业：先做感知（找车、找线）→ 再做预测 → 最后做规划。不仅慢，信息还会衰减。</p>
+<p>HiP-AD 搞了一个 <strong>&ldquo;单解码器&rdquo;</strong>，把所有任务拉进一个群里并行开会！</p>
+<h4 id="入场的三大代表输入配置">入场的三大&quot;代表&rdquo;（输入配置）
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>代表</th>
+          <th>符号</th>
+          <th>职责</th>
+          <th>初始坐标（Anchors）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>🚗 动态物体代表</td>
+          <td>Agent Query ($Q_a$)</td>
+          <td>找周围移动的车、人</td>
+          <td>3D 边界框（Box Anchors）</td>
+      </tr>
+      <tr>
+          <td>🛣️ 静态地图代表</td>
+          <td>Map Query ($Q_m$)</td>
+          <td>找车道线、斑马线</td>
+          <td>聚类算法生成的折线（Polyline Anchors）</td>
+      </tr>
+      <tr>
+          <td>🧠 自动驾驶主脑代表</td>
+          <td>Planning Query ($Q_p$)</td>
+          <td>决定咱们自己的车往哪开</td>
+          <td>未来 $T$ 个时间点的行驶轨迹折线</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="圆桌会议的三大议程">圆桌会议的三大议程
+</h4><p>每个 Decoder Layer 都包含以下三个关键环节：</p>
+<hr>
+<h4 id="-议程一翻阅历史案卷--时序交互模块">🕒 议程一：翻阅历史案卷 —— 时序交互模块
+</h4><p>老司机开车绝不能只看眼前，得记得上一秒旁边有辆车想加塞。</p>
+<p><strong>技术动作</strong>：</p>
+<ul>
+<li>代表们（Queries）首先会和 <strong>上一帧历史保留下来的重要特征</strong> 进行 <strong>交叉注意力（Cross-Attention）</strong> 计算</li>
+<li>为了防止历史信息太多把脑袋撑爆，系统用了一个 <strong>Top-$k$ 选择机制</strong>，只保留上一帧最有价值的线索</li>
+<li><strong>给主脑开小灶</strong>：规划代表（Planning Query）不但要回顾自己的历史，还会额外增加一次跨任务的 Cross-Attention，专门去盯住历史帧里的感知信息</li>
+</ul>
+<hr>
+<h4 id="-议程二圆桌激烈讨论--协同交互模块">🗣️ 议程二：圆桌激烈讨论 —— 协同交互模块
+</h4><p>看完历史，大家得互相通气了。主脑需要知道哪里有车、哪里是实线，才能规划路线。</p>
+<p><strong>核心技术细节 —— 几何物理融合（公式 1）</strong>：</p>
+<p>$$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{C}} - \tau D\right)V$$</p>
+<p>常规的注意力机制只有前半部分，决定谁和谁更相关。但这里多了一个极其关键的 <strong>&ldquo;惩罚项&rdquo;</strong>：$- \tau D$</p>
+<ul>
+<li><strong>$D$ 是什么？</strong> 两个物体在真实 3D 物理世界里的 <strong>欧几里得距离</strong>（比如动态车与车之间、车与车道线之间）</li>
+<li><strong>$\tau$ 是什么？</strong> 通过多层感知机（MLP）学习出来的系数</li>
+<li><strong>精妙之处</strong>：如果一辆车离你很远（$D$ 很大），那么它在注意力分数里就会被狠狠扣分。这强迫 AI 司机 <strong>&ldquo;把有限的注意力集中在离自己最近、最危险的物体上&rdquo;</strong>！</li>
+</ul>
+<p><strong>主脑的特权</strong>：这个距离惩罚对感知代表有效，但对 <strong>规划代表没有距离限制</strong>！为什么？因为作为最高决策者，规划主脑必须有统揽全局的视野。</p>
+<hr>
+<h4 id="-议程三去图像里找证据--任务可变形注意力模块">🎯 议程三：去图像里找证据 —— 任务可变形注意力模块
+</h4><p>讨论出了初步结果，代表们需要带着目前的猜测，去原始的摄像机画面里 <strong>&ldquo;精准取证&rdquo;</strong>，刷新自己的认知。</p>
+<p><strong>感知代表的做法</strong>：把 3D 锚点顺着预设高度，利用相机参数 <strong>投影到 2D 环视图像上</strong>，然后在投影落下的那个点附近采样提取图像特征。</p>
+<p><strong>规划主脑的终极奥义（PDA）</strong>：</p>
+<ul>
+<li>把预测的&quot;未来 3D 行驶轨迹路点&quot;投影到多个摄像头画面上</li>
+<li>让主脑自己学习：在轨迹周围哪些像素点最值得关注？</li>
+<li><strong>目光死死盯住&quot;车轮即将压过的未来路线&quot;周围的画面！提取图像特征。</strong></li>
+</ul>
+<hr>
+<h2 id="三伪代码实现老司机的脑神经">三、伪代码实现：老司机的脑神经
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> torch
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> torch.nn.functional <span style="color:#66d9ef">as</span> F
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">Unified_Decoder</span>(
+</span></span><span style="display:flex;"><span>    image_features,   <span style="color:#75715e"># [多视角环视图像特征 F] (监控录像)</span>
+</span></span><span style="display:flex;"><span>    queries,          <span style="color:#75715e"># [动态物体Qa, 静态地图Qm, 规划主脑Qp] (拿着清单的代表)</span>
+</span></span><span style="display:flex;"><span>    anchors,          <span style="color:#75715e"># [动态框Aa, 静态线段Am, 未来轨迹Ap] (各自关注的3D物理坐标)</span>
+</span></span><span style="display:flex;"><span>    history_memory,   <span style="color:#75715e"># [上一帧存下来的重要记忆]</span>
+</span></span><span style="display:flex;"><span>    camera_params,    <span style="color:#75715e"># [相机的内外参矩阵] (用于3D到2D的投影)</span>
+</span></span><span style="display:flex;"><span>    num_layers<span style="color:#f92672">=</span><span style="color:#ae81ff">6</span>      <span style="color:#75715e"># 会议通常要开好几轮 (堆叠6层Decoder)</span>
+</span></span><span style="display:flex;"><span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># --- 会议前奏：代表入场 ---</span>
+</span></span><span style="display:flex;"><span>    Qa, Qm, Qp <span style="color:#f92672">=</span> queries
+</span></span><span style="display:flex;"><span>    Aa, Am, Ap <span style="color:#f92672">=</span> anchors
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 🔄 开始循环开会：每一层 Decoder 都在进行信息的深度融合</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> layer <span style="color:#f92672">in</span> range(num_layers):
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 🕒 议程一：时序交互模块 (Temporal Interaction Module)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 目标：&#34;温故知新&#34;，看看上一秒发生了什么。</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 1. 脑容量有限，用 Top-k 机制挑选上一帧最有价值的记忆点</span>
+</span></span><span style="display:flex;"><span>        hist_k_agent, hist_k_map, hist_k_plan <span style="color:#f92672">=</span> select_top_k(history_memory)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 2. 感知代表各自查阅自己的历史卷宗 (Cross-Attention)</span>
+</span></span><span style="display:flex;"><span>        Qa <span style="color:#f92672">=</span> CrossAttention(query<span style="color:#f92672">=</span>Qa, key<span style="color:#f92672">=</span>hist_k_agent, value<span style="color:#f92672">=</span>hist_k_agent)
+</span></span><span style="display:flex;"><span>        Qm <span style="color:#f92672">=</span> CrossAttention(query<span style="color:#f92672">=</span>Qm, key<span style="color:#f92672">=</span>hist_k_map,   value<span style="color:#f92672">=</span>hist_k_map)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 💡 3. 【老司机的特权】规划主脑不仅看自己的历史轨迹，</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    还要盯着历史的感知环境！</span>
+</span></span><span style="display:flex;"><span>        Qp_self_hist <span style="color:#f92672">=</span> CrossAttention(query<span style="color:#f92672">=</span>Qp, key<span style="color:#f92672">=</span>hist_k_plan, value<span style="color:#f92672">=</span>hist_k_plan)
+</span></span><span style="display:flex;"><span>        Qp_perc_hist <span style="color:#f92672">=</span> CrossAttention(
+</span></span><span style="display:flex;"><span>            query<span style="color:#f92672">=</span>Qp,
+</span></span><span style="display:flex;"><span>            key<span style="color:#f92672">=</span>concat(hist_k_agent, hist_k_map),
+</span></span><span style="display:flex;"><span>            value<span style="color:#f92672">=</span>concat(hist_k_agent, hist_k_map)
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>        Qp <span style="color:#f92672">=</span> combine_features(Qp_self_hist, Qp_perc_hist)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 🗣️ 议程二：协同交互模块 (Collaborative Interaction Module)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 目标：统一的圆桌会议，互相通气，引入&#34;物理距离惩罚&#34;！</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 1. 把所有人拉进一个群里</span>
+</span></span><span style="display:flex;"><span>        Q_all <span style="color:#f92672">=</span> concat(Qa, Qm, Qp)
+</span></span><span style="display:flex;"><span>        A_all <span style="color:#f92672">=</span> concat(Aa, Am, Ap)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 2. 计算纯粹的注意力分数 (谁跟谁有关联)</span>
+</span></span><span style="display:flex;"><span>        attn_scores <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>matmul(Q_all, Q_all<span style="color:#f92672">.</span>transpose(<span style="color:#f92672">-</span><span style="color:#ae81ff">2</span>, <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)) <span style="color:#f92672">/</span> math<span style="color:#f92672">.</span>sqrt(C)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 💡 3. 【核心技术细节：公式(1)】计算真实物理世界中 3D 锚点之间的距离矩阵 D</span>
+</span></span><span style="display:flex;"><span>        D_matrix <span style="color:#f92672">=</span> calc_euclidean_distance_3d(A_all, A_all)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># ⚠️ 【主脑特权掩码】规划主脑(Qp)看所有人都不受距离限制</span>
+</span></span><span style="display:flex;"><span>        D_matrix <span style="color:#f92672">=</span> apply_planning_mask(D_matrix, mask_value<span style="color:#f92672">=</span><span style="color:#ae81ff">0.0</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 4. 用一个小网络学习一个动态系数 tau (控制惩罚力度)</span>
+</span></span><span style="display:flex;"><span>        tau <span style="color:#f92672">=</span> MLP(Q_all)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 5. 施加物理距离惩罚！距离越远的物体，注意力得分被扣得越惨</span>
+</span></span><span style="display:flex;"><span>        penalized_scores <span style="color:#f92672">=</span> attn_scores <span style="color:#f92672">-</span> (tau <span style="color:#f92672">*</span> D_matrix)
+</span></span><span style="display:flex;"><span>        attn_weights <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span>softmax(penalized_scores, dim<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 6. 根据惩罚后的权重，大家交换情报</span>
+</span></span><span style="display:flex;"><span>        Q_all_updated <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>matmul(attn_weights, Q_all)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 7. 散会，大家拿着更新后的情报各自归位</span>
+</span></span><span style="display:flex;"><span>        Qa, Qm, Qp <span style="color:#f92672">=</span> split_queries(Q_all_updated)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 🎯 议程三：任务可变形注意力模块 (Task Deformable Attention Module)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 目标：拿着讨论结果，去图像画面里&#34;精准取证&#34;。</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># =========================================================</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 1. 感知代表去找车和线：把 3D 的框和线投影到 2D 图像上</span>
+</span></span><span style="display:flex;"><span>        P_a_2d <span style="color:#f92672">=</span> project_3D_to_2D(Aa, camera_params)
+</span></span><span style="display:flex;"><span>        P_m_2d <span style="color:#f92672">=</span> project_3D_to_2D(Am, camera_params)
+</span></span><span style="display:flex;"><span>        Qa <span style="color:#f92672">=</span> DeformableAttention(query<span style="color:#f92672">=</span>Qa, reference_points<span style="color:#f92672">=</span>P_a_2d, features<span style="color:#f92672">=</span>image_features)
+</span></span><span style="display:flex;"><span>        Qm <span style="color:#f92672">=</span> DeformableAttention(query<span style="color:#f92672">=</span>Qm, reference_points<span style="color:#f92672">=</span>P_m_2d, features<span style="color:#f92672">=</span>image_features)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 💡 2. 【核心技术细节：公式(2) PDA】规划主脑的终极绝技！</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">#    把预测的&#34;未来3D行驶轨迹路点&#34;投影到多个摄像头画面上</span>
+</span></span><span style="display:flex;"><span>        P_p_2d <span style="color:#f92672">=</span> project_trajectory_to_2D(Ap, camera_params, predefined_heights)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 让主脑自己学习：在轨迹周围哪些像素点最值得关注？</span>
+</span></span><span style="display:flex;"><span>        sampling_offsets, sampling_weights <span style="color:#f92672">=</span> MLP_predict_offsets_weights(Qp)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 施展 PDA：目光死死盯住&#34;车轮即将压过的未来路线&#34;周围的画面！</span>
+</span></span><span style="display:flex;"><span>        Qp <span style="color:#f92672">=</span> PDA_DeformableAttention(
+</span></span><span style="display:flex;"><span>            query<span style="color:#f92672">=</span>Qp,
+</span></span><span style="display:flex;"><span>            reference_points<span style="color:#f92672">=</span>P_p_2d,
+</span></span><span style="display:flex;"><span>            offsets<span style="color:#f92672">=</span>sampling_offsets,
+</span></span><span style="display:flex;"><span>            weights<span style="color:#f92672">=</span>sampling_weights,
+</span></span><span style="display:flex;"><span>            features<span style="color:#f92672">=</span>image_features
+</span></span><span style="display:flex;"><span>        )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># 🔄 层级收尾：更新代表们的 3D 坐标锚点</span>
+</span></span><span style="display:flex;"><span>        Aa <span style="color:#f92672">=</span> update_anchors(Aa, Qa)
+</span></span><span style="display:flex;"><span>        Am <span style="color:#f92672">=</span> update_anchors(Am, Qm)
+</span></span><span style="display:flex;"><span>        Ap <span style="color:#f92672">=</span> update_anchors(Ap, Qp)  <span style="color:#75715e"># 轨迹越来越精确</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 🚪 整个开会流程结束，输出给外面的业务部门 (Heads) 去执行</span>
+</span></span><span style="display:flex;"><span>    update_history_memory(Qa, Qm, Qp)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Qa, Qm, Qp
+</span></span></code></pre></div><h3 id="伪代码里的三个高光时刻">伪代码里的三个&quot;高光时刻&rdquo;
+</h3><ol>
+<li>
+<p><strong>议程一中的 <code>combine_features(Qp_self_hist, Qp_perc_hist)</code></strong>：规划时不仅记得自己上一秒想怎么走，还 <strong>直接</strong> 调取了上一秒周围环境的原始记忆，没有中间商赚差价。</p>
+</li>
+<li>
+<p><strong>议程二中的 <code>penalized_scores = attn_scores - (tau * D_matrix)</code></strong>：这就是论文里最惊艳的 <strong>几何物理融合</strong>。它强迫网络变成一个真正的司机——&ldquo;不要看天上飞的鸟，看离你保险杠只有半米远的那辆车！&rdquo;</p>
+</li>
+<li>
+<p><strong>议程三中的 <code>PDA_DeformableAttention</code></strong>：传统的网络是在图像上撒网捞鱼，而这里是 <strong>&ldquo;按图索骥&rdquo;</strong>。沿着预测轨迹投影到 2D 上的路线，只在这个轨迹的左右两边提取图像特征。</p>
+</li>
+</ol>
+<hr>
+<h2 id="四秘密训练法对齐匹配align-matching">四、秘密训练法：对齐匹配（Align Matching）
+</h2><p>因为搞出了几十种不同粒度、不同模态的预测轨迹，训练的时候 AI 容易&quot;精神分裂&rdquo;，到底哪个才是最准的？</p>
+<p><strong>对齐匹配机制（公式 6）</strong>：</p>
+<ul>
+<li>在训练时，采用 <strong>&ldquo;赢家通吃&rdquo;（Winner-takes-all）</strong> 的策略</li>
+<li>先在所有的轨迹预测组里，找到和真实人类轨迹（Ground Truth）差距最小（L2 距离最小）的那组作为&quot;学霸（Reference）&quot;</li>
+<li>然后，强迫其他所有的粒度组，都向这个&quot;学霸&quot;的模态对齐，共享匹配结果，把梯度有效地反向传播回去</li>
+</ul>
+<hr>
+<h2 id="五战绩揭晓实验结果">五、战绩揭晓（实验结果）
+</h2><p>这位练成神功的 HiP-AD 老司机去考场了，结果直接&quot;屠榜&quot;！</p>
+<h3 id="闭环终极测验bench2drive-数据集">闭环终极测验（Bench2Drive 数据集）
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指标</th>
+          <th>HiP-AD</th>
+          <th>第二名（DriveTransformer）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>成功率</strong></td>
+          <td><strong>72.7%</strong></td>
+          <td>35%（翻了一倍多）</td>
+      </tr>
+      <tr>
+          <td><strong>驾驶得分</strong></td>
+          <td><strong>88.3</strong></td>
+          <td>远超所有现有端到端模型</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="特殊技能考核">特殊技能考核
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>高难度科目</th>
+          <th>成功率</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>紧急刹车</td>
+          <td>83.33%</td>
+      </tr>
+      <tr>
+          <td>超车</td>
+          <td>84.44%</td>
+      </tr>
+      <tr>
+          <td>汇入车流</td>
+          <td>50%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>不再像以前的模型那样遇到复杂路况就死机！</p>
+<h3 id="开环基础测验nuscenes-数据集">开环基础测验（nuScenes 数据集）
+</h3><ul>
+<li><strong>碰撞率</strong>：0.01% - 0.05%（极低）</li>
+<li>感知和预测任务也拿到了顶尖分数，证明底盘依然极度扎实</li>
+</ul>
+<hr>
+<h2 id="六总结与局限">六、总结与局限
+</h2><h3 id="一句话总结">一句话总结
+</h3><p>HiP-AD 通过 <strong>&ldquo;分层多粒度预测&rdquo; + &ldquo;顺着轨迹看图像（PDA）&rdquo; + &ldquo;三合一圆桌会议（统一解码器）&rdquo;</strong>，彻底打通了感知与规划的任督二脉，解决了端到端自动驾驶在闭环仿真中不敢开、不会开的难题。</p>
+<h3 id="局限性论文坦诚">局限性（论文坦诚）
+</h3><ul>
+<li>遇到后方突然高速冲过来的车辆时，系统有时候还是会反应不及（这确实也是人类司机的盲区）</li>
+<li>目前还在仿真阶段，真车路测将是未来的星辰大海</li>
+</ul>
+<hr>
+<h2 id="参考来源">参考来源
+</h2><ul>
+<li>原论文：HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention for End-to-End Autonomous Driving</li>
+<li>讨论：Gemini 3.1 Pro Preview 对话记录</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+            <a href="/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/">注意力机制</a>
+        
+            <a href="/tags/%E8%A7%A3%E7%A0%81%E5%99%A8/">解码器</a>
+        
+            <a href="/tags/%E5%A4%9A%E7%B2%92%E5%BA%A6%E8%A7%84%E5%88%92/">多粒度规划</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/uad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">End-to-End Autonomous Driving without Costly Modularization and 3D Manual Annotation</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/future-x/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">FutureX: Enhance End-to-End Autonomous Driving via Latent Chain-of-Thought World Model</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

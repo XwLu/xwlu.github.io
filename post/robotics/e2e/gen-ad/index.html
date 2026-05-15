@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Paper Reading Notes of GenAD">
+<title>GenAD</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/gen-ad/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="GenAD">
+<meta property='og:description' content="Paper Reading Notes of GenAD">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/gen-ad/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T11:08:42&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T11:08:42&#43;08:00'/>
+<meta name="twitter:title" content="GenAD">
+<meta name="twitter:description" content="Paper Reading Notes of GenAD">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#instance-centric-scene-representation">Instance-Centric Scene Representation</a>
+      <ul>
+        <li><a href="#image-to-bev">Image to BEV</a></li>
+        <li><a href="#bev-to-map">BEV to Map</a></li>
+        <li><a href="#bev-to-agent">BEV to agent</a></li>
+        <li><a href="#instance-centric-scene-representation-1">Instance-centric scene representation</a></li>
+      </ul>
+    </li>
+    <li><a href="#trajectory-prior-modeling">Trajectory Prior Modeling</a></li>
+    <li><a href="#latent-future-trajectory-generation">Latent Future Trajectory Generation</a></li>
+    <li><a href="#generative-end-to-end-autonomous-driving">Generative End-to-End Autonomous Driving</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/gen-ad/">GenAD</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T11:08:42&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#instance-centric-scene-representation">Instance-Centric Scene Representation</a>
+      <ul>
+        <li><a href="#image-to-bev">Image to BEV</a></li>
+        <li><a href="#bev-to-map">BEV to Map</a></li>
+        <li><a href="#bev-to-agent">BEV to agent</a></li>
+        <li><a href="#instance-centric-scene-representation-1">Instance-centric scene representation</a></li>
+      </ul>
+    </li>
+    <li><a href="#trajectory-prior-modeling">Trajectory Prior Modeling</a></li>
+    <li><a href="#latent-future-trajectory-generation">Latent Future Trajectory Generation</a></li>
+    <li><a href="#generative-end-to-end-autonomous-driving">Generative End-to-End Autonomous Driving</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="genad-generative-end-to-end-autonomous-driving">GenAD: Generative End-to-End Autonomous Driving
+</h1><h1 id="方案细节">方案细节
+</h1><h2 id="instance-centric-scene-representation">Instance-Centric Scene Representation
+</h2><h3 id="image-to-bev">Image to BEV
+</h3><ul>
+<li>
+<p>初始化一个 \(H\times W\)的BEV query \(B_{0}\)，将摄像头提取的multi-scaled feature \(F\)与之进行deformable cross-attention，得到BEV feature</p>
+<p>$$B=DA(B_{0},F,F)$$</p>
+<ul>
+<li>\(DA(Q,K,V)\)表示deformable cross-attention</li>
+</ul>
+</li>
+</ul>
+<h3 id="bev-to-map">BEV to Map
+</h3><ul>
+<li>
+<p>借鉴VAD的思路，初始化一个learnable query \(M_{0}\)，集合BEV feature通过global cross-attention得到地图元素表达 \(M\)</p>
+<p>$$M=CA(M_{0},B,B)$$</p>
+</li>
+</ul>
+<h3 id="bev-to-agent">BEV to agent
+</h3><ul>
+<li>
+<p>类似地图元素，agent特征的提取方式为：</p>
+<p>$$A=DA(A_{0},B,B)$$</p>
+<ul>
+<li>\(A_{0}\)是learnable query</li>
+<li>这边得到agent特征后，会接一个3D目标检测head进行agent的位置、朝向、种类的解码</li>
+</ul>
+</li>
+</ul>
+<h3 id="instance-centric-scene-representation-1">Instance-centric scene representation
+</h3><ul>
+<li>将上面学到的agent特征和ego query拼在一起， \(I=concat(e,A)\)</li>
+<li>学习agent和ego之间的相互影响， \(I=SA(I,I,I)\)， \(SA(Q,K,V)\)表示self-attention</li>
+<li>学习agent、ego和地图之间的交互， \(I=CA(I,M,M)\)</li>
+</ul>
+<h2 id="trajectory-prior-modeling">Trajectory Prior Modeling
+</h2><ul>
+<li>
+<p>自车和障碍物的轨迹都是高度结构化的（连续的），并遵循一定的模式。例如，当车辆以恒定速度行驶时，大多数轨迹都是直线，当车辆右转或左转时，其中一些轨迹是曲率接近恒定的曲线。只有在极少数情况下，轨迹才会是曲折的。考虑到这一点，我们采用变分自动编码器（VAE）架构来学习latent spaec \(Z\)，以此来建模trajectory prior。</p>
+</li>
+<li>
+<p>这里利用一个GT轨迹encoder \(e_{f}\)来建模 \(p(z|\mathsf{\mathbf{T}}(T,f))\)，它将未来轨迹映射到latent spaec \(Z\)。encoder \(e_{f}\)输出一组 \(\mu_{f}\)和 \(\sigma_{f}\)来表示GMM的均值和方差。</p>
+<ul>
+<li>
+<p>\(e_{f}\)代码实现</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="780px" data-flex-grow="325" height="140" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/1.png" width="455"></p>
+</li>
+</ul>
+<p>$$p(z|\mathsf{\mathbf{T}}(T,f)) \thicksim N(\mu_{f},\sigma_{f})$$</p>
+</li>
+<li>
+<p>分布 \(p(z|\mathsf{\mathbf{T}}(T,f))\)包含未来轨迹的先验，可用于提高障碍物和自车的运动预测和规划的真实性。</p>
+</li>
+</ul>
+<h2 id="latent-future-trajectory-generation">Latent Future Trajectory Generation
+</h2><ul>
+<li>
+<p>有了未来轨迹的latent distribution作为先验后，我们需要将未来轨迹从latent spaec \(Z\)中解码出来。最直接的办法是用一个MLP在BEV space下解码出轨迹点，但是这种方法无法模拟障碍物和自车随时间变化产生的交互。为了建模每个实例在不同时间戳之间的时间上的联系，对联合概率分布 \(p(\mathsf{\mathbf{T}}(T,f)|z)\)进行分解：</p>
+<p>$$p(\mathsf{\mathbf{T}}(T,f)|z)=p(w^{T+1}|z^{T})\cdot p(w^{T+2}|w^{T+1},z^{T})&hellip;p(w^{T+f}|w^{T+1},&hellip;,w^{T+f-1},z^{T})$$</p>
+</li>
+</ul>
+<ul>
+<li>
+<p>我们从分布 \(N(\mu_{f},\sigma_{f})\)中采样一组 \(\mu_{f}\)和\(\sigma_{f}\)作为当前时刻的 \(z^{T}\)的latent state。不同于其他方法中一次性将轨迹decode出来，这边是采用分步解码的方法。引入decoder \(d_{w}\)（MLP）从latent state中解码轨迹点。 \(p(w^{T+1}|z^{T})\)通过 \(w=d_{w}(z)\)来表示。</p>
+<ul>
+<li>采样代码实现：
+<img alt="pic" class="gallery-image" data-flex-basis="539px" data-flex-grow="224" height="294" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/2.png" width="661"></li>
+</ul>
+</li>
+<li>
+<p>我们通过GRU模型来建模状态随时间的演化。 \(z^{T+1}=g(z^{T})\)，然后再解码下个时刻的轨迹点， \(w^{T+1}=g(z^{T+1})\)， \(T+f\)时刻同理。</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="180px" data-flex-grow="75" height="788" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/3.png" width="594"></p>
+<ul>
+<li>
+<p>从distribution里面采样出的latent state进行future state的预测</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="423px" data-flex-grow="176" height="402" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/4.png" width="710"></p>
+</li>
+<li>
+<p>这边的self.predict_model函数里包含了GRU的实现，但是从代码上看，没有按照T循环调用GRU，而是设计了一个4层（layer_num=4）的GRU模拟状态随时间的推演。</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="398px" data-flex-grow="165" height="599" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/5.png" srcset="/post/robotics/e2e/gen-ad/5_hu_4e8c960c0271ce9c.png 800w, /post/robotics/e2e/gen-ad/5.png 994w" width="994"></p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="622px" data-flex-grow="259" height="379" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/6.png" srcset="/post/robotics/e2e/gen-ad/6_hu_239bace651070133.png 800w, /post/robotics/e2e/gen-ad/6.png 983w" width="983"></p>
+</li>
+<li>
+<p>decoder是按照T循环解码出的轨迹点（下面的for循环），这里的self.ego_fut_decoder是个MLP，将GRU输出的latent future state转化为轨迹点</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="350px" data-flex-grow="146" height="733" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/7.png" srcset="/post/robotics/e2e/gen-ad/7_hu_42141fc9c81886a4.png 800w, /post/robotics/e2e/gen-ad/7.png 1071w" width="1071"></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="generative-end-to-end-autonomous-driving">Generative End-to-End Autonomous Driving
+</h2><ul>
+<li>
+<p>轨迹loss</p>
+<p>$$J_{prior}=L_{traj}(\hat{T_{e}},T_{e})+\frac{1}{N_{a}}L_{traj}(\hat{T_{a}},T_{a})+\lambda_{c}L_{focal}(\hat{C_{a}},C_{a})$$</p>
+<ul>
+<li>\(L_{traj}()\)衡量两条轨迹的L1 loss。 \(N_{a}\)是agent的数量， \(C_{a}\)是agent的预测类别， \(T_{a}\)是agent的预测轨迹。</li>
+</ul>
+</li>
+<li>
+<p>将上面得到的instance tokens \(I\)通过encoder \(e_{i}\)映射到latent space \(Z\)，也类似地输出一组输出一组 \(\mu_{i}\)和 \(\sigma_{i}\)。</p>
+<ul>
+<li>
+<p>\(e_{i}\)代码实现：</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="799px" data-flex-grow="333" height="142" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/8.png" width="473"></p>
+</li>
+</ul>
+<p>$$p(z|I)\thicksim N(\mu_{i},\sigma_{i})$$</p>
+</li>
+<li>
+<p>通过KL散度衡量 \(p(z|I)\)和GT轨迹 \(p(z|\mathsf{\mathbf{T}}(T,f))\)之间的差异</p>
+<p>$$J_{plan}=D_{KL}(p(z|I),p(z|\mathsf{\mathbf{T}}(T,f)))$$
+<img alt="pic" class="gallery-image" data-flex-basis="338px" data-flex-grow="140" height="708" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/9.png" srcset="/post/robotics/e2e/gen-ad/9_hu_55bf729fd1560f1.png 800w, /post/robotics/e2e/gen-ad/9.png 998w" width="998"></p>
+<ul>
+<li>KL散度衡量的就是上面的output_distribution中present和future的分布差异</li>
+</ul>
+</li>
+<li>
+<p>总loss</p>
+<p>$$J_{GenAD}=J_{prior}+\lambda_{plan}J_{plan}+\lambda_{map}J_{map}+\lambda_{det}J_{det}$$</p>
+</li>
+<li>
+<p>在infer阶段，弃用future trajectory encoder（因为没有GT），从 \(p(z|I)\)中采样latent state，作为轨迹生成模块的输入</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="305px" data-flex-grow="127" height="348" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/10.png" width="443"></p>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

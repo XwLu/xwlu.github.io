@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Exception for C++">
+<title>Exception</title>
+
+
+<link rel="canonical" href="https://example.org/post/coding/c&#43;&#43;/exception/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Exception">
+<meta property='og:description' content="Exception for C++">
+<meta property='og:url' content='https://example.org/post/coding/c&#43;&#43;/exception/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Exception">
+<meta name="twitter:description" content="Exception for C++">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#异常类型">异常类型</a></li>
+    <li><a href="#尽量使用c提供的标准异常">尽量使用C++提供的标准异常</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/coding/" style="background-color: hsl(47, 60%, 84%); color: hsl(47, 60%, 15%);">
+                Coding
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/coding/c&#43;&#43;/exception/">Exception</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#异常类型">异常类型</a></li>
+    <li><a href="#尽量使用c提供的标准异常">尽量使用C++提供的标准异常</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="基础">基础
+</h1><ul>
+<li>通过关键字try/catch/throw引入异常处理机制
+<pre tabindex="0"><code>void f1() {
+  int x;
+  double y;  // y先被销毁，x后被销毁
+  throw 1;  // 此处抛出异常
+  std::cout &lt;&lt; &#34;1&#34; &lt;&lt; std::endl;
+}
+
+int f2() {
+  int x;
+  double y;  // f1函数中的局部对象被销毁后，开始销毁f2中的局部对象
+  try {
+    f1();
+  } catch(double) {
+    // f1抛出的异常不会在这里被捕获，int和double类型不匹配
+    std::cout &lt;&lt; &#34;exception catched 2: &#34; &lt;&lt; e &lt;&lt; std::endl; 
+  }
+  std::cout &lt;&lt; &#34;other logic in f2&#34; &lt;&lt; std::endl;  // 不会执行
+}
+
+int f3() {
+  try {
+    f2();
+  } catch(int e) {
+    std::cout &lt;&lt; &#34;exception catched 3: &#34; &lt;&lt; e &lt;&lt; std::endl;
+  }
+  std::cout &lt;&lt; &#34;other logic in f3&#34; &lt;&lt; std::endl;  // 会执行
+}
+
+int main() {
+  try {
+    f3();
+  } catch(int) {  // 异常已经被处理了，这里不会捕获到异常
+    std::cout &lt;&lt; &#34;exception catched 2!&#34; &lt;&lt; std::endl; 
+  } catch(double) {
+    // ...
+  }
+}
+</code></pre></li>
+<li>异常触发时的系统行为——栈展开
+<ul>
+<li>上面代码中的f1抛出异常后，会一层一层往上一个栈帧找catch匹配代码，找不到就抛弃对应栈帧</li>
+<li>抛出异常后续的代码不会被执行</li>
+<li>局部对象会按照构造相反的顺序自动销毁</li>
+<li>系统尝试匹配相应的catch代码段
+<ul>
+<li>如果匹配则执行其中的逻辑，之后执行catch后续的代码</li>
+<li>如果不匹配则继续进行栈展开，直到“跳出”main函数，触发terminate结束运行</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>异常对象
+<ul>
+<li>系统会使用抛出的异常拷贝初始化一个临时对象，称为异常对象</li>
+<li>异常对象会在栈展开过程中被保留，并最终传递给匹配的catch语句</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="trycatch语句块">try/catch语句块
+</h1><ul>
+<li>一个try语句块后面可以跟一个到多个catch语句块
+<pre tabindex="0"><code>try {
+  f3();
+} catch(int) {
+  // ...
+} catch(double) {
+  // ...
+}
+</code></pre></li>
+<li>每个catch语句块用于匹配一种类型的异常对象</li>
+<li>catch语句块的匹配按照从上到下进行
+<pre tabindex="0"><code>// demo 1
+void f0() {
+  throw 1;
+}
+
+void f1() {
+  try {
+    f0();
+  } catch(double) {
+    std::cout &lt;&lt; &#34;double&#34; &lt;&lt; std::endl;
+  } catch(int) {
+    std::cout &lt;&lt; &#34;int&#34; &lt;&lt; std::endl;  // 会被该catch捕获
+  }
+}
+
+
+// demo 2
+struct Base {};
+struct Derive : Base {};
+
+void f2() {
+  throw Derive{};  
+}
+
+void f3() {
+  try {
+    f2();
+  } catch(Base&amp; e) {
+    // 异常会被该catch捕获，系统会使用Derive尝试初始化Base类型的e，发现可以初始化，就被捕获了
+    // 只有派生类-&gt;基类、数组-&gt;指针、函数-&gt;指针可以被匹配，int-&gt;double这种不行
+    std::cout &lt;&lt; &#34;base&#34; &lt;&lt; std::endl;
+  } catch(Derive&amp; e) {
+    std::cout &lt;&lt; &#34;derive&#34; &lt;&lt; std::endl;
+  }
+}
+</code></pre></li>
+<li>使用catch(&hellip;)匹配任意异常，通常放在多个catch语句块的最后，兜底</li>
+<li>可以在catch中调用throw抛出相同类型的异常
+<pre tabindex="0"><code>void f0() {
+  throw Str{};
+}
+
+void f1() {
+  try {
+    f0();
+  } catch(...) {
+    throw;  // 把捕获到的异常继续向下一层栈帧抛出
+  }
+}
+
+int main() {
+  try {
+    f1();
+  } catch(Str&amp; e) {
+    // 捕获到最初由f0抛出的异常
+  }
+}
+</code></pre></li>
+</ul>
+<hr>
+<h1 id="一个异常未处理完成未被捕获时抛出新的异常会导致程序崩溃">一个异常未处理完成(未被捕获)时抛出新的异常会导致程序崩溃
+</h1><ul>
+<li>不要在析构函数或者operator delete函数重载版本中抛出异常</li>
+<li>通常来说，catch所接收的异常类型为引用类型
+<ul>
+<li>如果不加&amp;，就是用的拷贝初始化，而拷贝初始化过程可以抛出异常，所以存在程序崩溃风险</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="异常与构造析构函数">异常与构造&amp;析构函数
+</h1><ul>
+<li>使用function-try-block来保护初始化逻辑
+<pre tabindex="0"><code>struct Str {
+  Str() { throw 100; }
+};
+
+class Cla {
+public:
+  Cla()
+  try : mem() {  // 这里的&#34;: mem()&#34;可以删掉，编译器会隐式初始化mem，不需要用户显示指明
+    // init logic
+  } catch(int) {
+    std::cout &lt;&lt; &#34;exception catched in Cla::Cla&#34; &lt;&lt; std::endl;
+    // 编译器会在这里隐式地加一句&#34;throw;&#34;
+  }
+  int xxx;
+private:
+  Str mem;
+};
+
+int main() {
+  try {
+    Cla cla;
+    cla.xxx;
+  } catch(int) {
+    // 下面这一行也会执行，因为C++规定，如果是在构造函数内捕获的异常，编译器会隐式地在catch语句块最后加上&#34;throw;&#34;命令
+    // 这样做的原因是:
+    // 如果不继续向外吐出捕获，程序就会执行到上面的&#34;cla.xxx;&#34;指令，由于cla的初始化并没有成功，执行这条指令的行为是未定义的。
+    std::cout &lt;&lt; &#34;exception catched in main&#34; &lt;&lt; std::endl;
+  }
+}
+</code></pre></li>
+<li>function-try-block也支持一般函数
+<pre tabindex="0"><code>void fun()
+try {
+  throw 123;  
+} catch(...) {
+
+}
+</code></pre></li>
+<li>在构造函数中抛出异常时，已经构造的成员会被销毁，但析构函数不会被调用
+<ul>
+<li>构造函数没执行完，有些变量还没初始化，直接调用析构函数就存在未定义行为了</li>
+<li>对于已经构造出来的变量，如果需要手动清理的话，应该在构造函数的catch语句块中进行销毁处理</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="描述函数是否会抛出异常">描述函数是否会抛出异常
+</h1><ul>
+<li>如果函数不会抛出异常，则应表明，为系统提供更多的优化空间
+<ul>
+<li>C++98的方式：
+<ul>
+<li>throw()：不会抛出异常</li>
+<li>throw(int, char)：可能会抛出异常</li>
+</ul>
+</li>
+<li>C++11后的改进：
+<ul>
+<li>noexcept：不会抛出异常</li>
+<li>noexcept(false)：可能会抛出异常</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>noexcept
+<ul>
+<li>限定符：接受false/true表示是否会抛出异常</li>
+<li>操作符：接受一个表达式，根据表达式是否可能抛出异常返回false/true
+<pre tabindex="0"><code>void fun() noexcept(false) {}
+void fun1() noexcept(noexcept(fun())) {
+  fun();
+}
+int main() {
+  std::cout &lt;&lt; noexcept(fun()) &lt;&lt; std::endl;  // 0
+}
+</code></pre></li>
+<li>在声明了noexcept的函数中抛出异常会导致terminate被调用，程序终止，这里的异常无法在外部被捕获</li>
+<li>不作为函数重载依据，但函数指针、虚拟函数重写时要保持形式兼容
+<pre tabindex="0"><code>void fun() {}
+int main() {
+  void (*ptr)() noexcept = fun;  // 报错，fun可能会抛出异常，这里的函数指针明确了不能抛出异常，冲突了
+  (*ptr)();
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="标准异常">标准异常
+</h1><h2 id="异常类型">异常类型
+</h2><ul>
+<li><img alt="std-exception" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../std-exception.png"></li>
+<li>exception:异常
+<ul>
+<li>runtime_error: 运行期异常
+<ul>
+<li>overflow_error</li>
+<li>underflow_error</li>
+</ul>
+</li>
+<li>logic_error: 逻辑异常
+<ul>
+<li>invalid_argument</li>
+<li>length_error</li>
+<li>out_of_range</li>
+</ul>
+</li>
+<li>bad_alloc</li>
+<li>bad_cast</li>
+<li>bad_type_id</li>
+<li>bad_exception</li>
+</ul>
+</li>
+</ul>
+<h2 id="尽量使用c提供的标准异常">尽量使用C++提供的标准异常
+</h2><pre tabindex="0"><code>#include &lt;stdexcept&gt;
+void fun() {
+  // throw 123;
+  throw std::runtime_error(&#34;Invalid Input!&#34;);
+}
+
+int main() {
+  try {
+    fun();
+  } catch (const std::runtime_error&amp; e) {
+    std::cout &lt;&lt; e.what() &lt;&lt; &#34;\n&#34;;  // what是exception（基类）的虚函数
+  } catch (const std::bad_alloc&amp; e) {
+    // 如果在这里捕获到异常，意味着发生了内存分配失败的问题 
+  }
+  // 之所以标准定义了这么多种类的异常，就是让你在写代码的时候一眼就可以看出来异常类型和对应的处理逻辑
+  // 你也可以自己定义异常
+}
+</code></pre><h1 id="正确对待异常">正确对待异常
+</h1><ul>
+<li>不要滥用：异常的成本非常高
+<ul>
+<li>异常是用于处理程序不应该发生的逻辑，正常的跳转不要用</li>
+</ul>
+</li>
+<li>不要不用：对真正的异常场景，异常处理是相对高效、简洁的处理方式</li>
+<li>编写异常安全的代码
+<ul>
+<li>不安全的例子
+<pre tabindex="0"><code>void fun() {
+  int* ptr = new int[3];
+  throw std::runtime_error(&#34;Invalid Input!&#34;);  // 栈展开了，ptr被销毁，但指向的内存没有被释放，泄露了
+  delete []ptr;
+}
+</code></pre></li>
+<li>需要注意的点：
+<ul>
+<li>避免裸的资源分配（如上代码）
+<ul>
+<li>内存：使用智能指针</li>
+<li>文件：使用C++提供的fstream</li>
+</ul>
+</li>
+<li>接口设计
+<ul>
+<li>stack的pop只返回void，top返回的是内容，这样设计就是为了异常安全</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

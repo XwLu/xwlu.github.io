@@ -1,0 +1,1333 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="想象一下，你在教一个新手司机开车。用模仿学习（Imitation Learning）的方式，就像给他一大堆&quot;老司机录像&quot;反复看——他能学到很多驾驶技巧，但问题是，他只知道&quot;该怎么开&quot;，却从来没有为自己的失误付出过代价。">
+<title>RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/rad-2/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework">
+<meta property='og:description' content="想象一下，你在教一个新手司机开车。用模仿学习（Imitation Learning）的方式，就像给他一大堆&quot;老司机录像&quot;反复看——他能学到很多驾驶技巧，但问题是，他只知道&quot;该怎么开&quot;，却从来没有为自己的失误付出过代价。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/rad-2/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='强化学习' /><meta property='article:tag' content='扩散模型' /><meta property='article:tag' content='运动规划' /><meta property='article:published_time' content='2026-04-24T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-04-24T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework">
+<meta name="twitter:description" content="想象一下，你在教一个新手司机开车。用模仿学习（Imitation Learning）的方式，就像给他一大堆&quot;老司机录像&quot;反复看——他能学到很多驾驶技巧，但问题是，他只知道&quot;该怎么开&quot;，却从来没有为自己的失误付出过代价。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#核心贡献-提出了一个统一的生成器-鉴别器框架通过扩散生成器放飞自我地想--rl鉴别器冷静地挑好的--bev-warp快速地练习让自动驾驶规划器既能建模多模态的未来不确定性又能在闭环交互中为后果负责"><strong>核心贡献</strong>: 提出了一个统一的生成器-鉴别器框架，通过&#34;扩散生成器放飞自我地想 + RL鉴别器冷静地挑好的 + BEV-Warp快速地练习&#34;，让自动驾驶规划器既能建模多模态的未来不确定性，又能在闭环交互中为后果负责。</a></li>
+    <li><a href="#一核心动机为什么需要这套组合拳">一、核心动机：为什么需要这套组合拳？</a>
+      <ul>
+        <li><a href="#11-模仿学习的三重困境">1.1 模仿学习的三重困境</a></li>
+        <li><a href="#12-强化学习的拦路虎">1.2 强化学习的拦路虎</a></li>
+        <li><a href="#13-rad-2-的解题思路">1.3 RAD-2 的解题思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#二方法详解rad-2-的核心武器库">二、方法详解：RAD-2 的核心武器库</a>
+      <ul>
+        <li><a href="#21-生成器-鉴别器框架">2.1 生成器-鉴别器框架</a></li>
+        <li><a href="#22-bev-warp-仿真环境秘密武器">2.2 BEV-Warp 仿真环境——&ldquo;秘密武器&rdquo;</a></li>
+        <li><a href="#23-关于-bev-warp-动态障碍物的讨论">2.3 关于 BEV-Warp 动态障碍物的讨论</a></li>
+        <li><a href="#24-联合策略优化三步迭代循环">2.4 联合策略优化：三步迭代循环</a></li>
+      </ul>
+    </li>
+    <li><a href="#三3dgs-验证真实感渲染下的二次检验">三、3DGS 验证：真实感渲染下的二次检验</a>
+      <ul>
+        <li><a href="#31-两个环境的本质区别">3.1 两个环境的本质区别</a></li>
+        <li><a href="#32-训练数据的分层结构">3.2 训练数据的分层结构</a></li>
+        <li><a href="#33-3dgs-里的闭环流程">3.3 3DGS 里的闭环流程</a></li>
+        <li><a href="#34-为什么能迁移">3.4 为什么能迁移？</a></li>
+        <li><a href="#35-验证结果">3.5 验证结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#四安全奖励的计算依赖标注数据吗">四、安全奖励的计算：依赖标注数据吗？</a>
+      <ul>
+        <li><a href="#41-ttc-计算公式">4.1 TTC 计算公式</a></li>
+        <li><a href="#42-直接答案是的依赖预先标注好的真实障碍物位置">4.2 直接答案：是的，依赖预先标注好的真实障碍物位置</a></li>
+        <li><a href="#43-ttc-计算流程">4.3 TTC 计算流程</a></li>
+        <li><a href="#44-这个设计的重要推论">4.4 这个设计的重要推论</a></li>
+        <li><a href="#45-潜在局限性">4.5 潜在局限性</a></li>
+      </ul>
+    </li>
+    <li><a href="#五绕开人工标注的替代方案">五、绕开人工标注的替代方案</a>
+      <ul>
+        <li><a href="#51-用传感器原始数据直接计算占用">5.1 用传感器原始数据直接计算占用</a></li>
+        <li><a href="#52-用端到端模型的中间特征">5.2 用端到端模型的中间特征</a></li>
+        <li><a href="#53-从真实事故险情数据中学习奖励">5.3 从真实事故/险情数据中学习奖励</a></li>
+        <li><a href="#54-用世界模型替代标注环境">5.4 用世界模型替代标注环境</a></li>
+        <li><a href="#55-用规则定义基于原始信号的奖励">5.5 用规则定义基于原始信号的奖励</a></li>
+      </ul>
+    </li>
+    <li><a href="#六实验结果">六、实验结果</a>
+      <ul>
+        <li><a href="#61-数据集规模">6.1 数据集规模</a></li>
+        <li><a href="#62-闭环-bev-warp-评估">6.2 闭环 BEV-Warp 评估</a></li>
+        <li><a href="#63-闭环-3dgs-评估">6.3 闭环 3DGS 评估</a></li>
+        <li><a href="#64-开环-senna-2-基准">6.4 开环 Senna-2 基准</a></li>
+        <li><a href="#65-消融实验摘要">6.5 消融实验摘要</a></li>
+        <li><a href="#66-定性对比">6.6 定性对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#七局限性与未来展望">七、局限性与未来展望</a>
+      <ul>
+        <li><a href="#71-表示方式的局限性">7.1 表示方式的局限性</a></li>
+        <li><a href="#72-通向生成式世界模型">7.2 通向生成式世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#八总结">八、总结</a>
+      <ul>
+        <li><a href="#这篇论文解决了什么核心问题">这篇论文解决了什么核心问题？</a></li>
+        <li><a href="#rad-2-的三件法宝">RAD-2 的三件法宝</a></li>
+        <li><a href="#核心创新点">核心创新点</a></li>
+      </ul>
+    </li>
+    <li><a href="#相关论文">相关论文</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/rad-2/">RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-04-24T00:00:00Z'>Friday, April 24, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        5 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#核心贡献-提出了一个统一的生成器-鉴别器框架通过扩散生成器放飞自我地想--rl鉴别器冷静地挑好的--bev-warp快速地练习让自动驾驶规划器既能建模多模态的未来不确定性又能在闭环交互中为后果负责"><strong>核心贡献</strong>: 提出了一个统一的生成器-鉴别器框架，通过&#34;扩散生成器放飞自我地想 + RL鉴别器冷静地挑好的 + BEV-Warp快速地练习&#34;，让自动驾驶规划器既能建模多模态的未来不确定性，又能在闭环交互中为后果负责。</a></li>
+    <li><a href="#一核心动机为什么需要这套组合拳">一、核心动机：为什么需要这套组合拳？</a>
+      <ul>
+        <li><a href="#11-模仿学习的三重困境">1.1 模仿学习的三重困境</a></li>
+        <li><a href="#12-强化学习的拦路虎">1.2 强化学习的拦路虎</a></li>
+        <li><a href="#13-rad-2-的解题思路">1.3 RAD-2 的解题思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#二方法详解rad-2-的核心武器库">二、方法详解：RAD-2 的核心武器库</a>
+      <ul>
+        <li><a href="#21-生成器-鉴别器框架">2.1 生成器-鉴别器框架</a></li>
+        <li><a href="#22-bev-warp-仿真环境秘密武器">2.2 BEV-Warp 仿真环境——&ldquo;秘密武器&rdquo;</a></li>
+        <li><a href="#23-关于-bev-warp-动态障碍物的讨论">2.3 关于 BEV-Warp 动态障碍物的讨论</a></li>
+        <li><a href="#24-联合策略优化三步迭代循环">2.4 联合策略优化：三步迭代循环</a></li>
+      </ul>
+    </li>
+    <li><a href="#三3dgs-验证真实感渲染下的二次检验">三、3DGS 验证：真实感渲染下的二次检验</a>
+      <ul>
+        <li><a href="#31-两个环境的本质区别">3.1 两个环境的本质区别</a></li>
+        <li><a href="#32-训练数据的分层结构">3.2 训练数据的分层结构</a></li>
+        <li><a href="#33-3dgs-里的闭环流程">3.3 3DGS 里的闭环流程</a></li>
+        <li><a href="#34-为什么能迁移">3.4 为什么能迁移？</a></li>
+        <li><a href="#35-验证结果">3.5 验证结果</a></li>
+      </ul>
+    </li>
+    <li><a href="#四安全奖励的计算依赖标注数据吗">四、安全奖励的计算：依赖标注数据吗？</a>
+      <ul>
+        <li><a href="#41-ttc-计算公式">4.1 TTC 计算公式</a></li>
+        <li><a href="#42-直接答案是的依赖预先标注好的真实障碍物位置">4.2 直接答案：是的，依赖预先标注好的真实障碍物位置</a></li>
+        <li><a href="#43-ttc-计算流程">4.3 TTC 计算流程</a></li>
+        <li><a href="#44-这个设计的重要推论">4.4 这个设计的重要推论</a></li>
+        <li><a href="#45-潜在局限性">4.5 潜在局限性</a></li>
+      </ul>
+    </li>
+    <li><a href="#五绕开人工标注的替代方案">五、绕开人工标注的替代方案</a>
+      <ul>
+        <li><a href="#51-用传感器原始数据直接计算占用">5.1 用传感器原始数据直接计算占用</a></li>
+        <li><a href="#52-用端到端模型的中间特征">5.2 用端到端模型的中间特征</a></li>
+        <li><a href="#53-从真实事故险情数据中学习奖励">5.3 从真实事故/险情数据中学习奖励</a></li>
+        <li><a href="#54-用世界模型替代标注环境">5.4 用世界模型替代标注环境</a></li>
+        <li><a href="#55-用规则定义基于原始信号的奖励">5.5 用规则定义基于原始信号的奖励</a></li>
+      </ul>
+    </li>
+    <li><a href="#六实验结果">六、实验结果</a>
+      <ul>
+        <li><a href="#61-数据集规模">6.1 数据集规模</a></li>
+        <li><a href="#62-闭环-bev-warp-评估">6.2 闭环 BEV-Warp 评估</a></li>
+        <li><a href="#63-闭环-3dgs-评估">6.3 闭环 3DGS 评估</a></li>
+        <li><a href="#64-开环-senna-2-基准">6.4 开环 Senna-2 基准</a></li>
+        <li><a href="#65-消融实验摘要">6.5 消融实验摘要</a></li>
+        <li><a href="#66-定性对比">6.6 定性对比</a></li>
+      </ul>
+    </li>
+    <li><a href="#七局限性与未来展望">七、局限性与未来展望</a>
+      <ul>
+        <li><a href="#71-表示方式的局限性">7.1 表示方式的局限性</a></li>
+        <li><a href="#72-通向生成式世界模型">7.2 通向生成式世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#八总结">八、总结</a>
+      <ul>
+        <li><a href="#这篇论文解决了什么核心问题">这篇论文解决了什么核心问题？</a></li>
+        <li><a href="#rad-2-的三件法宝">RAD-2 的三件法宝</a></li>
+        <li><a href="#核心创新点">核心创新点</a></li>
+      </ul>
+    </li>
+    <li><a href="#相关论文">相关论文</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h2 id="核心贡献-提出了一个统一的生成器-鉴别器框架通过扩散生成器放飞自我地想--rl鉴别器冷静地挑好的--bev-warp快速地练习让自动驾驶规划器既能建模多模态的未来不确定性又能在闭环交互中为后果负责"><strong>核心贡献</strong>: 提出了一个统一的生成器-鉴别器框架，通过&quot;扩散生成器放飞自我地想 + RL鉴别器冷静地挑好的 + BEV-Warp快速地练习&quot;，让自动驾驶规划器既能建模多模态的未来不确定性，又能在闭环交互中为后果负责。
+</h2><hr>
+<h2 id="一核心动机为什么需要这套组合拳">一、核心动机：为什么需要这套组合拳？
+</h2><h3 id="11-模仿学习的三重困境">1.1 模仿学习的三重困境
+</h3><p>想象一下，你在教一个新手司机开车。用模仿学习（Imitation Learning）的方式，就像给他一大堆&quot;老司机录像&quot;反复看——他能学到很多驾驶技巧，但问题是，<strong>他只知道&quot;该怎么开&quot;，却从来没有为自己的失误付出过代价</strong>。</p>
+<p>作者首先梳理了自动驾驶运动规划领域的&quot;江湖现状&quot;：</p>
+<p><strong>第一种流派——回归规划器</strong>（如 VAD、UniAD）：直接预测一条轨迹。听起来简单粗暴，问题是现实中司机会有很多合理选择（超车？还是跟车？），而它只会吐出一个&quot;平均答案&quot;，像个永远在走中间路线的优柔寡断者。</p>
+<p><strong>第二种流派——选择型规划器</strong>（如 VADv2、Hydra-MDP）：预先定义一堆候选轨迹，然后从里面选一条。这就像出行前只有几条固定路线可选，灵活性大打折扣。</p>
+<p><strong>第三种流派——扩散规划器</strong>（Diffusion-based）：用扩散模型来生成连续的多模态轨迹分布，理论上最优雅。但它们在纯模仿学习训练下面临关键挑战：真实驾驶数据有噪声和分布不均匀，导致扩散模型对某些轨迹区域学习不充分，偶尔会生成低质量或不稳定的轨迹——这在对安全极度敏感的规划任务中尤为致命。</p>
+<p>更要命的是，模仿学习存在**&ldquo;因果混淆&quot;问题**——模型学到的是状态和动作之间的相关性，而不是真正的因果关系，导致&quot;走捷径&quot;行为。而且它的<strong>开环训练范式与真实驾驶的闭环本质存在根本性的错配</strong>。</p>
+<h3 id="12-强化学习的拦路虎">1.2 强化学习的拦路虎
+</h3><p>引入强化学习（RL）本是解药——让模型在闭环仿真中真正&quot;为自己的行为负责&rdquo;。但直接将RL应用于生成式规划器极具挑战性：</p>
+<ul>
+<li><strong>信用分配困境</strong>：RL的奖励信号通常是低维标量，而动作空间是高维、时间结构化的轨迹，这使得信用分配极其复杂</li>
+<li><strong>优化不稳定</strong>：优化高维轨迹空间极易发散</li>
+<li><strong>仿真环境限制</strong>：游戏引擎仿真器（如CARLA）简化了智能体行为；基于重建的仿真器复杂且昂贵；学习型世界模型在长时序、多视角生成上力不从心</li>
+</ul>
+<h3 id="13-rad-2-的解题思路">1.3 RAD-2 的解题思路
+</h3><p>RAD-2 的核心洞见是：<strong>不要直接用稀疏的标量奖励去优化那个高维的扩散轨迹空间</strong>——那太难了！</p>
+<p>换个思路：</p>
+<ul>
+<li>让 RL 只优化<strong>鉴别器（discriminator）</strong>——因为鉴别器的输出天然就是低维的分数，和奖励信号&quot;门当户对&quot;</li>
+<li>同时，用一种特殊的方法来<strong>渐进式地引导生成器向好的轨迹区域靠拢</strong></li>
+</ul>
+
+    <blockquote>
+        <p><strong>一句话概括</strong>：扩散生成器放飞自我地想 + RL鉴别器冷静地挑好的 + BEV-Warp快速地练习 = 一个既有丰富想象力、又懂得为后果负责的自动驾驶大脑。</p>
+
+    </blockquote>
+<hr>
+<h2 id="二方法详解rad-2-的核心武器库">二、方法详解：RAD-2 的核心武器库
+</h2><p>这是论文最精华的部分，包含四件&quot;法宝&quot;。</p>
+<h3 id="21-生成器-鉴别器框架">2.1 生成器-鉴别器框架
+</h3><p>整个框架分两个组件，分工明确，各司其职：</p>
+<h4 id="扩散生成器diffusion-generator天马行空">扩散生成器（Diffusion Generator）——&ldquo;天马行空&rdquo;
+</h4><p>生成器的任务是生成多样化的候选轨迹。具体流程：</p>
+<p><strong>第一步：场景编码</strong></p>
+<ul>
+<li>把多视角摄像头图像压缩成鸟瞰图（BEV）特征</li>
+<li>分别提取静态地图元素（车道线、路边界）、动态智能体（周围车辆、行人）和导航指令的 Token 嵌入</li>
+<li>融合成统一的场景嵌入 $E_{\text{scene}}$</li>
+</ul>
+<p><strong>第二步：轨迹生成</strong></p>
+<ul>
+<li>对 M 个独立模式，从高斯噪声出发</li>
+<li>通过 K 步迭代去噪，每一步都在场景嵌入的条件下完成</li>
+<li>最终得到 M 条连续的 (x, y) 轨迹候选</li>
+<li>这就像同时给出 32 种不同的&quot;下一步棋&quot;供选择</li>
+</ul>
+<h4 id="rl鉴别器rl-based-discriminator严格把关">RL鉴别器（RL-based Discriminator）——&ldquo;严格把关&rdquo;
+</h4><p>鉴别器的任务是对生成器吐出的每条轨迹打一个 0~1 的分数，分数越高代表这条轨迹的长期驾驶质量越好。</p>
+<p>具体架构：</p>
+<ul>
+<li>每条轨迹通过 MLP 嵌入后，用一个带 <code>[cls]</code> Token 的 Transformer Encoder 提取轨迹级别的查询向量</li>
+<li>通过交叉注意力与地图特征、BEV特征、智能体特征进行多源融合</li>
+<li>最后经过 Sigmoid 输出一个标量分数</li>
+</ul>
+
+    <blockquote>
+        <p><strong>推理时扩展</strong>：这一架构天然支持推理时扩展——增加候选数量 M，让鉴别器探索更密集的动作空间，在不重新训练的情况下找到更高质量的解。</p>
+
+    </blockquote>
+<h3 id="22-bev-warp-仿真环境秘密武器">2.2 BEV-Warp 仿真环境——&ldquo;秘密武器&rdquo;
+</h3><p>这是 RAD-2 能够大规模训练的&quot;秘密武器&quot;。</p>
+<h4 id="传统方法的痛点">传统方法的痛点
+</h4><p>传统方法想做闭环评估，要么开游戏引擎渲染图片，要么跑神经网络生成逼真画面——<strong>都慢得要命</strong>。</p>
+<h4 id="rad-2-的思路不生成图片直接变形特征图">RAD-2 的思路：不生成图片，直接变形特征图！
+</h4><p>在每个仿真步骤：</p>
+<ul>
+<li>提取参考 BEV 特征 $\mathcal{B}^{\text{ref}}_{t+1}$（来自真实录制的日志）</li>
+<li>根据仿真自车位姿与参考位姿的偏差，推导变形矩阵 $\mathbf{M}<em>{t+1} = (\mathcal{P}</em>{t+1})^{-1}\mathcal{P}^{\text{ref}}_{t+1}$</li>
+<li>通过双线性插值将参考特征进行空间变形，合成新的观测特征 $\mathcal{B}_{t+1}$</li>
+</ul>
+
+    <blockquote>
+        <p><strong>比喻</strong>：就像玩拼图，你不需要重新印一张新图，只需要把原来的图平移一下、旋转一下，就能模拟出&quot;车向前开了10米&quot;的新视角——速度快到飞起！</p>
+
+    </blockquote>
+<h4 id="为什么能这样做">为什么能这样做？
+</h4><p>BEV 特征具有强烈的<strong>空间等变性（Spatial Equivariance）</strong>：对特征施加变形矩阵，解码出的感知输出（如3D边界框）会随之精确对应物理世界的位移。这保证了模拟的可靠性。</p>
+<hr>
+<h3 id="23-关于-bev-warp-动态障碍物的讨论">2.3 关于 BEV-Warp 动态障碍物的讨论
+</h3>
+    <blockquote>
+        <p>这是一个非常关键的细节讨论，值得深入理解。</p>
+
+    </blockquote>
+<h4 id="问题动态障碍物怎么处理">问题：动态障碍物怎么处理？
+</h4><p>直觉上，直接平移 BEV 的操作对静态障碍物有效，但动态障碍物本身也在移动啊！</p>
+<h4 id="bev-warp-的处理方式">BEV-Warp 的处理方式
+</h4><p>BEV-Warp <strong>没有独立地对动态障碍物建模和预测运动</strong>。它的做法是：</p>
+<p><strong>直接从真实日志里取下一时刻的完整 BEV 特征</strong>（包含了那一时刻周围所有车辆已经运动到的真实位置），然后只对这张完整特征图施加一个<strong>刚体平移/旋转变换</strong>，补偿自车偏离参考轨迹产生的视角差。</p>
+<p>用一个比喻理解：就像你有一段真实录像，每帧都记录了所有人的真实位置。BEV-Warp 不是去&quot;演算&quot;下一帧里别的车在哪，而是<strong>直接拿真实录像的下一帧</strong>，再把画面平移/旋转一下来对准你当前的视角。</p>
+<p>这意味着什么？</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>结论</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>动态障碍物的运动轨迹</strong></td>
+          <td>✅ 是真实的——因为它们的位置直接来自真实日志</td>
+      </tr>
+      <tr>
+          <td><strong>动态障碍物与自车的交互</strong></td>
+          <td>❌ 是假的——真实日志里的其他车不会因为你的自车走了不同路径而改变行为</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="这个妥协带来的根本缺陷">这个妥协带来的根本缺陷
+</h4><p><strong>场景A——自车偏离但障碍物不响应</strong>：
+假设原本参考轨迹是跟车，但仿真自车选择了超车变道。真实日志里前车不会因此加速或让路，依然按原轨迹走。超车后自车与前车的空间关系在 BEV 特征里会出现一个几何偏差。</p>
+<p><strong>场景B——变形引入的空间误差</strong>：
+对动态元素，变形矩阵仅补偿了自车的视角变化，<strong>没有补偿动态障碍物本身在这段时间内的独立运动</strong>。</p>
+<h4 id="为什么这个方案还能奏效">为什么这个方案还能奏效？
+</h4><p>论文能自圆其说，依赖以下几点：</p>
+<p><strong>1. 自车偏离量通常很小</strong>
+BEV-Warp 的设计前提是：仿真自车不会和参考轨迹偏差太远。在短时序的 rollout 里（10~20秒），如果自车的偏差是米级的，对 BEV 特征的影响是局部的、可用刚体近似的。</p>
+<p><strong>2. 奖励计算绕开了特征误差</strong>
+安全奖励 TTC 的计算方式：$\mathcal{V}_{\text{env}}(t+k)$ 代表的是环境在绝对时间 $t+k$ 的<strong>真实状态（ground-truth occupancy）</strong>，而不是从变形后的 BEV 特征里解码出的感知结果。</p>
+
+    <blockquote>
+        <p><strong>关键洞察</strong>：奖励信号是直接查真实日志计算的，而不是依赖那张变形后可能有误差的特征图。特征图只是给规划器看的&quot;输入视图&quot;，碰没碰、安不安全，是对照真实数据算的。</p>
+
+    </blockquote>
+<p><strong>3. 它的目标是训练 RL，不是完美仿真</strong>
+BEV-Warp 的定位从来不是&quot;真实模拟所有交互&quot;，而是给策略提供<strong>足够密度的、方向大致正确的梯度信号</strong>。</p>
+<h4 id="总结对比表">总结对比表
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>静态障碍物</th>
+          <th>动态障碍物</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>位置来源</strong></td>
+          <td>真实日志特征</td>
+          <td>真实日志特征</td>
+      </tr>
+      <tr>
+          <td><strong>运动建模</strong></td>
+          <td>无需（静止）</td>
+          <td>❌ 完全没有独立预测</td>
+      </tr>
+      <tr>
+          <td><strong>视角校正</strong></td>
+          <td>✅ 刚体变换精确</td>
+          <td>⚠️ 只校正了自车视角偏差</td>
+      </tr>
+      <tr>
+          <td><strong>交互响应</strong></td>
+          <td>N/A</td>
+          <td>❌ 其他车不响应自车行为变化</td>
+      </tr>
+      <tr>
+          <td><strong>奖励计算</strong></td>
+          <td>查真实日志</td>
+          <td>查真实日志（绕开了特征误差）</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h3 id="24-联合策略优化三步迭代循环">2.4 联合策略优化：三步迭代循环
+</h3><p>整个训练过程分三个阶段循环推进，如同一个自我进化的闭环。</p>
+<h4 id="241-时序一致性采样temporally-consistent-rollout">2.4.1 时序一致性采样（Temporally Consistent Rollout）
+</h4><p><strong>问题</strong>：如果每一步都重新采样一条全新的轨迹来执行，那么&quot;这一步走哪&quot;和&quot;后来撞没撞车&quot;之间的关联就会被打散——强化学习的信用分配变得极其困难，就像一场考试里每道题都由不同的人作答，分数却只给到整份试卷一样。</p>
+<p><strong>解法</strong>：一旦在时刻 $t$ 选定了最优轨迹，就把它对应的控制序列重用 $H_{\text{reuse}}$ 步（设为 <strong>8 步最优</strong>），而不是每步都重新规划。这保证了&quot;这条轨迹导致的结果&quot;能被清晰地归因到这条轨迹的选择上。</p>
+<p>用时间轴画出来：</p>
+<pre tabindex="0"><code>时刻:   t=0   1   2   3   4   5   6   7   8   9  10  11 ...
+决策:   ★               ★               ★
+执行:   [← 锁定执行 A →][← 锁定执行 B →][← 锁定执行 C →]
+        (Hreuse=8)       (Hreuse=8)       (Hreuse=8)
+</code></pre><p>★ 是&quot;真正做决策的时刻&quot;——鉴别器重新对 M 条候选轨迹打分、选出最优的时刻。</p>
+<h4 id="为什么-h_textreuse8-而不是-1">为什么 $H_{\text{reuse}}=8$ 而不是 1？
+</h4><p>这是一个经过实验验证的关键设计。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>$H_{\text{reuse}}$</th>
+          <th>效果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>太小（=1或2）</strong></td>
+          <td>模式切换频繁，奖励被稀释到太多决策点，归因噪声大；rollout 间差异来源混乱，组内对比失效；轨迹跳变、不可跟踪</td>
+      </tr>
+      <tr>
+          <td><strong>太大（=16+）</strong></td>
+          <td>归因清晰但决策点太少，更新频率低；锁定时间过长导致策略对环境变化的响应迟钝</td>
+      </tr>
+      <tr>
+          <td><strong>=8（最优）</strong></td>
+          <td>让每个决策的影响持续足够长以便清晰归因，同时又不长到让策略对动态环境失去反应能力</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p><strong>比喻</strong>：你要评估&quot;选A路还是选B路&quot;哪个更好，最合理的方式是让两辆车<strong>各自沿着选定的路开一段时间</strong>再比较结果。而不是每走一步都重新随机选一次路。</p>
+
+    </blockquote>
+<h4 id="242-鉴别器的-rl-优化tc-grpo">2.4.2 鉴别器的 RL 优化（TC-GRPO）
+</h4><p><strong>奖励设计</strong>：系统设计了两个互补的奖励：</p>
+<p><strong>🛡️ 安全奖励（$r_{\text{coll}}$）</strong></p>
+<ul>
+<li>通过反事实插值量化碰撞风险</li>
+<li>计算&quot;碰撞时间（TTC）&quot;</li>
+<li>序列级奖励取整个 rollout 中最危险时刻的 TTC 边际</li>
+<li><strong>一次安全违规就能主导整个序列的奖励</strong>，强制执行严格保守的驾驶策略</li>
+</ul>
+<p><strong>🚀 效率奖励（$r_{\text{eff}}$）</strong></p>
+<ul>
+<li>评估自车相对于参考轨迹的行驶进度</li>
+<li>用稳定窗口惩罚机制将车辆进度限制在目标效率区间（1.05~1.10倍参考速度）内</li>
+<li>既惩罚磨磨蹭蹭，也惩罚冒进超速</li>
+</ul>
+<p><strong>TC-GRPO 优化目标</strong>：</p>
+<p>这是从 DeepSeek-R1 里借鉴灵感的 GRPO 方法的&quot;驾驶版&quot;。对于从同一初始状态出发的 G 条 rollout：</p>
+<p>$$\mathcal{L}<em>{i,t\in\mathcal{K}<em>i} = \min\Big(\rho</em>{i,t} A_i,; \text{clip}(\rho</em>{i,t}, 1-\varepsilon, 1+\varepsilon) A_i\Big)$$</p>
+<p>其中：</p>
+<ul>
+<li>$A_i$：标准化优势（每条 rollout 奖励相对于组内均值和标准差）</li>
+<li>$\rho_{i,t} = \frac{\mathcal{D}<em>\phi(\hat{\tau}^*</em>{i,t} \mid o_{i,t})}{\mathcal{D}<em>{\phi</em>{\text{old}}}(\hat{\tau}^*<em>{i,t} \mid o</em>{i,t})}$：重要性采样比</li>
+<li>$\mathcal{K}_i$：rollout 中&quot;启动新的锁定执行区间的决策时刻&quot;的集合</li>
+</ul>
+
+    <blockquote>
+        <p><strong>关键设计</strong>：策略梯度只施加在 ★ 时刻（决策点），这保证了优势信号强化的是时序一致的轨迹假设，而非时序上缺乏相干性的独立动作样本。</p>
+
+    </blockquote>
+<h4 id="梯度为什么只在--时刻施加">梯度为什么只在 ★ 时刻施加？
+</h4><p><strong>问题一</strong>：在非决策时刻（比如 t=1,2,3），鉴别器根本没有输出任何分数——它没有做选择，不存在一个 $\mathcal{D}_\phi(\hat{\tau}^* \mid o_1)$ 这样的量。强行在 t=1 打梯度，等于是在惩罚一个&quot;没有做过的决定&quot;。</p>
+<p><strong>问题二</strong>：整个 rollout 只有一个序列级奖励 $r_i$。如果强行把这个奖励分摊到每一步，t=0 的决策和最终碰撞隔了十几步，t=14 的决策和碰撞只隔了 1 步——把同一个奖励同等地归因给这两个时刻，是严重失真的。</p>
+
+    <blockquote>
+        <p><strong>对比 LLM 的 GRPO</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>LLM 中的 GRPO</th>
+          <th>RAD-2 的 TC-GRPO</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>决策单元</strong></td>
+          <td>每个生成的 token</td>
+          <td>每个锁定执行区间的起点 ★</td>
+      </tr>
+      <tr>
+          <td><strong>奖励来源</strong></td>
+          <td>整段回答的最终得分</td>
+          <td>整段 rollout 的碰撞/效率分数</td>
+      </tr>
+      <tr>
+          <td><strong>梯度施加点</strong></td>
+          <td>每个 token 位置</td>
+          <td>只有 ★ 时刻，跳过锁定执行步</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    </blockquote>
+<h4 id="奖励如何分配到多个决策时刻">奖励如何分配到多个决策时刻？
+</h4><p>假设一条 rollout 的 $A_i = -0.8$，有 t=0, 4, 8 三个决策时刻。三个时刻的损失项是：</p>
+<p>$$\mathcal{L}<em>{i,0} = \min!\Big(\rho</em>{i,0} \cdot (-0.8),\ \text{clip}(\rho_{i,0}, 1-\varepsilon, 1+\varepsilon)\cdot(-0.8)\Big)$$</p>
+<p>三项进入求和后被 $|\mathcal{K}_i|=3$ 均等归一化，<strong>没有任何时刻拿到更大的权重</strong>。</p>
+<p>但每个时刻的<strong>实际梯度大小</strong>由各自的重要性采样比 $\rho_{i,t}$ 决定：</p>
+<p>$$\rho_{i,t} = \frac{\mathcal{D}<em>\phi(\hat{\tau}^*</em>{i,t} \mid o_{i,t})}{\mathcal{D}<em>{\phi</em>{\text{old}}}(\hat{\tau}^*<em>{i,t} \mid o</em>{i,t})}$$</p>
+
+    <blockquote>
+        <p><strong>设计哲学</strong>：三个决策点对最终结果的贡献是&quot;串联&quot;的，而不是&quot;并联独立&quot;的。用统一的 $A_i$ + 各自不同的 $\rho_{i,t}$ 来自然地区分惩罚强度，让<strong>数据本身说话</strong>。</p>
+
+    </blockquote>
+<h4 id="自适应熵正则化">自适应熵正则化
+</h4><p><strong>什么是熵？</strong></p>
+<p>熵来自信息论，衡量的是**&ldquo;不确定性&quot;或&quot;混乱程度&rdquo;**。</p>
+<p>用抛硬币理解：</p>
+<ul>
+<li><strong>公平硬币</strong>（50%-50%）：熵最大 = 1 bit，完全猜不到结果</li>
+<li><strong>作弊硬币</strong>（99%-1%）：熵很小 ≈ 0.08 bit，几乎能确定结果</li>
+</ul>
+<p><strong>熵越高 = 分布越均匀 = 越不确定；熵越低 = 分布越集中 = 越确定。</strong></p>
+<p><strong>鉴别器的&quot;分布&quot;</strong></p>
+<p>鉴别器对每条候选轨迹输出一个 0~1 的分数。在一批候选轨迹里，可以把这些分数理解为一个偏好分布：</p>
+<ul>
+<li><strong>高熵状态</strong>：分数都差不多，鉴别器在说&quot;我也不太确定哪条更好&quot;</li>
+<li><strong>低熵状态</strong>：分数极度集中（比如一条0.99，其他都0.01），鉴别器在说&quot;A 碾压所有&quot;</li>
+</ul>
+<p><strong>低熵有什么问题？</strong></p>
+<p>在 RL 训练中，鉴别器会自然趋向低熵——每次更新都在奖励高分、惩罚低分，分数越来越往两极分化。</p>
+<p>这带来两个后果：</p>
+<ul>
+<li><strong>梯度消失</strong>：Sigmoid 在接近 0 或 1 时梯度几乎为零，学习停滞</li>
+<li><strong>探索停止</strong>：鉴别器不再给其他轨迹机会，系统失去发现更好解的可能性</li>
+</ul>
+<p><strong>自适应熵正则化——只在需要时介入</strong></p>
+<p>RAD-2 的改进：用可学习的温度参数 $\lambda$ 控制正则化强度，只在批次平均熵低于目标值时才激活：</p>
+<p>$$\beta = \exp(\lambda) \cdot \mathbf{1}<em>{[\bar{\mathcal{H}} &lt; \bar{\mathcal{H}}</em>{\text{target}}]}$$</p>
+<p>大白话翻译：</p>
+<pre tabindex="0"><code>如果 当前平均熵 &lt; 目标熵：
+    β = exp(λ)  → 熵正则化开启，踩刹车
+否则：
+    β = 0       → 熵正则化关闭，放手让它跑
+</code></pre>
+    <blockquote>
+        <p><strong>比喻</strong>：想象鉴别器是招聘面试官。HR 只在面试官&quot;过于武断&quot;时出面提醒：&ldquo;你确定看够了吗？&quot;——平时不干涉，只在关键时刻介入。</p>
+
+    </blockquote>
+<p>消融实验显示：加入熵项后碰撞率从 0.254 降至 0.234，Safety@1 从 0.697 提升至 0.730。</p>
+<h4 id="243-生成器的在策优化ogo">2.4.3 生成器的在策优化（OGO）
+</h4><p>鉴别器再厉害，也只是从已有候选里&quot;选最好的&rdquo;。如果生成器本身生成的轨迹质量就不高，鉴别器也巧妇难为无米之炊。<strong>OGO 就是专门来&quot;提升生成器的上限&quot;的。</strong></p>
+<p><strong>核心思路</strong>：不直接用 RL 去优化高维轨迹空间，而是把闭环反馈转化为结构化的<strong>纵向</strong>优化信号，仅调整速度/加速度剖面，保持横向路径不变：</p>
+<ul>
+<li><strong>安全驱动减速</strong>：当 TTC 低于安全阈值时，压缩行驶距离（减速）</li>
+<li><strong>效率驱动加速</strong>：当自车落后参考轨迹且无碰撞风险时，延展行驶距离（加速）</li>
+</ul>
+<p><strong>为什么只动纵向？横向怎么办？</strong></p>
+<p>OGO 对横向路径（转向、变道、绕障的空间曲线）<strong>完全不施加任何修正</strong>。</p>
+<p>设计者的核心论点是：<strong>在驾驶场景里，大多数安全和效率问题，首先体现在纵向维度上。</strong></p>
+<p>想想日常驾驶中的典型危险：</p>
+<ul>
+<li>前车突然刹车 → 需要<strong>减速</strong>，而不是转向</li>
+<li>路口黄灯 → 需要<strong>加速通过或减速停止</strong></li>
+<li>跟车太近 → 需要<strong>拉开纵向距离</strong></li>
+</ul>
+<p>横向问题（压线、走错车道）通常在<strong>生成阶段</strong>就会被鉴别器过滤掉——一条明显走错车道的轨迹在重排序时就会得到低分。</p>
+
+    <blockquote>
+        <p><strong>分工逻辑</strong>：横向质量靠鉴别器的重排序来保证，纵向质量靠 OGO 来迭代改进。</p>
+
+    </blockquote>
+<p><strong>局限性</strong>：这种系统性横向偏差无法被 OGO 修正。只能靠最初的模仿学习预训练纠正，或靠积累足够多的真实数据让生成器自然学到正确的横向分布。</p>
+<p><strong>具体怎么做到&quot;只动纵向&quot;？</strong></p>
+<p>关键在于轨迹的参数化方式。把轨迹想象成一段铁路：</p>
+<ul>
+<li><strong>横向路径</strong> = 铁轨本身的弯曲形状（空间曲线）</li>
+<li><strong>纵向剖面</strong> = 火车在这段铁轨上的速度和加速度（时间进度）</li>
+</ul>
+<p>OGO 的操作：<strong>铁轨的形状一分不动，只调整火车的速度表。</strong></p>
+<p>纵向优化通过对原始加速度值施加常数偏移并重新积分：</p>
+<p>$$\text{压缩后的行驶距离} = \text{原始距离} \times \rho$$</p>
+<p>其中 $\rho \in (0,1)$ 用于减速，$\rho&rsquo; &gt; 1$ 用于加速。</p>
+<p><strong>数字例子</strong>：</p>
+<pre tabindex="0"><code>原始轨迹（空间坐标），总行驶距离 ≈ 9.0m：
+h=0: (0.0m,  0.0m)
+h=1: (2.0m,  0.3m)
+h=2: (4.2m,  0.5m)
+h=3: (6.5m,  0.6m)
+h=4: (9.0m,  0.6m)
+
+压缩后（ρ=0.7），总行驶距离 ≈ 6.3m：
+h=0: (0.0m,  0.0m)
+h=1: (1.4m,  0.21m)  ← 沿同一条曲线，走到70%的位置
+h=2: (2.94m, 0.35m)
+h=3: (4.55m, 0.42m)
+h=4: (6.3m,  0.42m)
+</code></pre><p><strong>空间曲线的形状（弯曲程度、转向角）完全没变</strong>，只是车在同样的时间窗口里走得更慢了。</p>
+
+    <blockquote>
+        <p><strong>技术原理</strong>：空间曲线可以用弧长参数化来描述。加速度的积分只影响<strong>沿弧长方向的进度</strong>，对垂直于运动方向的横向位移没有任何作用——这是微分几何上的天然解耦。</p>
+
+    </blockquote>
+<p><strong>优化循环的异步机制</strong>：</p>
+<ul>
+<li>每次新批次 rollout 入库就更新鉴别器</li>
+<li>每积累满 8 批新 rollout（整个 buffer 刷新一遍）才优化生成器</li>
+<li>形成 <strong>8:1</strong> 的训练频率比</li>
+<li>确保鉴别器持续感知最新数据，生成器则在积累足够数据后做一次大步调整</li>
+</ul>
+<hr>
+<h2 id="三3dgs-验证真实感渲染下的二次检验">三、3DGS 验证：真实感渲染下的二次检验
+</h2><h3 id="31-两个环境的本质区别">3.1 两个环境的本质区别
+</h3><p><strong>BEV-Warp 环境</strong>（日常训练）：</p>
+<ul>
+<li>&ldquo;作弊版&quot;仿真——不渲染任何图片，直接对 BEV 特征图做矩阵变形</li>
+<li>极其高效，但本质上是一种<strong>几何近似</strong></li>
+<li>场景里缺少真实的光照、纹理、天气等视觉细节</li>
+</ul>
+<p><strong>3DGS 环境</strong>（验证环境）：</p>
+<ul>
+<li>使用 3D 高斯泼溅技术</li>
+<li>直接从 3DGS 场景中，根据自车当前位姿 $\mathcal{P}_t$，用可微渲染算子 $\mathcal{R}(\cdot)$ 渲染出真实的多视角摄像头图像</li>
+<li>再正常走完整的感知→BEV 编码→规划流程</li>
+</ul>
+
+    <blockquote>
+        <p><strong>比喻</strong>：BEV-Warp 是让学生在&quot;填涂卷&quot;上练习，3DGS 是让他进真实考场做&quot;实操题&rdquo;。问题是：在简化版练习场里练出来的技能，在逼真考场里还能用吗？</p>
+
+    </blockquote>
+<h3 id="32-训练数据的分层结构">3.2 训练数据的分层结构
+</h3><p>RAD-2 有<strong>两套并行的训练体系</strong>：</p>
+<p><strong>第一套（主力训练，BEV-Warp 环境）</strong></p>
+<ul>
+<li>从真实驾驶日志收集 <strong>5万条片段</strong></li>
+<li>筛选后保留安全类和效率类场景各 <strong>1万条</strong> 做 RL 训练，各 <strong>512条</strong> 做评估</li>
+<li>生成器和鉴别器<strong>都在这里联合优化</strong></li>
+<li>这是论文方法的主战场</li>
+</ul>
+<p><strong>第二套（补充训练，3DGS 环境）</strong></p>
+<ul>
+<li>来自 Senna-2 基准的 <strong>1044条训练片段</strong></li>
+<li><strong>只在 3DGS 里对鉴别器做额外的 RL 训练</strong></li>
+<li>生成器在这里<strong>不做额外训练</strong></li>
+<li>3DGS 渲染太慢，无法支撑完整的联合优化</li>
+</ul>
+
+    <blockquote>
+        <p><strong>工程考量</strong>：3DGS 每一步都要调用可微渲染器生成多视角真实感图像，再走完整感知流水线，<strong>计算代价极高</strong>。所以只让相对轻量、参数少的鉴别器做增量适配——本质上是让鉴别器在&quot;更逼真的考场&quot;里做一次针对性微调，以弥合域差距。</p>
+
+    </blockquote>
+<h3 id="33-3dgs-里的闭环流程">3.3 3DGS 里的闭环流程
+</h3><ol>
+<li><strong>感知输入是真实渲染图像</strong>：每一步用当前自车位姿向 3DGS 场景发出渲染请求</li>
+<li><strong>感知→BEV→规划走完整链路</strong>：送入预训练感知骨干网络，编码成 BEV 特征</li>
+<li><strong>iLQR 控制器执行轨迹</strong>：选定最优轨迹后，计算底层控制指令</li>
+<li><strong>奖励和指标与 BEV-Warp 一致</strong>：仍然计算碰撞率、安全边际</li>
+</ol>
+<h3 id="34-为什么能迁移">3.4 为什么能迁移？
+</h3><p>关键保障：<strong>BEV 特征的空间等变性</strong>。</p>
+<p>不管输入是变形后的 BEV 特征，还是由真实渲染图片走感知流程得到的 BEV 特征，骨干网络输出的特征语义是一致的——两个世界共享同一套&quot;语言&quot;。</p>
+<h3 id="35-验证结果">3.5 验证结果
+</h3><p>在真实感 3DGS 基准评估中：</p>
+<ul>
+<li>RAD-2 取得最低碰撞率（<strong>0.250</strong>）</li>
+<li>最高 Safety@1（<strong>0.723</strong>）和 Safety@2（<strong>0.644</strong>）</li>
+<li>超越 Senna、Senna-2 和 RAD 等强劲竞争对手</li>
+</ul>
+
+    <blockquote>
+        <p><strong>结论</strong>：在 BEV 特征空间里训练出来的策略，没有因为换成真实感图像输入而&quot;失灵&quot;，证明泛化能力是真实的。</p>
+
+    </blockquote>
+<hr>
+<h2 id="四安全奖励的计算依赖标注数据吗">四、安全奖励的计算：依赖标注数据吗？
+</h2><h3 id="41-ttc-计算公式">4.1 TTC 计算公式
+</h3><p>$$T_t = \inf{k \in [0, T_{\max}] \mid \mathcal{B}<em>{\text{ego}}(k;t) \cap \mathcal{V}</em>{\text{env}}(t+k) \neq \emptyset}$$</p>
+<p>其中 $\mathcal{V}_{\text{env}}(t+k)$ 是环境在绝对时间 $t+k$ 的<strong>所有障碍物的真实占用集合（ground-truth occupancy）</strong>。</p>
+<h3 id="42-直接答案是的依赖预先标注好的真实障碍物位置">4.2 直接答案：是的，依赖预先标注好的真实障碍物位置
+</h3><p>$\mathcal{V}_{\text{env}}$ 这个符号里藏着答案——<strong>ground-truth occupancy</strong>，即真实标注的占用区域。这不是模型感知出来的结果，而是从真实驾驶日志的标注数据里直接读取的。</p>
+<p>数据包含：</p>
+<ul>
+<li>每个时刻所有动态障碍物的 <strong>3D 边界框</strong>（位置、朝向、尺寸）</li>
+<li>静态障碍物和道路边界的几何信息</li>
+</ul>
+<p>这在自动驾驶数据集（nuScenes、Waymo）里是标准配置。</p>
+<h3 id="43-ttc-计算流程">4.3 TTC 计算流程
+</h3><p><strong>第一步：预测自车未来占用区域</strong></p>
+<ul>
+<li>根据选定轨迹推算自车在未来 k 时刻的位置和朝向</li>
+<li>结合车辆几何尺寸得到矩形占用框</li>
+</ul>
+<p><strong>第二步：查询环境真实占用</strong></p>
+<ul>
+<li>直接从日志标注里读取 k 时刻所有障碍物的真实边界框</li>
+</ul>
+<p><strong>第三步：逐帧检测相交</strong></p>
+<ul>
+<li>从 k=0 开始往后扫，找到第一个重叠时刻</li>
+</ul>
+<h3 id="44-这个设计的重要推论">4.4 这个设计的重要推论
+</h3><p>BEV 特征图里动态障碍物的位置有误差 → <strong>不影响奖励计算</strong></p>
+<p>因为奖励用的是标注真值，不是从变形后的 BEV 特征里解码出来的感知结果。这是一个非常聪明的解耦——用近似的特征图喂给规划器看，但用精确的标注真值来评判决策好不好。</p>
+<h3 id="45-潜在局限性">4.5 潜在局限性
+</h3><p><strong>训练数据必须有高质量的 3D 标注</strong>，而标注本身是昂贵的。论文用了 5 万条片段做 RL 训练，这背后是规模庞大的标注工程。</p>
+<hr>
+<h2 id="五绕开人工标注的替代方案">五、绕开人工标注的替代方案
+</h2><p>对于资源有限的公司，有几条可行的替代路径：</p>
+<h3 id="51-用传感器原始数据直接计算占用">5.1 用传感器原始数据直接计算占用
+</h3><p><strong>激光雷达点云</strong>：</p>
+<ul>
+<li>点云本身就是障碍物存在的直接证据</li>
+<li>体素化成占用栅格（Occupancy Grid）</li>
+<li>TTC 计算从&quot;自车预测框 vs 标注边界框&quot;变成&quot;自车预测框 vs 占用栅格&quot;</li>
+<li><strong>零标注成本</strong></li>
+</ul>
+<p><strong>纯视觉的深度估计</strong>：</p>
+<ul>
+<li>用自监督深度估计模型（MonoDepth2、DepthAnything）从图像恢复深度</li>
+<li>投影成伪点云，构建占用栅格</li>
+<li>模型可以用无监督方式训练（利用多帧视差一致性）</li>
+</ul>
+<h3 id="52-用端到端模型的中间特征">5.2 用端到端模型的中间特征
+</h3><p><strong>BEV 占用预测头</strong>：</p>
+<ul>
+<li>很多端到端模型都有占用预测分支</li>
+<li>可以用自监督或弱监督方式训练：
+<ul>
+<li>利用激光雷达点云作为伪标签</li>
+<li>利用相邻帧光流一致性</li>
+</ul>
+</li>
+</ul>
+<h3 id="53-从真实事故险情数据中学习奖励">5.3 从真实事故/险情数据中学习奖励
+</h3><p><strong>利用车辆自身的传感器信号</strong>：</p>
+<ul>
+<li>急刹车事件（加速度计突然大负值）</li>
+<li>AEB（自动紧急制动）触发记录</li>
+<li>碰撞传感器触发</li>
+<li>驾驶员接管事件</li>
+</ul>
+<p>这些事件不需要任何人工标注，车辆 ECU 会自动记录。</p>
+<p><strong>对比学习构建奖励模型</strong>：</p>
+<ul>
+<li>收集&quot;好的驾驶&quot;和&quot;坏的驾驶&quot;片段</li>
+<li>用对比学习训练奖励模型</li>
+<li>类似 RLHF 思路，把&quot;人类偏好&quot;换成&quot;传感器采集的客观安全信号&quot;</li>
+</ul>
+<h3 id="54-用世界模型替代标注环境">5.4 用世界模型替代标注环境
+</h3><p>训练生成式世界模型，输入当前场景和自车轨迹，预测未来画面或 BEV 特征：</p>
+<pre tabindex="0"><code>原来：查标注数据 → 获得未来障碍物真实位置
+替换：世界模型预测 → 获得未来场景的估计状态
+</code></pre><p>世界模型本身可以用纯视频数据自监督训练（预测下一帧），不需要任何标注。</p>
+<p><strong>代价</strong>：世界模型在长时序下会累积误差（时序漂移），导致奖励信号失真。</p>
+<h3 id="55-用规则定义基于原始信号的奖励">5.5 用规则定义基于原始信号的奖励
+</h3><p><strong>不计算 TTC，直接用原始信号</strong>：</p>
+<ul>
+<li>纵向加速度 $|a_x| &gt; \text{阈值}$ → 惩罚</li>
+<li>横向加速度 $|a_y| &gt; \text{阈值}$ → 惩罚</li>
+<li>方向盘转角变化率过大 → 惩罚</li>
+<li>自车速度与参考速度偏差 → 效率奖励</li>
+</ul>
+<p>这些信号全部来自车辆 IMU 和 CAN 总线，<strong>零标注、零感知依赖</strong>。</p>
+<p><strong>缺点</strong>：这类奖励是<strong>滞后的</strong>——只能在危险已发生后才给惩罚，而 TTC 是前瞻性的预测。</p>
+<hr>
+<h2 id="六实验结果">六、实验结果
+</h2><h3 id="61-数据集规模">6.1 数据集规模
+</h3><ul>
+<li><strong>生成器预训练</strong>：约 <strong>5万小时</strong>真实世界驾驶数据</li>
+<li><strong>RL 闭环训练（BEV-Warp）</strong>：从真实驾驶日志收集 <strong>5万条片段</strong>，筛选后安全类和效率类场景各 <strong>1万条</strong>训练，各 <strong>512条</strong>评估</li>
+<li><strong>3DGS 环境</strong>：来自 Senna-2 基准，<strong>1044条</strong>训练，<strong>256条</strong>评估</li>
+</ul>
+<h3 id="62-闭环-bev-warp-评估">6.2 闭环 BEV-Warp 评估
+</h3><p>与 ResAD 基线对比：</p>
+<ul>
+<li>碰撞率（CR）从 0.533 降至 <strong>0.234</strong>（降低 56%）</li>
+<li>自身责任碰撞率从 0.264 降至 <strong>0.092</strong></li>
+<li>Safety@1/2 从 0.418/0.281 提升至 <strong>0.730/0.596</strong></li>
+<li><a class="link" href="mailto:EP@1.0" >EP@1.0</a> 从 0.516 提升至 <strong>0.736</strong></li>
+</ul>
+<h3 id="63-闭环-3dgs-评估">6.3 闭环 3DGS 评估
+</h3><p>RAD-2 在所有方法中取得：</p>
+<ul>
+<li>最低碰撞率（<strong>0.250</strong>）</li>
+<li>最高 Safety@1/2（<strong>0.723/0.644</strong>）</li>
+<li>超越 Senna、Senna-2 和 RAD</li>
+</ul>
+<h3 id="64-开环-senna-2-基准">6.4 开环 Senna-2 基准
+</h3><ul>
+<li>总体碰撞率降至 <strong>0.142%</strong>（前最优为 Senna-2 的 0.288%）</li>
+<li>ADE/FDE 分别降至 <strong>0.208m/0.553m</strong></li>
+</ul>
+<h3 id="65-消融实验摘要">6.5 消融实验摘要
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>消融项</th>
+          <th>结论</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>训练流程</strong></td>
+          <td>单独 RL 生成器优化能提升安全性但稍降效率；单独 RL 鉴别器训练能大幅提升效率；二者联合才能取得最优</td>
+      </tr>
+      <tr>
+          <td><strong>执行时域 $H_{\text{reuse}}$</strong></td>
+          <td>=8 最优；太小梯度不稳，太长反应迟钝</td>
+      </tr>
+      <tr>
+          <td><strong>片段过滤</strong></td>
+          <td>过滤低方差片段能显著提升效率（EP@1.0 从 0.662→0.728），使训练更稳定</td>
+      </tr>
+      <tr>
+          <td><strong>鉴别器初始化</strong></td>
+          <td>从预训练规划头初始化大幅提升安全性（Safety@1 从 0.512→0.615）</td>
+      </tr>
+      <tr>
+          <td><strong>TC-GRPO 组大小</strong></td>
+          <td>组大小=4 时性能最优</td>
+      </tr>
+      <tr>
+          <td><strong>熵正则化</strong></td>
+          <td>加入熵项使碰撞率从 0.254 降至 0.234，Safety@1 从 0.697 提升至 0.730</td>
+      </tr>
+      <tr>
+          <td><strong>训练场景组合</strong></td>
+          <td>混合安全和效率场景训练效果最优；单一目标训练会导致严重性能偏差</td>
+      </tr>
+      <tr>
+          <td><strong>推理时扩展</strong></td>
+          <td>训练时 M=32，推理时增大 M 可持续提升效率（EP@1.0 从 0.667→0.814），无需重新训练</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="66-定性对比">6.6 定性对比
+</h3><p><strong>场景一（安全性）</strong>：</p>
+<ul>
+<li>基线模型识别不到风险直接撞车</li>
+<li>RAD-2 提前感知威胁，主动减速，等危险解除后平稳继续</li>
+</ul>
+<p><strong>场景二（效率性）</strong>：</p>
+<ul>
+<li>基线模型在另一辆车并入时过于保守，停下来等待</li>
+<li>RAD-2 判断左侧有足够空间，果断变道超越慢车，EP=1.09（基线 EP=1.01）</li>
+</ul>
+<hr>
+<h2 id="七局限性与未来展望">七、局限性与未来展望
+</h2><p>作者坦诚指出两大不足：</p>
+<h3 id="71-表示方式的局限性">7.1 表示方式的局限性
+</h3><p>BEV-Warp 的高效率根植于对 BEV 特征图的操作。对于使用原始相机像素或统一潜在嵌入（没有显式空间等变栅格结构）的架构，几何变形机制需要更通用的变换模块或直接在潜在空间的世界模型才能适用。</p>
+<h3 id="72-通向生成式世界模型">7.2 通向生成式世界模型
+</h3><p>生成式世界模型提供更高灵活性和逼真感，但目前受：</p>
+<ul>
+<li>计算开销大</li>
+<li>长时序生成中时间漂移严重</li>
+</ul>
+<p>等问题制约，限制了在大规模 RL 训练中的实用性。未来将聚焦于优化基于潜在空间的世界模型的推理效率和时序一致性。</p>
+<hr>
+<h2 id="八总结">八、总结
+</h2><h3 id="这篇论文解决了什么核心问题">这篇论文解决了什么核心问题？
+</h3><p>解决了扩散规划器在纯模仿学习下的关键挑战——模型只知道&quot;该怎么开&quot;，却不知道为自己的失误付出代价。通过生成器-鉴别器框架，让 RL 只优化低维的鉴别器分数，同时渐进引导生成器向好的轨迹区域靠拢。</p>
+<h3 id="rad-2-的三件法宝">RAD-2 的三件法宝
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>法宝</th>
+          <th>功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>扩散生成器</strong></td>
+          <td>天马行空地生成多样化候选轨迹</td>
+      </tr>
+      <tr>
+          <td><strong>RL 鉴别器</strong></td>
+          <td>冷静地为后果负责，挑出最安全高效的轨迹</td>
+      </tr>
+      <tr>
+          <td><strong>BEV-Warp</strong></td>
+          <td>快速地练习，支撑大规模闭环训练</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="核心创新点">核心创新点
+</h3><ul>
+<li><strong>TC-GRPO</strong>：时序一致采样改善信用分配，只在决策时刻施加梯度</li>
+<li><strong>OGO</strong>：在策生成器优化，通过纵向反馈渐进精炼轨迹分布</li>
+<li><strong>自适应熵正则化</strong>：只在熵过低时介入，维持探索多样性</li>
+<li><strong>BEV-Warp</strong>：特征级仿真绕过昂贵渲染，高吞吐量闭环训练</li>
+</ul>
+<hr>
+<h2 id="相关论文">相关论文
+</h2><ul>
+<li>[[ResAD - 归一化残差轨迹建模]]（同团队的前作，生成器架构的基础）</li>
+<li>[[UAD - 无需3D标注的端到端自动驾驶]]</li>
+<li>[[World4Drive - 无需感知标注的端到端世界模型]]</li>
+<li>[[LAW - Latent World Model for E2E Driving]]</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">强化学习</a>
+        
+            <a href="/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">扩散模型</a>
+        
+            <a href="/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/">运动规划</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/res-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ResAD: Normalized Residual Trajectory Modeling for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mosaic/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MOSAIC: 基于规模感知的自动驾驶数据挑选魔法阵</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/drive-transformer/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DriveTransformer: Unified Transformer for Scalable End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

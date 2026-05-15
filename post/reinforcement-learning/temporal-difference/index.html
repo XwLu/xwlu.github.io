@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="wiki on TD">
+<title>Temporal Difference</title>
+
+
+<link rel="canonical" href="https://example.org/post/reinforcement-learning/temporal-difference/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Temporal Difference">
+<meta property='og:description' content="wiki on TD">
+<meta property='og:url' content='https://example.org/post/reinforcement-learning/temporal-difference/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Temporal Difference">
+<meta name="twitter:description" content="wiki on TD">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#策略评价">策略评价</a>
+      <ul>
+        <li><a href="#在策略评价sarsa">在策略评价<strong>SARSA</strong></a></li>
+        <li><a href="#期望sarsa">期望SARSA</a></li>
+        <li><a href="#离策略评价q学习">离策略评价<strong>Q学习</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#策略提升">策略提升</a></li>
+    <li><a href="#varepsilon--贪婪策略提升">\(\varepsilon \)-贪婪策略提升</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/reinforcement-learning/" style="background-color: hsl(72, 60%, 84%); color: hsl(72, 60%, 15%);">
+                Reinforcement Learning
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/reinforcement-learning/temporal-difference/">Temporal Difference</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#策略评价">策略评价</a>
+      <ul>
+        <li><a href="#在策略评价sarsa">在策略评价<strong>SARSA</strong></a></li>
+        <li><a href="#期望sarsa">期望SARSA</a></li>
+        <li><a href="#离策略评价q学习">离策略评价<strong>Q学习</strong></a></li>
+      </ul>
+    </li>
+    <li><a href="#策略提升">策略提升</a></li>
+    <li><a href="#varepsilon--贪婪策略提升">\(\varepsilon \)-贪婪策略提升</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="temporal-difference">Temporal Difference
+</h1><ul>
+<li>增量式MC
+<ul>
+<li>$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(G_{t}-V(S_{t}))$$</li>
+</ul>
+</li>
+<li>时间差分TD
+<ul>
+<li>$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(R_{t+1}+\gamma V(S_{t+1})-V(S_{t}))$$</li>
+</ul>
+</li>
+<li>核心差别：
+<ul>
+<li>MC是根据[\(s1\to\)终止状态]完整片段的最终回报更新s1的值函数</li>
+<li>TD是根据[\(s1\to s2\)]这一步片段的即时回报值\(R\)和\(s2\)的估计值函数更新\(s1\)的值函数</li>
+</ul>
+</li>
+</ul>
+<h1 id="与dp的对比">与DP的对比
+</h1><ul>
+<li>DP是全宽备份</li>
+<li>TD是样本备份</li>
+</ul>
+<h1 id="td与mc的对比">TD与MC的对比
+</h1><ul>
+<li><strong>TD 算法在知道结果之前学习</strong>
+<ul>
+<li>TD算法在每一步之后都能在线学习</li>
+<li>MC算法必须等待最终回报值得到之后才能学习</li>
+</ul>
+</li>
+<li><strong>TD算法即便没有最终结果也能学习</strong>
+<ul>
+<li>TD算法能够从不完整序列中学习</li>
+<li>MC算法仅仅能够从完整序列中学习</li>
+<li>TD算法适用于连续性任务和片段性任务</li>
+<li>MC算法仅仅适用于片段性任务</li>
+</ul>
+</li>
+<li><strong>TD算法有多个驱动力</strong>
+<ul>
+<li>MC算法只有奖励值作为更新的驱动力</li>
+<li>TD算法有奖励值和状态转移作为更新的驱动力</li>
+</ul>
+</li>
+<li><strong>MC有高方差,零偏差</strong>
+<ul>
+<li>收敛性较好 (即使采用函数逼近)</li>
+<li>对初始值不太敏感</li>
+<li>随着样本数量的增加,方差逐渐减少, 趋近于 0</li>
+</ul>
+</li>
+<li><strong>TD 有低方差,和一些偏差</strong>
+<ul>
+<li>通常比 MC 效率更高</li>
+<li>表格法下TD(0)收敛到\(V_{\pi }(s)\)(函数逼近时不一定)</li>
+<li>对初始值更敏感</li>
+<li>随着样本数量的增加,偏差逐渐减少,趋近于 0</li>
+<li>样本数量有限时，TD的结果与真实结果的偏差比较稳定。MC可能出现巨大偏差。</li>
+</ul>
+</li>
+<li><strong>TD要求环境符合马尔科夫性，MC不要求</strong></li>
+</ul>
+<h1 id="自举和采样">自举和采样
+</h1><ul>
+<li><strong>自举</strong>: 使用随机变量的估计去更新
+<ul>
+<li>MC 没有自举</li>
+<li>DP 和 TD 都有自举</li>
+</ul>
+</li>
+<li><strong>采样</strong>: 通过样本估计期望
+<ul>
+<li>MC 和 TD 采样</li>
+<li>DP 不采样</li>
+</ul>
+</li>
+</ul>
+<h1 id="td的优化方法">TD的优化方法
+</h1><ul>
+<li>整体思路是 策略评价+策略提升</li>
+<li>
+<h2 id="策略评价">策略评价
+</h2><ul>
+<li>
+<h3 id="在策略评价sarsa">在策略评价<strong>SARSA</strong>
+</h3><ul>
+<li>
+<h4 id="公式">公式
+</h4><ul>
+<li>$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_{t},A_{t}))$$</li>
+</ul>
+</li>
+<li>
+<h4 id="算法流程">算法流程
+</h4><ul>
+<li>1:初始化\(Q(s,a), \forall s\in S, a\in A(s)\)且\(Q(S_{end},\cdot )=0\)</li>
+<li>2:repeat(对于每个片段)</li>
+<li>3:  初始化状态\(S\)</li>
+<li>4:  根据\(Q\)选择一个在\(S\)处的动作\(A\)(使用\(\varepsilon \)-贪婪策略)</li>
+<li>5:  repeat(对于片段中每一步)</li>
+<li>6:    执行动作\(A\)，观测\(R,S^{&rsquo;}\)</li>
+<li>7:    根据\(Q\)选择一个在\(S^{&rsquo;}\)处的动作\(A^{&rsquo;}\)(使用\(\varepsilon \)-贪婪策略)</li>
+<li>8:    \(Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_{t},A_{t}))\)</li>
+<li>9:    \(S\leftarrow S^{&rsquo;};A\leftarrow A^{&rsquo;}\)</li>
+<li>10:  until \(S\)是终止状态</li>
+<li>11:until收敛</li>
+</ul>
+</li>
+<li>
+<h4 id="收敛性">收敛性
+</h4><ul>
+<li>在满足以下条件时,Sarsa 算法收敛到最优的状态动作值函数
+<ul>
+<li>策略序列\(\pi _{t}(a|s)\)满足GLIE</li>
+<li>步长序列\(\alpha _{t}\)是一个Robbins-Monro序列
+<ul>
+<li>$$\sum_{t=1}^{\infty }\alpha_{t}=\infty ,\sum_{t=1}^{\infty }\alpha_{t}^{2}=\infty $$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GLIE 保证了
+<ul>
+<li>充分的探索</li>
+<li>策略最终收敛到贪婪的策略</li>
+</ul>
+</li>
+<li>Robbins-Monro保证了
+<ul>
+<li>步长足够大,足以克服任意初始值</li>
+<li>步长足够小,最终收敛 (常量步长不满足)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h3 id="期望sarsa">期望SARSA
+</h3><ul>
+<li>$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma \sum_{a}\pi (a|S_{t+1})Q(S_{t+1},a)-Q(S_{t},A_{t}))$$</li>
+<li>减少了由于\(A^{&rsquo;}\)的选择带来的方差</li>
+<li>在相同更新步数时,期望 Sarsa 比 Sarsa 的通用性更好</li>
+<li>可以在在策略和离策略中切换
+<ul>
+<li>在策略:TD目标值中的\(R_{t+1}+\gamma \sum_{a}\pi (a|S_{t+1})Q(S_{t+1},a)\)中的策略\(\pi \)和采样的策略是同一个策略</li>
+<li>离策略:TD目标值中的\(R_{t+1}+\gamma \sum_{a}\pi (a|S_{t+1})Q(S_{t+1},a)\)中的策略\(\pi \)和采样的策略是不同的策略</li>
+</ul>
+</li>
+<li>一种特殊情况,TD目标值中的策略选择贪婪策略, 采样的策略选用ε-贪婪策略——<strong>Q学习</strong></li>
+</ul>
+</li>
+<li>
+<h3 id="离策略评价q学习">离策略评价<strong>Q学习</strong>
+</h3><ul>
+<li>
+<h4 id="公式-1">公式
+</h4><ul>
+<li>$$Q(S,A)\leftarrow Q(S,A)+\alpha (R+\gamma \max_{a^{&rsquo;}}Q(S^{&rsquo;},a^{&rsquo;})-Q(S,A))$$</li>
+</ul>
+</li>
+<li>
+<h4 id="算法流程-1">算法流程
+</h4><ul>
+<li>1:初始化\(Q(s,a), \forall s\in S, a\in A(s)\)且\(Q(S_{end},\cdot )=0\)</li>
+<li>2:repeat(对于每个片段)</li>
+<li>3:  初始化状态\(S\)</li>
+<li>4:  repeat(对于片段中每一步)</li>
+<li>5:    根据\(Q\)选择一个在\(S\)处的动作\(A\)(使用\(\varepsilon \)-贪婪策略)</li>
+<li>6:    执行动作\(A\)，观测\(R,S^{&rsquo;}\)</li>
+<li>7:    \(Q(S,A)\leftarrow Q(S,A)+\alpha (R+\gamma \max_{a^{&rsquo;}}Q(S^{&rsquo;},a^{&rsquo;})-Q(S,A))\)</li>
+<li>8:    \(S\leftarrow S^{&rsquo;}\)</li>
+<li>9:  until \(S\)是终止状态</li>
+<li>10:until收敛</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h2 id="策略提升">策略提升
+</h2><ul>
+<li>
+<h2 id="varepsilon--贪婪策略提升">\(\varepsilon \)-贪婪策略提升
+</h2></li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

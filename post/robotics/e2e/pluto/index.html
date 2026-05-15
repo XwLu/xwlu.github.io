@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Paper Reading Notes of Pluto">
+<title>Pluto</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/pluto/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Pluto">
+<meta property='og:description' content="Paper Reading Notes of Pluto">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/pluto/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T11:08:42&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T11:08:42&#43;08:00'/>
+<meta name="twitter:title" content="Pluto">
+<meta name="twitter:description" content="Paper Reading Notes of Pluto">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#特征编码">特征编码</a>
+      <ul>
+        <li><a href="#agent-history-encoding">Agent History Encoding</a></li>
+        <li><a href="#static-obstacles-encoding">Static Obstacles Encoding</a></li>
+        <li><a href="#avs-state-encoding">AV&rsquo;s State Encoding</a></li>
+        <li><a href="#vectorized-map-encoding">Vectorized Map Encoding</a></li>
+        <li><a href="#scene-encoding">Scene Encoding</a></li>
+      </ul>
+    </li>
+    <li><a href="#多模态轨迹解码">多模态轨迹解码</a>
+      <ul>
+        <li><a href="#基于参考线的横向query">基于参考线的横向query</a></li>
+        <li><a href="#分解式横纵self-attention">分解式横纵self attention</a></li>
+        <li><a href="#query2scene-cross-attention">Query2Scene Cross Attention</a></li>
+        <li><a href="#轨迹解码">轨迹解码</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#imitation-loss">Imitation Loss</a></li>
+        <li><a href="#prediction-loss">Prediction Loss</a></li>
+        <li><a href="#efficient-differentiable-auxiliary-loss">Efficient Differentiable Auxiliary Loss</a></li>
+        <li><a href="#contrastive-imitation-learning-framework">Contrastive Imitation Learning Framework</a></li>
+        <li><a href="#total-loss">Total Loss</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/pluto/">Pluto</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T11:08:42&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#特征编码">特征编码</a>
+      <ul>
+        <li><a href="#agent-history-encoding">Agent History Encoding</a></li>
+        <li><a href="#static-obstacles-encoding">Static Obstacles Encoding</a></li>
+        <li><a href="#avs-state-encoding">AV&rsquo;s State Encoding</a></li>
+        <li><a href="#vectorized-map-encoding">Vectorized Map Encoding</a></li>
+        <li><a href="#scene-encoding">Scene Encoding</a></li>
+      </ul>
+    </li>
+    <li><a href="#多模态轨迹解码">多模态轨迹解码</a>
+      <ul>
+        <li><a href="#基于参考线的横向query">基于参考线的横向query</a></li>
+        <li><a href="#分解式横纵self-attention">分解式横纵self attention</a></li>
+        <li><a href="#query2scene-cross-attention">Query2Scene Cross Attention</a></li>
+        <li><a href="#轨迹解码">轨迹解码</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#imitation-loss">Imitation Loss</a></li>
+        <li><a href="#prediction-loss">Prediction Loss</a></li>
+        <li><a href="#efficient-differentiable-auxiliary-loss">Efficient Differentiable Auxiliary Loss</a></li>
+        <li><a href="#contrastive-imitation-learning-framework">Contrastive Imitation Learning Framework</a></li>
+        <li><a href="#total-loss">Total Loss</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="pluto-pushing-the-limit-of-imitation-learning-based-planning-for-autonomous-driving">PLUTO: Pushing the Limit of Imitation Learning-based Planning for Autonomous Driving
+</h1><h1 id="动机">动机
+</h1><ul>
+<li>模型方法缺乏横向行为建模，导致不擅长横向任务</li>
+<li>模仿学习的局限性：
+<ul>
+<li>shortcut学习（只学到了递推自车历史状态完成规划）</li>
+<li>分布转移（训练集中所有数据都是居中行驶的，但是闭环测试中可能偏离车道，ego未学习到从偏离状态纠正到居中状态的能力）</li>
+<li>因果混淆</li>
+</ul>
+</li>
+</ul>
+<h1 id="开创性思路">开创性思路
+</h1><ul>
+<li>基于查询的模型架构，anchor-based横向+anchor-free-based纵向</li>
+<li>提出了一种基于差分插值计算辅助损失的新方法</li>
+<li>提出了对比模仿学习框架，和新的数据增强方法，避免模型学到捷径或因果混淆</li>
+</ul>
+<h1 id="问题建模">问题建模
+</h1><ul>
+<li>\(N_{A}\)* 动态agents</li>
+<li>\(N_{S}\)* 静态障碍物</li>
+<li>高精地图\(M\)</li>
+<li>其他交通环境信息（信号灯等）\(C\)</li>
+<li>历史观测时长\(T_{H}\)</li>
+<li>预测时长\(T_{F}\)</li>
+</ul>
+<h1 id="模块细节">模块细节
+</h1><p><img alt="pic" class="gallery-image" data-flex-basis="865px" data-flex-grow="360" height="370" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/1.png" srcset="/post/robotics/e2e/pluto/1_hu_f9e5b01e9b1a80cd.png 800w, /post/robotics/e2e/pluto/1.png 1335w" width="1335"></p>
+<h2 id="特征编码">特征编码
+</h2><h3 id="agent-history-encoding">Agent History Encoding
+</h3><p>-\(t\)时刻障碍物的观测状态为\(s_{i}^{t}=(p_{i}^{t},\theta_{i}^{t},v_{i}^{t},b_{i}^{t},\Pi_{i}^{t})\)，其中\(p\)和\(\theta\)表示agent的位置和角度，\(v\)表示速度矢量，\(b\)表示长宽尺寸，\(\Pi\)是一个bool量，表示当前帧是否被观测到</p>
+<ul>
+<li>这里通过相邻两帧的状态量插值将历史状态序列转化为vector的形式，\(s_{i}^{t}=(p_{i}^{t}-p_{i}^{t-1},\theta_{i}^{t}-\theta_{i}^{t-1},v_{i}^{t}-v_{i}^{t-1},b_{i}^{t},\Pi_{i}^{t})\)，最终得到历史特征向量\(F_{A} \in R^{N_{A}*(T_{H}-1)*8}\)</li>
+<li>这里通过一个neighbor attention-based Feature Pyramid Network(FPN)对agent的历史信息进行提取，得到embedding\(E_{A} \in R^{N_{A}*D}\)</li>
+</ul>
+<h3 id="static-obstacles-encoding">Static Obstacles Encoding
+</h3><ul>
+<li>静止障碍物的观测状态为\(o_{i}=(p_{i},\theta_{i},b_{i})\)，聚合得到\(F_{O} \in R^{N_{S}*5}\)</li>
+<li>通过一个两层的MLP进行提取得到embedding\(E_{O} \in R^{N_{S}*D}\)</li>
+</ul>
+<h3 id="avs-state-encoding">AV&rsquo;s State Encoding
+</h3><ul>
+<li>为了防止shortcuts学习，只输入ego当前帧的状态（位置、角度、速度、加速度和方向盘转角），为了避免生成的轨迹只是当前状态的简单外推，引入了attention-based state dropout encoder(SDE)进行编码，得到embedding\(E_{AV} \in R^{1*D}\)</li>
+</ul>
+<h3 id="vectorized-map-encoding">Vectorized Map Encoding
+</h3><ul>
+<li>地图由\(N_{P}\)条polyline组成。</li>
+<li>我们对polyline上的每个点进行差分计算。第\(i\)个点的特征包括8个维度\((p_{i}-p_{0},p_{i}-p_{i-1},p_{i}-p_{i}^{left},p_{i}-p_{i}^{right})\)。其中 \(p_{0}\)表示polyline的第一个点\(p_{i}^{left}\)和\(p_{i}^{right}\)表示车道的左右边界点。</li>
+<li>polyline的特征\(F_{P} \in R^{N_{p}*n_{p}*8}\)，\(n_{p}\)是每条polyline包含的点的数量。</li>
+<li>通过一个类PointNet网络提取embedding\(E_{p} \in R^{N_{p}*D}\)。</li>
+</ul>
+<h3 id="scene-encoding">Scene Encoding
+</h3><ul>
+<li>由于前面的vector化过程，特征中只包含了相邻状态的差分信息，因此需要补充全局位置信息编码\(PE\)，这里是用的傅立叶位置编码。这里的全局位置点是取的动态agent当前（最新）帧的 \(p\)和 \(\theta\)，静态障碍物的 \(p\)和 \(\theta\)，地图元素polyline的第一个点。</li>
+<li>初始化了一个可学习的embedding \(E_{attr}\)用于编码每个对象的属性类别</li>
+<li>将各个来源的特征合并到一个tensor \(E_{0} = concat(E_{AV},E_{A},E_{O},E_{P})+PE+E_{attr} \in R^{(N_{A}+N_{S}+N_{P}+1)*D}\)</li>
+<li>随后通过 \(N\)层transform decoder进行特征提取
+<ul>
+<li>第 \(i\)层的decoder步骤如下：
+$$E_{i-1}^{&rsquo;}=LayerNorm(E_{i-1})$$
+$$E_{i}=E_{i-1}+MHA(E_{i-1}^{&rsquo;},E_{i-1}^{&rsquo;},E_{i-1}^{&rsquo;})$$
+$$E_{i}=E_{i}+FFN(LayerNorm(E_{i}))$$</li>
+<li>其中MHA是标准的multi-head attention操作</li>
+</ul>
+</li>
+</ul>
+<h2 id="多模态轨迹解码">多模态轨迹解码
+</h2><ul>
+<li>引入modality query生成多模态轨迹，根据之前的经验，anchor-free的learnable query会导致模态的坍塌和训练的不稳定，因此这里采用了semi-anchor based decoding结构，将横向和纵向解耦建模。</li>
+</ul>
+<h3 id="基于参考线的横向query">基于参考线的横向query
+</h3><ul>
+<li>通过DFS连接lane segment形成参考线，通过和Vectorized Map类似的编码过程得到lateral query \(Q_{lat} \in R^{N_{R}*D}\)，其中 \(N_{R}\)是参考线的数量</li>
+</ul>
+<h3 id="分解式横纵self-attention">分解式横纵self attention
+</h3><ul>
+<li>
+<p>纵向query是初始化了一个anchor-free learnable embedding \(Q_{lon} \in R^{N_{L}*D}\)</p>
+</li>
+<li>
+<p>合并 \(Q_{lat}\)和 \(Q_{lon}\)创建横纵联合query \(Q_{0}=Projection(concat(Q_{lat},Q_{lon})) \in R^{N_{R}*N_{L}*D}\)，上面的 \(Projection\)是一个简单的MLP</p>
+<ul>
+<li>将 \(Q_{lat}\)通过unsqueeze和repeat操作复制 \(N_{L}\)份，得到 \(Q_{lat}^{tmp}\in R^{N_{R}*N_{L}*D}\)</li>
+<li>将 \(Q_{lon}\)通过unsqueeze和repeat操作复制 \(N_{R}\)份，得到 \(Q_{lon}^{tmp}\in R^{N_{R}*N_{L}*D}\)</li>
+<li>concat得到 \(Q^{tmp}\in R^{N_{R}*N_{L}*2D}\)</li>
+<li>最后MLP将 \(2D\)维度变成 \(D\)维</li>
+</ul>
+</li>
+<li>
+<p>这里如果直接对 \(Q_{0}\)进行global self attention，计算复杂度在 \(O(N_{R}^{2}N_{L}^{2})\)</p>
+</li>
+<li>
+<p>为了简化，先遍历 \(N_{L}\)维度，针对每个 \(N_{R}*D\)的query块计算self attention</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="542px" data-flex-grow="226" height="180" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/2.png" width="407"></p>
+</li>
+<li>
+<p>再遍历\(N_{R}\)维度，针对每个\(N_{L}*D\)的query块计算self attention</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="520px" data-flex-grow="216" height="183" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/3.png" width="397"></p>
+</li>
+<li>
+<p>最终的计算复杂度在 \(O(N_{R}^{2}N_{L}+N_{R}N_{L}^{2})\)</p>
+</li>
+</ul>
+<h3 id="query2scene-cross-attention">Query2Scene Cross Attention
+</h3><ul>
+<li>将上面得到的Query和Scene Encoding（作为key和value）进行Cross Attention</li>
+</ul>
+<h3 id="轨迹解码">轨迹解码
+</h3><ul>
+<li>遍历 \(L_{dec}\)次self-attention和cross-attention操作:
+$$Q_{i-1}^{&rsquo;}=SelfAttn(Q_{i-1},dim=0)$$
+$$Q_{i-1}^{<em>}=SelfAttn(Q_{i-1}^{&rsquo;},dim=1)$$
+$$Q_{i}=CrossAttn(Q_{i-1}^{</em>},E_{enc},E_{enc})$$</li>
+<li>最终得到 \(Q_{dec}\)，通过两个MLP分别解码得到ego的未来轨迹和对应scores。其中每个轨迹点包含 \([p_{x},p_{y},cos\theta,sin\theta,v_{x},v_{y}]\)
+$$T_{0}=MLP(Q_{dec}),\pi_{0}=MLP(Q_{dec})$$</li>
+<li>此外，为了应对某些没有参考线的场景，用一个MLP直接解码\(E_{AV}\)得到一条轨迹
+$$\tau^{free}=MLP(E^{&rsquo;}_{AV})$$</li>
+</ul>
+<h1 id="loss设计">Loss设计
+</h1><h3 id="imitation-loss">Imitation Loss
+</h3><ul>
+<li>首先将GT轨迹的末状态投影到参考线上，找横向距离最近的参考线作为目标参考线。</li>
+<li>将目标参考线等分 \(N_{L}-1\)份，每一份对应上面 \(Q_{lon}\)的每个区域（格子）。包含GT状态投影的query被标记为目标query。</li>
+<li>通过将目标参考线和目标纵向query结合，得到目标监督轨迹 \(\hat{\tau}\)，通过 \(L1\)loss进行轨迹监督，通过corss-entropy loss进行score classification监督。
+$$L_{reg}=L1_{smooth}(\hat{\tau},\tau^{gt})+L1_{smooth}(\tau^{free},\tau^{gt})$$
+$$L_{cls}=CrossEntropy(\pi_{0},\pi_{0}^{*})$$
+<ul>
+<li>其中， \(\pi_{0}^{*}\)是根据 \(\hat{\tau}\)的编号计算得到的one-hot编码</li>
+</ul>
+</li>
+<li>最终的Imitation Loss是上面两个loss的加和
+$$L_{i}=L_{reg}+L_{cls}$$</li>
+</ul>
+<h3 id="prediction-loss">Prediction Loss
+</h3><ul>
+<li>针对每个动态agent，通过一个简单的双层MLP生成单一模态的预测轨迹
+$$P_{1:N_{A}}=MLP(E_{A}^{&rsquo;})$$</li>
+<li>预测loss设计如下：
+$$L_{p}=L1_{smooth}(P_{1:N_{A}},P_{1:N_{A}}^{gt})$$</li>
+</ul>
+<h3 id="efficient-differentiable-auxiliary-loss">Efficient Differentiable Auxiliary Loss
+</h3><ul>
+<li>根据过往经验，单纯靠模仿学习不足以杜绝不合理的规划结果，例如与静止障碍物碰撞或偏离可行驶路径等现象。因此，在训练阶段，将这些约束作为辅助loss至关重要。</li>
+<li>问题的关键在于如何将这些约束设计成可导的形式，使其可以端到端的进行训练。常用的手段是一种叫做可微分光栅化的技术。
+<ul>
+<li>使用可微核函数将每个轨迹点转换为光栅化图像。</li>
+<li>使用图像空间内的障碍物掩模计算损失。</li>
+</ul>
+</li>
+<li>但是该方法对计算量和内存的要求都比较大，限制较多。因此本文提出了一种基于differentiable interpolation的新方法。本文以可行驶区域约束为例来阐明该方法。</li>
+</ul>
+<h4 id="cost-map-construction">Cost Map Construction
+</h4><ul>
+<li>第一步是将约束转换为一个queryable cost-map。对于可行驶区域约束来说，利用Euclidean Signed Distance Field (ESDF)进行cost表征。此过程包括将不可驾驶区域（例如路外区域）映射到H×W大小的栅格化二值mask上。</li>
+<li>与现有方法相比，该方法的一个显著优势是它不需要将轨迹渲染成一系列图像，从而显著降低了计算需求。</li>
+</ul>
+<h4 id="loss-calculation">Loss Calculation
+</h4><p><img alt="pic" class="gallery-image" data-flex-basis="751px" data-flex-grow="312" height="379" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/4.png" srcset="/post/robotics/e2e/pluto/4_hu_bd8da2ef562ea8a2.png 800w, /post/robotics/e2e/pluto/4.png 1186w" width="1186"></p>
+<ul>
+<li>用 \(N_{C}\)个覆盖ego的圆进行建模，ego轨迹点决定了这些圆的中心，这些圆可以用可微分的方式推导出来。</li>
+<li>对于与轨迹点关联的每个覆盖圆 \(i\)，我们通过投影和双线性插值得到其有符号距离值 \(d_{i}\)。为了确保ego遵守可行驶区域约束，当 \(d_{i}\)低于圆的半径 \(R_{c}\)时，我们对模型施加惩罚：
+$$L_{aux}=\frac{1}{T_{f}}\sum_{t=1}^{T_{f}}{\sum_{i=1}^{N_{c}}{max(0,R_{c}+\epsilon-d_{i}^{t})}}$$
+<ul>
+<li>其中 \(\epsilon\)是安全阈值</li>
+</ul>
+</li>
+</ul>
+<h3 id="contrastive-imitation-learning-framework">Contrastive Imitation Learning Framework
+</h3><ul>
+<li>为了解决分布转移和因果混淆问题</li>
+<li>步骤：
+<ul>
+<li>假设当前有一个数据样本 \(x\)，通过一个positive data augmentation模块 \(\Gamma^{+}\)和一个negative data augmentation模块 \(\Gamma^{-}\)分别生成一个正样本 \(x^{+}\)和负样本 \(x^{-}\)。</li>
+<li>前面的Scene Encoding部分会将样本 \(x\)编码为隐式特征 \(h(\cdot)\)。这里将原始样本、正负样本的隐式编码通过一个两层的MLP分别映射到一个新的空间，表征为 \(z,z^{+},z^{-}\)。</li>
+<li>利用一个triplet contrastive loss来增强 \(z\)和 \(z^{+}\)的相似度，降低 \(z\)和 \(z^{-}\)的相似度。</li>
+<li>最后将样本 \(x\)和 \(x^{+}\)的解码轨迹用于imitation loss和auxiliary loss的计算</li>
+</ul>
+</li>
+<li>在实际操作中，我们随机采样 \(N_{bs}\)个样本，每个样本都过一遍positive和negative augmentation，从而得到 \(3N_{bs}\)个样本。</li>
+<li>每个样本都过一遍encoder和projection head。softmax-based triple contrastive loss公式如下：
+$$L_{c}=-log\frac{exp(sim(z,z^{+})/\sigma)}{exp(sim(z,z^{+})/\sigma) + exp(sim(z,z^{-})/\sigma)}$$
+$$sim(u,v)=u^{T}v/\lVert u \rVert \lVert v \rVert$$
+<ul>
+<li>\(\sigma\)表示温度参数（temperature parameter）</li>
+</ul>
+</li>
+<li>注意，原始样本和正样本都利用未改动过的GT进行监督训练（ \(L_{i}, L_{p},L_{aux},L_{c}\)），但是负样本只用于contrastive loss（ \(L_{c}\)）的计算。因为在负样本中，原始的GT可能已经是无效的了。</li>
+</ul>
+<h4 id="data-augmentations">Data augmentations
+</h4><ul>
+<li>数据增强是对比学习发挥作用的关键。虽然基于扰动的增强很普遍，但替代增强策略的探索仍然不足。在此背景下，本文提出了六个精心设计的增强函数，用于定义对比任务。</li>
+<li>State Perturbation \(\in \Gamma^{+}\)
+<ul>
+<li>对自动驾驶汽车的当前位置、速度、加速度和转向角引入轻微的随机干扰。这种增强旨在使模型能够学习与训练分布略有偏差的恢复策略。</li>
+</ul>
+</li>
+<li>Non-interactive Agents Dropout \(\in \Gamma^{+}\)
+<ul>
+<li>从输入场景中忽略不与ego交互的agent。判断agent与ego是否有交互是通过其未来bounding box与ego轨迹的交点来识别的。这种增强可以防止模型通过模仿非交互agent来学习行为，从而鼓励模型辨别与有交互关系的agent的真正因果关系。</li>
+</ul>
+</li>
+<li>Leading Agents Dropout \(\in \Gamma^{-}\)
+<ul>
+<li>删除位于ego前面的所有leading agent。这种增强训练了模型的跟驰前车行为，以防止追尾碰撞。</li>
+</ul>
+</li>
+<li>Leading Agent Insertions \(\in \Gamma^{-}\)
+<ul>
+<li>在ego未来会运动的路线上插入一个agent，使得ego如果按照GT走的话会发生碰撞。插入的车辆的轨迹数据来自当前小批量中随机选择的agent，以保持数据的真实性。</li>
+</ul>
+</li>
+<li>Interactive Agent Dropout \(\in \Gamma^{-}\)
+<ul>
+<li>删除与ego有直接或间接交互的agent。该功能旨在训练模型在复杂场景中与不太直观的交互agent之间的交互行为，如无保护的左转和变道场景。</li>
+</ul>
+</li>
+<li>Traffic Light Inversion \(\in \Gamma^{-}\)
+<ul>
+<li>在ego接近由交通灯控制的十字路口而没有前方车辆的情况下，人为反转交通灯状态（例如，从红色变为绿色）。用于教导模型遵守基本的交通灯规则。</li>
+</ul>
+</li>
+</ul>
+<h3 id="total-loss">Total Loss
+</h3><p>$$L=w_{1}L_{i}+w_{2}L_{p}+w_{3}L_{aux}+w_{4}L_{c}$$</p>
+<h1 id="后处理">后处理
+</h1><ul>
+<li>前面的轨迹解码器模块会输出多模态的自车规划轨迹 \(T_{0} \in R^{N_{R}N_{L}*T_{F}*6}\)和对应score \(\pi_{0} \in R^{N_{R}N_{L}}\)</li>
+<li>为了计算复杂度满足要求，先根据scores从前面的轨迹中选出top K</li>
+<li>遍历K条轨迹，根据ego状态，利用一个LQR的优化器计算出跟踪轨迹的控制量，再用自行车模型积分控制量得到一条更精细的轨迹</li>
+<li>对精细轨迹进行rule-based评估（引入其他agent的预测信息），评估项包括驾驶进度、舒适度、交规、碰撞</li>
+<li>最后将规则得分和网络预测得分加权求和，排序得到最优轨迹</li>
+</ul>
+<h1 id="实验结果">实验结果
+</h1><ul>
+<li>与其他方法的对比实验</li>
+</ul>
+<p><img alt="pic" class="gallery-image" data-flex-basis="576px" data-flex-grow="240" height="504" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/5.png" srcset="/post/robotics/e2e/pluto/5_hu_95683876457f0cc6.png 800w, /post/robotics/e2e/pluto/5.png 1210w" width="1210"></p>
+<ul>
+<li>消融实验</li>
+</ul>
+<p><img alt="pic" class="gallery-image" data-flex-basis="785px" data-flex-grow="327" height="360" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/pluto/6.png" srcset="/post/robotics/e2e/pluto/6_hu_d8236b4dfb2a2b5d.png 800w, /post/robotics/e2e/pluto/6.png 1178w" width="1178"></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="在机器人领域，一直存在着两派势力的较量：">
+<title>Fast-WAM - 世界动作模型在推理时真的需要&#34;脑补&#34;未来吗？</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/worldmodel/fast-wam/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Fast-WAM - 世界动作模型在推理时真的需要\"脑补\"未来吗？">
+<meta property='og:description' content="在机器人领域，一直存在着两派势力的较量：">
+<meta property='og:url' content='https://example.org/post/robotics/worldmodel/fast-wam/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='WorldModel' /><meta property='article:tag' content='EmbodiedAI' /><meta property='article:tag' content='Diffusion' /><meta property='article:tag' content='MoT' /><meta property='article:tag' content='ActionPrediction' /><meta property='article:tag' content='VideoGeneration' /><meta property='article:published_time' content='2026-04-16T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-04-16T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Fast-WAM - 世界动作模型在推理时真的需要\"脑补\"未来吗？">
+<meta name="twitter:description" content="在机器人领域，一直存在着两派势力的较量：">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一研究背景具身智能的两难困境">一、研究背景：具身智能的&quot;两难困境&quot;</a>
+      <ul>
+        <li><a href="#vla-派视觉-语言-动作模型">VLA 派（视觉-语言-动作模型）</a></li>
+        <li><a href="#wam-派世界动作模型">WAM 派（世界动作模型）</a></li>
+        <li><a href="#核心问题">核心问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#二fast-wam-的核心思想">二、Fast-WAM 的核心思想</a>
+      <ul>
+        <li><a href="#核心理念">核心理念</a></li>
+        <li><a href="#核心结论">核心结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#三方法论详解">三、方法论详解</a>
+      <ul>
+        <li><a href="#31-底层基座wan22-5b-视频-transformer">3.1 底层基座：Wan2.2-5B 视频 Transformer</a></li>
+        <li><a href="#32-motmixture-of-transformer架构">3.2 MoT（Mixture-of-Transformer）架构</a></li>
+        <li><a href="#33-token-的三分法">3.3 Token 的三分法</a></li>
+        <li><a href="#34-精妙的防作弊注意力掩码">3.4 精妙的&quot;防作弊&quot;注意力掩码</a></li>
+        <li><a href="#35-训练-loss-设计">3.5 训练 Loss 设计</a></li>
+        <li><a href="#36-推理逻辑想象力截断">3.6 推理逻辑：想象力&quot;截断&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实验结果">四、实验结果</a>
+      <ul>
+        <li><a href="#41-仿真战场">4.1 仿真战场</a></li>
+        <li><a href="#42-终极考验现实世界折毛巾">4.2 终极考验：现实世界折毛巾！</a></li>
+      </ul>
+    </li>
+    <li><a href="#五与-leworldmodel-的对比讨论">五、与 LeWorldModel 的对比讨论</a>
+      <ul>
+        <li><a href="#51-问题引入单帧预测的局限性">5.1 问题引入：单帧预测的局限性</a></li>
+        <li><a href="#52-fast-wam-的真实工作模式">5.2 Fast-WAM 的真实工作模式</a></li>
+        <li><a href="#53-fast-wam-vs-leworldmodel两种哲学">5.3 Fast-WAM vs LeWorldModel：两种哲学</a></li>
+        <li><a href="#54-延迟对比">5.4 延迟对比</a></li>
+        <li><a href="#55-终极思考大小脑结合">5.5 终极思考：大小脑结合</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结">六、总结</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#形象总结">形象总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/worldmodel/fast-wam/">Fast-WAM - 世界动作模型在推理时真的需要&#34;脑补&#34;未来吗？</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-04-16T00:00:00Z'>Thursday, April 16, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一研究背景具身智能的两难困境">一、研究背景：具身智能的&quot;两难困境&quot;</a>
+      <ul>
+        <li><a href="#vla-派视觉-语言-动作模型">VLA 派（视觉-语言-动作模型）</a></li>
+        <li><a href="#wam-派世界动作模型">WAM 派（世界动作模型）</a></li>
+        <li><a href="#核心问题">核心问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#二fast-wam-的核心思想">二、Fast-WAM 的核心思想</a>
+      <ul>
+        <li><a href="#核心理念">核心理念</a></li>
+        <li><a href="#核心结论">核心结论</a></li>
+      </ul>
+    </li>
+    <li><a href="#三方法论详解">三、方法论详解</a>
+      <ul>
+        <li><a href="#31-底层基座wan22-5b-视频-transformer">3.1 底层基座：Wan2.2-5B 视频 Transformer</a></li>
+        <li><a href="#32-motmixture-of-transformer架构">3.2 MoT（Mixture-of-Transformer）架构</a></li>
+        <li><a href="#33-token-的三分法">3.3 Token 的三分法</a></li>
+        <li><a href="#34-精妙的防作弊注意力掩码">3.4 精妙的&quot;防作弊&quot;注意力掩码</a></li>
+        <li><a href="#35-训练-loss-设计">3.5 训练 Loss 设计</a></li>
+        <li><a href="#36-推理逻辑想象力截断">3.6 推理逻辑：想象力&quot;截断&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实验结果">四、实验结果</a>
+      <ul>
+        <li><a href="#41-仿真战场">4.1 仿真战场</a></li>
+        <li><a href="#42-终极考验现实世界折毛巾">4.2 终极考验：现实世界折毛巾！</a></li>
+      </ul>
+    </li>
+    <li><a href="#五与-leworldmodel-的对比讨论">五、与 LeWorldModel 的对比讨论</a>
+      <ul>
+        <li><a href="#51-问题引入单帧预测的局限性">5.1 问题引入：单帧预测的局限性</a></li>
+        <li><a href="#52-fast-wam-的真实工作模式">5.2 Fast-WAM 的真实工作模式</a></li>
+        <li><a href="#53-fast-wam-vs-leworldmodel两种哲学">5.3 Fast-WAM vs LeWorldModel：两种哲学</a></li>
+        <li><a href="#54-延迟对比">5.4 延迟对比</a></li>
+        <li><a href="#55-终极思考大小脑结合">5.5 终极思考：大小脑结合</a></li>
+      </ul>
+    </li>
+    <li><a href="#六总结">六、总结</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#形象总结">形象总结</a></li>
+      </ul>
+    </li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <hr>
+<h2 id="一研究背景具身智能的两难困境">一、研究背景：具身智能的&quot;两难困境&quot;
+</h2><p>在机器人领域，一直存在着两派势力的较量：</p>
+<h3 id="vla-派视觉-语言-动作模型">VLA 派（视觉-语言-动作模型）
+</h3><p><strong>代表</strong>：OpenVLA</p>
+<p><strong>特点</strong>：</p>
+<ul>
+<li>反应极快，看到图像就直接输出动作</li>
+<li>像&quot;直觉派&quot;选手，出手如电</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li>不懂物理规律，不知道物体被碰后会怎样</li>
+<li>容易&quot;手残&quot;，在精细操作上容易出错</li>
+</ul>
+<h3 id="wam-派世界动作模型">WAM 派（世界动作模型）
+</h3><p><strong>特点</strong>：</p>
+<ul>
+<li>不仅预测动作，还要预测未来的视频画面</li>
+<li>像&quot;思辨派&quot;选手，深思熟虑</li>
+</ul>
+<p><strong>缺点</strong>：</p>
+<ul>
+<li><strong>太慢了！</strong> 执行前要进行几十次 Diffusion 去噪步骤</li>
+<li>机器人动一下可能要等几秒钟，简直是&quot;慢动作重播&quot;</li>
+</ul>
+<h3 id="核心问题">核心问题
+</h3><blockquote class="alert alert-question">
+        <div class="alert-header">
+            <span class="alert-icon"></span>
+            <span class="alert-title">灵魂拷问</span>
+        </div>
+        <div class="alert-body">
+            <p>世界模型之所以强，是因为推理时需要&quot;脑补&quot;未来视频？还是因为训练时学过如何生成视频？</p>
+        </div>
+    </blockquote>
+<p>作者大胆假设：<strong>视频生成的价值在于训练，而非推理。</strong> 能不能既要 WAM 的&quot;脑子&quot;（物理常识），又要 VLA 的&quot;手速&quot;？</p>
+<hr>
+<h2 id="二fast-wam-的核心思想">二、Fast-WAM 的核心思想
+</h2><h3 id="核心理念">核心理念
+</h3><p><strong>训练时拼命&quot;画画&quot;，推理时只管&quot;出招&quot;。</strong></p>
+<p>想象一下，你让一个机器人折毛巾：</p>
+<ul>
+<li>传统 WAM 是个&quot;慢性子&quot;：每动一下，都要先在脑子里花几秒钟&quot;脑补&quot;出接下来的动作会产生什么样的视频画面，然后再根据画面去出招</li>
+<li>Fast-WAM 的做法：<strong>在训练场让你画画是为了让你理解肌肉发力的逻辑，等上了战场，直接出拳就行，别在那儿画画了！</strong></li>
+</ul>
+<h3 id="核心结论">核心结论
+</h3><blockquote class="alert alert-tip">
+        <div class="alert-header">
+            <span class="alert-icon">💡</span>
+            <span class="alert-title">核心发现</span>
+        </div>
+        <div class="alert-body">
+            <p>世界模型的力量源泉在于<strong>联合训练</strong>带来的表征提升，而不是推理时那花里胡哨的视频生成。</p>
+<p><strong>视频训练就像是给机器人读了《物理百科全书》，不读这套书，机器人就是个瞎子；但读过之后，干活时并不需要一边干一边复述书里的内容。</strong></p>
+        </div>
+    </blockquote>
+<hr>
+<h2 id="三方法论详解">三、方法论详解
+</h2><h3 id="31-底层基座wan22-5b-视频-transformer">3.1 底层基座：Wan2.2-5B 视频 Transformer
+</h3><p>Fast-WAM 不是从零开始的，它寄生在一个巨大的&quot;智慧大脑&quot;上——<strong>Wan2.2-5B</strong>，这是一个拥有 <strong>50亿参数</strong> 的视频生成大模型。</p>
+<p><strong>它的角色</strong>：提供&quot;常识&quot;——它知道如果手往左拨，杯子就会向左倒。</p>
+<h3 id="32-motmixture-of-transformer架构">3.2 MoT（Mixture-of-Transformer）架构
+</h3><p>这是 Fast-WAM 最核心的&quot;手术刀&quot;，精准解决了&quot;大模型太笨重&quot;和&quot;机器人要灵敏&quot;之间的矛盾。</p>
+<h4 id="形象比喻">形象比喻
+</h4><p>如果把普通的 Transformer 比作一个**&ldquo;全科医生&rdquo;<strong>（什么都干，但由于太胖，反应慢），那么 <strong>MoT</strong> 就像是一个</strong>&ldquo;专家门诊部&rdquo;**。</p>
+<p>MoT 在 Fast-WAM 中扮演了三个关键角色：</p>
+<h4 id="1-知识的寄生与借力knowledge-injection">1. 知识的&quot;寄生与借力&quot;（Knowledge Injection）
+</h4><ul>
+<li><strong>做法</strong>：在大模型内部&quot;插入&quot;了一个专门处理动作的 <strong>Action Expert（动作专家）</strong>，约 10 亿参数</li>
+<li><strong>比喻</strong>：就像在一个精通物理规律的&quot;老教授&quot;（视频底座）大脑里，植入了一个&quot;专业运动员&quot;（动作专家）的运动神经</li>
+<li>运动员在做动作时，能实时调用老教授脑子里的物理常识，但他不需要老教授亲自下场画图</li>
+</ul>
+<h4 id="2-任务的结构化解耦task-decoupling">2. 任务的&quot;结构化解耦&quot;（Task Decoupling）
+</h4><p>视频预测和动作预测虽然有联系，但它们的&quot;脑回路&quot;是不一样的：</p>
+<ul>
+<li><strong>视频预测</strong>：关注全局，比如背景变没变，光影漂不漂亮</li>
+<li><strong>动作预测</strong>：关注细节，比如夹爪现在离桌子几厘米，力道够不够</li>
+</ul>
+<p>MoT 通过不同的 <strong>Router（路由）</strong> 或特殊的注意力掩码，让模型在处理数据时，一部分参数专门盯着&quot;画面怎么变&quot;，另一部分参数专门盯着&quot;手该怎么动&quot;。</p>
+<h4 id="3-实现推理大瘦身的开关the-efficiency-switch">3. 实现&quot;推理大瘦身&quot;的开关（The Efficiency Switch）
+</h4><p>这是 Fast-WAM 能跑得快的<strong>终极秘密</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>MoT 的工作状态</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>训练时</strong></td>
+          <td>所有专家都上班。一边生成视频，一边预测动作。动作专家能学到：&ldquo;当老教授预测毛巾会动时，我这一步的动作指令是正确的。&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>推理时</strong></td>
+          <td><strong>只让动作专家上班</strong>。动作专家已经通过训练掌握了老教授的物理神髓，直接关掉负责&quot;画图/渲染视频&quot;的那些耗电、耗时的分支。</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="33-token-的三分法">3.3 Token 的三分法
+</h3><p>论文将输入 Token 明确划分为三大类，配合结构化掩码实现了精妙的信息流控制：</p>
+<h4 id="-第一帧干净隐变量-token共享视觉锚点">🟦 第一帧干净隐变量 Token（共享视觉锚点）
+</h4><ul>
+<li><strong>角色</strong>：现实世界的&quot;起点&quot;</li>
+<li><strong>特点</strong>：干净的、不加噪声的。训练和推理都有</li>
+<li><strong>逻辑</strong>：模型唯一的真实参考，所有&quot;脑补&quot;都必须基于这个起点</li>
+<li><strong>注意力规则</strong>：孤芳自赏，谁也不看</li>
+</ul>
+<h4 id="-未来帧噪声-token模拟实验室素材">🟨 未来帧噪声 Token（模拟实验室素材）
+</h4><ul>
+<li><strong>角色</strong>：供视频建模用</li>
+<li><strong>特点</strong>：只有训练时才塞进序列，被加了不同程度的噪声</li>
+<li><strong>命运</strong>：推理时彻底踢掉</li>
+<li><strong>注意力规则</strong>：可以相互双向注意，也可以看到第一帧；可以看到动作 Token</li>
+</ul>
+<h4 id="-动作-token最终指令输出">🟥 动作 Token（最终指令输出）
+</h4><ul>
+<li><strong>角色</strong>：由动作专家负责去噪生成动作序列</li>
+<li><strong>特点</strong>：采用动作离散化，变成类似&quot;单词&quot;的形式</li>
+<li><strong>注意力规则</strong>：只能看到第一帧，<strong>绝对不能看未来帧</strong>——防止信息泄露！</li>
+</ul>
+<blockquote class="alert alert-warning">
+        <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">关键设计</span>
+        </div>
+        <div class="alert-body">
+            <p>动作 Token 绝对不能看未来帧！</p>
+<p><strong>原因</strong>：如果训练时动作 Token 看到了未来帧，它就会发现：&ldquo;哦，未来毛巾已经折好了，那我反推一下现在的动作就行。&ldquo;这叫<strong>信息泄露</strong>。这样学出来的机器人，一旦到了推理阶段（没有未来帧可以看），它就直接瘫痪了。</p>
+        </div>
+    </blockquote>
+<h3 id="34-精妙的防作弊注意力掩码">3.4 精妙的&quot;防作弊&quot;注意力掩码
+</h3><pre tabindex="0"><code>┌─────────────────────────────────────────────────────┐
+│                    注意力规则表                        │
+├─────────────────────────────────────────────────────┤
+│ 规则 A：动作 Token (🟥) 绝对不能看未来帧 (🟨)          │
+│         → 防止&#34;偷看答案&#34;，强迫学习物理直觉             │
+│                                                     │
+│ 规则 B：未来帧 (🟨) 可以看动作 Token (🟥) 和起点 (🟦)   │
+│         → 保证视频生成分支学习因果关系                  │
+│                                                     │
+│ 规则 C：第一帧 (🟦) 谁也不看                          │
+│         → 它是给定的事实，不需要被任何预测信息干扰      │
+└─────────────────────────────────────────────────────┘
+</code></pre><h3 id="35-训练-loss-设计">3.5 训练 Loss 设计
+</h3><p>Fast-WAM 的 Loss 设计是一个**&ldquo;双头并进、联合练兵&rdquo;**的策略：</p>
+<p>$$L_{total} = L_{video} + \lambda L_{action}$$</p>
+<h4 id="l_video物理规律的强制灌输">$L_{video}$：物理规律的&quot;强制灌输&rdquo;
+</h4><ul>
+<li><strong>技术细节</strong>：基于 <strong>Flow Matching（流匹配）</strong> 或标准的 <strong>Diffusion Loss</strong></li>
+<li><strong>通俗解释</strong>：给模型一张模糊的、加了噪声的未来画面，它必须想办法还原出清晰的画面</li>
+<li><strong>作用</strong>：让模型的大脑对物理世界保持敏感，练就&quot;火眼金睛&rdquo;</li>
+</ul>
+<h4 id="l_action肌肉记忆的精准打磨">$L_{action}$：肌肉记忆的&quot;精准打磨&quot;
+</h4><ul>
+<li><strong>技术细节</strong>：采用 <strong>Diffusion-based Loss</strong></li>
+<li><strong>通俗解释</strong>：教练在旁边看着机器人折毛巾，每动一下就对比专业动作给出差评</li>
+<li><strong>精妙之处</strong>：这个损失作用在 Action Expert 那个 1B 大小的&quot;专家插件&quot;上，同时也会通过反向传播微调底座</li>
+</ul>
+<h4 id="lambda-系数动态平衡的调音师">$\lambda$ 系数：动态平衡的&quot;调音师&quot;
+</h4><p>决定模型是更想当一个&quot;画家&quot;（视频生成）还是&quot;工人&quot;（动作执行）。</p>
+<h4 id="为什么这样设计能借力打力">为什么这样设计能&quot;借力打力&quot;？
+</h4><p>在训练时，由于 $L_{video}$ 和 $L_{action}$ 在同一个 Transformer 结构中同时优化，它们会共享中间的 Hidden States：</p>
+<ol>
+<li>当 $L_{video}$ 强迫模型去理解&quot;玻璃杯碎了&quot;的物理过程时，Transformer 的中间层会产生**&ldquo;具有物理感知力&quot;的特征信号**</li>
+<li>负责动作预测的支路会立刻&quot;偷听到&quot;这个信号</li>
+<li>$L_{action}$ 的优化过程发现：<strong>如果借用视频分支分析出的物理特征，预测动作的准确率会大大提升！</strong></li>
+</ol>
+<p><strong>结果</strong>：训练结束后，动作分支已经彻底吸收了视频分支的&quot;内功&rdquo;。即便推理时砍掉未来帧 Token，动作分支依然能凭借已经练就的&quot;肌肉记忆&quot;做出符合物理规律的反应。</p>
+<blockquote class="alert alert-quote">
+        <div class="alert-header">
+            <span class="alert-icon"></span>
+            <span class="alert-title">形象比喻</span>
+        </div>
+        <div class="alert-body">
+            <p>Fast-WAM 的 Loss 设计就像是一个<strong>双人舞训练</strong>。视频 Loss 负责教舞步的逻辑和平衡感，动作 Loss 负责教力量和落点。虽然演出时只有动作分支上台，但他脑子里记着的，全都是排练时视频分支带给他的节奏感。</p>
+        </div>
+    </blockquote>
+<h3 id="36-推理逻辑想象力截断">3.6 推理逻辑：想象力&quot;截断&quot;
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">特性</th>
+          <th style="text-align: left">传统视频动作模型 (WAM)</th>
+          <th style="text-align: left">Fast-WAM</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>推理步骤</strong></td>
+          <td style="text-align: left">去噪采样</td>
+          <td style="text-align: left">单次前向传播</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>性能瓶颈</strong></td>
+          <td style="text-align: left">必须生成高清视频像素</td>
+          <td style="text-align: left">只计算潜在特征</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>物理理解</strong></td>
+          <td style="text-align: left">靠&quot;看图&quot;来确认</td>
+          <td style="text-align: left">靠&quot;联合训练&quot;内化到权重中</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>延迟</strong></td>
+          <td style="text-align: left">很高 (1s ~ 5s+)</td>
+          <td style="text-align: left"><strong>极低 (190ms)</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>一句话逻辑</strong>：</p>
+
+    <blockquote>
+        <p>Fast-WAM 通过 MoT 结构在 5B 视频大模型里安插了&quot;动作特务&quot;，在训练时利用视频生成任务来磨练这些特务的物理嗅觉，但在实战中<strong>卸磨杀驴</strong>（关掉视频生成），从而实现了&quot;有着世界模型灵魂的 VLA 速度&quot;。</p>
+
+    </blockquote>
+<hr>
+<h2 id="四实验结果">四、实验结果
+</h2><h3 id="41-仿真战场">4.1 仿真战场
+</h3><h4 id="libero长程规划和空间推理测试">LIBERO（长程规划和空间推理测试）
+</h4><ul>
+<li>Fast-WAM 成功率：<strong>97.6%</strong></li>
+<li>与慢悠悠的&quot;完整脑补派&quot;不相上下</li>
+</ul>
+<h4 id="robotwin-20复杂环境">RoboTwin 2.0（复杂环境）
+</h4><ul>
+<li>Fast-WAM 表现依然稳健</li>
+</ul>
+<h3 id="42-终极考验现实世界折毛巾">4.2 终极考验：现实世界折毛巾！
+</h3><ul>
+<li>机器人：<strong>Galaxea R1 Lite</strong></li>
+<li>数据：60 小时遥操作数据</li>
+</ul>
+<h4 id="惊人发现">惊人发现
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>训练方式</th>
+          <th>成功率</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>开启视频联合训练</td>
+          <td><strong>90%+</strong></td>
+      </tr>
+      <tr>
+          <td>关闭视频联合训练</td>
+          <td><strong>10%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<blockquote class="alert alert-danger">
+        <div class="alert-header">
+            <span class="alert-icon"></span>
+            <span class="alert-title">关键发现</span>
+        </div>
+        <div class="alert-body">
+            <p>如果关掉训练时的&quot;视频辅助&quot;，成功率从 90%+ 暴跌到 10%！</p>
+<p>这证明了：<strong>视频训练的价值在于训练阶段，而非推理阶段。</strong></p>
+        </div>
+    </blockquote>
+<hr>
+<h2 id="五与-leworldmodel-的对比讨论">五、与 LeWorldModel 的对比讨论
+</h2><h3 id="51-问题引入单帧预测的局限性">5.1 问题引入：单帧预测的局限性
+</h3><blockquote class="alert alert-question">
+        <div class="alert-header">
+            <span class="alert-icon"></span>
+            <span class="alert-title">深刻质疑</span>
+        </div>
+        <div class="alert-body">
+            <p>如果任务比较难，需要预测的未来动作序列比较长，光看第一帧的隐变量 Token 预测后续动作的难度是不是大了些？</p>
+<p>就好像下围棋的时候，如果不进行多步的未来棋局推演，只看当前棋局就直接落子，落子质量应该会低很多吧？</p>
+        </div>
+    </blockquote>
+<p>这个问题切中了具身智能界最大的争论之一：<strong>&ldquo;直觉反应（System 1）&ldquo;与&quot;深思熟虑（System 2）&ldquo;的路线之争</strong>。</p>
+<h3 id="52-fast-wam-的真实工作模式">5.2 Fast-WAM 的真实工作模式
+</h3><p>首先要澄清：Fast-WAM 在真正干活时，<strong>并不是只看一开始的那一帧，就盲目地把未来 10 分钟的动作全预测完。</strong></p>
+<p><strong>动作分块+ 闭环控制</strong>：</p>
+<ul>
+<li>看当前的&quot;第一帧&rdquo;，预测未来一小段（比如 16 步或 64 步）的动作序列</li>
+<li>执行这几步动作后，会<strong>再次睁开眼睛</strong>，把最新的画面作为新的&quot;第一帧&rdquo;，再次预测</li>
+</ul>
+<p><strong>比喻</strong>：就像你打乒乓球——你不是在发球那一刻就算好接下来 10 个回合怎么打，你是看着球飞过来，瞬间做出挥拍动作，打完再看下一回合。</p>
+<h3 id="53-fast-wam-vs-leworldmodel两种哲学">5.3 Fast-WAM vs LeWorldModel：两种哲学
+</h3><p>根据 LeWorldModel 论文（arXiv: 2603.19312，Yann LeCun 团队，2026年3月）：</p>
+<h4 id="-fast-wam大模型--肌肉记忆">🔴 Fast-WAM：&ldquo;大模型 + 肌肉记忆&rdquo;
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>路线</strong></td>
+          <td>找一个看懂所有物理规律的 50亿参数&quot;巨人&rdquo;</td>
+      </tr>
+      <tr>
+          <td><strong>提速方法</strong></td>
+          <td>干活时蒙上巨人的眼睛，不让他画图，只提取物理直觉直接输出动作</td>
+      </tr>
+      <tr>
+          <td><strong>延迟</strong></td>
+          <td><strong>190ms</strong></td>
+      </tr>
+      <tr>
+          <td><strong>适用场景</strong></td>
+          <td>折毛巾、接飞球、动态物体操作（高频、动态、物理交互）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="-leworldmodel小模型--纯粹物理法则">🔵 LeWorldModel：&ldquo;小模型 + 纯粹物理法则&rdquo;
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>描述</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>路线</strong></td>
+          <td>不依赖庞大预训练视频模型，从零开始学习</td>
+      </tr>
+      <tr>
+          <td><strong>提速方法</strong></td>
+          <td>只有 <strong>15M</strong> 参数（Fast-WAM 的 1/333），抛弃复杂像素生成，运行在特征空间</td>
+      </tr>
+      <tr>
+          <td><strong>延迟</strong></td>
+          <td><strong>0.98s</strong>（含 MPC 多步推演）</td>
+      </tr>
+      <tr>
+          <td><strong>适用场景</strong></td>
+          <td>迷宫寻宝、多步骤逻辑任务、复杂环境导航</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="54-延迟对比">5.4 延迟对比
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型</th>
+          <th>延迟</th>
+          <th>频率</th>
+          <th>适用场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Fast-WAM</strong></td>
+          <td>190ms</td>
+          <td>~5 Hz</td>
+          <td>毫秒级&quot;物理操作时间&quot;——手已抓到门把手，感受阻力瞬间调整发力</td>
+      </tr>
+      <tr>
+          <td><strong>LeWM</strong></td>
+          <td>0.98s</td>
+          <td>~1 Hz</td>
+          <td>1秒级&quot;战术规划时间&quot;——走到厨房门口，推演怎么绕过障碍物</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="55-终极思考大小脑结合">5.5 终极思考：大小脑结合
+</h3><blockquote class="alert alert-tip">
+        <div class="alert-header">
+            <span class="alert-icon">💡</span>
+            <span class="alert-title">未来方向</span>
+        </div>
+        <div class="alert-body">
+            <p>单一模型无法通吃。未来的完美机器人，一定会把两者结合起来：</p>
+<ul>
+<li>
+<p><strong>大脑（System 2 - 类似 LeWorldModel）</strong>：负责在后台慢速运行。接到&quot;做一顿年夜饭&quot;的指令时，大脑开始推演步骤，进行 MPC，制定长程计划。</p>
+</li>
+<li>
+<p><strong>小脑（System 1 - 类似 Fast-WAM）</strong>：负责前台的高速执行。当大脑决定&quot;现在去切土豆&quot;时，小脑接管身体，利用极速反应和物理直觉，稳准狠地把土豆切成丝。</p>
+</li>
+</ul>
+        </div>
+    </blockquote>
+<hr>
+<h2 id="六总结">六、总结
+</h2><h3 id="核心贡献">核心贡献
+</h3><ol>
+<li><strong>打破迷思</strong>：证明了世界模型的力量源泉在于联合训练带来的表征提升，而非推理时的视频生成</li>
+<li><strong>架构创新</strong>：MoT 结构让&quot;物理常识&quot;和&quot;动作反应&quot;在同一架构里深度交融，又能在干活时&quot;分家&quot;</li>
+<li><strong>极致速度</strong>：用 50 亿参数模型的智慧，跑出轻量化模型的速度（190ms）</li>
+</ol>
+<h3 id="形象总结">形象总结
+</h3>
+    <blockquote>
+        <p>这篇论文就像是一个高效的教练，告诉机器人：&ldquo;我在训练场让你画画是为了让你理解肌肉发力的逻辑，等你上了战场，直接出拳就行，别在那儿画画了！&rdquo;</p>
+
+    </blockquote>
+<p>这种&quot;重训练、轻推理&quot;的思路，很可能会成为 2026 年之后机器人 foundation model 的标准范式。</p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li>[[LeWorldModel]] - LeCun 团队的 JEPA 架构世界模型，提供了另一种&quot;快&quot;的哲学</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/worldmodel/">WorldModel</a>
+        
+            <a href="/tags/embodiedai/">EmbodiedAI</a>
+        
+            <a href="/tags/diffusion/">Diffusion</a>
+        
+            <a href="/tags/mot/">MoT</a>
+        
+            <a href="/tags/actionprediction/">ActionPrediction</a>
+        
+            <a href="/tags/videogeneration/">VideoGeneration</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/le-world-model/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeWorldModel - 稳定的端到端联合嵌入预测架构世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/world-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WorldDrive</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

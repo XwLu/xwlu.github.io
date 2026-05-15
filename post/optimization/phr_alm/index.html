@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Powell-Hestenes-Rockafellar Method for Equality- Constrained Cases">
+<title>PHR Augmented Lagrangian Method</title>
+
+
+<link rel="canonical" href="https://example.org/post/optimization/phr_alm/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="PHR Augmented Lagrangian Method">
+<meta property='og:description' content="Powell-Hestenes-Rockafellar Method for Equality- Constrained Cases">
+<meta property='og:url' content='https://example.org/post/optimization/phr_alm/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="PHR Augmented Lagrangian Method">
+<meta name="twitter:description" content="Powell-Hestenes-Rockafellar Method for Equality- Constrained Cases">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/optimization/" style="background-color: hsl(228, 60%, 84%); color: hsl(228, 60%, 15%);">
+                Optimization
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/optimization/phr_alm/">PHR Augmented Lagrangian Method</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="背景">背景
+</h1><ul>
+<li>PHR是Powell、Hestenes和Rockafellar三个人名的缩写，前两个人在等式约束的优化问题中提出了增广拉格朗日乘子法，第三个作者将其推广到不等式约束上，并给出了新的解释</li>
+</ul>
+<h1 id="等式约束">等式约束
+</h1><ul>
+<li>问题形式
+<ul>
+<li>$$min_{x\in\mathbb{R^{n}}}f(x)$$</li>
+<li>$$s.t.h(x)=0$$</li>
+</ul>
+</li>
+<li>推导
+<ul>
+<li>Uzawa&rsquo;s method
+<ul>
+<li>通过冯诺依曼定理将minmax问题转化为maxmin（对偶）问题，只需要满足原问题是严格凸的，原问题和对偶问题的最优解就是一致的</li>
+<li>$$d(\lambda):=min_{x}f(x)+\lambda^{T}h(x)$$</li>
+<li>如果原问题不是严格凸，上面的式子求得的\(x^{*}\)就不是唯一的，导致\(d(\lambda)\)不是光滑的，梯度\(\triangledown d(\lambda)\)有可能不存在</li>
+</ul>
+</li>
+<li>PHR Augmented Lagrangian Method
+<ul>
+<li>核心思路
+<ul>
+<li>不直接依赖冯诺依曼定理将minmax问题转化为maxmin问题。</li>
+<li>再来观察一下原问题
+<ul>
+<li>$$min_{x}max_{\lambda}f(x)+\lambda^{T}h(x)$$</li>
+</ul>
+</li>
+<li>现在的主要难点在于，函数的max部分，取值要么是无穷大要么是一个定值，他是一个non smooth的函数，一个很直观的想法是，把这部分近似一下，变成一个smooth的函数：
+<ul>
+<li>我们在右边加一个proximal point项。其思路是，我们并不知道\(\lambda\)最优应该取什么值，但可以先假设\(\lambda\)的最优解是\(\bar\lambda\)，那么我们在优化的时候尽可能让\(\lambda\)靠近\(\bar\lambda\)</li>
+<li>$$min_{x}max_{\lambda}f(x)+\lambda^{T}h(x)-\frac{1}{2\rho}\left|\lambda-\bar{\lambda}\right|$$</li>
+<li>$$(\rho&gt;0)$$</li>
+<li>加上这个proximal point项（正则项）之后，原问题的max部分就是对\(\lambda\)的线性项加上对\(\lambda\)的二次项，这对\(\lambda\)来说是一个连续且严格凸的函数，且二次函数的最优值是有解析解的
+<ul>
+<li><img alt="proximal point term" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../proximal_point_term.png"></li>
+<li><img alt="phr outer" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../phr_outer.png"></li>
+<li>至此，该问题变成了一个针对\(x\)无约束优化问题</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>但目前我们只是得到了对原问题的minmax解的一个粗略估计，仍需要持续迭代提高精度，从两个角度进行提升
+<ul>
+<li>让正则项趋近于0，即\(\rho\to\infty\)</li>
+<li>不断更新更准确的\(\bar\lambda\)，\(\bar\lambda\leftarrow\lambda^{*}(\bar\lambda)\)。因为第一次优化时，\(\bar\lambda\)是我们猜的，优化结束后，我们得到的\(\lambda^{*}\)比之前猜的\(\bar\lambda\)更接近最优解，所以第二次就把\(\lambda^{*}\)作为下一轮的\(\bar\lambda\)来不断提高精度</li>
+<li>注意，由于我们不断地在更新更精确的\(\bar\lambda\)，这意味着\(\left|\lambda-\bar{\lambda}\right|\)本身不断在接近0，所以\(\rho\)的取值不需要真的趋向无穷大， 慢慢增长到一定程度大即可,取到1000就可以了</li>
+</ul>
+</li>
+<li>现在我们不需要借助冯诺依曼定理最minmax问题进行对换了，也就不需要保证\(f(x)\)严格凸</li>
+</ul>
+</li>
+<li>原问题的拉格朗日函数 + 增广项 = 增广拉格朗日法
+<ul>
+<li><img alt="phr alm func" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../phr_alm_func.png"></li>
+</ul>
+</li>
+<li>一般来说，我们常把上面的式子整理为如下形式（灰色部分可以省略），进行迭代
+<ul>
+<li><img alt="frequently phr alm" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../frequently_phr_alm.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="不等式约束">不等式约束
+</h1><ul>
+<li>问题形式
+<ul>
+<li>$$min_{x\in R^{n}}f(x)$$</li>
+<li>$$s.t.g(x)\leq0$$</li>
+</ul>
+</li>
+<li>原问题变形（不等式变等式）
+<ul>
+<li>$$min_{x\in R^{n},s\in R^{m}}f(x)$$</li>
+<li>$$s.t.g(x)+\left[s\right]^{2}\leq0$$
+<ul>
+<li>其中\(\left[\cdot\right]^{2}\)表示element-wise squaring</li>
+</ul>
+</li>
+<li><img alt="phr alm inequal" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../phr_alm_inequal.png"></li>
+</ul>
+</li>
+</ul>
+<h1 id="等式约束不等式约束">等式约束+不等式约束
+</h1><ul>
+<li>问题形式
+<ul>
+<li>$$min_{x\in R^{n}}f(x)$$</li>
+<li>$$s.t.g(x)\leq0,h(x)=0$$</li>
+</ul>
+</li>
+<li>PHR_Augmented Lagrangian
+<ul>
+<li>$$\pounds_{\rho}(x,\lambda,\mu):=f(x)+\frac{\rho}{2}\lbrace\left|h(x)+\frac{\lambda}{\rho}\right|^{2}+\left|max\left[g(x)+\frac{\mu}{\rho},0\right])\right|\rbrace-\frac{1}{2\rho}\lbrace\left|\lambda\right|^{2}+\left|\mu\right|^{2}\rbrace$$
+<ul>
+<li>丄式的最后一项一般都省略掉</li>
+<li>$$\rho&gt;0,\mu\geq0$$</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>迭代步骤
+<ul>
+<li>$$\Bigg\lbrace\begin{matrix}x\leftarrow argmin_{x}\pounds_{\rho}(x,\lambda,\mu) \ \lambda\leftarrow\lambda+\rho h(x)\\mu\leftarrow max\left[\mu+\rho g(x),0\right]\\rho\leftarrow min\left[(1+\lambda)\rho,\beta\right]\end{matrix}$$</li>
+</ul>
+</li>
+<li>参数初始化
+<ul>
+<li>$$\rho=1,\lambda=\mu=0,\gamma=1,\beta=10^{3}$$</li>
+</ul>
+</li>
+<li>内层循环退出条件（求\(argmin_{x}\)）
+<ul>
+<li><img alt="phr alm inner loop exit" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../phr_alm_inner_loop_exit.png"></li>
+<li>\(\xi\)从一个正数逐渐收敛到0</li>
+</ul>
+</li>
+<li>外层迭代退出条件
+<ul>
+<li><img alt="phr alm outer loop exit" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../phr_alm_outer_loop_exit.png"></li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

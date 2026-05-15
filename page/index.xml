@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Pages on 朝花夕拾</title>
+        <link>https://example.org/page/</link>
+        <description>Recent content in Pages on 朝花夕拾</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 15 May 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/page/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>About</title>
+            <link>https://example.org/page/about/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/page/about/</guid>
+            <description>&lt;h2 id=&#34;关于本站&#34;&gt;关于本站&#xA;&lt;/h2&gt;&lt;p&gt;这里记录了我的学习笔记和技术积累，涵盖机器人、深度学习、强化学习、优化理论、C++ 等领域，以及攀岩和工具使用的心得。&lt;/p&gt;&#xA;&#xA;    &lt;blockquote&gt;&#xA;        &lt;p&gt;日拱一卒，功不唐捐。&lt;/p&gt;&#xA;&#xA;    &lt;/blockquote&gt;&#xA;&lt;h2 id=&#34;关于作者&#34;&gt;关于作者&#xA;&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;looyifan&lt;/strong&gt; | 现居中国杭州&lt;/p&gt;&#xA;&lt;h3 id=&#34;技能&#34;&gt;技能&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;编程语言&lt;/strong&gt;：C++、Python&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;研究兴趣&lt;/strong&gt;：自动驾驶、端到端运动规划、世界模型&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;其他爱好&lt;/strong&gt;：攀岩&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;联系我&#34;&gt;联系我&#xA;&lt;/h3&gt;&lt;ul&gt;&#xA;&lt;li&gt;&lt;strong&gt;GitHub&lt;/strong&gt;：&lt;a class=&#34;link&#34; href=&#34;https://github.com/XwLu&#34;  target=&#34;_blank&#34; rel=&#34;noopener&#34;&#xA;    &gt;XwLu&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;strong&gt;Email&lt;/strong&gt;：&lt;a class=&#34;link&#34; href=&#34;mailto:looyifan@gmail.com&#34; &gt;looyifan@gmail.com&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;</description>
+        </item><item>
+            <title>Archives</title>
+            <link>https://example.org/page/archives/</link>
+            <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+            <guid>https://example.org/page/archives/</guid>
+            <description></description>
+        </item><item>
+            <title>Links</title>
+            <link>https://example.org/page/links/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+            <guid>https://example.org/page/links/</guid>
+            <description></description>
+        </item><item>
+            <title>Search</title>
+            <link>https://example.org/page/search/</link>
+            <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+            <guid>https://example.org/page/search/</guid>
+            <description></description>
+        </item></channel>
+</rss>

@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="array, vector, string for C++">
+<title>Array Vector String</title>
+
+
+<link rel="canonical" href="https://example.org/post/coding/c&#43;&#43;/array-vector-string/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Array Vector String">
+<meta property='og:description' content="array, vector, string for C++">
+<meta property='og:url' content='https://example.org/post/coding/c&#43;&#43;/array-vector-string/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Array Vector String">
+<meta name="twitter:description" content="array, vector, string for C++">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/coding/" style="background-color: hsl(47, 60%, 84%); color: hsl(47, 60%, 15%);">
+                Coding
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/coding/c&#43;&#43;/array-vector-string/">Array Vector String</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="数组">数组
+</h1><ul>
+<li>数组初始化方式
+<ul>
+<li>缺省初始化</li>
+<li>聚合初始化
+<pre tabindex="0"><code>int a[3] = {1, 2};
+int b[3] = {1, 2, 3};
+int c[] = {1, 2, 3};  // c的类型是int[3]
+</code></pre></li>
+</ul>
+</li>
+<li>注意
+<ul>
+<li>不能使用auto来声明数组类型
+<pre tabindex="0"><code>#include &lt;typeinfo&gt;
+#include &lt;iostream&gt;
+
+int main() {
+  auto b = {1, 2, 3};
+  std::cout &lt;&lt; typeid(b).name() &lt;&lt; std::endl;  // ./exe | c++filt -t 得到std::initializer_list&lt;int&gt;
+}
+</code></pre></li>
+<li>数组不能复制
+<pre tabindex="0"><code>int b[] = {1, 2};
+auto a = b;  // a的类型是int*，发生了类型退化
+auto&amp; c = b;  // auto&amp;可以防止类型退化，c的类型是int(&amp;)[3]
+int d[3];
+d = b;  // 报错
+</code></pre></li>
+<li>元素个数必须是一个常量表达式（编译期可计算的值），且值必须大于0
+<pre tabindex="0"><code>int a[3];  // a是一个数组，类型是int[3]
+int x;
+std::cin &gt;&gt; x;
+int b[x];  // C语言从C99开始支持variable length array，但C++标准不支持
+// 虽然C++标准不支持，但clang++或g++的部分版本的编译器实现中还是支持该方法，但不建议使用，在代码跨平台移植的时候会出问题
+</code></pre></li>
+<li>int和int[1]是两个不同的类型</li>
+<li>字符串数组的特殊性
+<pre tabindex="0"><code>int main() {
+  char str[] = &#34;Hello&#34;;  // 类型是char[6]，隐式地在字符串最后加一个&#39;\0&#39;
+  char str[] = {&#39;H&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;};  // 类型是char[5]
+}
+</code></pre></li>
+</ul>
+</li>
+<li>数组的复杂声明
+<ul>
+<li>指针数组与数组指针
+<pre tabindex="0"><code>int* a[3];  // a是个数组，存了3个int*指针，类型是int*[3]
+int (*a)[3];  // a是个指针，指向一个int[3]类型的数组，类型是int(*)[3]
+</code></pre></li>
+<li>声明数组的引用
+<pre tabindex="0"><code>int a[3];
+int (&amp;b)[3] = a;  // b是a的引用
+// auto&amp; b = a;  // 同上
+int x1;
+int&amp; c[1] = {x1};  // C++不支持引用的数组
+</code></pre></li>
+</ul>
+</li>
+<li>数组到指针的隐式转换
+<ul>
+<li>会丢失一些信息，比如数组的长度</li>
+<li>可以通过声明引用来避免隐式类型转换</li>
+<li>注意：不要用extern指针来声明数组
+<ul>
+<li>unknown bounded array声明
+<pre tabindex="0"><code>// source.cc
+int array[5] = {1, 2};
+int array1[5] = {1, 2};
+
+// main.cc
+extern int array[];  // unknown bounded array
+extern int* array1;
+
+int main() {
+  array[0];  // 编译通过，运行正常
+  array1[0];  // 编译通过，运行不正常，强行用指针解释数组的内容，会出屎
+}
+</code></pre></li>
+</ul>
+</li>
+<li>获得指向数组开头和结尾的指针
+<pre tabindex="0"><code>// 这里的array不可以是指针
+// extern int array[];  // 不可以是unknown bounded array
+extern int array[4];  // 这个声明可以
+std::begin(array);  // int*
+std::cbegin(array);  // const int*
+std::end(array);  // int*
+std::cend(array);  // const int*
+</code></pre></li>
+<li>指针算数
+<ul>
+<li>增加、减少、比较</li>
+<li>求距离</li>
+<li>解引用</li>
+<li>指针索引</li>
+</ul>
+<pre tabindex="0"><code>int a[3] = {1, 2, 3};
+auto ptr = a;
+*ptr;
+*a;
+ptr[1];
+</code></pre></li>
+</ul>
+</li>
+<li>其他操作
+<ul>
+<li>求元素的个数
+<pre tabindex="0"><code>extern int array[];  // 下面的三个方法都无法处理这种imcomplete type
+int a[3];
+sizeof(a);  // 12，int占四个字节，这里的a不会退化为指针，C语言的方法，编译期计算
+std::size(a);  // 3， 推荐使用该方法，C++方法，编译期计算
+std::end(a) - std::begin(a);  // 3，运行期计算
+</code></pre></li>
+<li>元素遍历
+<pre tabindex="0"><code>int a[3];
+// 方法1
+size_t i = 0;
+while (i &lt; std::size(a)) {
+  a[i];
+  ++i;
+}
+// 方法2
+auto ptr =  std::cbegin(a);
+while (ptr != std::cend(a)) {
+  ++ptr;
+}
+// 方法3
+for (int x : a) {}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<h1 id="c字符串">C字符串
+</h1><ul>
+<li>本质上是数组char[]</li>
+<li>C语言提供了额外的操作
+<pre tabindex="0"><code>#include &lt;cstring&gt;
+char str[] = &#34;Hello&#34;;
+strlen(str);
+// strcmp
+</code></pre></li>
+</ul>
+<h1 id="多维数组">多维数组
+</h1><ul>
+<li>类型推导
+<pre tabindex="0"><code>#include &lt;type_traits&gt;
+int x[3][4];  // x是一个数组，包含了3个 int[4]类型的元素
+std::is_same_v(decltype(x[0], int(&amp;)[4]));  // true，x[0]是个表达式，decltype(表达式)会加上引用
+auto ptr = x;  // 类型退化只发生在第一维，ptr类型是int(*)[4]，只有这样在执行ptr+1的时候才知道要往后移动多少位
+
+using A = int[4];  // 使用类型别名简化初始化
+A x2[3];  // int x2[3][4]
+A* ptr = x2;
+</code></pre></li>
+<li>初始化
+<pre tabindex="0"><code>int x[2][3] = {1, 2, 3, 4};  // {123}{400}
+int x[2][3] = \{\{1, 2, 3\}, \{4, 5, 6\}\};  // {123}{456}
+int x[2][3] = \{\{1, 2, 3\}, \{4, 5\}\};  // // {123}{450}
+int x[2][3] = \{\{1, 2\}, \{4, 5\}\};  // // {120}{450}
+int x[][3] = {1, 2, 3, 4, 5};  // x的类型是int[2][3]
+int x[][] = \{\{1, 2, 3\}, \{4, 5, 6\}\};  // 报错，只有第一个[]里面的size可以自动推导，后面的都得显示标明
+</code></pre></li>
+<li>遍历
+<ul>
+<li>二维数组遍历的时候，尽量按行遍历，因为一行的元素往往存在同一块内存，cache命中的概率比较高</li>
+</ul>
+<pre tabindex="0"><code>int x[2][3] = {1, 2, 3, 4};
+for (auto&amp; p : x) {  // 这里的&amp;不能少，如果没有&amp;，p会从int(&amp;)[3]退化为int*，无法进入下面的循环
+  for (auto&amp; q : p) {
+    // ...
+  }
+}
+</code></pre></li>
+</ul>
+<h1 id="vector">Vector
+</h1><ul>
+<li>是内建数组的代替品</li>
+<li>与数组比，更注重易用性
+<ul>
+<li>可复制</li>
+<li>可在运行期改变元素个数</li>
+</ul>
+</li>
+<li>初始化
+<pre tabindex="0"><code>std::vector&lt;int&gt; x(3);
+std::vector&lt;int&gt; x(3, 1);  // 1, 1, 1
+std::vector&lt;int&gt; x{3, 1};  // 3, 1
+std::vector&lt;int&gt; x = {1, 2, 3};
+</code></pre></li>
+<li>索引与遍历
+<pre tabindex="0"><code>std::vector&lt;int&gt; x = {1, 2, 3};
+std::cout &lt;&lt; x[20] &lt;&lt; std::endl;  // 编译通过，运行可能不会报错
+std::cout &lt;&lt; x.at(20) &lt;&lt; std::endl;  // 编译通过，运行报错，所以这种写法更好
+</code></pre></li>
+<li>迭代器
+<ul>
+<li>模拟指针的行为</li>
+<li>包含多种类别，每种类别支持的操作不同</li>
+<li>vector对应随机访问迭代器
+<ul>
+<li>解引用与下标访问</li>
+<li>移动</li>
+<li>相减求距离</li>
+<li>两个迭代器比较</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>其他
+<ul>
+<li>添加元素会导致迭代器失效</li>
+</ul>
+</li>
+</ul>
+<h1 id="string">String
+</h1><ul>
+<li>是内建字符串的代替品</li>
+<li>string其实是std::basic_string&lt;char&gt;的类型别名，basic_string是一个类模板</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

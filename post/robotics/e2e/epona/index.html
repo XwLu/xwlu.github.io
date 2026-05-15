@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content=" 端到端自动驾驶的视频生成与轨迹规划\n">
+<title>Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/epona/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving">
+<meta property='og:description' content=" 端到端自动驾驶的视频生成与轨迹规划\n">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/epona/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='扩散模型' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='视频生成' /><meta property='article:tag' content='轨迹规划' /><meta property='article:published_time' content='2026-03-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-03-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving">
+<meta name="twitter:description" content=" 端到端自动驾驶的视频生成与轨迹规划\n">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#-一句话概括">🎯 一句话概括</a></li>
+    <li><a href="#-核心设计理念">🧠 核心设计理念</a>
+      <ul>
+        <li><a href="#为什么需要-epona">为什么需要 Epona？</a></li>
+        <li><a href="#三大核心创新">三大核心创新</a></li>
+      </ul>
+    </li>
+    <li><a href="#-架构详解">🏗️ 架构详解</a></li>
+    <li><a href="#-21-mst-multimodal-spatiotemporal-transformer">📚 2.1 MST (Multimodal Spatiotemporal Transformer)</a>
+      <ul>
+        <li><a href="#-角色超级记忆大师">🎭 角色：超级记忆大师</a></li>
+        <li><a href="#输入预处理">输入预处理</a></li>
+        <li><a href="#-时空分离处理--先看时间再看空间">🔄 时空分离处理 —— &ldquo;先看时间，再看空间&rdquo;</a></li>
+        <li><a href="#-3d-位置编码-embednd">📍 3D 位置编码 (EmbedND)</a></li>
+        <li><a href="#输出">输出</a></li>
+      </ul>
+    </li>
+    <li><a href="#-22-trajdit-trajectory-planning-dit">🚗 2.2 TrajDiT (Trajectory Planning DiT)</a>
+      <ul>
+        <li><a href="#-角色决策中枢--老司机">🎭 角色：决策中枢 &amp; 老司机</a></li>
+        <li><a href="#架构双流融合">架构：双流融合</a></li>
+        <li><a href="#-modulation-调制机制">🔧 Modulation 调制机制</a></li>
+        <li><a href="#-doublestreamblock-vs-singlestreamblock">📊 DoubleStreamBlock vs SingleStreamBlock</a></li>
+      </ul>
+    </li>
+    <li><a href="#-23-visdit-next-frame-prediction-dit">🎨 2.3 VisDiT (Next-frame Prediction DiT)</a>
+      <ul>
+        <li><a href="#-角色超写实画师">🎭 角色：超写实画师</a></li>
+        <li><a href="#输入准备">输入准备</a></li>
+        <li><a href="#核心机制动作调制">核心机制：动作调制</a></li>
+        <li><a href="#-分辨率感知的时间偏移-get_schedule">⏱️ 分辨率感知的时间偏移 (get_schedule)</a></li>
+        <li><a href="#时序感知解码">时序感知解码</a></li>
+      </ul>
+    </li>
+    <li><a href="#-关键技术细节">🎓 关键技术细节</a>
+      <ul>
+        <li><a href="#31-傅立叶嵌入-timestep_embedding">3.1 傅立叶嵌入 (timestep_embedding)</a></li>
+        <li><a href="#32-rope-vs-正弦编码">3.2 RoPE vs 正弦编码</a></li>
+        <li><a href="#33-连锁前向训练-chain-of-forward-training">3.3 连锁前向训练 (Chain-of-Forward Training)</a></li>
+      </ul>
+    </li>
+    <li><a href="#-完整推理流程">🔄 完整推理流程</a></li>
+    <li><a href="#-实验成果">📊 实验成果</a></li>
+    <li><a href="#-总结">💡 总结</a></li>
+    <li><a href="#-相关链接">📎 相关链接</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/epona/">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-03-17T00:00:00Z'>Tuesday, March 17, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#-一句话概括">🎯 一句话概括</a></li>
+    <li><a href="#-核心设计理念">🧠 核心设计理念</a>
+      <ul>
+        <li><a href="#为什么需要-epona">为什么需要 Epona？</a></li>
+        <li><a href="#三大核心创新">三大核心创新</a></li>
+      </ul>
+    </li>
+    <li><a href="#-架构详解">🏗️ 架构详解</a></li>
+    <li><a href="#-21-mst-multimodal-spatiotemporal-transformer">📚 2.1 MST (Multimodal Spatiotemporal Transformer)</a>
+      <ul>
+        <li><a href="#-角色超级记忆大师">🎭 角色：超级记忆大师</a></li>
+        <li><a href="#输入预处理">输入预处理</a></li>
+        <li><a href="#-时空分离处理--先看时间再看空间">🔄 时空分离处理 —— &ldquo;先看时间，再看空间&rdquo;</a></li>
+        <li><a href="#-3d-位置编码-embednd">📍 3D 位置编码 (EmbedND)</a></li>
+        <li><a href="#输出">输出</a></li>
+      </ul>
+    </li>
+    <li><a href="#-22-trajdit-trajectory-planning-dit">🚗 2.2 TrajDiT (Trajectory Planning DiT)</a>
+      <ul>
+        <li><a href="#-角色决策中枢--老司机">🎭 角色：决策中枢 &amp; 老司机</a></li>
+        <li><a href="#架构双流融合">架构：双流融合</a></li>
+        <li><a href="#-modulation-调制机制">🔧 Modulation 调制机制</a></li>
+        <li><a href="#-doublestreamblock-vs-singlestreamblock">📊 DoubleStreamBlock vs SingleStreamBlock</a></li>
+      </ul>
+    </li>
+    <li><a href="#-23-visdit-next-frame-prediction-dit">🎨 2.3 VisDiT (Next-frame Prediction DiT)</a>
+      <ul>
+        <li><a href="#-角色超写实画师">🎭 角色：超写实画师</a></li>
+        <li><a href="#输入准备">输入准备</a></li>
+        <li><a href="#核心机制动作调制">核心机制：动作调制</a></li>
+        <li><a href="#-分辨率感知的时间偏移-get_schedule">⏱️ 分辨率感知的时间偏移 (get_schedule)</a></li>
+        <li><a href="#时序感知解码">时序感知解码</a></li>
+      </ul>
+    </li>
+    <li><a href="#-关键技术细节">🎓 关键技术细节</a>
+      <ul>
+        <li><a href="#31-傅立叶嵌入-timestep_embedding">3.1 傅立叶嵌入 (timestep_embedding)</a></li>
+        <li><a href="#32-rope-vs-正弦编码">3.2 RoPE vs 正弦编码</a></li>
+        <li><a href="#33-连锁前向训练-chain-of-forward-training">3.3 连锁前向训练 (Chain-of-Forward Training)</a></li>
+      </ul>
+    </li>
+    <li><a href="#-完整推理流程">🔄 完整推理流程</a></li>
+    <li><a href="#-实验成果">📊 实验成果</a></li>
+    <li><a href="#-总结">💡 总结</a></li>
+    <li><a href="#-相关链接">📎 相关链接</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>端到端自动驾驶的视频生成与轨迹规划</p>
+
+    </blockquote>
+<hr>
+<h2 id="-一句话概括">🎯 一句话概括
+</h2><p>Epona 是一个<strong>自回归扩散世界模型</strong>，它像拍连续剧一样根据历史画面预测未来，同时用扩散模型保证每一帧画质高清——不仅能&quot;脑补&quot;出未来 2 分钟的驾驶场景，还能学会&quot;红灯停、避让行人&quot;等物理规则。</p>
+<hr>
+<h2 id="-核心设计理念">🧠 核心设计理念
+</h2><h3 id="为什么需要-epona">为什么需要 Epona？
+</h3><p>在自动驾驶领域，存在两类模型各有优劣：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型类型</th>
+          <th>优势</th>
+          <th>劣势</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>扩散模型</strong></td>
+          <td>画质逼真、细节丰富</td>
+          <td>短视，难以生成长视频，不懂数理逻辑</td>
+      </tr>
+      <tr>
+          <td><strong>自回归 Transformer</strong></td>
+          <td>懂因果、能长程推理</td>
+          <td>图像压缩粗糙，画质模糊</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Epona 的思路</strong>：为什么不能兼得？于是采用 <strong>&ldquo;自回归 + 扩散&rdquo;</strong> 混合架构：</p>
+<ul>
+<li>像<strong>写连续剧</strong>一样（自回归）根据历史预测未来</li>
+<li>同时用<strong>扩散模型</strong>保证每一帧画质高清</li>
+</ul>
+<h3 id="三大核心创新">三大核心创新
+</h3><ol>
+<li><strong>分工明确</strong>：时空处理分离，效率大幅提升</li>
+<li><strong>异步生成</strong>：轨迹规划和视频生成分开进行</li>
+<li><strong>连锁前向训练</strong>：解决误差累积问题，能生成长达 2 分钟的视频</li>
+</ol>
+<hr>
+<h2 id="-架构详解">🏗️ 架构详解
+</h2><p>Epona 由三个核心模块组成，像一个精密配合的团队：</p>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────────────────┐
+│                        Epona 架构                            │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   历史 T 帧 ──┐                                              │
+│               │    ┌─────────┐                              │
+│   历史动作 ────┼───►│   MST   │──► 特征 F                     │
+│               │    │(记忆大师)│       │                      │
+│               ┘    └─────────┘      │                       │
+│                                     │                       │
+│                          ┌──────────┴──────────┐            │
+│                          ▼                     ▼            │
+│                   ┌──────────┐          ┌──────────┐        │
+│                   │ TrajDiT  │          │  VisDiT  │        │
+│                   │(领航员)   │          │ (画师)    │        │
+│                   └────┬─────┘          └────┬─────┘        │
+│                        │                     │              │
+│                        ▼                     ▼              │
+│                   未来轨迹              下一帧画面             │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+</code></pre><hr>
+<h2 id="-21-mst-multimodal-spatiotemporal-transformer">📚 2.1 MST (Multimodal Spatiotemporal Transformer)
+</h2><h3 id="-角色超级记忆大师">🎭 角色：超级记忆大师
+</h3><p>MST 的任务是将过去复杂的视频画面和驾驶操作，<strong>压缩</strong>成一个精炼的特征向量。就像一个记忆力超群的人，看一眼就能记住所有关键信息。</p>
+<h3 id="输入预处理">输入预处理
+</h3><pre tabindex="0"><code>原始输入：
+├── 视觉：过去 T 帧 (如 10 帧) 图像，分辨率 512×1024
+└── 动作：每帧对应的历史轨迹（速度、方向盘转角等）
+
+DCAE 压缩处理：
+├── 图像压缩 16 倍：512×1024 → 32×64 特征图
+├── 铺平成 Token：32×64 = 2048 个视觉 Token (记作 L)
+└── 动作投影：动作向量映射到同维度 Token
+
+最终输入张量 E：
+├── 形状：[Batch, T, (L+3), D]
+├── L+3 = 2048 个视觉 Token + 3 个动作 Token
+└── D = 特征维度
+</code></pre><h3 id="-时空分离处理--先看时间再看空间">🔄 时空分离处理 —— &ldquo;先看时间，再看空间&rdquo;
+</h3><p>MST 不是同时处理时空，而是<strong>交替进行</strong>，像这样：</p>
+<h4 id="步骤-a时间层--串联历史">步骤 A：时间层 —— &ldquo;串联历史&rdquo;
+</h4><p><strong>目标</strong>：让图像中<strong>同一个坐标位置</strong>的像素点，去查阅自己在过去 $T$ 帧的变化。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 输入变换</span>
+</span></span><span style="display:flex;"><span>原始形状<span style="color:#960050;background-color:#1e0010">：</span>[B, T, S, D]    <span style="color:#75715e"># S 是空间 Token 数 L+3</span>
+</span></span><span style="display:flex;"><span>变换后<span style="color:#960050;background-color:#1e0010">：</span>[(B <span style="color:#f92672">*</span> S), T, D]   <span style="color:#75715e"># 把空间维度和 Batch 绑在一起</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 物理含义</span>
+</span></span><span style="display:flex;"><span>现在模型眼里的<span style="color:#e6db74">&#34;一个样本&#34;</span><span style="color:#960050;background-color:#1e0010">，</span>不再是整段视频<span style="color:#960050;background-color:#1e0010">，</span>
+</span></span><span style="display:flex;"><span>而是视频中某个特定位置的像素点随时间的变化序列<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 关键技术：Causal Mask（因果遮罩）</span>
+</span></span><span style="display:flex;"><span>第 <span style="color:#ae81ff">5</span> 帧的像素只能看第 <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">2</span>, <span style="color:#ae81ff">3</span>, <span style="color:#ae81ff">4</span> 帧的自己<span style="color:#960050;background-color:#1e0010">，</span>不能偷看第 <span style="color:#ae81ff">6</span> 帧<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h4 id="步骤-b空间层--理解当下">步骤 B：空间层 —— &ldquo;理解当下&rdquo;
+</h4><p><strong>目标</strong>：把每一帧看作独立的图片，让图像里的车、路、树木以及动作指令 Token 进行<strong>全注意力交互</strong>。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 输入变换</span>
+</span></span><span style="display:flex;"><span>变换后<span style="color:#960050;background-color:#1e0010">：</span>[(B <span style="color:#f92672">*</span> T), S, D]   <span style="color:#75715e"># 把时间维度和 Batch 绑在一起</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 多模态融合</span>
+</span></span><span style="display:flex;"><span>视觉信息和动作意图在此处深度融合<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span></code></pre></div><h3 id="-3d-位置编码-embednd">📍 3D 位置编码 (EmbedND)
+</h3><p>Epona 使用<strong>分块对角旋转位置编码 (RoPE)</strong> 来编码时空位置：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">EmbedND</span>(dim, theta, axes_dim):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    为视频中的每个像素点生成 3D 位置嵌入
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    维度分配示例：[Time: 2维, Height: 2维, Width: 2维]
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i, (pos, dim) <span style="color:#f92672">in</span> enumerate(zip(axes, axes_dim)):
+</span></span><span style="display:flex;"><span>        out<span style="color:#f92672">.</span>append(rope(pos, dim, theta))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> torch<span style="color:#f92672">.</span>cat(out, dim<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><p><strong>形象例子</strong>：假设要给坐标 <code>(t=5, h=10, w=20)</code> 的像素编码：</p>
+<pre tabindex="0"><code>循环 1 (Time):   Embed(5)  → [0.1, 0.9]
+循环 2 (Height): Embed(10) → [0.5, 0.5]
+循环 3 (Width):  Embed(20) → [0.8, 0.2]
+
+最终拼接：[0.1, 0.9, 0.5, 0.5, 0.8, 0.2]
+</code></pre><p>这样，最终向量同时包含时间、高度和宽度信息，互不干扰。</p>
+<h3 id="输出">输出
+</h3><p>经过 $N$ 层循环后，提取序列中<strong>最后一帧</strong>的特征 $\mathbf{F}$。这是包含丰富历史语义和当前状态的高维特征向量，作为后续两个模块的基石。</p>
+<hr>
+<h2 id="-22-trajdit-trajectory-planning-dit">🚗 2.2 TrajDiT (Trajectory Planning DiT)
+</h2><h3 id="-角色决策中枢--老司机">🎭 角色：决策中枢 &amp; 老司机
+</h3><p>拿到 MST 给的局面 $\mathbf{F}$，在不生成图像的情况下，<strong>极速规划</strong>出未来 3 秒怎么开。</p>
+<h3 id="架构双流融合">架构：双流融合
+</h3><p>这是一个专门&quot;画线&quot;（轨迹）的轻量级扩散模型。</p>
+<pre tabindex="0"><code>输入准备：
+├── 条件 (Cond)：来自 MST 的特征 F
+└── 噪声 (Input)：随机高斯噪声 x_T（代表未来轨迹的草稿）
+
+双流阶段 (Dual-Stream Phase)：
+├── 环境流：处理特征 F
+├── 轨迹流：处理噪声轨迹
+└── 通过 Cross-Attention 交换信息
+
+单流阶段 (Single-Stream Phase)：
+├── 两条流拼接，深度混合推理
+└── 确保轨迹与环境严丝合缝
+</code></pre><h3 id="-modulation-调制机制">🔧 Modulation 调制机制
+</h3><p>Modulation 是将时间嵌入转化为神经网络控制参数的关键组件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Modulation</span>:
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">__init__</span>(self, dim, double):
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>multiplier <span style="color:#f92672">=</span> <span style="color:#ae81ff">6</span> <span style="color:#66d9ef">if</span> double <span style="color:#66d9ef">else</span> <span style="color:#ae81ff">3</span>
+</span></span><span style="display:flex;"><span>        self<span style="color:#f92672">.</span>lin <span style="color:#f92672">=</span> nn<span style="color:#f92672">.</span>Linear(dim, dim <span style="color:#f92672">*</span> self<span style="color:#f92672">.</span>multiplier)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">forward</span>(self, vec):
+</span></span><span style="display:flex;"><span>        out <span style="color:#f92672">=</span> self<span style="color:#f92672">.</span>lin(vec<span style="color:#f92672">.</span>silu())<span style="color:#f92672">.</span>chunk(self<span style="color:#f92672">.</span>multiplier, dim<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out  <span style="color:#75715e"># 返回 (shift, scale, gate) 组</span>
+</span></span></code></pre></div><p><strong>参数含义</strong>：</p>
+<ul>
+<li><strong>Shift (β)</strong>：偏移量，平移特征</li>
+<li><strong>Scale (γ)</strong>：缩放因子，拉伸/压缩特征</li>
+<li><strong>Gate (α)</strong>：门控值，控制残差连接强度</li>
+</ul>
+<h3 id="-doublestreamblock-vs-singlestreamblock">📊 DoubleStreamBlock vs SingleStreamBlock
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>DoubleStreamBlock</th>
+          <th>SingleStreamBlock</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>数据流</td>
+          <td>两条独立流 (环境+轨迹)</td>
+          <td>一条混合流</td>
+      </tr>
+      <tr>
+          <td>调制参数</td>
+          <td>每条流 6 个，共 12 个</td>
+          <td>仅 3 个</td>
+      </tr>
+      <tr>
+          <td>结构</td>
+          <td>串行逻辑</td>
+          <td><strong>并行逻辑</strong></td>
+      </tr>
+      <tr>
+          <td>用途</td>
+          <td>TrajDiT 前期，保护环境特征</td>
+          <td>TrajDiT 后期/VisDiT，高效推理</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>在 DoubleStreamBlock 中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 轨迹流</span>
+</span></span><span style="display:flex;"><span>img_mod1 <span style="color:#960050;background-color:#1e0010">→</span> 控制 Attention 的 AdaLN 和门控
+</span></span><span style="display:flex;"><span>img_mod2 <span style="color:#960050;background-color:#1e0010">→</span> 控制 MLP 的 AdaLN 和门控
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 环境流</span>
+</span></span><span style="display:flex;"><span>cond_mod1 <span style="color:#960050;background-color:#1e0010">→</span> 控制 Attention 的 AdaLN 和门控
+</span></span><span style="display:flex;"><span>cond_mod2 <span style="color:#960050;background-color:#1e0010">→</span> 控制 MLP 的 AdaLN 和门控
+</span></span></code></pre></div><hr>
+<h2 id="-23-visdit-next-frame-prediction-dit">🎨 2.3 VisDiT (Next-frame Prediction DiT)
+</h2><h3 id="-角色超写实画师">🎭 角色：超写实画师
+</h3><p>根据 MST 的特征和 TrajDiT 的轨迹规划，<strong>生成下一帧图像</strong>。</p>
+<h3 id="输入准备">输入准备
+</h3><pre tabindex="0"><code>画布噪声：随机高斯噪声潜变量 Z_{T+1}
+环境参考：MST 的特征 F
+动作指令：TrajDiT 预测的轨迹（关键！）
+</code></pre><h3 id="核心机制动作调制">核心机制：动作调制
+</h3><p>轨迹向量转化为控制神经网络的旋钮参数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># 轨迹向量转化为缩放因子和偏移量</span>
+</span></span><span style="display:flex;"><span>Input <span style="color:#f92672">=</span> Input <span style="color:#f92672">*</span> Scale(a) <span style="color:#f92672">+</span> Shift(a)
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 通过 AdaLN 注入到 Transformer 每一层</span>
+</span></span></code></pre></div><ul>
+<li>如果规划是&quot;左转&quot;，调制会强迫网络关注左侧特征</li>
+<li>保证生成画面与规划动作一致</li>
+</ul>
+<h3 id="-分辨率感知的时间偏移-get_schedule">⏱️ 分辨率感知的时间偏移 (get_schedule)
+</h3><p>这是一个**&ldquo;智能时间管理大师&rdquo;**：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">get_schedule</span>(num_steps, image_seq_len, base_shift<span style="color:#f92672">=</span><span style="color:#ae81ff">0.5</span>, max_shift<span style="color:#f92672">=</span><span style="color:#ae81ff">1.15</span>):
+</span></span><span style="display:flex;"><span>    timesteps <span style="color:#f92672">=</span> torch<span style="color:#f92672">.</span>linspace(<span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>, num_steps <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>)  <span style="color:#75715e"># 基础进度条</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> shift:
+</span></span><span style="display:flex;"><span>        mu <span style="color:#f92672">=</span> get_lin_function(base_shift, max_shift)(image_seq_len)
+</span></span><span style="display:flex;"><span>        timesteps <span style="color:#f92672">=</span> time_shift(mu, <span style="color:#ae81ff">1.0</span>, timesteps)   <span style="color:#75715e"># 偏移</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> timesteps)<span style="color:#f92672">.</span>tolist()
+</span></span></code></pre></div><p><strong>为什么需要它？</strong></p>
+<ul>
+<li><strong>痛点</strong>：画大图比画小图更难，需要在&quot;宏观构图&quot;阶段多花点时间</li>
+<li><strong>解决方案</strong>：根据序列长度自动调整时间表
+<ul>
+<li>序列长（大图）：在高噪声阶段停留更久，先定大轮廓</li>
+<li>序列短（小图/轨迹）：匀速搞定即可</li>
+</ul>
+</li>
+</ul>
+<p><strong>在 Epona 中</strong>：</p>
+<ul>
+<li><strong>TrajDiT</strong>：序列短，时间表几乎不偏移</li>
+<li><strong>VisDiT</strong>：序列长（2048 Token），显著偏移</li>
+</ul>
+<h3 id="时序感知解码">时序感知解码
+</h3><ul>
+<li>使用 Temporal-aware DCAE Decoder 解压潜变量</li>
+<li>参考上一帧的潜变量，消除频闪和抖动</li>
+<li>输出 512×1024 高清图像</li>
+</ul>
+<hr>
+<h2 id="-关键技术细节">🎓 关键技术细节
+</h2><h3 id="31-傅立叶嵌入-timestep_embedding">3.1 傅立叶嵌入 (timestep_embedding)
+</h3><p>将低维动作数据映射到高维空间，增强神经网络对细微变化的感知能力：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">timestep_embedding</span>(t, dim, max_period<span style="color:#f92672">=</span><span style="color:#ae81ff">10000</span>):
+</span></span><span style="display:flex;"><span>    t <span style="color:#f92672">=</span> time_factor <span style="color:#f92672">*</span> t
+</span></span><span style="display:flex;"><span>    half <span style="color:#f92672">=</span> dim <span style="color:#f92672">//</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span>    freqs <span style="color:#f92672">=</span> exp(<span style="color:#f92672">-</span>log(<span style="color:#ae81ff">10000</span>) <span style="color:#f92672">*</span> arange(<span style="color:#ae81ff">0</span>, half) <span style="color:#f92672">/</span> half)
+</span></span><span style="display:flex;"><span>    args <span style="color:#f92672">=</span> t[:, <span style="color:#66d9ef">None</span>] <span style="color:#f92672">*</span> freqs[<span style="color:#66d9ef">None</span>]
+</span></span><span style="display:flex;"><span>    embedding <span style="color:#f92672">=</span> cat([cos(args), sin(args)], dim<span style="color:#f92672">=-</span><span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> embedding
+</span></span></code></pre></div><p><strong>原理</strong>：</p>
+<ul>
+<li>原始输入：低维向量</li>
+<li>输出：高维特征，包含从低频到高频的丰富信号</li>
+<li>效果：神经网络能&quot;看到&quot;微小变化</li>
+</ul>
+<h3 id="32-rope-vs-正弦编码">3.2 RoPE vs 正弦编码
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>特性</th>
+          <th>正弦编码</th>
+          <th>RoPE</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>相对位置感知</td>
+          <td>弱</td>
+          <td><strong>强</strong>（点积只取决于相对距离）</td>
+      </tr>
+      <tr>
+          <td>长度外推性</td>
+          <td>差</td>
+          <td><strong>好</strong>（周期性，不死记硬背）</td>
+      </tr>
+      <tr>
+          <td>维度解耦</td>
+          <td>难</td>
+          <td><strong>优雅</strong>（分块对角矩阵）</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="33-连锁前向训练-chain-of-forward-training">3.3 连锁前向训练 (Chain-of-Forward Training)
+</h3><p><strong>痛点</strong>：自回归模式的误差累积——第一帧歪一点，第 100 帧就崩了</p>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>训练时偶尔用模型自己生成的（有瑕疵的）预测结果作为下一轮输入</li>
+<li>模型被迫学会自我修正</li>
+</ul>
+<p><strong>效果</strong>：能生成长达 <strong>2 分钟</strong>不崩坏的视频</p>
+<hr>
+<h2 id="-完整推理流程">🔄 完整推理流程
+</h2><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">step_eval</span>(latents, rel_pose, rel_yaw):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1. MST 编码：压缩历史信息</span>
+</span></span><span style="display:flex;"><span>    stt_features, pose_emb <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>evaluate(latents, poses, yaws)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2. TrajDiT 规划：决定未来怎么走</span>
+</span></span><span style="display:flex;"><span>    noise_traj <span style="color:#f92672">=</span> randn(<span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>    predict_traj <span style="color:#f92672">=</span> traj_dit<span style="color:#f92672">.</span>sample(noise_traj, traj_ids, stt_features)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 3. 提取下一步动作</span>
+</span></span><span style="display:flex;"><span>    predict_pose, predict_yaw <span style="color:#f92672">=</span> predict_traj[:, <span style="color:#ae81ff">0</span>:<span style="color:#ae81ff">1</span>, <span style="color:#f92672">...</span>]
+</span></span><span style="display:flex;"><span>    pose_emb <span style="color:#f92672">=</span> model<span style="color:#f92672">.</span>get_pose_emb(predict_pose, predict_yaw)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 4. VisDiT 生成：脑补下一帧画面</span>
+</span></span><span style="display:flex;"><span>    noise <span style="color:#f92672">=</span> randn(<span style="color:#f92672">...</span>)
+</span></span><span style="display:flex;"><span>    predict_latents <span style="color:#f92672">=</span> dit<span style="color:#f92672">.</span>sample(noise, img_ids, stt_features, pose_emb)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> predict_traj, predict_latents
+</span></span></code></pre></div><hr>
+<h2 id="-实验成果">📊 实验成果
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>指标</th>
+          <th>结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>视频生成 FVD</td>
+          <td><strong>7.4</strong> (优于 Vista 7.9, 远超 DriveGAN 73.4)</td>
+      </tr>
+      <tr>
+          <td>视频长度</td>
+          <td><strong>2 分钟</strong> 且逻辑连贯</td>
+      </tr>
+      <tr>
+          <td>物理理解</td>
+          <td>自学懂&quot;红灯停&quot;、&ldquo;避让行人&quot;等规则</td>
+      </tr>
+      <tr>
+          <td>规划能力</td>
+          <td>NAVSIM 评测超过多个专门规划模型</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="-总结">💡 总结
+</h2><p>Epona 通过 <strong>MST（压缩理解）</strong>、<strong>TrajDiT（规划导航）</strong> 和 <strong>VisDiT（受控绘图）</strong> 三者的精密配合，实现了从&quot;看懂路&quot;到&quot;决定怎么开&quot;再到&quot;脑补未来后果&quot;的完整闭环。</p>
+<p>它不仅是一个视频生成器，更是一个具备潜力的端到端自动驾驶大脑。</p>
+<hr>
+<h2 id="-相关链接">📎 相关链接
+</h2><ul>
+<li>论文：Epona: Autoregressive Diffusion World Model for Autonomous Driving</li>
+<li>相关工作：[[World4Drive - 无需感知标注的端到端世界模型]]、[[LAW - Latent World Model for E2E Driving]]</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">扩散模型</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/">视频生成</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/uad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">End-to-End Autonomous Driving without Costly Modularization and 3D Manual Annotation</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/future-x/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">FutureX: Enhance End-to-End Autonomous Driving via Latent Chain-of-Thought World Model</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/hi-p-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/law/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LAW - Enhancing End-to-End Autonomous Driving with Latent World Model</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

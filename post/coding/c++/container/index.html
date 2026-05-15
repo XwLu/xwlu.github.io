@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="container for c++">
+<title>Container</title>
+
+
+<link rel="canonical" href="https://example.org/post/coding/c&#43;&#43;/container/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Container">
+<meta property='og:description' content="container for c++">
+<meta property='og:url' content='https://example.org/post/coding/c&#43;&#43;/container/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Container">
+<meta name="twitter:description" content="container for c++">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/coding/" style="background-color: hsl(47, 60%, 84%); color: hsl(47, 60%, 15%);">
+                Coding
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/coding/c&#43;&#43;/container/">Container</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="容器分类">容器分类
+</h1><ul>
+<li>pair &amp; tuple</li>
+<li>序列容器：对象有序排列，使用整数值进行索引</li>
+<li>关联容器：对像顺序不重要，利用键进行索引</li>
+<li>适配器：调整原有容器行为，使其对外展现出新的类型、接口或返回新的元素</li>
+<li>生成器：构造元素序列</li>
+</ul>
+<hr>
+<h1 id="迭代器">迭代器
+</h1><ul>
+<li>获取迭代器
+<ul>
+<li>begin, end</li>
+<li>rbegin, rend</li>
+<li>crbegin, crend</li>
+</ul>
+</li>
+<li>迭代器分类
+<ul>
+<li>Input Iterator</li>
+<li>Output Iterator</li>
+<li>Forward Iterator = Input Iterator + Output Iterator，只能往前挪</li>
+<li>Bidirection Iterator，可以双向挪动</li>
+<li>Random Access Iterator，支持iter+N</li>
+</ul>
+</li>
+<li>支持迭代器的容器统称为range</li>
+</ul>
+<hr>
+<h1 id="pair--tuple">pair &amp; tuple
+</h1><ul>
+<li>tuple &amp; tie
+<ul>
+<li>tuple
+<ul>
+<li>tuple是类似pair的模板</li>
+<li>每个pair都恰好有两个成员,tuple可以有任意数量的成员</li>
+<li>我们希望将一些数据组合成单一对象，但又不想麻烦地定义一个新数据结构来表示这些数据时，std::tuple是非常有用的。</li>
+<li>std::tuple中元素是被紧密地存储的(位于连续的内存区域)，而不是链式结构。</li>
+<li>生成方式多样
+<pre tabindex="0"><code>auto my_tuple0 = std::make_tuple(&#34;Peter&#34;, 10, &#34;1024&#34;};
+std::tuple&lt;std::string, size_t, std::string&gt; my_tuple1{&#34;Mike&#34;, 20, &#34;24&#34;};
+std::tuple&lt;std::string, size_t, std::string&gt; my_tuple2{my_tuple0};
+</code></pre></li>
+<li>tuple 对象的成员函数 swap() 可以将它的元素和参数交换。
+<pre tabindex="0"><code>my_tuple2.swap (my_tuple1);
+</code></pre></li>
+<li>函数模板 get&lt;&gt;() 可以返回 tuple 中的一个元素的<strong>引用值</strong>。
+<pre tabindex="0"><code>auto my_tuple = std::make_tuple (Name {&#34;Peter&#34;,&#34;Piper&#34;}, 42, std::string {&#34;914 626 7890&#34;});
+std::cout &lt;&lt; std::get&lt;0&gt;(my_tuple)&lt;&lt; &#34;age = &#34;&lt;&lt;std::get&lt;1&gt;(my_tuple)&lt;&lt; &#34; tel: &#34; &lt;&lt; std::get&lt;2&gt;(my_tuple) &lt;&lt; std::endl;
+</code></pre></li>
+<li>也可以用基于类型的 get&lt;&gt;() 从 tuple 获取元素，但要求 tuple 中只有一个这种类型的元素。
+<pre tabindex="0"><code>auto my_tuple = std::make_tuple(Name{&#34;Peter&#34;, &#34;Piper&#34;}, 42, std::string {&#34;914 626 7890&#34;});
+std::cout &lt;&lt; std::get&lt;Name&gt;(my_tuple)&lt;&lt;&#34; age = &#34; &lt;&lt; std::get&lt;int&gt; (my_tuple)&lt;&lt; &#34; tel: &#34; &lt;&lt;std::get&lt;std::string&gt;(my_tuple) &lt;&lt; std::endl;
+</code></pre></li>
+</ul>
+</li>
+<li>tie
+<ul>
+<li>tuple将几个不同类型的变量打包为一个对象，tie则负责将tuple类型的对象解构为几个变量
+<pre tabindex="0"><code>tuple&lt;int,double,string&gt; t3 = {1, 2.0, &#34;3&#34;};
+int i; double d; string s;
+tie(i, d, s) = t3;
+tie(i, d, s) = {1, 2.0, &#34;3&#34;};//这一行会报错，因为tie只能解构tuple
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="序列容器">序列容器
+</h1><ul>
+<li>array:元素个数固定的序列容器，不支持添加和删除
+<ul>
+<li>定义时必须用<strong>常量</strong>指定array的大小，因为大小是模板参数之一，不可忽略</li>
+<li>当容器中的元素是连续存储的时候，容器都会有一个data()接口，返回指向第一个元素的指针</li>
+<li>swap的实现是元素复制，效率很低</li>
+</ul>
+</li>
+<li>vector:元素连续存储的序列容器
+<ul>
+<li>vector也有data()接口</li>
+<li>swap是指针交换，效率很高</li>
+<li>emplace_back()相比push_back()少了一次对象的拷贝或者移动，因此当对象是string或者自定义结构数据时，用emplace_back效率更高
+<ul>
+<li>(emplace_back vs push_back)[https://zhuanlan.zhihu.com/p/183861524]</li>
+</ul>
+</li>
+<li>insert和emplace是在vector中间插入元素，但效率很低；emplace和insert的差异与上面的emplace_back和push_back的差异一致</li>
+<li>会导致iter失效的操作：swap、push_back等写操作</li>
+</ul>
+</li>
+<li>list:双向链表的容器
+<ul>
+<li>插入和删除成本较低，随机访问成本较高</li>
+<li>支持pop_front, push_front操作，但是不支持[]访问</li>
+<li>提供了splice接口，A.splice(it, B)：将list B插入到A的it位置</li>
+<li>写操作通常不改变iter有效性</li>
+<li>如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用list或forward_list</li>
+</ul>
+</li>
+<li>forward_list:基于单向链表的容器
+<ul>
+<li>只支持递增，无rbegin</li>
+<li>不支持size</li>
+<li>不支持push_back, pop_back</li>
+<li>提供了xxx_after操作</li>
+</ul>
+</li>
+<li>deque:vector与list的折衷，它会将整个容器分成若干段，段内是连续存储，段间是链表
+<ul>
+<li>push_back和push_front比较快</li>
+<li>在序列中间插入删除比较慢</li>
+<li>通常情况下我们不会想要用deque，随机访问速度不如vector，插入删除不如list</li>
+<li>只有在我们想要得到类似于vector的功能，但又希望push_front比较快的时候才会使用deque</li>
+</ul>
+</li>
+<li>basic_string:提供了对字符串的专门支持
+<ul>
+<li>提供了数值与字符串转换的接口</li>
+<li>短字符串优化，(short string optimization: SSO)[https://tigercosmos.xyz/post/2022/06/c++/sso/]</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="关联容器">关联容器
+</h1><ul>
+<li>按底层实现分为两类
+<ul>
+<li>set/map/multiset/multimap
+<ul>
+<li>底层用红黑树实现</li>
+</ul>
+</li>
+<li>unordered_xxx
+<ul>
+<li>底层用hash表实现</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>set
+<ul>
+<li>元素需要支持使用&lt;比较大小，如果是自定义的元素，需要定义比较函数并在初始化的时候传入std::set&lt;MyType, Cmp&gt;
+<pre tabindex="0"><code>#include &lt;set&gt;
+#include &lt;type_traits&gt;
+
+struct MyType {
+    int x;
+};
+
+bool MyCmp(const MyType&amp; lhs, const MyType&amp; rhs) {
+    return lhs.x &lt; rhs.x;
+}
+
+int main() {
+    std::set&lt;MyType, decltype(&amp;MyCmp)&gt; s({MyType{1}, MyType{2}}, MyCmp);
+    return 0;
+}
+</code></pre></li>
+<li>插入insert/emplace/emplace_hint
+<ul>
+<li>emplace_hint可以给出一些插入的提示，从而加速插入的速度，但是如果hint给错了，反而增加耗时
+<pre tabindex="0"><code>std::set&lt;MyType, decltype(&amp;MyCmp)&gt; s({MyType{3}, MyType{5}}, MyCmp);
+s.insert(MyType{100});
+s.emplace(100);  // 两者等价，推荐使用emplace，减少拷贝和移动
+</code></pre></li>
+</ul>
+</li>
+<li>提供了extract来修改元素(C++17)，但是操作很复杂。</li>
+<li>set的迭代器是只读的，不能用于修改元素。</li>
+</ul>
+</li>
+<li>map
+<ul>
+<li>每个节点是个std::pair，其中pair.first是const类型，不能修改</li>
+<li>key需要支持使用&lt;比较大小，也支持自定义比较函数</li>
+<li>支持k，v分别获取
+<pre tabindex="0"><code>std::map&lt;int, bool&gt; m{{3, true}};
+for (auto&amp; [k, v] : m) {
+  std::cout &lt;&lt; k &lt;&lt; &#34; &#34; &lt;&lt; v &lt;&lt; std::endl;
+}
+</code></pre></li>
+<li>访问元素：find/contain/[]/at
+<ul>
+<li>map.at(key)若key不存在，会抛出异常</li>
+<li>map[key]若key不存在，会插入一个新的pair&lt;key,T()&gt;</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>multiset/multimap
+<ul>
+<li>允许重复key</li>
+<li>元素访问：
+<ul>
+<li>find：返回首个查到的元素</li>
+<li>count：返回元素个数</li>
+<li>lower_bound/upper_bound/equal_range：返回查找到的区间
+<pre tabindex="0"><code>std::multiset&lt;int&gt; s{1, 3, 1};
+auto [b, e] = s.equal_range(100);
+for (auto iter = b; iter != e; ++iter) {
+  // ...
+}
+auto b = s.lower_bound(100);
+auto e = s.upper_bound(100);
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>unordered_xxx
+<ul>
+<li>底层实现：
+<ul>
+<li>新建一个size=N的bucket vector</li>
+<li>对于新插入的元素，将其key转换为hash值n，index = n % N，往bucket vector[index]中维护的链表的尾部插入该元素</li>
+<li>每一个bucket中都维护了一个链表，一般来说大部分bucket中的链表元素的长度都比较小</li>
+</ul>
+</li>
+<li>与set,map相比，查找性能更好，转换成hash后找对应的bucket，如果其中的链表元素个数是1，直接返回；即使大于1，也一般都比较小，做几次判断即可。</li>
+<li>插入操作一些情况下会慢，比如一个bucket中包含的链表元素过多了，就会出发rehash，这个过程就比较耗时了</li>
+<li>key需要支持两种操作
+<ul>
+<li>转换为hash</li>
+<li>判等</li>
+</ul>
+</li>
+<li>除了!=和==，不支持容器级别的关系运算；同时!=和==的计算很慢，因为当一个bucket中的链表元素较多时，为了判断两个set是否相等，需要将两条链表判断是否相等</li>
+<li>自定义hash转换
+<ul>
+<li>方法1
+<pre tabindex="0"><code>struct Str {
+  int x;
+};
+
+size_t MyHash(const Str&amp; val) {
+    return val.x;
+}
+
+bool MyEqual(const Str&amp; lhs, const Str&amp; rhs) {
+  return lhs.x = rhs.x;
+}
+std::unordered_set&lt;Str, decltype(&amp;MyHash), decltype(&amp;MyEqual)&gt; s{1, MyHash, MyEqual};  // 1 是bucket vector的size，最小为1
+</code></pre></li>
+<li>方法2(推荐)
+<pre tabindex="0"><code>class Str {
+  int x;
+  bool operate==(const Str&amp; s) const {
+    return (this-&gt;x == s.x);
+  }
+};
+
+class MyHasFunction {
+public:
+  size_t operator(const Str&amp; s) const {
+    return s.x;
+  }
+};
+
+std::unordered_set&lt;Str, MyHasFunction&gt; s;
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="适配器">适配器
+</h1><ul>
+<li>类型适配器
+<ul>
+<li>basic_string_view (C++17)
+<ul>
+<li>代码demo
+<pre tabindex="0"><code>void fun(std::string_view str) {  // 这里不需要引用，因为string_view只记录了string开头和结尾的位置，无论字符串本身有多长，它的内存都很小
+  if (!str.empty()) {
+    std::cout &lt;&lt; str[0] &lt;&lt; std::endl;
+  }
+}
+
+fun(&#34;1234&#34;);  // fun(char[6])
+fun(std::string(&#34;1234&#34;));  // fun(std::string)
+
+std::string s(&#34;12345&#34;);
+fun(std::string_view(s.begin(), s.begin() + 3));  // 只传入&#34;123&#34;
+</code></pre></li>
+<li>提供较低成本的操作接口
+<ul>
+<li>比如std::string的substr会开辟一段新的内存来存放截取到的字符串，但std::string_view的substr只会初始化一个新的string_view来记录截取的字符串，string_view只占16个字节，所以很轻量</li>
+</ul>
+</li>
+<li>不能进行写操作</li>
+<li>一般string_view只作为函数的输入，作为输出的时候需要小心，函数中的临时变量销毁导致string_view记录的指针位置失效</li>
+</ul>
+</li>
+<li>span (C++20)
+<ul>
+<li>span就是string_view的功能在其他类型的容器上的扩展，用于提升代码的性能</li>
+<li>只能处理连续存储的容器，比如vector、array</li>
+<li>支持写操作，这与string_view不同</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>接口适配器
+<ul>
+<li>stack
+<ul>
+<li>stack中维护了一个底层容器，然后封装了它的接口，只保留了push，pop，top这三个操作
+<pre tabindex="0"><code>std::stack&lt;int&gt; s;
+std::stack&lt;int, std::vector&lt;int&gt;&gt; s;  // 指定使用vector作为stack的底层容器
+</code></pre></li>
+</ul>
+</li>
+<li>queue</li>
+<li>priority_queue
+<ul>
+<li>输入的元素需要支持比较操作（比较操作用于确定优先级）</li>
+<li>支持自定义比较函数</li>
+<li>输入元素和queue一致，但输出的元素一定是所有元素中优先级最高的元素</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>数值适配器(C++20)
+<ul>
+<li>std::ranges::XXX_view, std::ranges::views::XXX, std::views::XXX</li>
+<li>可以将一个输出区间中的值变换后输出
+<ul>
+<li>demo1
+<pre tabindex="0"><code>std::vector&lt;int&gt; v{1, 2, 3, 4, 5};
+
+
+int Square(int i) {
+  return i * i;
+}
+for (auto p : std::ranges::transform_view(v, Square)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 打印出1, 4, 9, 16, 25
+}
+std::cout &lt;&lt; std::endl;
+
+
+bool IsEven(int i) {
+  return i % 2 == 0;
+}
+// 用法1
+for (auto p : std::ranges::filter_view(v, isEven)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 只打印出偶数
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法2
+auto x = std::views::filter(IsEven);
+for (auto p : x(v)) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;  // 只打印出偶数
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法3
+auto x2 = std::views::filter(IsEven);
+auto y = std::views::transform(Square);
+for (auto p : v | x2 | y) {  // 按位或，模拟linux bash中的pipe功能，这里可以无限后缀新操作 v | x2 | y | k
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// 用法4
+auto operate = std::views::filter(IsEven) ｜ std::views::transform(Square);
+for (auto p : v | operate) {
+  std::cout &lt;&lt; p &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+</code></pre></li>
+</ul>
+</li>
+<li>数值适配器可以组合，引入复杂的数值适配逻辑</li>
+<li>view这种算法和之前讨论的泛型算法有两点核心区别
+<ul>
+<li>view没有对输入的东西立即进行计算，而是需要的时候才进行计算, 这样可以提高性能（比如10000个数据，只有前几个元素会被view计算，后面的计算就省掉了）</li>
+<li>view模糊了算法和容器的概念，它可以被称作容器，也可以被称作算法</li>
+<li>配合ranges还可以灵活组织程序逻辑</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>生成器(C++20)
+<ul>
+<li>std::ranges::itoa_view
+<pre tabindex="0"><code>for (int i : std::ranges::itoa_view{1, 10}) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+for (int i : std::views::itoa(1, 10)) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// std::views::itoa(...)，如果这里的...只有一个元素，就表示生成一个以该元素为开头的无限长的容器，后面的take(n)表示取容器中的前9个元素
+for (int i : std::views::itoa(1) | std::views::take(9)) {
+  std::cout &lt;&lt; i &lt;&lt; &#34; &#34;;
+}
+std::cout &lt;&lt; std::endl;
+
+// 上面三种写法的输出都是1，2，3，4，5，6，7，8，9
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="注意事项">注意事项
+</h1><ul>
+<li>尽量使用at方法来访问元素
+<ul>
+<li>运算符[]不会对索引值进行检查，像调用myarray[-1]是不会报错的</li>
+<li>使用at()，将在运行期间捕获非法索引，默认将程序中断</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

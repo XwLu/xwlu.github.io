@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Knowledges of Attention">
+<title>DL Attention</title>
+
+
+<link rel="canonical" href="https://example.org/post/deep-learning/attention/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DL Attention">
+<meta property='og:description' content="Knowledges of Attention">
+<meta property='og:url' content='https://example.org/post/deep-learning/attention/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="DL Attention">
+<meta name="twitter:description" content="Knowledges of Attention">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#起源">起源</a></li>
+        <li><a href="#encoder-decoder">Encoder-Decoder</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#基本结构">基本结构</a></li>
+        <li><a href="#分类">分类</a></li>
+        <li><a href="#核心思想">核心思想</a></li>
+        <li><a href="#计算步骤">计算步骤</a></li>
+        <li><a href="#扩展">扩展</a></li>
+        <li><a href="#缺点">缺点</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/deep-learning/" style="background-color: hsl(347, 60%, 84%); color: hsl(347, 60%, 15%);">
+                Deep Learning
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/deep-learning/attention/">DL Attention</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        1 minute read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#起源">起源</a></li>
+        <li><a href="#encoder-decoder">Encoder-Decoder</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#基本结构">基本结构</a></li>
+        <li><a href="#分类">分类</a></li>
+        <li><a href="#核心思想">核心思想</a></li>
+        <li><a href="#计算步骤">计算步骤</a></li>
+        <li><a href="#扩展">扩展</a></li>
+        <li><a href="#缺点">缺点</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="背景">背景
+</h1><h3 id="起源">起源
+</h3><ul>
+<li>模拟人的大脑思考机制，每时每刻，人脑都在接受巨量的信息。人脑的容量无法同时处理如此海量的信息，因此，人会将大部分的脑力资源集中在部分需要特别关注的信息点上。</li>
+<li>attention模型最早应用在seq2eq模型上。</li>
+</ul>
+<h3 id="encoder-decoder">Encoder-Decoder
+</h3><ul>
+<li>这个框架可以看做是深度学习领域的研究模式，应用场景十分的广泛，可看作是由一个句子（或是篇章）生成另一个句子（或是篇章）的通用处理框架。</li>
+<li>Encoder: 对输入句子Source进行编码，将句子通过非线性的变换转化成一个中间的语句表示，即\(C=F(source)\)</li>
+<li>Decoder: Decoder: 根据中间语义表示𝐶𝐶和之前的已经生成的历史信息\(y_{1},y_{2},&hellip;,y_{t-1}\)来生成\(t\)时刻的内容，即\(y_{t}=G(C,y_{t-1})\)</li>
+<li>对比
+<ul>
+<li>RNN：无法并行，由于误差只能有效的传递到前两个历史时刻，无法很好的学习到全局的结构信息。</li>
+<li>CNN：很容易并行，容易捕捉到一些局部结构信息。</li>
+<li>注意力机制：注意力机制直接利用整个Encoder序列对当前的目标进行计算，因此能够很好的获得全局结构信息。同时，对Decoder中每个单词的注意力计算相互之间没有依赖关系，因此也能够进行并行计算。</li>
+</ul>
+</li>
+</ul>
+<h1 id="注意力机制">注意力机制
+</h1><h3 id="基本结构">基本结构
+</h3><ul>
+<li><img alt="seq2seq" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../seq2seq.png"></li>
+<li><img alt="seq2seq with attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../seq2seq_attention.png">
+<ul>
+<li>上图中的\(\alpha_{ij}\)就是描述的\(c_{i}\)对\(h_{j}\)的注意力大小</li>
+<li>可以看到\(\alpha_{ij}\)是通过对\(e_{ij}\)softmax操作得来的。\(e_{ij}\)。这边用\(h_{i-1}^{&rsquo;}\)的原因在于，我们要求的是\(h_{i}^{&rsquo;}\)，我们已知的是\(&hellip;, h_{i-2}^{&rsquo;}, h_{i-1}^{&rsquo;}\)，所以我们就用最近的\(h_{i-1}^{&rsquo;}\)和source中的每个\(h_{i}\)通过一个激活函数\(a(x,y)\)，计算彼此之间的关联度。关联度归一化后就变成了概率信息。</li>
+<li>最后解码的时候利用到的是\(c_{i}\)，而不是原先的一个固定的\(C\)</li>
+</ul>
+</li>
+</ul>
+<h3 id="分类">分类
+</h3><ul>
+<li>SoftAttention
+<ul>
+<li>由于每一个\(c_{i}\)都是通过对原始输入\(x\)在输出侧的\(y_{i}\)上的一个概率分布来进行计算的，因此获得是当前需要解码位置在原始输入序列上的一个注意力分布，可以被嵌入到模型里面去，直接训练。</li>
+<li><img alt="soft attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../soft_attention.png"></li>
+</ul>
+</li>
+<li>HardAttention
+<ul>
+<li>是一个随机的过程，它不会选择整个encoder的输出作为其输入（注意看下图decoder层每个输出到encoder的连接，不是全连接），而是会依据概率来采样encoder端的某些隐藏层作为其attention。为了实现梯度的反向传播，需要使用蒙特卡洛的方法来估计模块的梯度。</li>
+<li><img alt="hard attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../hard_attention.png"></li>
+</ul>
+</li>
+<li>GlobalAttention
+<ul>
+<li>与传统的Attention模式一样。所有的encoder端的hidden state都被用于计算背景向量的权重。</li>
+</ul>
+</li>
+<li>LocalAttention
+<ul>
+<li>将Soft &amp; Hard Attention结合起来，每次先为decoder端当前的词，预测一个source端对齐位置（aligned position）\(p_{t}\)。然后基于\(p_{t}\)选择一个窗口，用于计算背景向量\(c_{t}\)。
+<ul>
+<li>$$p_{t}=S\cdot sigmod(v_{p}^{t}tanh(W_{p}h_{t}))$$</li>
+<li>$$a_{t}(s)=align(h_{t},h_{t}^{&rsquo;})exp(-\frac{(s-p_{t}^{2})}{2\sigma^{2}})$$</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="核心思想">核心思想
+</h3><ul>
+<li>本质上，Attention机制是对source中元素的value（指代source中的\(h_{i}\)或\(x_{i}\)）值进行加权求和，而query（上文中的\(h_{i}^{&rsquo;}\)）和key（source中的\(h_{j}\)）用来计算对应value的权重系数
+<ul>
+<li>$$attention(query,key)=\sum_{i=1}^{t}sim(query,key_{i})*value_{i}$$</li>
+</ul>
+</li>
+<li>聚焦的过程体现在权重系数的计算上，权重越大越聚焦到其对应的value上，即权重代表了信息的重要性，而value是其对应的信息。</li>
+</ul>
+<h3 id="计算步骤">计算步骤
+</h3><ul>
+<li>阶段一：根据query&lt;-&gt;key计算相似性或相关性</li>
+<li>阶段二：原始分值归一化、概率化</li>
+<li>阶段三：根据权重系数对value进行加权求和</li>
+<li><img alt="process" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../process.png"></li>
+<li>$$Attention(Q,K,V)=softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V$$
+<ul>
+<li>$$Q\in R^{n\times d_{k}}$$</li>
+<li>$$K\in R^{m\times d_{k}}$$</li>
+<li>$$V\in R^{m\times d_{v}}$$</li>
+</ul>
+</li>
+<li>公式理解
+<ul>
+<li>如果忽略激活函数softmax的话，那么事实上它就是三个\(n\times d_{k}\), \(d_{k}\times m\), \(m\times d_{v}\)的矩阵相乘，最后的结果也是一个\(n\times d_{v}\)的矩阵。即\(n\times d_{k}\)的序列\(Q\)编码成了一个新的\(n\times d_{v}\)</li>
+<li>$$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{&lt;Q,k_{s}&gt;}{d_{k}})v_{s}$$
+<ul>
+<li>\(K\)和\(V\)是一一对应的，每次拿一个\(q_{t}\)和各个key做内积并softmax，得到\(q_{t}\)与各个\(v_{s}\)的相似程度，然后加权求和，得到一个\(d_{v}\)的向量。</li>
+<li>其中，因子\(\sqrt{d_{k}}\)起到调节的作用，使得内积不至于太大（太大的话softmax就是非0即1了，不够soft）</li>
+<li>这个定义只是注意力的一种形式，还有一些其他的选择，比如query和key的运算方式并不一定是点乘，还可以是拼接后再内积一个参数向量，甚至是权重都不一定要归一化等。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><img alt="scaled dot product attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../scaled_dot_prod_attention.png"></li>
+</ul>
+<h3 id="扩展">扩展
+</h3><ul>
+<li>
+<p>Mutil-Head Attention</p>
+<ul>
+<li>Mutil-Head Attention是Google提出的新概念，是Attention机制的完善，不过从形式上看，它其实就是把Q,K,V通过参数矩阵映射一下，然后再做Attention，把这个过程重复做了h次，结果拼接起来就行了。</li>
+<li><img alt="multi-head attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../attention_multi_head.png"></li>
+<li>$$head_{i}=Attention(QW_{i}^{Q},KW_{i}^{K},VW_{i}^{V})$$</li>
+<li>$$W_{i}^{Q}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{K}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{V}\in R^{d_{v}\times \breve{d}_{v}}$$</li>
+<li>$$MultiHead(Q,K,V)=Concat(head_{1},&hellip;,head_{n})$$</li>
+<li>最后得到一个\(n\times (h\breve{d}_{k})\)的序列，所谓的“多头”，就是多做几次同样的事情（参数不共享），然后把结果进行拼接。</li>
+</ul>
+</li>
+<li>
+<p>Self Attention</p>
+<ul>
+<li>传统的Attention是基于source端和target端的隐变量计算的。得到的结果是source端的每个单词与target端的每个词之间的依赖关系。</li>
+<li>Self Attention分别在source端和target端进行，但是分别在两端捕捉自身的词与词之间的依赖关系，然后再把source端得到的self Attention加入到target端得到的self Attention中，捕捉source端和target端词与词之间的依赖关系。</li>
+<li><strong>Self Attention要比传统的Attention Mechanism效果好</strong>，主要原因之一是：传统的Attention机制忽略了source/target端自身的词之间的依赖关系。</li>
+<li>在Google的论文中，大部分的Attention都是Self Attention。</li>
+<li>Self Attention就是\(Attention(X, X, X)\), \(X\) 是前面说的输入序列，也就是在序列内部做Attention，寻找序列内部的联系。</li>
+<li>Google论文的主要贡献之一就是它表明了内部注意力在机器翻译（甚至在一般的seq2seq）任务的序列编码上是相当重要的，而之前关于seq2seq的研究基本都只是把注意力机制用在解码端。</li>
+</ul>
+</li>
+<li>
+<p>Posting Embedding</p>
+<ul>
+<li>Attention模型并不能捕捉序列的顺序，换句话说，如果将K,V按行打乱顺序（相当于句子中的词序打乱），那么Attention模型的结果还是一样，这就表明了它顶多是一个非常巧妙的BOW模型。</li>
+<li><strong>顺序对于时间序列至关重要，如果学习不到顺序信息，那么效果会大打折扣。</strong></li>
+<li>Position Embedding将每个位置编号，然后每个编号对应一个向量，通过结合位置向量和词向量，就给每个词都引入了一定的位置信息，这样Attention就可以分辨出不同位置的词了。</li>
+<li>以前的RNN，CNN模型中都出现过Position Embedding，但是那些模型本身就能够学习到序列的位置信息，所以Position Embedding(PE)不是必须的。但是在Attention模型中，PE是位置信息的唯一来源，因此它是模型的核心成分之一，并非仅仅是简单的辅助手段。</li>
+<li>在之前的PE中，基本都是根据任务训练出来的向量，而Google直接给出了一个构造PE的公式：
+<ul>
+<li>$$PE_{2i}(p)=sin(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+<li>$$PE_{2i+1}(p)=cos(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+</ul>
+</li>
+<li>Position Embedding 本身是一个绝对位置的信息，但是在语言中，相对位置也很重要，Google选择前述的位置向量公式一个重要的原因是：由于有\(sin(\alpha +\beta )=sin\alpha cos\beta +cos\alpha sin\beta\)和\(cos(\alpha +\beta )=cos\alpha cos\beta -sin\alpha sin\beta\)，这表明位置\(p+k\)的向量可以表明位置为\(p\)的向量的线性变换，这提供了表达相对位置的可能性。</li>
+<li>结合位置向量和词向量的几个可选方案：可以把他们拼接起来作为一个新向量，也可以把位置向量定义为跟词向量一样大小，然后两者加起来。Facebook的论文和Google的论文中用的都是后者。直觉上相加会导致信息损失，似乎是不可取，但是实验证明相加也是很好的方案。</li>
+</ul>
+<h3 id="缺点">缺点
+</h3><ul>
+<li>Attention层的好处就是能够一步到位的捕捉全局的联系，因为它直接把序列两两比较（代价是计算量变为\(O(n^{2})\)）。相比之下，RNN需要一步步地递推才能捕捉到，而CNN需要通过层叠扩大感受野，这是Attention层的明显优势。
+<ul>
+<li><img alt="complexity" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../complexity.png"></li>
+</ul>
+</li>
+<li>Attention虽然跟CNN没有直接联系，但是事实上充分的借鉴了CNN的思想，比如Multi-Head Attention就是Attention做多次然后拼接，这个CNN的多个卷积核思想是一致的，论文用到的残差结构都源于CNN网络。</li>
+<li>无法对位置信息进行很好的建模，PE的引入无法从根本上解决这个问题。</li>
+<li>并非所有的问题都是需要长程的全局的依赖，也有很多的问题只是依赖于局部结构，这时候用纯的Attention不是很好。所以论文中还是提到了一个受限Attention的概念。</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

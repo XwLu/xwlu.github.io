@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Posts on 朝花夕拾</title>
+        <link>https://example.org/post/</link>
+        <description>Recent content in Posts on 朝花夕拾</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Thu, 07 May 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://example.org/post/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>Climbing</title>
+            <link>https://example.org/post/climbing/</link>
+            <pubDate>Thu, 07 May 2026 00:00:00 +0800</pubDate>
+            <guid>https://example.org/post/climbing/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/climbing/cover.jpg&#34; alt=&#34;Featured image of post Climbing&#34; /&gt;</description>
+        </item><item>
+            <title>Coding</title>
+            <link>https://example.org/post/coding/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/coding/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/coding/coding.jpg&#34; alt=&#34;Featured image of post Coding&#34; /&gt;</description>
+        </item><item>
+            <title>Deep Learning</title>
+            <link>https://example.org/post/deep-learning/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/deep-learning/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/deep-learning/cover.jpeg&#34; alt=&#34;Featured image of post Deep Learning&#34; /&gt;</description>
+        </item><item>
+            <title>Optimization</title>
+            <link>https://example.org/post/optimization/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/optimization/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/optimization/cover.webp&#34; alt=&#34;Featured image of post Optimization&#34; /&gt;</description>
+        </item><item>
+            <title>Reforce. Learning</title>
+            <link>https://example.org/post/reinforcement-learning/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/reinforcement-learning/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/reinforcement-learning/cover.png&#34; alt=&#34;Featured image of post Reforce. Learning&#34; /&gt;</description>
+        </item><item>
+            <title>Robotics</title>
+            <link>https://example.org/post/robotics/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/robotics/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/robotics/cover.png&#34; alt=&#34;Featured image of post Robotics&#34; /&gt;</description>
+        </item><item>
+            <title>Tools</title>
+            <link>https://example.org/post/tools/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/post/tools/</guid>
+            <description>&lt;img src=&#34;https://example.org/post/tools/cover.jpg&#34; alt=&#34;Featured image of post Tools&#34; /&gt;</description>
+        </item></channel>
+</rss>

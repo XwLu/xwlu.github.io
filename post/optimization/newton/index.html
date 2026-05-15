@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="newton methods for unconstrained optimization">
+<title>Newton Methods</title>
+
+
+<link rel="canonical" href="https://example.org/post/optimization/newton/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Newton Methods">
+<meta property='og:description' content="newton methods for unconstrained optimization">
+<meta property='og:url' content='https://example.org/post/optimization/newton/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Newton Methods">
+<meta name="twitter:description" content="newton methods for unconstrained optimization">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#牛顿法">牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#阻尼牛顿法">阻尼牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#修正牛顿法">修正牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#拟牛顿法">拟牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/optimization/" style="background-color: hsl(228, 60%, 84%); color: hsl(228, 60%, 15%);">
+                Optimization
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/optimization/newton/">Newton Methods</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#牛顿法">牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#阻尼牛顿法">阻尼牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#修正牛顿法">修正牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#拟牛顿法">拟牛顿法</a></li>
+      </ul>
+    </li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="newtons-method">Newton&rsquo;s Method
+</h1><h3 id="牛顿法">牛顿法
+</h3><ul>
+<li>前提条件
+<ul>
+<li>一阶导和二阶导连续</li>
+<li>具有严格正定的Hessian矩阵</li>
+</ul>
+</li>
+<li>原理
+<ul>
+<li>对函数进行二阶泰勒展开
+<ul>
+<li>$$f(x)\approx f(x_{k})+\triangledown f(x_{k})^{T}(x-x_{k})+\frac{1}{2}(x-x_{k})^{T}\triangledown ^{2}f(x_{k})(x-x_{k})$$</li>
+</ul>
+</li>
+<li>导数为0时得到极值点
+<ul>
+<li>$$\triangledown f(x)=\triangledown ^{2} f(x_{k})(x-x_{k})+\triangledown f(x_{k})=0$$</li>
+<li>$$x=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+</ul>
+</li>
+<li>更新公式
+<ul>
+<li>$$x_{k+1}=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+<li>减号后面的内容就是牛顿步长（Newton step），这里需要满足Hessian严格正定\(\triangledown^{2} f(x_{k})&gt;0\)，因为沿着梯度的负方向才可以保证函数值下降，牛顿步长是一个负号乘Hessian的逆再乘梯度，Hessian的逆必须要和梯度是同向的（正定）才行，从而Hessian也必须是正定的</li>
+</ul>
+</li>
+<li>特别的，如果目标函数本身就是二次的，那一步就可以迭代到最优解</li>
+</ul>
+</li>
+<li>与梯度下降法对比
+<ul>
+<li><img alt="newton v.s. gd" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../newton_vs_gd.png"></li>
+<li>下降路线更加平直</li>
+<li>迭代次数更少</li>
+<li>每次迭代计算量更大</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>很多时候Hessian矩阵是半正定或者不定的，会导更新方向不是梯度的反方向，函数值增大</li>
+<li><img alt="Hessian indefinite" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../hessian_indef.png"></li>
+</ul>
+</li>
+</ul>
+<h1 id="damped-newtons-method">Damped Newton&rsquo;s Method
+</h1><h3 id="阻尼牛顿法">阻尼牛顿法
+</h3><ul>
+<li>当初始点距离最优解较远时，Hessian不一定正定，迭代不一定收敛，因此引入步长因子\(t\)
+<ul>
+<li>$$d=-H^{-1}g$$</li>
+<li>$$x_{k+1}=x_{k}+td_{k}$$</li>
+</ul>
+</li>
+</ul>
+<h1 id="modified-newtons-method">Modified Newton&rsquo;s Method
+</h1><h3 id="修正牛顿法">修正牛顿法
+</h3><ul>
+<li>背景
+<ul>
+<li>提高牛顿方法在一般函数上的鲁棒性</li>
+<li>对牛顿法的优化思路
+<ul>
+<li><img alt="Modified Damped Newton’s Method" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../modified_damped_newton.png"></li>
+<li>考虑到Hessian不一定正定，尝试用一个正定的\(M\)拟合Hessian，只要拟合的够接近，也可以近似表示曲率信息</li>
+<li>其实没必要求\(M^{-1}\)，本质上我们是想求线性方程\(Md=-\triangledown f(x)\)的解\(d\)，可以用一些成熟的线性求解器进行求解，比解逆快很多</li>
+<li>inexact line search不需要求Hessian，梯度也只是在最开始算一次，更新\(t\)的过程中不需要计算梯度，所以计算量很小</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>原问题
+<ul>
+<li>$$\left [ \triangledown ^{2}f(x) \right ]d=-\triangledown f(x)$$</li>
+</ul>
+</li>
+<li>用\(M\)拟合Hessian
+<ul>
+<li>如果是凸函数（Hessian半正定）
+<ul>
+<li>$$M=\triangledown ^{2}f(x)+\epsilon I,\epsilon =min(1,\left| \triangledown f(x) \right|_{\infty })/10$$</li>
+<li>\(M\)严格正定，搜索方向的求解可以用Cholesky factorization快速求解</li>
+<li>\(Md=-\triangledown f(x),M=LL^{T}\)，\(L\)是个下三角矩阵</li>
+</ul>
+</li>
+<li>如果是非凸函数（Hessian不定）
+<ul>
+<li>将Hessian进行Bunch-Kaufman Factorization，原问题转化为\(LBL^{T}d=-\triangledown f(x)\)</li>
+<li>其中，\(L\)是个下三角矩阵，\(B\)是个对角线由\(1\times 1\)和\(2\times 2\)的矩阵块组成的块对角阵</li>
+<li>\(1\times 1\)的标量一定是正数，\(2\times 2\)的矩阵块的特征值是一正一负，我们需要把每个\(2\times 2\)矩阵替换为和其最接近的\(2\times 2\)正定矩阵，最终得到新的\(\tilde{B}\)（正定），把\(d\)求解出来
+<ul>
+<li>上面\(2\times 2\)矩阵的正定化就是把负的特征值都算出来，然后用一个\(\epsilon \)去代替负特征值得到新的矩阵</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>缺点
+<ul>
+<li>仅仅保证了Hessian的正定，还是要把Hessian求出来，计算量大</li>
+</ul>
+</li>
+</ul>
+<h1 id="quasi-newtons-method">Quasi Newton&rsquo;s Method
+</h1><h3 id="拟牛顿法">拟牛顿法
+</h3><ul>
+<li>牛顿法的问题
+<ul>
+<li>牛顿法需要函数在任何点的Hessian可逆且正定，条件比较苛刻</li>
+<li>牛顿法的计算量太大</li>
+<li>当\(x\)距离函数的最优解还比较远的时候，用二次函数进行近似的效果不好，这时候用牛顿法不仅计算量大，收敛还很慢；当\(x\)距离函数的最优解比较近的时候，二次函数的近似会好一些，收敛会很快。</li>
+<li>Hessian拟合的函数的条件数可能会变得很大（poorly conditioned）。比如函数是一段直线和一段二次曲线拼接起来的，在直线部分计算Hessian去确定更新步长的话，会得到一个非常大的更新步长（曲率是0，对0取逆是无穷大）</li>
+</ul>
+</li>
+<li>拟牛顿法需要满足的一些特质
+<ul>
+<li>原理和修正阻尼牛顿法一样，设计一个\(M\)去近似\(H\)</li>
+<li>收敛速度应该在牛顿法和最速梯度下降法之间</li>
+<li>不需要计算完整的Hessian矩阵（低计算量）</li>
+<li>线性方程\(Md=-\triangledown f(x)\)存在闭式解</li>
+<li>\(M\)不应该是一个稠密的阵，只需要在重要的的方向上对\(H\)做近似，尽可能稀疏</li>
+<li>\(d\)一定得让函数下降（和梯度方向的夹角小于90度），其实就是\(M\)必须正定</li>
+<li>\(d\)应该包含曲率信息（收敛要比梯度下降来的快），也就是满足\(\Delta g\approx M^{k+1}\Delta x\)</li>
+</ul>
+</li>
+<li>拟牛顿法的核心思路
+<ul>
+<li>通过采样N对\(\Delta x\)和\(\Delta g\)来估计\(\Delta M\)</li>
+<li>同时，考虑到最终是要求\(M^{-1}\)，干脆直接估计\(B=M^{-1}\)，更新方向\(\Delta x=B\Delta g \)</li>
+<li>估计\(B\)的时候避免计算Hessian矩阵</li>
+</ul>
+</li>
+</ul>
+<h4 id="凸且光滑函数的bfgs方法">凸且光滑函数的BFGS方法
+</h4><ul>
+<li>假设我们有了很多的\(\Delta x\)和\(\Delta g\)，怎么估计B呢？还是用优化迭代的思路：
+<ul>
+<li>初始化\(B^{0}\)为单位阵</li>
+<li>迭代求解最优的\(B\)，迭代的思路如下：
+<ul>
+<li>我们希望迭代前后B的差距尽可能小：\(min_{B^{k+1}}\left| B^{k+1}-B^{k} \right|^{2}\)</li>
+<li>其次，\(B\)需要满足一些约束：
+<ul>
+<li>\(B=B^{T}\)，这是因为Hessian是对称阵，所以Hessian的逆也应该对称</li>
+<li>\(\Delta x=B\Delta g \)</li>
+</ul>
+</li>
+<li>注意，单纯用差的二范数描述\(B^{k}\)和\(B^{k+1}\)的变化并不好，比如\(\begin{bmatrix} 100 &amp; 1 \\ 1 &amp; 100 \end{bmatrix}\)和\(\begin{bmatrix} 100 &amp; 0.5 \\ 0.5 &amp; 100 \end{bmatrix}\)的差值的二范数很小，但对于右上和左下角的元素来说变化和其自身的大小相比是巨大的，因此需要进行归一化</li>
+<li>归一化后，优化目标变成：\(min_{B^{k+1}}\left| H^{\frac{1}{2}}(B^{k+1}-B^{k})H^{\frac{1}{2}} \right|^{2}\)，\(B=H\)为真实的Hessian矩阵，\(H=\int_{0}^{1}\triangledown^{2}f\left[(1-\tau)x^{k}+\tau x^{k+1}\right]d\tau\)</li>
+<li>我们本来就是套估计H，现在这里还要用到H，看起来是个鸡生蛋，蛋生鸡的问题，但实际上这个问题是有解析解的，与\(H\)无关。四个优化领域的大佬提出了BFGS方法，最终得到的更新公式如下：</li>
+<li><img alt="BFGS" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../bfgs.png"></li>
+<li>注意：当\(\Delta g^{T}\Delta x&gt;0\)时，我们可以保证BFGS更新的结果是正定的，从而保证\(\Delta x\)的方向是函数值下降的方向，对凸函数而言，这是绝对成立的（可以回顾强凸性的定义）；非凸函数后面讨论</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>适用于凸且光滑函数的BFGS方法的流程
+<ul>
+<li><img alt="BFGS for convex" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../bfgs_for_convex.png"></li>
+<li>\(g\)是梯度</li>
+<li>\(d\)是更新方向</li>
+<li>\(t\)是line search方法确定的步长</li>
+</ul>
+</li>
+<li>缺点与问题
+<ul>
+<li>严格梯度单调性（严格凸函数）的条件过于苛刻，一般函数很难满足</li>
+<li>曲率的计算在optimum附近有效，在远处反而是浪费算力</li>
+<li>每次迭代的计算复杂度是优化变量的维度的平方，还是不够轻量</li>
+<li>在非凸函数上是否能够保证收敛仍未知</li>
+<li>在非光滑函数上能否正常使用仍未知</li>
+</ul>
+</li>
+</ul>
+<h4 id="非凸但光滑函数的bfgs方法">非凸但光滑函数的BFGS方法
+</h4><ul>
+<li>在非凸函数上如何保证\(\Delta g^{T}\Delta x&gt;0\)，从而保证更新方向是函数值的下降方向呢？答案是线搜索的时候满足Wolfe conditions
+<ul>
+<li>weak wolfe conditions
+<ul>
+<li><img alt="weak wolfe conditions" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../weak_wolfe.png"></li>
+<li>sufficient decrease condition保证了函数值的下降</li>
+<li>curvature condition保证了这一步跨的足够大，从下山跨到上山</li>
+</ul>
+</li>
+<li>strong wolfe conditions
+<ul>
+<li><img alt="strong wolfe conditions" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../strong_wolfe.png"></li>
+<li>strong和weak的区别在于对curvature condition加了个绝对值约束，不让这一步跨的太过头（跑到对面的山坡上），可以抑制震荡</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>但Wolfe conditions只能保证方向是下降方向，如何保证BFGS的收敛性呢？答案是cautious update(Li and Fukushima 2001) with mild conditions
+<ul>
+<li><img alt="cautious update" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../cautious_update.png"></li>
+<li>只要函数满足如下两个条件，cautious update都可以保证BFGS的收敛性
+<ul>
+<li>函数有bounded sub-level sets</li>
+<li>函数有lipschitz continuous grad</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>适用于非凸但光滑函数的BFGS方法的流程
+<ul>
+<li><img alt="BFGS for nonconvex" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../bfgs_for_nonconvex.png"></li>
+</ul>
+</li>
+<li>与牛顿方法的收敛速度对比
+<ul>
+<li><img alt="BFGS vs Newton" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../bfgs_vs_newton.png"></li>
+<li>速度上慢了一点点，但计算量少很多，综合看更具优势</li>
+</ul>
+</li>
+</ul>
+<h4 id="limited-memory-bfgsl-bfgs方法">Limited-memory BFGS(L-BFGS)方法
+</h4><ul>
+<li>由于\(B^{k+1}\)是由\(B^{k}\)迭代计算得到的。所以\(B^{k}\)隐含了\(B^{k-100}\)的信息。但直觉上来说，\(x^{k}\)和\(x^{k-100}\)已经差的很远了，\(x^{k-100}\)处的曲率信息对\(x^{k}\)处的曲率信息的推导没有啥有效价值了，因此我们可以设置一个memory buffer，让\(B^{k-m}\)到\(B^{k-1}\)来决定\(B^{k}\)的取值，从而降低计算量。</li>
+<li>L-BFGS方法的流程
+<ul>
+<li>就是把上面的Cautious-BFGS过程改成下面的\(B^{k}\)更新流程</li>
+<li><img alt="L-BFGS" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../limit_memory_update.png"></li>
+<li>上图左边方法的复杂度是\(O(mn^{2})\)，因为每个window size内的信息都被重复遍历并计算了。实际上每个循环中，我们只需要将窗口中的头元素去掉，末尾的新元素算进来即可，因此改成右边的计算过程后可以将复杂度简化到\(O(mn)\)，具体推导可以看Liu and Nocedal 1989.</li>
+</ul>
+</li>
+<li>与Newton和BFGS的对比
+<ul>
+<li><img alt="L-BFGS vs BFGS" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../l_bfgs_vs_bfgs.png"></li>
+<li>由于牺牲了部分历史信息，收敛速度相比BFGS更慢一些，但计算量从\(O(n^{2})\)降低到\(O(mn)\)，当\(n\)很大的时候，效率提升就非常大了，基本上是光滑非凸函数优化的第一选择</li>
+</ul>
+</li>
+</ul>
+<h4 id="非凸且非光滑函数的l-bfgs方法">非凸且非光滑函数的L-BFGS方法
+</h4><ul>
+<li>wolfe conditions方法选择
+<ul>
+<li>假设我们把strong wolfe conditions方法直接应用在非凸且非光滑函数上，看看会发生什么
+<ul>
+<li><img alt="strong wolfe on nonconvex" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../strong_wolfe_on_nonconvex.png"></li>
+<li>回顾一下，strong wolfe conditions通过绝对值约束，将更新点的梯度压在0附近，但上图右侧的非光滑函数没有任何点的梯度在0附近，导致无法找到满足strong wolfe conditions的点</li>
+</ul>
+</li>
+<li>假设我们把weak wolfe conditions方法直接应用在非凸且非光滑函数上，看看效果
+<ul>
+<li><img alt="weak wolfe on nonconvex" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../weak_wolfe_on_nonconvex.png"></li>
+<li>weak wolfe conditions方法可以保证能找到满足条件的更新点</li>
+</ul>
+</li>
+<li>结论：使用weak wolfe conditions方法处理nonsmooth函数</li>
+</ul>
+</li>
+<li>如何确定一个步长使得weak wolfe conditions被满足呢？
+<ul>
+<li>对smooth函数，用拟合法确定步长
+<ul>
+<li>先初始化一个步长\(\alpha\)</li>
+<li>如果该步长满足weak wolfe conditions，直接返回</li>
+<li>如果不满足weak wolfe conditions，根据\(\left ( x,{f}\ &lsquo;(x) \right )\)和\(\left ( x+\alpha d,{f}\ &lsquo;(x+\alpha d) \right )\)两个点去拟合二次函数，取二次函数的极值点作为新的步长，不断迭代，直到满足weak wolfe conditions</li>
+<li>但是当函数nonsmooth（或者条件数很大）的时候，这种二次函数拟合的效果很差，导致求出来的极值点也很不理想，就不再适用了</li>
+</ul>
+</li>
+<li>对nonsmooth函数，用Lewis &amp; Overton line search方法
+<ul>
+<li><img alt="lewis overton 1" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../lewis_overton_1.png"></li>
+<li><img alt="lewis overton 2" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../lewis_overton_2.png"></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>注意点
+<ul>
+<li>\(x_{0}\)一定要取在可导的点，不能一上来就落在nonsmooth处</li>
+</ul>
+</li>
+<li>非凸且非光滑函数的L-BFGS方法流程
+<ul>
+<li><img alt="L-BFGS for nonsmooth nonconvex" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../lbfgs_nonsmooth_nonconvex.png"></li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

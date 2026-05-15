@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+    <channel>
+        <title>Categories on 朝花夕拾</title>
+        <link>https://example.org/categories/</link>
+        <description>Recent content in Categories on 朝花夕拾</description>
+        <generator>Hugo -- gohugo.io</generator>
+        <language>en-us</language>
+        <lastBuildDate>Fri, 15 May 2026 00:00:00 +0800</lastBuildDate><atom:link href="https://example.org/categories/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>Robotics</title>
+            <link>https://example.org/categories/robotics/</link>
+            <pubDate>Fri, 15 May 2026 00:00:00 +0800</pubDate>
+            <guid>https://example.org/categories/robotics/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/robotics/cover.png&#34; alt=&#34;Featured image of post Robotics&#34; /&gt;</description>
+        </item><item>
+            <title>climbing</title>
+            <link>https://example.org/categories/climbing/</link>
+            <pubDate>Thu, 07 May 2026 00:00:00 +0800</pubDate>
+            <guid>https://example.org/categories/climbing/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/climbing/cover.jpg&#34; alt=&#34;Featured image of post climbing&#34; /&gt;</description>
+        </item><item>
+            <title>Coding</title>
+            <link>https://example.org/categories/coding/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/categories/coding/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/coding/coding.jpg&#34; alt=&#34;Featured image of post Coding&#34; /&gt;</description>
+        </item><item>
+            <title>Deep Learning</title>
+            <link>https://example.org/categories/deep-learning/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/categories/deep-learning/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/deep-learning/cover.jpeg&#34; alt=&#34;Featured image of post Deep Learning&#34; /&gt;</description>
+        </item><item>
+            <title>Optimization</title>
+            <link>https://example.org/categories/optimization/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/categories/optimization/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/optimization/cover.webp&#34; alt=&#34;Featured image of post Optimization&#34; /&gt;</description>
+        </item><item>
+            <title>Reinforcement Learning</title>
+            <link>https://example.org/categories/reinforcement-learning/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/categories/reinforcement-learning/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/reinforcement-learning/cover.png&#34; alt=&#34;Featured image of post Reinforcement Learning&#34; /&gt;</description>
+        </item><item>
+            <title>Tools</title>
+            <link>https://example.org/categories/tools/</link>
+            <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
+            <guid>https://example.org/categories/tools/</guid>
+            <description>&lt;img src=&#34;https://example.org/categories/tools/cover.jpg&#34; alt=&#34;Featured image of post Tools&#34; /&gt;</description>
+        </item></channel>
+</rss>

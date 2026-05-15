@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="端到端自动驾驶的多模态规划中，江湖上原本分为两派：">
+<title>SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/sparse-drive-v2/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving">
+<meta property='og:description' content="端到端自动驾驶的多模态规划中，江湖上原本分为两派：">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/sparse-drive-v2/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='轨迹规划' /><meta property='article:tag' content='打分机制' /><meta property='article:tag' content='词表构建' /><meta property='article:tag' content='因式分解' /><meta property='article:published_time' content='2026-04-20T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-04-20T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving">
+<meta name="twitter:description" content="端到端自动驾驶的多模态规划中，江湖上原本分为两派：">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题">核心问题</a></li>
+        <li><a href="#作者的灵魂拷问">作者的灵魂拷问</a></li>
+        <li><a href="#sparsedrivev2-的答案">SparseDriveV2 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二暴力扩容实验用数据说话">二、暴力扩容实验：用数据说话</a></li>
+    <li><a href="#三核心方法两大创新">三、核心方法：两大创新</a>
+      <ul>
+        <li><a href="#创新一可扩展的词汇表征--轨迹解剖术">创新一：可扩展的词汇表征 —— 轨迹&quot;解剖术&quot;</a></li>
+        <li><a href="#创新二丝滑的打分策略--大浪淘沙">创新二：丝滑的打分策略 —— 大浪淘沙</a></li>
+      </ul>
+    </li>
+    <li><a href="#四词汇构建从数据到锚点">四、词汇构建：从数据到锚点</a>
+      <ul>
+        <li><a href="#两步聚类法">两步聚类法</a></li>
+        <li><a href="#奇迹时刻排列组合">奇迹时刻：排列组合</a></li>
+      </ul>
+    </li>
+    <li><a href="#五训练与推理">五、训练与推理</a>
+      <ul>
+        <li><a href="#训练秘籍">训练秘籍</a></li>
+        <li><a href="#推理流程">推理流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#六实验设置赛场与装备">六、实验设置：赛场与装备</a>
+      <ul>
+        <li><a href="#主战场-navsim">主战场 NAVSIM</a></li>
+        <li><a href="#推流过滤魔法">推流过滤魔法</a></li>
+        <li><a href="#轻量级装备">轻量级装备</a></li>
+      </ul>
+    </li>
+    <li><a href="#七主打战绩越级挑战">七、主打战绩：越级挑战</a>
+      <ul>
+        <li><a href="#navsim-v1-榜单">NAVSIM v1 榜单</a></li>
+        <li><a href="#navsim-v2-榜单">NAVSIM v2 榜单</a></li>
+        <li><a href="#bench2drive闭环测试">Bench2Drive（闭环测试）</a></li>
+      </ul>
+    </li>
+    <li><a href="#八消融实验抽丝剥茧">八、消融实验：抽丝剥茧</a>
+      <ul>
+        <li><a href="#词表密度实验">词表密度实验</a></li>
+        <li><a href="#关键组件实验">关键组件实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#九附录彩蛋bench2drive-闭环实验细节">九、附录彩蛋：Bench2Drive 闭环实验细节</a>
+      <ul>
+        <li><a href="#配置调整">配置调整</a></li>
+        <li><a href="#两段式训练">两段式训练</a></li>
+        <li><a href="#如何控车">如何控车？</a></li>
+        <li><a href="#定性结果展示">定性结果展示</a></li>
+      </ul>
+    </li>
+    <li><a href="#十个人思考与疑问">十、个人思考与疑问</a>
+      <ul>
+        <li><a href="#值得学习的亮点">值得学习的亮点</a></li>
+        <li><a href="#待探索的问题">待探索的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/sparse-drive-v2/">SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-04-20T00:00:00Z'>Monday, April 20, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一这篇论文在讲什么">一、这篇论文在讲什么？</a>
+      <ul>
+        <li><a href="#核心问题">核心问题</a></li>
+        <li><a href="#作者的灵魂拷问">作者的灵魂拷问</a></li>
+        <li><a href="#sparsedrivev2-的答案">SparseDriveV2 的答案</a></li>
+      </ul>
+    </li>
+    <li><a href="#二暴力扩容实验用数据说话">二、暴力扩容实验：用数据说话</a></li>
+    <li><a href="#三核心方法两大创新">三、核心方法：两大创新</a>
+      <ul>
+        <li><a href="#创新一可扩展的词汇表征--轨迹解剖术">创新一：可扩展的词汇表征 —— 轨迹&quot;解剖术&quot;</a></li>
+        <li><a href="#创新二丝滑的打分策略--大浪淘沙">创新二：丝滑的打分策略 —— 大浪淘沙</a></li>
+      </ul>
+    </li>
+    <li><a href="#四词汇构建从数据到锚点">四、词汇构建：从数据到锚点</a>
+      <ul>
+        <li><a href="#两步聚类法">两步聚类法</a></li>
+        <li><a href="#奇迹时刻排列组合">奇迹时刻：排列组合</a></li>
+      </ul>
+    </li>
+    <li><a href="#五训练与推理">五、训练与推理</a>
+      <ul>
+        <li><a href="#训练秘籍">训练秘籍</a></li>
+        <li><a href="#推理流程">推理流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#六实验设置赛场与装备">六、实验设置：赛场与装备</a>
+      <ul>
+        <li><a href="#主战场-navsim">主战场 NAVSIM</a></li>
+        <li><a href="#推流过滤魔法">推流过滤魔法</a></li>
+        <li><a href="#轻量级装备">轻量级装备</a></li>
+      </ul>
+    </li>
+    <li><a href="#七主打战绩越级挑战">七、主打战绩：越级挑战</a>
+      <ul>
+        <li><a href="#navsim-v1-榜单">NAVSIM v1 榜单</a></li>
+        <li><a href="#navsim-v2-榜单">NAVSIM v2 榜单</a></li>
+        <li><a href="#bench2drive闭环测试">Bench2Drive（闭环测试）</a></li>
+      </ul>
+    </li>
+    <li><a href="#八消融实验抽丝剥茧">八、消融实验：抽丝剥茧</a>
+      <ul>
+        <li><a href="#词表密度实验">词表密度实验</a></li>
+        <li><a href="#关键组件实验">关键组件实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#九附录彩蛋bench2drive-闭环实验细节">九、附录彩蛋：Bench2Drive 闭环实验细节</a>
+      <ul>
+        <li><a href="#配置调整">配置调整</a></li>
+        <li><a href="#两段式训练">两段式训练</a></li>
+        <li><a href="#如何控车">如何控车？</a></li>
+        <li><a href="#定性结果展示">定性结果展示</a></li>
+      </ul>
+    </li>
+    <li><a href="#十个人思考与疑问">十、个人思考与疑问</a>
+      <ul>
+        <li><a href="#值得学习的亮点">值得学习的亮点</a></li>
+        <li><a href="#待探索的问题">待探索的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <hr>
+<h2 id="一这篇论文在讲什么">一、这篇论文在讲什么？
+</h2><h3 id="核心问题">核心问题
+</h3><p>端到端自动驾驶的多模态规划中，江湖上原本分为两派：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">派系</th>
+          <th style="text-align: left">代表方法</th>
+          <th style="text-align: left">优点</th>
+          <th style="text-align: left">缺点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>静态词表派</strong></td>
+          <td style="text-align: left">VADv2、Hydra-MDP、DriveSuprim</td>
+          <td style="text-align: left">算力友好，简单高效</td>
+          <td style="text-align: left">颗粒度太粗，动作空间覆盖不足</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>动态生成派</strong></td>
+          <td style="text-align: left">ipad（回归）、DiffusionDrive、GoalFlow（扩散/流匹配）</td>
+          <td style="text-align: left">极其精细，性能霸榜</td>
+          <td style="text-align: left">模型臃肿，需要额外网络或疯狂迭代降噪</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="作者的灵魂拷问">作者的灵魂拷问
+</h3>
+    <blockquote>
+        <p><strong>动态生成真的是必需的吗？如果我把静态词表塞得密不透风，能不能打败它们？</strong></p>
+
+    </blockquote>
+<h3 id="sparsedrivev2-的答案">SparseDriveV2 的答案
+</h3>
+    <blockquote>
+        <p><strong>静态词表只要足够密，打分机制就能一统天下！</strong> 纯粹的打分范式（Purely Scoring-based），照样拿 SOTA！</p>
+
+    </blockquote>
+<p><strong>形象的比喻</strong>：</p>
+<ul>
+<li><strong>动态生成派</strong>：像一个&quot;现场作画&quot;的艺术家，每次都要从头画一幅精细的作品，耗时耗力</li>
+<li><strong>SparseDriveV2</strong>：像一个&quot;菜单点菜&quot;的食客，只要菜单够厚（词表够密），就能精准选中自己想要的那道菜</li>
+</ul>
+<hr>
+<h2 id="二暴力扩容实验用数据说话">二、暴力扩容实验：用数据说话
+</h2><p>为了验证&quot;静态词表的潜力是无穷的&quot;这个猜想，作者拿经典的 <strong>Hydra-MDP</strong> 模型做了一场&quot;大力出奇迹&quot;实验：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">轨迹锚点数量</th>
+          <th style="text-align: left">NAVSIM v2 EPDMS 得分</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">1024</td>
+          <td style="text-align: left">85.02</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">2048</td>
+          <td style="text-align: left">↑</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">4096</td>
+          <td style="text-align: left">↑</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">8192</td>
+          <td style="text-align: left">↑</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">16384</td>
+          <td style="text-align: left"><strong>87.35</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">32768</td>
+          <td style="text-align: left">💥 OOM（显存爆了）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>结论</strong>：性能一路看涨，完全没有遇到瓶颈！限制它的只是你的算力和显存！</p>
+<p>于是，<strong>SparseDriveV2</strong> 闪亮登场，它带来了两个改变游戏规则的核心创新，彻底打破了这个内存墙。</p>
+<hr>
+<h2 id="三核心方法两大创新">三、核心方法：两大创新
+</h2><h3 id="创新一可扩展的词汇表征--轨迹解剖术">创新一：可扩展的词汇表征 —— 轨迹&quot;解剖术&quot;
+</h3><p>一条轨迹包含两个维度：</p>
+<ol>
+<li><strong>空间几何</strong>：你去哪儿？（路径）</li>
+<li><strong>时间演进</strong>：你开多快？（速度）</li>
+</ol>
+<p>既然完整的轨迹太多会导致内存爆炸，那就把它们<strong>拆了</strong>！</p>
+<h4 id="轨迹因式分解factorization">轨迹因式分解（Factorization）
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">组成部分</th>
+          <th style="text-align: left">定义</th>
+          <th style="text-align: left">采样方式</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>几何路径 (Path, $p$)</strong></td>
+          <td style="text-align: left">剥离时间，只看地上的车辙印</td>
+          <td style="text-align: left">在最大空间长度 $S_{max}$ 内，每隔固定空间间隔 $\Delta s$ 采一个点</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>速度配置 (Velocity, $v$)</strong></td>
+          <td style="text-align: left">剥离空间，只看迈速表</td>
+          <td style="text-align: left">在总时间 $T$ 内，每隔固定时间 $\Delta t$ 记录一个平均速度</td>
+      </tr>
+  </tbody>
+</table></div>
+<h4 id="积木重组如何还原轨迹">积木重组：如何还原轨迹？
+</h4><p>当需要还原轨迹时，通过计算时间步 $t$ 时的累计行驶距离：
+$$s_t = \sum v_k \Delta t$$</p>
+<p>然后在路径 $p$ 上进行距离插值，就能完美拼出完整的时空轨迹 $\tau$！</p>
+
+    <blockquote>
+        <p><strong>形象比喻</strong>：就像玩乐高积木，你不需要为每种组合单独准备一个成品，只需要准备有限数量的&quot;路径积木&quot;和&quot;速度积木&quot;，然后按需组装即可！</p>
+
+    </blockquote>
+<h3 id="创新二丝滑的打分策略--大浪淘沙">创新二：丝滑的打分策略 —— 大浪淘沙
+</h3><p>面对几十万条轨迹，一个一个打分肯定会死机，于是作者设计了**&ldquo;漏斗式&quot;打分法**：</p>
+<pre tabindex="0"><code>┌─────────────────────────────────────────────────────┐
+│  第一层：场景编码 (Scene Encoding)                    │
+│  - 用 ResNet 提取多视角图像特征                       │
+│  - 编码自车状态                                       │
+└─────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────┐
+│  第二层：粗粒度解耦打分 (Coarse Factorized Scoring)   │
+│  - 路径打分：MLP + 场景特征 → Top-K_p 个路径          │
+│  - 速度打分：MLP + 场景特征 → Top-K_v 个速度          │
+│  - 筛掉离谱组合（高速上猛打方向盘、拥堵路段狂飙）       │
+└─────────────────────────────────────────────────────┘
+                        ↓
+┌─────────────────────────────────────────────────────┐
+│  第三层：细粒度轨迹打分 (Fine-Grained Scoring)        │
+│  - 轨迹重条件化（Re-conditioning）                   │
+│  - 可变形聚合（Deformable Aggregation）              │
+│  - 高精度时空依赖推理                                 │
+│  → 选出最终冠军轨迹                                   │
+└─────────────────────────────────────────────────────┘
+</code></pre><h4 id="为什么需要轨迹重条件化">为什么需要&quot;轨迹重条件化&rdquo;？
+</h4><p>高速行驶和急转弯之间存在<strong>物理冲突</strong>，路径和速度不是绝对独立的！</p>
+<p>所以作者引入了<strong>轨迹重条件化（Trajectory Re-conditioning）</strong>，用可变形聚合让组合后的轨迹特征再次与场景特征互动，进行高精度的时空依赖推理，最终给出精准打分！</p>
+<hr>
+<h2 id="四词汇构建从数据到锚点">四、词汇构建：从数据到锚点
+</h2><h3 id="两步聚类法">两步聚类法
+</h3><p>作者在海量人类驾驶数据中，用 <strong>K-Means 聚类算法</strong> 分别聚类出：</p>
+<ul>
+<li><strong>$N_p$ 个路径锚点</strong>：代表人类常见的行驶路径形态</li>
+<li><strong>$N_v$ 个速度锚点</strong>：代表人类常见的速度配置</li>
+</ul>
+<h3 id="奇迹时刻排列组合">奇迹时刻：排列组合
+</h3><p>把它们两两排列组合！</p>
+<p>$$\text{总轨迹数} = N_p \times N_v$$</p>
+<p>只需极小的内存，就能组合出包含<strong>几十万条候选轨迹的超高密度轨迹词表</strong>！</p>
+<hr>
+<h2 id="五训练与推理">五、训练与推理
+</h2><h3 id="训练秘籍">训练秘籍
+</h3><p>损失函数：<strong>基于距离的软分类交叉熵损失（CE Loss）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">评估维度</th>
+          <th style="text-align: left">距离度量</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">路径评估</td>
+          <td style="text-align: left">点到点的平均平方距离（$L_2$ 距离）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">速度评估</td>
+          <td style="text-align: left">绝对误差（$L_1$ 距离）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">细粒度轨迹评估</td>
+          <td style="text-align: left">$L_2$ 距离</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>额外监督</strong>：还请了一位&quot;基于规则的老师（Rule-based Teacher）&ldquo;来传授心法：</p>
+<ul>
+<li>安全性</li>
+<li>行驶进度</li>
+<li>舒适度</li>
+<li>交通规则遵守度</li>
+</ul>
+<p>使用二元交叉熵（BCE）损失进行监督。</p>
+<h3 id="推理流程">推理流程
+</h3><p>综合这些分数，选出&quot;选秀冠军&quot;直接控车！</p>
+<hr>
+<h2 id="六实验设置赛场与装备">六、实验设置：赛场与装备
+</h2><h3 id="主战场-navsim">主战场 NAVSIM
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">配置</th>
+          <th style="text-align: left">数值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">路径词表 $N_p$</td>
+          <td style="text-align: left">1024（1米间隔，最长50米）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">速度词表 $N_v$</td>
+          <td style="text-align: left">256（0.5秒间隔，最长4秒）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>总候选轨迹</strong></td>
+          <td style="text-align: left"><strong>262,144 条</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">与前人对比</td>
+          <td style="text-align: left">比常用的 8192 个锚点密 <strong>32 倍</strong>！</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="推流过滤魔法">推流过滤魔法
+</h3><p>26万条轨迹怎么算？</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">层级</th>
+          <th style="text-align: left">筛选策略</th>
+          <th style="text-align: left">结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">第一层</td>
+          <td style="text-align: left">Top 128 路径 + Top 64 速度</td>
+          <td style="text-align: left">筛掉大部分离谱组合</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">第二层</td>
+          <td style="text-align: left">Top 20 路径 + Top 20 速度（v2加速：Top 10 速度）</td>
+          <td style="text-align: left">形成高质量子集</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">最终</td>
+          <td style="text-align: left">细粒度打分</td>
+          <td style="text-align: left">只给 <strong>400 条</strong>最靠谱的轨迹打分</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="轻量级装备">轻量级装备
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">配置项</th>
+          <th style="text-align: left">数值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">骨干网络</td>
+          <td style="text-align: left">ResNet-34（仅 21.8M 参数）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">输入分辨率</td>
+          <td style="text-align: left">256 x 512</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">训练设备</td>
+          <td style="text-align: left">8 张 NVIDIA L20 GPU</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Batch Size</td>
+          <td style="text-align: left">128</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">学习率</td>
+          <td style="text-align: left">$1 \times 10^{-4}$</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">权重衰减</td>
+          <td style="text-align: left">0</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">训练 Epochs</td>
+          <td style="text-align: left">10</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="七主打战绩越级挑战">七、主打战绩：越级挑战
+</h2><h3 id="navsim-v1-榜单">NAVSIM v1 榜单
+</h3><p><strong>PDMS 终极高分：92.0</strong></p>
+<ul>
+<li>完爆其他打分方法和动态生成方法</li>
+<li>&ldquo;以下犯上&rdquo;：用袖珍的 ResNet-34 干翻了配备 V2-99 骨干网络（96.9M参数）的 GoalFlow 和 Hydra-MDP！</li>
+</ul>
+<h3 id="navsim-v2-榜单">NAVSIM v2 榜单
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">模型</th>
+          <th style="text-align: left">EPDMS 分数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>SparseDriveV2</strong></td>
+          <td style="text-align: left"><strong>90.1</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">DiffusionDriveV2（前任霸主）</td>
+          <td style="text-align: left">87.5</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>特别是在 <strong>EP（驾驶进度）</strong> 指标上进步神速，证明了致密词表真的能覆盖更广的动作空间！</p>
+<h3 id="bench2drive闭环测试">Bench2Drive（闭环测试）
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">指标</th>
+          <th style="text-align: left">分数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">驾驶得分</td>
+          <td style="text-align: left">89.15</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">成功率</td>
+          <td style="text-align: left">70.00%</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">多能力得分</td>
+          <td style="text-align: left">67.67%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>全面碾压 TCP-traj 和 DriveAdapter 等一众强敌，展现了强大的复杂场景泛化能力。</p>
+<hr>
+<h2 id="八消融实验抽丝剥茧">八、消融实验：抽丝剥茧
+</h2><h3 id="词表密度实验">词表密度实验
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">词表大小</th>
+          <th style="text-align: left">EPDMS 分数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">512 × 128</td>
+          <td style="text-align: left">88.7</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">&hellip;</td>
+          <td style="text-align: left">↑</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">1024 × 256</td>
+          <td style="text-align: left">90.1</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>结论</strong>：词表越密，效果越好！</p>
+<h3 id="关键组件实验">关键组件实验
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">配置</th>
+          <th style="text-align: left">效果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">可变形聚合（DFA）</td>
+          <td style="text-align: left">✅ 提升</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">轨迹重条件化（Re-conditioning）</td>
+          <td style="text-align: left">✅ 提升</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">DFA + Re-conditioning</td>
+          <td style="text-align: left">🏆 <strong>黄金搭档</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="九附录彩蛋bench2drive-闭环实验细节">九、附录彩蛋：Bench2Drive 闭环实验细节
+</h2><h3 id="配置调整">配置调整
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">配置项</th>
+          <th style="text-align: left">数值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">路径锚点最大长度</td>
+          <td style="text-align: left">15 米</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">速度视野</td>
+          <td style="text-align: left">3 秒</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">骨干网络</td>
+          <td style="text-align: left">ResNet-50</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">训练设备</td>
+          <td style="text-align: left">16 张 L20 显卡</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">输入</td>
+          <td style="text-align: left">6 个摄像头（256 x 704）</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">辅助任务</td>
+          <td style="text-align: left">3D 目标检测、在线建图、运动预测</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="两段式训练">两段式训练
+</h3><ol>
+<li><strong>第一阶段</strong>：100 个 Epoch 的感知训练</li>
+<li><strong>第二阶段</strong>：10 个 Epoch 的感知与规划联合训练（纯模仿学习，没用规则老师监督）</li>
+</ol>
+<p>学习率分别为 $4 \times 10^{-4}$ 和 $3 \times 10^{-4}$。</p>
+<h3 id="如何控车">如何控车？
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: left">控制维度</th>
+          <th style="text-align: left">策略</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>横向控制</strong></td>
+          <td style="text-align: left">&ldquo;随速可变目标距离&rdquo;：$d = 0.5 \times \text{自车速度} + 2.5$，寻找路径上的预瞄点打方向盘</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>纵向控制</strong></td>
+          <td style="text-align: left">直接取速度配置里的第一个速度作为目标油门/刹车</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="定性结果展示">定性结果展示
+</h3><p>与基线相比（红线），SparseDriveV2 的轨迹（蓝线）：</p>
+<ul>
+<li>更贴近人类老司机（绿线）</li>
+<li>急转弯更平滑</li>
+<li>交通效率更高</li>
+<li>不会像呆子一样停在原地！</li>
+</ul>
+<p><strong>坦诚的局限性</strong>：在缺乏导航信息的情况下，系统偶尔也会&quot;迷路&rdquo;。</p>
+<hr>
+<h2 id="十个人思考与疑问">十、个人思考与疑问
+</h2><h3 id="值得学习的亮点">值得学习的亮点
+</h3><ol>
+<li><strong>极简哲学</strong>：用最纯粹的打分思路，证明了&quot;简单方法 + 大规模&quot;可以打败&quot;复杂方法 + 小规模&quot;</li>
+<li><strong>因式分解的智慧</strong>：把轨迹拆成路径和速度两个维度，巧妙地绕过了显存爆炸的问题</li>
+<li><strong>漏斗式打分</strong>：三层筛选机制既保证了计算效率，又没有牺牲最终精度</li>
+</ol>
+<h3 id="待探索的问题">待探索的问题
+</h3><ol>
+<li><strong>词表密度的极限</strong>：如果显存继续增大，词表密到什么程度会开始出现边际效应递减？</li>
+<li><strong>路径和速度的耦合</strong>：重条件化机制是否可以进一步优化，更好地捕捉两者的深层关联？</li>
+<li><strong>与扩散模型的融合</strong>：能否将 SparseDriveV2 的致密词表思想与扩散模型的生成能力结合起来？</li>
+</ol>
+<hr>
+<h2 id="参考链接">参考链接
+</h2><ul>
+<li>论文原文：https://arxiv.org/pdf/2603.29163</li>
+<li>相关工作：Hydra-MDP, VADv2, DiffusionDrive, GoalFlow</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+            <a href="/tags/%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/">打分机制</a>
+        
+            <a href="/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/">词表构建</a>
+        
+            <a href="/tags/%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3/">因式分解</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/hi-p-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/drive-transformer/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DriveTransformer: Unified Transformer for Scalable End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Function for C++">
+<title>Function</title>
+
+
+<link rel="canonical" href="https://example.org/post/coding/c&#43;&#43;/function/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Function">
+<meta property='og:description' content="Function for C++">
+<meta property='og:url' content='https://example.org/post/coding/c&#43;&#43;/function/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T10:32:39&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T10:32:39&#43;08:00'/>
+<meta name="twitter:title" content="Function">
+<meta name="twitter:description" content="Function for C++">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/coding/" style="background-color: hsl(47, 60%, 84%); color: hsl(47, 60%, 15%);">
+                Coding
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/coding/c&#43;&#43;/function/">Function</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T10:32:39&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="函数基础">函数基础
+</h1><ul>
+<li>函数声明可以出现多次，但函数定义通常只能出现一次（inline函数可以多次）</li>
+<li>栈帧结构(stack frame)
+<ul>
+<li>每次调用一个函数就会在栈上开辟一个frame</li>
+<li>frame包含了如下信息
+<ul>
+<li>local variables</li>
+<li>返回地址</li>
+<li>实参args1, args2, &hellip;</li>
+</ul>
+</li>
+<li>当前frame执行完后返回到前一个frame的地址，遵循stack先进后出的逻辑</li>
+</ul>
+</li>
+<li>拷贝过程的（强制）省略
+<ul>
+<li>返回值优化</li>
+<li>C++17强制省略拷贝临时对象</li>
+</ul>
+</li>
+<li>函数的外部链接
+<ul>
+<li>编译器需要为C++中的所有函数，在符号表中生成唯一的标识符，来区分不同的函数。而对于同名不同参的函数，编译器在进行name mangling操作时，会通过函数名和其参数类型生成唯一标识符，来支持函数重载。
+<ul>
+<li>nm exetable_file</li>
+<li>nm exetable_file | c++filt -t: demangling， 得到函数的原始命名</li>
+</ul>
+</li>
+<li>demo
+<pre tabindex="0"><code>// func.h
+int Add(int x, int y);
+
+// func.cc
+int Add(int x, int y) {
+  return x + y;
+}
+</code></pre><ul>
+<li>对上面的代码进行编译，mangling后，Add函数的标识符为_Z3addii，前缀不讨论，后缀的ii表示函数的形参类型是两个int型</li>
+<li>C++之所以能实现重载，就是因为mangling之后的函数标识符在函数名的基础上追加了形参类型的后缀，这样相同名字的函数只要形参类型不同，编译器依然可以区分开</li>
+<li>C语言没有这样的后缀，所以C不支持函数重载</li>
+<li>如果我们想在一个C文件里调用上面的C++代码，是无法链接到Add函数的，因为C语言想找的函数标识符就是add，没有后缀，与_Z3addii不同</li>
+<li>可以通过extern &quot;C&quot;去支持C文件的调用
+<pre tabindex="0"><code>// func.h
+extern &#34;C&#34; int Add(int x, int y);
+int Add(int x);
+
+// func.cc
+extern &#34;C&#34;
+int Add(int x, int y) {  // 标识符为add
+  return x + y;
+}
+
+int Add(int x) {  // 标识符为addi
+  return x;
+}
+</code></pre><ul>
+<li>这样处理后，mangling得到的标识符就变成add了，外部的C文件可以找到该函数进行调用，但同样就不支持重载了</li>
+<li>上面的代码两个Add函数都可以被正常调用，因为第二个函数没有extern &quot;C&quot;修饰，还是用的C++的nm方法，两者的标识符不一样</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="函数重载">函数重载
+</h1><ul>
+<li>相同的函数名，不同的参数列表
+<ul>
+<li>不能基于不同的返回值进行重载</li>
+<li>函数重载与name mangling</li>
+</ul>
+</li>
+<li>名称查找
+<ul>
+<li>限定查找(qualified lookup)与非限定查找(unqualified lookup)
+<pre tabindex="0"><code>void fun() {}
+
+namespace MyNS {
+  void fun() {}
+}
+
+int main() {
+  ::fun();  // 限定查找，有明确的域名global
+  MyNS::fun();  // 限定查找，有明确的域名MyNS
+  fun();  // 非限定查找，函数前没有指定明确的域
+}
+</code></pre></li>
+<li>非限定查找会进行域的逐级查找——名称隐藏(hiding)
+<pre tabindex="0"><code>void fun() {}
+void fun1() {}
+
+namespace MyNS {
+  void fun() {}
+  void g() {
+    fun();  // 会调用MyNS中的fun
+  }
+
+  int fun1 = 3;
+  void g2() {
+    fun1();  // 会报错，因为MyNS::fun1隐藏掉了global::fun1，而MyNS::fun1是个变量，无法执行函数调用
+  }
+}
+
+int main() {
+  MyNS::g();
+}
+</code></pre></li>
+<li>查找通常只会在已声明的名称集合中进行
+<pre tabindex="0"><code>void fun() {}
+
+namespace MyNS {
+  void g() {
+    fun();  // 会调用global中的fun
+  }
+  void fun() {}
+}
+
+int main() {
+  MyNS::g();
+}
+</code></pre></li>
+<li>实参依赖查找(Argument Dependent Lookup: ADL)
+<ul>
+<li>只对自定义类型生效
+<pre tabindex="0"><code>struct Str2 {};
+
+namespace MyNS {
+  struct Str {};
+  void g(Str x) {}
+  void g(Str2 x) {}
+}
+
+int main() {
+  Str2 obj2;
+  g(obj2);  // 编译不通过，找不到g
+  MyNS::Str obj;
+  g(obj);  // 非限定性查找一般来说不会去考虑名字空间内部的东西，但由于这个函数的形参的类型是定义于MyNS内部的一个结构体，编译器就会把对应名字空间内的对象纳入到考虑范围之内，这里的调用就是合法的
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>重载决议
+<ul>
+<li>当有多个函数都符合名称查找时，需要有一系列的规则去决定到底用哪个函数</li>
+<li>过滤不能被调用的版本
+<ul>
+<li>参数个数不对</li>
+<li>无法将实参转换为形参</li>
+<li>实参不满足形参的限制条件（一般是用到模板时会遇到，比如C++20 concept限制）</li>
+</ul>
+</li>
+<li>在剩余版本中查找与调用表达式最匹配的版本，匹配级别越低越好（有特殊规则）
+<ul>
+<li>级别1：完美匹配 或 平凡转换（比如加一个const）</li>
+<li>级别2：promotion或promotion+平凡转换</li>
+<li>级别3：标准转换或标准转换+平凡转换</li>
+<li>级别4（非C++标准引入）：自定义转换或自定义转换+平凡转换或自定义转换+标准转换</li>
+<li>级别5（非C++标准引入）：调用形参为省略号的版本
+<pre tabindex="0"><code>void fun(...) {}  // 可以传入任意参数
+</code></pre></li>
+<li>函数包含多个形参时，所选函数的所有形参的匹配级别都要优于或等于其他函数</li>
+<li>特殊规则
+<pre tabindex="0"><code>void fun(int&amp; x) {}
+void fun(const int&amp; x) {}
+
+int main() {
+  int x;
+  fun(x);  // 上面两个函数都属于级别1的匹配，但编译通过，没有发生冲突
+  // 规则是：x为左值，int&amp;优于const int&amp;
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="内联函数">内联函数
+</h1><ul>
+<li>满足翻译单元的一处原则（为了在编译期展开），普通函数需要满足程序的一处原则，所以inline函数可以定义在header中</li>
+</ul>
+<h1 id="constexprconsteval函数">constexpr/consteval函数
+</h1><ul>
+<li>满足翻译单元的一处原则（为了在编译期就可以计算）</li>
+<li>constexpr函数可以在编译期执行也可以在运行期执行（since C++11）
+<pre tabindex="0"><code>constexpr int fun(int x) {
+  return x + 1;
+}
+
+int fun2(int x) {
+  return x + 1;
+}
+
+int main() {
+  int y;
+  cin &gt;&gt; y;
+  constexpr int x = fun(y);  // 运行期执行
+  constexpr int x2 = fun(3);  // 编译期执行
+  constexpr int x3 = fun2(3);  // 编译失败，因为fun不是常量函数，无法赋值给常量
+  return 0;
+}
+</code></pre></li>
+<li>consteval函数只能在编译期执行（since C++20）
+<pre tabindex="0"><code>consteval int fun(int x) {
+  return x + 1;
+}
+
+int main() {
+  int y;
+  cin &gt;&gt; y;
+  constexpr int x = fun(y);  // 编译失败，无法在编译期执行
+  constexpr int x2 = fun(3);  // 编译期执行
+  return 0;
+}
+</code></pre></li>
+</ul>
+<h1 id="函数指针">函数指针
+</h1><ul>
+<li>函数类型
+<pre tabindex="0"><code>using K = int(int);  // K就是一个函数类型的别名
+K fun;  // 函数声明，等同于int fun(int);
+std::function&lt;void(int)&gt; f;  // 这里的模板参数就是函数类型
+</code></pre></li>
+<li>函数指针类型
+<pre tabindex="0"><code>int inc(int x) {
+  return x + 1;
+}
+
+int dec(int x) {
+  return x - 1;
+}
+
+using K = int(int);
+
+void Demo(K in) {}
+void Demo1(K* in) {}
+
+int main() {
+  K* fun = &amp;inc;
+  (*fun)(100);  // 101
+
+  auto fun2 = dec;  // 等同于：using F = int(*)(int); F fun2 = dec;
+
+  // 下面四种写法效果一样
+  Demo(inc);
+  Demo(&amp;inc);
+  Demo1(inc);
+  Demo1(&amp;inc);
+}
+</code></pre></li>
+<li>函数指针重载
+<pre tabindex="0"><code>void fun(int) {}
+
+void fun(int, int) {}
+
+int main() {
+  auto f = fun;  // 报错，编译器不知道指向上面哪个fun函数
+  void(*f)(int) = fun;  // 通过，类型明确
+}
+</code></pre></li>
+<li>将函数指针作为函数参数</li>
+<li>将函数指针作为函数的返回值
+<pre tabindex="0"><code>int inc(int x) {
+  return x + 1;
+}
+
+int dec(int x) {
+  return x - 1;
+}
+
+auto fun(bool input) {
+  if (input) {
+    return inc;
+  } else {
+    return dec;
+  }
+}
+
+int main() {
+  (*fun(true))(100);  // 101
+}
+</code></pre></li>
+<li>注意most vexing parse问题
+<ul>
+<li>该问题促使C++11引入T xx{};的初始化方式</li>
+<li>使用{}而非()去初始化一个变量可以避免该问题的发生</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

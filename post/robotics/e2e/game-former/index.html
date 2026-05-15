@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="Paper Reading Notes of GameFormer">
+<title>GameFormer</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/game-former/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="GameFormer">
+<meta property='og:description' content="Paper Reading Notes of GameFormer">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/game-former/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:published_time' content='2025-04-02T11:08:42&#43;08:00'/><meta property='article:modified_time' content='2025-04-02T11:08:42&#43;08:00'/>
+<meta name="twitter:title" content="GameFormer">
+<meta name="twitter:description" content="Paper Reading Notes of GameFormer">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#scene-encoding">Scene Encoding</a></li>
+    <li><a href="#future-decoding-with-level-k-reasoning">Future Decoding with Level-k Reasoning</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#imitation-loss">Imitation Loss</a></li>
+    <li><a href="#auxiliary-loss">Auxiliary Loss</a></li>
+    <li><a href="#total-loss">Total Loss</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#环境">环境</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#文件结构">文件结构</a></li>
+    <li><a href="#核心代码">核心代码</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/game-former/">GameFormer</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-04-02T11:08:42&#43;08:00'>Wednesday, April 2, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#scene-encoding">Scene Encoding</a></li>
+    <li><a href="#future-decoding-with-level-k-reasoning">Future Decoding with Level-k Reasoning</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#imitation-loss">Imitation Loss</a></li>
+    <li><a href="#auxiliary-loss">Auxiliary Loss</a></li>
+    <li><a href="#total-loss">Total Loss</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#环境">环境</a></li>
+  </ul>
+
+  <ul>
+    <li><a href="#文件结构">文件结构</a></li>
+    <li><a href="#核心代码">核心代码</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="gameformer-game-theoretic-modeling-and-learning-of-transformer-based-interactive-prediction-and-planning-for-autonomous-driving">GameFormer: Game-theoretic Modeling and Learning of Transformer-based Interactive Prediction and Planning for Autonomous Driving
+</h1><h1 id="问题建模">问题建模
+</h1><ul>
+<li>输入：\(N\)个agents，历史状态，地图（交通灯、车道中心线、边界线、斑马线等）</li>
+<li>输出：每个agent输出 \(M\)条轨迹及对应score</li>
+<li>多次迭代更新agent的预测轨迹</li>
+<li>第 \(i\)个agent的第 \(k\)层策略为 \(\pi_{i}^{(k)}=min_{\pi_{i}}L_{i}^{k}(\pi_{i}^{(k)}|\pi_{\neg i}^{(k-1)})\)，这边的 \(\pi
+\)指的是每个agent的多模态预测轨迹（GMM模型）</li>
+</ul>
+<h1 id="模块细节">模块细节
+</h1><h2 id="scene-encoding">Scene Encoding
+</h2><ul>
+<li>Input Representation
+<ul>
+<li>agent的历史状态 \(S_{p}\in R^{N*T_{h}*d_{s}}\)， \(d_{s}\)是状态属性的维度</li>
+<li>局部地图polyline \(M\in R^{N*N_{m}*N_{p}*d_{p}}\)，对每个agent，找到其周围的 \(N_{m}\)个地图元素，每个元素包含 \(N_{p}\)个点， \(d_{p}\)是属性维度。通过DFS为每个agent构造候选参考线，遍历候选参考线里的车道内的每个路点，记录点的位置和类型、左右边界位置和类型、限速、信号灯、信号牌等.</li>
+</ul>
+</li>
+<li>Agent History Encoding
+<ul>
+<li>利用LSTM编码历史状态，得到 \(A_{p}\in R^{N*D}\)，包含所有agent的过去历史信息， \(D\)是隐藏层特征维度</li>
+</ul>
+</li>
+<li>Vectorized Map Encoding
+<ul>
+<li>利用MLP为所有agent编码周围地图信息 \(M_{p}\in R^{N*N_{m}*N_{p}*D}\)，后面将同一个地图元素中的 \(N_{p}\)个点通过max pooling聚合，将 \(N_{p}\)维度压缩掉（类似于PointNet），新的shape为 \(M_{r}\in R^{N*N_{mr}*D}\)， \(N_{mr}\)是每个agent周围的地图元素数量</li>
+</ul>
+</li>
+<li>Relation Encoding
+<ul>
+<li>针对每个agent，聚合所有agent（包括它自己）的历史信息和其周围的地图信息， \(C_{i}=[A_{p},M_{p}^{i}]\in R^{(N+N_{mr})*D}\)</li>
+<li>通过一个包含 \(E\)层的multi-head self-attention transformer计算彼此之间的交互，最终得到一个scene context encoding \(C_{s}\in R^{N*(N+N_{mr})*D}\)</li>
+</ul>
+</li>
+</ul>
+<h2 id="future-decoding-with-level-k-reasoning">Future Decoding with Level-k Reasoning
+</h2><ul>
+<li>Modality Embedding
+<ul>
+<li>为了描述不确定信引入多模态，初始化一个可学习的modality embedding \(I \in R^{N*M*D}\)， \(M\)是模态的数量</li>
+</ul>
+</li>
+<li>Level-0 Decoding
+<ul>
+<li>输入 \(I\)和该agent在scene context encoding中的历史信息编码 \(C_{s,A_{p}}\)(by inflating a modality axis)，得到 \((C_{s,A_{p}}+I)\in R^{N*M*D}\)作为query，然后 \(C_{s}\)作为key、value。</li>
+<li>multi-head cross-attention Transformer作用在每个agent的modality axis上，得到query content features \(Z_{L_{0}}\in R^{N*M*D}\)。</li>
+<li>\(Z_{L_{0}}\)通过一个MLP解码得到预测轨迹的GMM参数 \(G_{L_{0}}\in R^{N*M*T_{f}*4}\)，4个维度对应每个timestamp的 \((\mu_{x},\mu_{y},log\sigma_{x},log\sigma_{y})\)。再通过另一个MLP解码得到每组预测的score \(P_{L_{0}}\in R^{N*M*1}\)</li>
+</ul>
+</li>
+<li>Interaction Decoding
+<ul>
+<li>\(k\)次迭代decode过程</li>
+<li>第 \(k\)次迭代
+<ul>
+<li>取所有agent在 \(k-1\)次迭代中生成的轨迹点 \(S_{f}^{L_{k-1}}\in R^{N*M*T_{f}*2}\)（每对点是GMM参数 \(G_{L_{k-1}}\)中的 \(\mu_{x}, \mu_{y}\)），通过MLP和max pooling操作在时间维度上对轨迹进行编码，得到agent的多模预测轨迹编码 \(A_{mf}^{L_{k-1}}\in R^{N*M*D}\)</li>
+<li>依据 \(k-1\)次迭代中得到的scores \(P_{L_{k-1}}\)对 \(A_{mf}^{L_{k-1}}\)在模态维度上对进行weighted-average-pooling操作，得到agent的future feature \(A_{f}^{L_{k-1}}\in R^{N*D}\)</li>
+<li>通过multi-head self-attention Transformer实现 \(A_{f}^{L_{k-1}}\)之间的交互</li>
+<li>针对每个agnet，将交互完成后的future feature和编码过程中得到的scene context encoding合并在一起， \(C_{L_{k}}^{i}=[A_{fi}^{L_{k-1}},C_{s}^{i}]\in R^{(N+N_{m}+N)*D}\)</li>
+<li>将当前关注agent在第 \(k-1\)次迭代中得到的query content features \(Z_{L_{k-1}}^{i}\)和该agent多模预测轨迹编码 \(A_{mf}^{L_{k-1}} \)组合为query \((Z_{L_{k-1}}^{i}+A_{mf}^{i,L_{k-1}})\in R^{M*D}\)，将更新过的scene context encoding \(C_{L_{k}}^{i}\)作为key和value过一遍multi-head cross-attention Transformer</li>
+<li>通过mask策略阻止第 \(i\)个agent在第 \(k\)次迭代中获取到它自己在前面几次迭代中的future  interaction features。只能获取周围其他障碍的future  interaction features</li>
+<li>最终得到的query content tensor \(Z_{L_{k}}^{i}\)通过两个MLP解码得到预测轨迹的GMM参数和每组预测的score
+<img alt="pic" class="gallery-image" data-flex-basis="193px" data-flex-grow="80" height="1212" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/1.png" srcset="/post/robotics/e2e/game-former/1_hu_16743779b447a5c5.png 800w, /post/robotics/e2e/game-former/1.png 976w" width="976"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="训练过程">训练过程
+</h1><h2 id="imitation-loss">Imitation Loss
+</h2><ul>
+<li>采用imitation loss作为主要loss来规范agent的行为，以此来学习交通规则和驾驶风格等</li>
+<li>通过negative log-likelihood loss，对比best prediction \(m^{*}\)（和gt最接近的预测结果）和gt来计算imitation loss</li>
+</ul>
+<p>$$L_{IL}=\sum_{t=1}^{T_{f}}{L_{NLL}(\mu_{m^{*}}^{t},\sigma_{m^{*}}^{t},p_{m^{*}},s_{t})}$$</p>
+<p>$$L_{NLL}=log\sigma_{x}+log\sigma_{y}+\frac{1}{2}((\frac{dx}{\sigma_{x}})^{2}+(\frac{dy}{\sigma_{y}})^{2})-log(p_{m^{*}})$$</p>
+<ul>
+<li>其中， \(ds=s_{x}-\mu_{x}\)， \(dy=s_{y}-\mu_{y}\)， \((s_{x},s_{y})\)是gt轨迹点； \(p_{m^{*}}\)是best prediction对应的网络输出概率</li>
+</ul>
+<h2 id="auxiliary-loss">Auxiliary Loss
+</h2><ul>
+<li>充分考虑了每个agent之间的交互</li>
+<li>通过一个interaction loss鼓励每个agent避免和其他agent在 \(k-1\)次迭代中生成的future traj碰撞。
+<ul>
+<li>通过一个斥力场来拉开各个agent轨迹之间的距离
+$$L_{inter}=\sum_{m=1}^{M}{\sum_{t=1}^{T_{f}}{\max\limits_{\forall j\neq i,\forall n \in 1:M}\frac{1}{d(\hat s_{m,t}^{(i,k)},s_{n,t}^{(j,k-1)})+1}}}$$</li>
+<li>其中 \(d(\cdot,\cdot)\)是预测轨迹点的 \(L2\)距离， \(m\)是agent \(i\)的预测轨迹模态， \(n\)是（ \(k-1\)次迭代中）agent \(j\)的预测轨迹模态。</li>
+<li>为了确保安全loss只在近距离被激活，引入一个安全阈值，只有距离小于安全阈值才有loss惩罚</li>
+</ul>
+</li>
+</ul>
+<h2 id="total-loss">Total Loss
+</h2><p>$$L_{i}^{k}(\pi_{i}^{(k)})=w_{1}L_{IL}(\pi_{i}^{(k)})+w_{2}L_{inter}(\pi_{i}^{(k)},\pi_{\neg i}^{(k-1)})$$</p>
+<h1 id="实验">实验
+</h1><h2 id="环境">环境
+</h2><ul>
+<li>数据集
+<ul>
+<li>Waymo open motion dataset(WOMD)</li>
+<li>nuPlan dataset</li>
+</ul>
+</li>
+<li>实验模型
+<ul>
+<li>预测模型
+<ul>
+<li>采用WOMD训练</li>
+<li>每次只评价两个被标记的交互障碍物的未来8s轨迹和真值的差距</li>
+<li>评价指标包括：最小平均位移误差minADE、最小最终位移误差minFDE、未命中率 miss rate、平均精度mAP
+<img alt="pic" class="gallery-image" data-flex-basis="475px" data-flex-grow="197" height="480" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/2.png" srcset="/post/robotics/e2e/game-former/2_hu_78bd015df157b2c7.png 800w, /post/robotics/e2e/game-former/2.png 950w" width="950"></li>
+</ul>
+</li>
+<li>规划模型
+<ul>
+<li>
+<p>采用WOMD和nuPlan训练</p>
+</li>
+<li>
+<p>开环</p>
+<ul>
+<li>planning ADE、collision rate、miss rate、prediction ADE</li>
+</ul>
+</li>
+<li>
+<p>闭环</p>
+<ul>
+<li>成功率（无碰撞且无偏航）、导航完成进度、纵向acc &amp; jerk、横向acc、位置误差</li>
+</ul>
+</li>
+<li>
+<p>迭代层数 \(k=4\)效果最好</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="564px" data-flex-grow="235" height="408" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/3.png" srcset="/post/robotics/e2e/game-former/3_hu_578e70f4aeb47.png 800w, /post/robotics/e2e/game-former/3.png 960w" width="960"></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><img alt="pic" class="gallery-image" data-flex-basis="471px" data-flex-grow="196" height="1004" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/4.png" srcset="/post/robotics/e2e/game-former/4_hu_9b7d9ece8c880b57.png 800w, /post/robotics/e2e/game-former/4_hu_d1179e6cc56f0b53.png 1600w, /post/robotics/e2e/game-former/4.png 1972w" width="1972"></p>
+<ul>
+<li>消融实验
+<ul>
+<li>agent future modeling的作用
+<ul>
+<li>第 \(k-1\)层得到的future trajectory不输入第 \(k\)层的解码过程</li>
+<li>输入上一层的future trajectory，但不进行self-attention操作</li>
+<li>训练过程中不引入interaction loss(Auxiliary Loss)
+<img alt="pic" class="gallery-image" data-flex-basis="913px" data-flex-grow="380" height="250" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/5.png" srcset="/post/robotics/e2e/game-former/5_hu_9dc58030e2d34460.png 800w, /post/robotics/e2e/game-former/5.png 952w" width="952"></li>
+</ul>
+</li>
+<li>解码器结构的作用
+<ul>
+<li>用 \(k\)个共享权重的decoder代替当前设计中 \(k\)个独立的decoder</li>
+<li>用一个multi-layer transformer代替当前设计中 \(k\)个独立的decoder
+<img alt="pic" class="gallery-image" data-flex-basis="1021px" data-flex-grow="425" height="226" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/6.png" srcset="/post/robotics/e2e/game-former/6_hu_536fb7b1cf9650de.png 800w, /post/robotics/e2e/game-former/6.png 962w" width="962"></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="代码解读">代码解读
+</h1><h2 id="文件结构">文件结构
+</h2><ul>
+<li>open_loop_planning
+<ul>
+<li>data_process.py：以帧为单位打包ego, neighbors, lanes, crosswalk, ref_line数据</li>
+<li>open_loop_test.py：开环方式跑测试集统计相关指标</li>
+<li>train.py：规划模型训练</li>
+</ul>
+</li>
+<li>interaction_prediction
+<ul>
+<li>data_process.py：同上</li>
+<li>train.py：预测模型训练</li>
+</ul>
+</li>
+<li>model
+<ul>
+<li>GameFormer.py：GF网络主体结构</li>
+<li>modules.py：子网络的实现</li>
+</ul>
+</li>
+<li>utils
+<ul>
+<li>inter_pred_utils.py：loss定义、metrics定义</li>
+<li>data_utils.py：地图存储、搜错，data normalization</li>
+<li>cubic_spline_planner.py：Spline类定义</li>
+<li>open_loop_test_utils.py：open_loop_test.py中工具函数的实现</li>
+<li>open_loop_test_train.py：open_loop_planning/train.py中工具函数的实现</li>
+</ul>
+</li>
+</ul>
+<h2 id="核心代码">核心代码
+</h2><ul>
+<li>GameFormer.py
+<ul>
+<li>GF网络主体，encoder + decoder
+<img alt="pic" class="gallery-image" data-flex-basis="878px" data-flex-grow="365" height="494" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/7.png" srcset="/post/robotics/e2e/game-former/7_hu_e9bfa481aa08c158.png 800w, /post/robotics/e2e/game-former/7_hu_b5892015e216556.png 1600w, /post/robotics/e2e/game-former/7.png 1808w" width="1808"></li>
+<li>GM.encoder
+<ul>
+<li>
+<p>agent encoding( \(B*N*D\))</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1095px" data-flex-grow="456" height="344" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/8.png" srcset="/post/robotics/e2e/game-former/8_hu_bda253e0fc1546e.png 800w, /post/robotics/e2e/game-former/8.png 1570w" width="1570"></p>
+<ul>
+<li>这里的ego encoder和agent encoder都是AgentEncoder类，concat(LSTM(state), MLP(type))</li>
+</ul>
+</li>
+<li>
+<p>map encoding( \(B*N_{mr}*N_{pts}*D\))</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1146px" data-flex-grow="477" height="226" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/9.png" srcset="/post/robotics/e2e/game-former/9_hu_c0d7ee9ebea03d02.png 800w, /post/robotics/e2e/game-former/9.png 1080w" width="1080"></p>
+<ul>
+<li>LaneEncoder: PE(concat(MLP(pts), MLP(spd_limit), embeding(type)))，PE用的三角函数式绝对位置编码</li>
+<li>CrosswalkEncoder: MLP(pts)</li>
+</ul>
+</li>
+<li>
+<p>fusion encoding( \(N*(N+N_{mr})*D\))</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="699px" data-flex-grow="291" height="600" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/10.png" srcset="/post/robotics/e2e/game-former/10_hu_4f5551da7a65566e.png 800w, /post/robotics/e2e/game-former/10_hu_3730c4b0d9ab247a.png 1600w, /post/robotics/e2e/game-former/10.png 1748w" width="1748"></p>
+<ul>
+<li>segment_map核心是max pooling，将 \(N_{pts}\)维度压缩掉</li>
+<li>fusion_encoder是一个6层的transformer_encoder，计算每个agent和周围其他agent以及地图元素的关系，得到每个agent的周围环境的编码scene_context_encoding（循环 \(N\)次后stack）。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>GM.decoder
+<ul>
+<li>
+<p>level 0 encoding</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1320px" data-flex-grow="550" height="320" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/11.png" srcset="/post/robotics/e2e/game-former/11_hu_d0dd44397899decf.png 800w, /post/robotics/e2e/game-former/11_hu_d19272762084ee2f.png 1600w, /post/robotics/e2e/game-former/11.png 1760w" width="1760"></p>
+<ul>
+<li>
+<p>核心是initial_stage函数</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="559px" data-flex-grow="233" height="710" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/12.png" srcset="/post/robotics/e2e/game-former/12_hu_6421e4d1e7e89c3d.png 800w, /post/robotics/e2e/game-former/12_hu_2f96125fe5b37a01.png 1600w, /post/robotics/e2e/game-former/12.png 1656w" width="1656"></p>
+<ul>
+<li>这里输入的encoding是id对应的agent的周围环境信息 \(\in R^{(N+N_{mr})*D}\)</li>
+<li>multi_modal_query \(\in R^{M*D}\)，模态 \(M\)的值为6</li>
+<li>agent_query \(\in R^{D}\)也是取自一个随机初始化的可学习的embedding</li>
+<li>前面两者相加得到一个多模态的agent query \(\in R^{M*D}\)，再和GM.encoder中对每个agent计算的scene_context_encoding \(\in R^{(N+N_{mr})*D}\)中该agent对应的历史状态维度 \(\in R^{N*None*D}\)相加（在模态维度上新增一个维度），得到最终的query \(\in R^{M*D}\)</li>
+<li>将scene_context_encoding \(\in R^{(N+N_{mr})*D}\)作为key和value，与上面的query在模态维度上进行cross attention，得到query content \(\in R^{M * D}\)，表征该agent的不同预测模态和周围环境的交互编码</li>
+<li>self.predictor即GMMPredictor类，本质上是2个MLP，一个回归GMM参数 \(\in R^{B*M*T*4}\)，一个回归score \(\in R^{B*M}\)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Interaction Decoding</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="814px" data-flex-grow="339" height="438" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/13.png" srcset="/post/robotics/e2e/game-former/13_hu_9ac53e4f0c42b2ae.png 800w, /post/robotics/e2e/game-former/13.png 1486w" width="1486"></p>
+<ul>
+<li>
+<p>核心是interaction_decoder函数（ \(k\)个相互独立的InteractionDecoder），它不断拿上一层计算出来的其他agent的predict和score去更新当前关注的agent的未来轨迹（先猜别人怎么走，再思考自己怎么应对）</p>
+<p><img alt="pic" class="gallery-image" data-flex-basis="1600px" data-flex-grow="667" height="194" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/14.png" srcset="/post/robotics/e2e/game-former/14_hu_8e7b7586f0f69507.png 800w, /post/robotics/e2e/game-former/14.png 1294w" width="1294"></p>
+<ul>
+<li>future encoding是编码其他agent在上一层（ \(k-1\)层）计算的prediction和score， \(\in R^{N*D}\)<img alt="pic" class="gallery-image" data-flex-basis="842px" data-flex-grow="350" height="330" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/15.png" srcset="/post/robotics/e2e/game-former/15_hu_e490d28f6023fe56.png 800w, /post/robotics/e2e/game-former/15.png 1158w" width="1158"></li>
+<li>通过self attention计算上一层的预测之间的关联，并将结果不断concat到对应agent的scene context encoding当中（所以每个agent的scene context encoding包含了最开始的环境中每个障碍物的历史信息，地图信息，以及后面1～ \(k-1\)层的future interaction信息）</li>
+<li>注意，这里有个mask，是为了让每个agent不看自己在前1～ \(k-1\)层的future encoding。
+<img alt="pic" class="gallery-image" data-flex-basis="1509px" data-flex-grow="629" height="186" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/game-former/16.png" srcset="/post/robotics/e2e/game-former/16_hu_78593a9956612805.png 800w, /post/robotics/e2e/game-former/16.png 1170w" width="1170"></li>
+<li>这里把当前关注agent在 \(k-1\)层的query content和该agent的预测轨迹编码相加作为query，该agent的scene context encoding作为key和value，通过multi-head cross-attention Transformer得到该agent在本层的query content</li>
+<li>最后通过一个GMMPredictor回归最新的GMM prediction和scores</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
