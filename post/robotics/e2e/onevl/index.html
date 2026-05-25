@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="来自小米具身智能团队，让自动驾驶AI像老司机一样瞬间感知立刻行动">
+<title>OneVL - 双模态隐式推理框架</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/onevl/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="OneVL - 双模态隐式推理框架">
+<meta property='og:description' content="来自小米具身智能团队，让自动驾驶AI像老司机一样瞬间感知立刻行动">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/onevl/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='论文阅读' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='隐式推理' /><meta property='article:tag' content='VLA' /><meta property='article:tag' content='Chain-of-Thought' /><meta property='article:published_time' content='2026-04-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-04-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="OneVL - 双模态隐式推理框架">
+<meta name="twitter:description" content="来自小米具身智能团队，让自动驾驶AI像老司机一样瞬间感知立刻行动">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#摘要先把故事讲清楚">摘要：先把故事讲清楚</a></li>
+    <li><a href="#第一章引言三个核心矛盾">第一章：引言——三个核心矛盾</a>
+      <ul>
+        <li><a href="#-cot推理为什么这么香">🚗 CoT推理为什么这么香？</a></li>
+        <li><a href="#-但它太慢了">⏱️ 但它太慢了！</a></li>
+        <li><a href="#-前人的尝试隐式cot但踩坑了">💡 前人的尝试：隐式CoT，但踩坑了</a></li>
+        <li><a href="#-为什么隐式cot会失败">🔍 为什么隐式CoT会失败？</a></li>
+        <li><a href="#-onevl双模态隐式推理">✨ OneVL：双模态隐式推理</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二章相关工作站在巨人的肩膀上">第二章：相关工作——站在巨人的肩膀上</a>
+      <ul>
+        <li><a href="#21-隐式与隐式链式推理">2.1 隐式与隐式链式推理</a></li>
+        <li><a href="#22-vlm与vla在自动驾驶中的应用">2.2 VLM与VLA在自动驾驶中的应用</a></li>
+        <li><a href="#23-世界模型在自动驾驶中的角色">2.3 世界模型在自动驾驶中的角色</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三章模型架构三合一的精妙设计">第三章：模型架构——&ldquo;三合一&quot;的精妙设计</a>
+      <ul>
+        <li><a href="#31-主干视觉语言模型">3.1 主干：视觉语言模型</a></li>
+        <li><a href="#32-隐向量设计两种特殊占位符">3.2 隐向量设计——两种&quot;特殊占位符&rdquo;</a></li>
+        <li><a href="#33-语言辅助解码器">3.3 语言辅助解码器</a></li>
+        <li><a href="#34-视觉辅助解码器世界模型之心">3.4 视觉辅助解码器——世界模型之心</a></li>
+        <li><a href="#35-联合训练目标">3.5 联合训练目标</a></li>
+        <li><a href="#36-预填充推理速度魔法">3.6 预填充推理——速度魔法</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四章三阶段训练流程循序渐进才能不崩溃">第四章：三阶段训练流程——&ldquo;循序渐进&quot;才能不崩溃</a>
+      <ul>
+        <li><a href="#预备阶段视觉解码器自监督预训练">预备阶段：视觉解码器自监督预训练</a></li>
+        <li><a href="#stage-0主模型热身">Stage 0：主模型热身</a></li>
+        <li><a href="#stage-1辅助解码器热身">Stage 1：辅助解码器热身</a></li>
+        <li><a href="#stage-2端到端联合微调">Stage 2：端到端联合微调</a></li>
+      </ul>
+    </li>
+    <li><a href="#第五章实验用数字说话">第五章：实验——用数字说话</a>
+      <ul>
+        <li><a href="#51-四个测试基准">5.1 四个测试基准</a></li>
+        <li><a href="#52-实验配置">5.2 实验配置</a></li>
+        <li><a href="#53-主要结果onevl全面碾压">5.3 主要结果：OneVL全面碾压</a></li>
+        <li><a href="#54-解释质量评估">5.4 解释质量评估</a></li>
+        <li><a href="#55-消融实验每个组件都有贡献">5.5 消融实验：每个组件都有贡献</a></li>
+        <li><a href="#56-迈向真实部署">5.6 迈向真实部署</a></li>
+        <li><a href="#57-深度分析收益从哪里来">5.7 深度分析：收益从哪里来？</a></li>
+      </ul>
+    </li>
+    <li><a href="#第六章结论与展望">第六章：结论与展望</a>
+      <ul>
+        <li><a href="#核心洞见">核心洞见</a></li>
+        <li><a href="#局限性">局限性</a></li>
+        <li><a href="#未来方向">未来方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录一瞥">附录一瞥</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/onevl/">OneVL - 双模态隐式推理框架</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-04-01T00:00:00Z'>Wednesday, April 1, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        3 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#摘要先把故事讲清楚">摘要：先把故事讲清楚</a></li>
+    <li><a href="#第一章引言三个核心矛盾">第一章：引言——三个核心矛盾</a>
+      <ul>
+        <li><a href="#-cot推理为什么这么香">🚗 CoT推理为什么这么香？</a></li>
+        <li><a href="#-但它太慢了">⏱️ 但它太慢了！</a></li>
+        <li><a href="#-前人的尝试隐式cot但踩坑了">💡 前人的尝试：隐式CoT，但踩坑了</a></li>
+        <li><a href="#-为什么隐式cot会失败">🔍 为什么隐式CoT会失败？</a></li>
+        <li><a href="#-onevl双模态隐式推理">✨ OneVL：双模态隐式推理</a></li>
+      </ul>
+    </li>
+    <li><a href="#第二章相关工作站在巨人的肩膀上">第二章：相关工作——站在巨人的肩膀上</a>
+      <ul>
+        <li><a href="#21-隐式与隐式链式推理">2.1 隐式与隐式链式推理</a></li>
+        <li><a href="#22-vlm与vla在自动驾驶中的应用">2.2 VLM与VLA在自动驾驶中的应用</a></li>
+        <li><a href="#23-世界模型在自动驾驶中的角色">2.3 世界模型在自动驾驶中的角色</a></li>
+      </ul>
+    </li>
+    <li><a href="#第三章模型架构三合一的精妙设计">第三章：模型架构——&ldquo;三合一&quot;的精妙设计</a>
+      <ul>
+        <li><a href="#31-主干视觉语言模型">3.1 主干：视觉语言模型</a></li>
+        <li><a href="#32-隐向量设计两种特殊占位符">3.2 隐向量设计——两种&quot;特殊占位符&rdquo;</a></li>
+        <li><a href="#33-语言辅助解码器">3.3 语言辅助解码器</a></li>
+        <li><a href="#34-视觉辅助解码器世界模型之心">3.4 视觉辅助解码器——世界模型之心</a></li>
+        <li><a href="#35-联合训练目标">3.5 联合训练目标</a></li>
+        <li><a href="#36-预填充推理速度魔法">3.6 预填充推理——速度魔法</a></li>
+      </ul>
+    </li>
+    <li><a href="#第四章三阶段训练流程循序渐进才能不崩溃">第四章：三阶段训练流程——&ldquo;循序渐进&quot;才能不崩溃</a>
+      <ul>
+        <li><a href="#预备阶段视觉解码器自监督预训练">预备阶段：视觉解码器自监督预训练</a></li>
+        <li><a href="#stage-0主模型热身">Stage 0：主模型热身</a></li>
+        <li><a href="#stage-1辅助解码器热身">Stage 1：辅助解码器热身</a></li>
+        <li><a href="#stage-2端到端联合微调">Stage 2：端到端联合微调</a></li>
+      </ul>
+    </li>
+    <li><a href="#第五章实验用数字说话">第五章：实验——用数字说话</a>
+      <ul>
+        <li><a href="#51-四个测试基准">5.1 四个测试基准</a></li>
+        <li><a href="#52-实验配置">5.2 实验配置</a></li>
+        <li><a href="#53-主要结果onevl全面碾压">5.3 主要结果：OneVL全面碾压</a></li>
+        <li><a href="#54-解释质量评估">5.4 解释质量评估</a></li>
+        <li><a href="#55-消融实验每个组件都有贡献">5.5 消融实验：每个组件都有贡献</a></li>
+        <li><a href="#56-迈向真实部署">5.6 迈向真实部署</a></li>
+        <li><a href="#57-深度分析收益从哪里来">5.7 深度分析：收益从哪里来？</a></li>
+      </ul>
+    </li>
+    <li><a href="#第六章结论与展望">第六章：结论与展望</a>
+      <ul>
+        <li><a href="#核心洞见">核心洞见</a></li>
+        <li><a href="#局限性">局限性</a></li>
+        <li><a href="#未来方向">未来方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录一瞥">附录一瞥</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p>来自小米具身智能团队，发表于 arXiv 2604.18486</p>
+
+    </blockquote>
+<hr>
+<h2 id="摘要先把故事讲清楚">摘要：先把故事讲清楚
+</h2><p>想象你是一位经验丰富的老司机。遇到复杂路口时，你的大脑并不会真的在脑海里&quot;逐字逐句&quot;地默念&quot;前方有红灯→行人正在过马路→我应该刹车&quot;——你只是<strong>瞬间感知+立刻行动</strong>。然而，当前的自动驾驶AI在做决策时，往往要先把这段&quot;内心独白&quot;一字一字地写出来（也就是所谓的<strong>链式推理 Chain-of-Thought，CoT</strong>），这既慢又冗余。</p>
+<p>OneVL 的目标，就是让AI也能像老司机那样：<strong>思考在心里，行动在当下</strong>——而且思考质量不降反升。</p>
+<hr>
+<h2 id="第一章引言三个核心矛盾">第一章：引言——三个核心矛盾
+</h2><h3 id="-cot推理为什么这么香">🚗 CoT推理为什么这么香？
+</h3><p>近年来，视觉语言动作模型（VLA）已成为自动驾驶的核心基础设施。其中，<strong>链式推理（CoT）</strong> 是个大功臣：让模型在预测轨迹之前，先用自然语言描述场景、分析意图、推断行为——有了这个&quot;思考过程&quot;，规划误差显著降低。</p>
+<h3 id="-但它太慢了">⏱️ 但它太慢了！
+</h3><p>这里有个致命缺陷：传统CoT必须<strong>一个词一个词地生成</strong>推理链，再输出轨迹。推理链越长，等待时间越久。对于需要实时响应的自动驾驶系统，这个延迟完全不可接受。</p>
+<h3 id="-前人的尝试隐式cot但踩坑了">💡 前人的尝试：隐式CoT，但踩坑了
+</h3><p>有人想到&quot;压缩&quot;这条路：把冗长的推理链压缩成几个<strong>隐向量（latent tokens）</strong>，推理在&quot;向量空间里&quot;偷偷发生，不用明着写出来——这叫<strong>隐式CoT</strong>。代表方法有 COCONUT、CODI、SIM-CoT。</p>
+<p>但实验结果很尴尬：<strong>这些方法在自动驾驶上全军覆没</strong>，甚至比连推理都不做的&quot;直接答题&quot;还差。</p>
+<h3 id="-为什么隐式cot会失败">🔍 为什么隐式CoT会失败？
+</h3><p>论文给出了一个深刻的诊断：这些方法压缩的是<strong>语言描述</strong>，而语言本身已经是对物理世界的<strong>一层抽象</strong>——它只编码了语义标签，而不是&quot;车会往哪儿走、路会怎么变&quot;这类<strong>因果动力学</strong>。</p>
+<p>换句话说，把抽象再压缩一次，离真实世界就更远了。</p>
+<h3 id="-onevl双模态隐式推理">✨ OneVL：双模态隐式推理
+</h3><p>本文提出 <strong>OneVL</strong>（One-step latent reasoning and planning with Vision-Language explanations），有两大创新：</p>
+<ol>
+<li><strong>双辅助解码器</strong>：一个&quot;语言解码器&quot;负责从隐向量重建人类可读的CoT推理文本；一个&quot;视觉解码器&quot;（世界模型角色）负责预测未来帧——强迫隐向量真正学到场景的物理因果结构。</li>
+<li><strong>预填充推理机制</strong>：推理时，辅助解码器全部丢弃，隐向量作为固定前缀一次性并行输入，速度与&quot;不推理直接答题&quot;几乎相同。</li>
+</ol>
+<p><strong>结果：OneVL 是第一个在隐式CoT里超越显式CoT的方法。</strong></p>
+<hr>
+<h2 id="第二章相关工作站在巨人的肩膀上">第二章：相关工作——站在巨人的肩膀上
+</h2><h3 id="21-隐式与隐式链式推理">2.1 隐式与隐式链式推理
+</h3><p>从 COCONUT 到 CODI，再到 SIM-CoT，这些方法都在同一条路上探索：用更紧凑的表示替代冗长的推理 token。但它们都是为<strong>纯文本任务</strong>设计的，遇到自动驾驶这种高度视觉化、空间化的任务就&quot;水土不服&quot;。</p>
+<h3 id="22-vlm与vla在自动驾驶中的应用">2.2 VLM与VLA在自动驾驶中的应用
+</h3><p>这一领域近年来异常活跃。从 AdaThinkDrive（自适应CoT）、LaST-VLA（大型VLA）到 Alpamayo-R1（用推理链对抗长尾场景），都在证明&quot;让模型先想再开&quot;是有效的——代价就是慢。</p>
+<h3 id="23-世界模型在自动驾驶中的角色">2.3 世界模型在自动驾驶中的角色
+</h3><p>世界模型的核心思想来自强化学习：让AI能预测&quot;我这样做之后，世界会变成什么样&quot;。GAIA-1、Cosmos、DriveVLA-W0 等工作分别在<strong>数据生成</strong>、<strong>闭环评估</strong>、<strong>表示学习</strong>三个维度上利用世界模型。</p>
+<p>OneVL 的独特之处在于：把世界模型当作一个<strong>训练时的辅助监督信号</strong>，而不是独立的大系统——训练完就丢，推理时零开销。</p>
+<hr>
+<h2 id="第三章模型架构三合一的精妙设计">第三章：模型架构——&ldquo;三合一&quot;的精妙设计
+</h2><h3 id="31-主干视觉语言模型">3.1 主干：视觉语言模型
+</h3><p>OneVL 的主干是 <strong>Qwen3-VL-4B-Instruct</strong>，一个视觉编码器（ViT）+ 视觉投影层（MLP）+ 大语言模型（LLM）的标准三件套。输入是前视摄像头图像 + 结构化文本（ego状态、历史轨迹、行驶指令）。</p>
+<h3 id="32-隐向量设计两种特殊占位符">3.2 隐向量设计——两种&quot;特殊占位符&rdquo;
+</h3><p>这是整个框架最有趣的部分。OneVL 在助手回复里插入两类特殊 token：</p>
+<ul>
+<li><strong>视觉隐向量（Zv）</strong>：4个视觉潜在token，负责编码空间-时间视觉推理（&ldquo;未来场景长什么样&rdquo;）。在实现中用35个词表token表示。</li>
+<li><strong>语言隐向量（Zl）</strong>：2个语言潜在token，负责编码语义推理（&ldquo;我应该怎么想这件事&rdquo;）。用20个词表token表示。</li>
+</ul>
+<p>💡 有个有趣的工程细节：直接往词表里加新special token会掉点，所以他们用原有词表的token来表示隐向量——模型在训练中自然学会赋予这些位置特殊含义。</p>
+<h4 id="理论与工程的精妙博弈">理论与工程的精妙博弈
+</h4><p><strong>理论上的 $C_t = 2$</strong> 探讨的是隐式推理通道的<strong>逻辑概念深度</strong>。为了强迫模型不偷懒、不进行无用的信息死记硬背，信息论里的 <strong>信息瓶颈（Information Bottleneck）</strong> 要求这个通道必须窄到极致。在理论推导中，作者认为：</p>
+<ul>
+<li><strong>2 个逻辑单位（Logical Tokens）</strong> 的语义表达能力，就已经足够在高度抽象的隐藏空间里编码一个驾驶意图（比如&quot;减速让行&quot;）</li>
+<li><strong>4 个逻辑单位</strong> 就可以在物理维度上编码 $+0.5$ 秒和 $+1.0$ 秒的未来路况预测</li>
+</ul>
+<p><strong>工程上的 20 / 35 个 Token</strong> 解决的是：如何在保护大模型预训练能力、对抗词表语义干扰的前提下，为这 2 个逻辑深度提供充足的物理表征带宽。</p>
+<p>为什么不直接添加新的特殊Token？向已经预训练好的多模态大模型（如 Qwen3-VL）中添加全新的特殊 Token，会导致明显的<strong>性能退化</strong>：</p>
+<ol>
+<li><strong>冷启动难题</strong>：新加入的特殊 Token，其 Embedding 权重完全是随机初始化的，没有任何预训练的知识</li>
+<li><strong>破坏预训练对齐</strong>：大模型的 Attention 机制非常敏感，在中途强行插入没有任何语义的全新 Token，会干扰预训练模型原本极其丝滑的上下文注意力分配</li>
+</ol>
+<p>解决方案：<strong>完全不新增特殊 Token，直接复用大模型原始词表中已有的 Token</strong>。这样大模型对这些 Token 的 Embedding 已经有了极好的预训练初始化。</p>
+<p>那为什么要用 20 个（和 35 个）词表 Token？如果只用 2 个已有的词来充当隐式推理的瓶颈，会产生两个致命缺陷：</p>
+<ol>
+<li><strong>原语义的干扰（Semantic Bias）</strong>：当只有 1 到 2 个 Token 时，自注意力机制会极难克服它们原本固有的字面含义</li>
+<li><strong>表征容量的瓶颈</strong>：大模型（如 4B 大小）的一个隐藏层向量维度 $d$ 通常在 $3072$ 左右，仅靠 2 个 Token 提供的隐藏状态空间，信息容量极易发生溢出和丢失</li>
+</ol>
+<p>增加到 20 个 Token 的妙处在于：</p>
+<ul>
+<li><strong>稀释原始语义</strong>：当 20 个已有的词组合成一个固定的长序列时，它在自注意力机制中会形成一个相对独立的&quot;语义盲区&quot;，有利于模型更容易地将其&quot;重编程&quot;为一个纯粹存放隐式推理的物理隐空间</li>
+<li><strong>极佳的信息瓶颈</strong>：20 个语言 Token（加上 35 个视觉 Token）既给两个辅助解码器提供了足够宽、足够稳的输入维度来重建出复杂的思维链和未来路况图像，同时相比于直接自回归吐出几百个文字，它依然保持了极窄、极度压缩的特征瓶颈</li>
+</ul>
+<h3 id="33-语言辅助解码器">3.3 语言辅助解码器
+</h3><p>从语言隐向量的隐藏状态 Hl 出发，结合当前帧的视觉 patch 嵌入 V，拼接后输入一个独立的语言模型解码器，让它<strong>重建出完整的CoT推理文本</strong>。</p>
+<p>训练目标就是标准的交叉熵：预测的CoT要和标注的CoT尽量一致。这个损失（Ll）会反向传播到主模型，逼着隐向量&quot;记住&quot;语义推理内容。</p>
+<h3 id="34-视觉辅助解码器世界模型之心">3.4 视觉辅助解码器——世界模型之心
+</h3><p>这是整篇论文最关键的创新。视觉解码器拿到视觉隐向量隐藏状态 Hv 和当前帧视觉嵌入，输出的目标是：<strong>预测未来 +0.5s 和 +1.0s 的视觉token序列</strong>。</p>
+<p>图像先通过 IBQ 视觉分词器（来自 Emu3.5，codebook 有 131,072 个离散视觉码）离散化；Qwen3 的词表也对应扩充了 131,072 个视觉token ID。</p>
+<p>这一步的逻辑非常优雅：要预测&quot;0.5秒后道路长什么样&quot;，模型就<strong>必须学会车辆运动规律、道路几何结构、障碍物动态</strong>——这正是轨迹预测所需要的因果动力学，而不是模糊的语言标签。</p>
+<h3 id="35-联合训练目标">3.5 联合训练目标
+</h3><p>$$\mathcal{L} = \mathcal{L}_c + \lambda_l \mathcal{L}_l + \lambda_v \mathcal{L}_v$$</p>
+<p>其中：</p>
+<ul>
+<li>Lc：主模型的轨迹预测交叉熵损失</li>
+<li>Ll：语言解码器损失，权重 λl = 1.0</li>
+<li>Lv：视觉解码器损失，权重 λv = 0.1（视觉重建更难，权重调小防止它&quot;喧宾夺主&quot;）</li>
+</ul>
+<h3 id="36-预填充推理速度魔法">3.6 预填充推理——速度魔法
+</h3><p>推理时，辅助解码器全部抛弃。推理 prompt 构建为：</p>
+<pre tabindex="0"><code>[System] + [User query] + &lt;start-latent-vis&gt; + Zv × 4 + &lt;end-latent-vis&gt;
+         + &lt;start-latent&gt; + Zl × 2 + &lt;end-latent&gt;
+</code></pre><p>这些隐向量 token 全部放入<strong>预填充阶段（prefill phase）</strong>，现代 Transformer 会把整个前缀一次性并行处理——几乎零额外开销。之后只需自回归地生成轨迹 token。</p>
+<p>推理结果可选输出三种东西：</p>
+<ol>
+<li><strong>轨迹预测</strong>（必须输出）</li>
+<li><strong>语言解释</strong>（可选，供事后人工审查）</li>
+<li><strong>视觉预测帧</strong>（可选，空间预览）</li>
+</ol>
+<h4 id="为什么变成输入后可以并行计算">为什么变成&quot;输入&quot;后可以并行计算？
+</h4><p><strong>Transformer 底层最核心的物理机制</strong>——&ldquo;读（预填充 Prefill）&ldquo;与&quot;写（解码 Decoding）&ldquo;的本质区别。</p>
+<p>可以把 GPU 想象成一个**&ldquo;阅读速度极快、但写字速度极慢的超级打字员&rdquo;**。</p>
+<p><strong>当隐式Token是&quot;输出&quot;时（自回归）</strong>：</p>
+<ul>
+<li>因果关系限制：模型在写第 2 个字时，必须知道第 1 个字写了什么</li>
+<li>串行计算：GPU 哪怕算力再强，也无法&quot;预知未来&rdquo;，必须<strong>老老实实地运行 55 次完整的前向传播</strong></li>
+<li>带宽瓶颈：每次只写一个字，GPU 都需要把大模型几十 GB 的权重从显存里完整读取一遍</li>
+</ul>
+<p><strong>当隐式Token变成&quot;输入&quot;后（预填充）</strong>：</p>
+<ul>
+<li>信息完全已知：GPU 在启动前，已经拿到了全部的输入</li>
+<li>矩阵乘法的并行神话：Transformer 的自注意力机制可以<strong>一次性并行计算出所有 Token 之间的 Query、Key、Value 矩阵</strong></li>
+<li>一次读取，全部算完：GPU 只需要将大模型权重从显存里<strong>读取一次</strong>，就能把这 55 个 Token 对应的 Hidden State 在 1 个 Step 内全部并行计算出来</li>
+</ul>
+<h4 id="训练建立的真正是什么能力">训练建立的真正是什么能力？
+</h4><p>训练建立的并不是&quot;生成这些token&quot;的能力，而是**&ldquo;利用这些位置做推理&quot;的习惯**。</p>
+<p>在大模型的底层数学世界里，&ldquo;自己吐出来的 Token&quot;和&quot;外部塞进去的 Token&quot;是<strong>完全等价的</strong>。对于任何一个 Token 位置，它的计算只取决于三样东西：</p>
+<ol>
+<li>这个 Token 的 ID 是什么（查 Embedding 词表得到初始向量）</li>
+<li>它的位置编号是多少（加上位置编码）</li>
+<li>它的左边都有哪些 Token（通过注意力机制计算相关性）</li>
+</ol>
+<p>训练时模型一步步&quot;写&quot;出占位符；推理时占位符是外部一次性塞给它的输入——但当 GPU 计算到这些位置时，<strong>它所经历的数学矩阵乘法、注意力掩码、以及位置编码，与训练时完全一模一样</strong>。</p>
+<p>大模型学到的真正能力是**&ldquo;注意力路由机制（Attention Routing）&rdquo;**：</p>
+<ol>
+<li><strong>&ldquo;吸星大法&rdquo;</strong>：当计算运行到这 55 个占位符的位置时，模型各层的 Attention 会把左侧&quot;图像中行人的位置、前车的加速度、马路的边界&quot;等关键特征，全部抽取并<strong>压缩存储</strong>在这 55 个 Token 对应的隐藏状态里</li>
+<li><strong>&ldquo;定向读取&rdquo;</strong>：当计算运行到最后的 <code>&lt;answer&gt;</code> 轨迹预测位置时，注意力网络会直接去那 55 个中转站提取高度浓缩的&rsquo;思想'</li>
+</ol>
+<hr>
+<h2 id="第四章三阶段训练流程循序渐进才能不崩溃">第四章：三阶段训练流程——&ldquo;循序渐进&quot;才能不崩溃
+</h2><h3 id="预备阶段视觉解码器自监督预训练">预备阶段：视觉解码器自监督预训练
+</h3><p>在把视觉解码器接到主模型之前，先让它&quot;独自练习&rdquo;：只给当前帧，让它预测下两帧——不涉及任何隐向量。这相当于先让它学会&quot;世界的一般运动规律&rdquo;，再教它&quot;按照驾驶意图来预测未来&rdquo;。</p>
+<h3 id="stage-0主模型热身">Stage 0：主模型热身
+</h3><p>把主模型+隐向量接在一起，只训练轨迹预测任务（没有辅助解码器）。目的是让隐向量位置自然地发展出对轨迹有用的内部表示，同时让注意力机制建立起&quot;轨迹token→隐向量&quot;的信息路由路径。</p>
+<p><strong>Stage 0 的隐式压力来源</strong></p>
+<p>Stage 0 唯一的压力来自因果注意力机制的结构：</p>
+<pre tabindex="0"><code>输入tokens → 视觉隐向量位置 → 语言隐向量位置 → 轨迹tokens
+                ↑                    ↑
+         轨迹tokens可以attend到这些位置
+</code></pre><p>如果模型发现&quot;把一些中间计算结果存到隐向量位置，再从那里读取&quot;比&quot;直接从几千个图像 token 里检索&quot;更高效，梯度下降就会朝这个方向推。</p>
+<p>但问题是：<strong>模型完全可以绕过隐向量位置</strong>，直接让轨迹 token attend 图像 token，隐向量位置形同虚设。没有任何硬约束阻止这件事。</p>
+<p>Stage 0 的真正作用是<strong>建立路径</strong>，不是充分利用路径。隐向量位置在 Stage 0 结束时，可能只编码了一些模糊的、局部的信息，远不是有意义的推理表示。但它为 Stage 1 的强监督创造了一个稳定的起点。</p>
+<h3 id="stage-1辅助解码器热身">Stage 1：辅助解码器热身
+</h3><p><strong>冻结主模型</strong>，只训练两个辅助解码器。此时主模型输出的隐向量表示已经稳定，解码器可以专心学习&quot;从固定的隐向量表示→语言/视觉输出&quot;的映射。</p>
+<p><strong>为什么 Stage 1 不会崩溃？</strong></p>
+<p>有两个安全网：</p>
+<ol>
+<li><strong>视觉解码器有预训练兜底</strong>：即使 Hv 是弱信号，视觉解码器可以主要依赖 V（当前帧特征），把 Hv 的贡献压到接近零</li>
+<li><strong>两个解码器都能看到当前帧特征 V</strong>：解码器的输入是拼接的，V 是明确的、高质量的视觉信息</li>
+</ol>
+<p>Stage 1 的真正作用是：</p>
+<ul>
+<li>学习解码器的基本结构</li>
+<li>给 Stage 2 提供初始化（解码器不是从随机开始）</li>
+<li>稳定梯度来源</li>
+</ul>
+<h3 id="stage-2端到端联合微调">Stage 2：端到端联合微调
+</h3><p>三者同时训练，Ll 和 Lv 的梯度反流回主模型，形成良性循环：</p>
+<ul>
+<li>更好的隐向量 → 更准的轨迹预测</li>
+<li>解码器反馈 → 隐向量编码更丰富的信息</li>
+</ul>
+<p>正因为 Stage 0 和 Stage 1 把所有组件都&quot;预热&quot;好了，Stage 2 才能稳定收敛。<strong>跳过三阶段训练的后果是灾难性的</strong>。</p>
+<hr>
+<h2 id="第五章实验用数字说话">第五章：实验——用数字说话
+</h2><h3 id="51-四个测试基准">5.1 四个测试基准
+</h3><ul>
+<li><strong>NAVSIM</strong>：基于真实驾驶日志的大规模非反应式仿真规划基准，评价指标是 PDM-score（越高越好，综合安全/舒适/进度）。</li>
+<li><strong>ROADWork</strong>：专攻施工路段，有锥桶、临时标志、工人——所有让常规模型头大的场景，评价指标是 ADE/FDE（越低越好）。</li>
+<li><strong>Impromptu</strong>：从8个开放驾驶数据集蒸馏而来，专注四类非结构化边角场景，带规划导向Q&amp;A标注。</li>
+<li><strong>APR1</strong>：引入&quot;因果链&quot;注释，对应复杂驾驶行为，强调可解释性和泛化性。</li>
+</ul>
+<h3 id="52-实验配置">5.2 实验配置
+</h3><p>所有方法都基于 Qwen3-VL-4B-Instruct，公平对比。对手包括：</p>
+<ul>
+<li><strong>AR Answer</strong>：直接输出轨迹，不推理，最快的基线</li>
+<li><strong>AR CoT+Answer</strong>：先生成完整推理链再输出，最慢但最准的显式CoT</li>
+<li><strong>COCONUT/CODI/SIM-CoT</strong>：三种隐式CoT对手</li>
+<li><strong>AdaThinkDrive（8B）、LaST-VLA（8B）</strong>：文献最优方法</li>
+</ul>
+<h3 id="53-主要结果onevl全面碾压">5.3 主要结果：OneVL全面碾压
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>基准</th>
+          <th>最优对手</th>
+          <th>OneVL</th>
+          <th>提升</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>NAVSIM PDM↑</td>
+          <td>88.29（AR CoT）</td>
+          <td><strong>88.84</strong></td>
+          <td>+0.55 vs CoT</td>
+      </tr>
+      <tr>
+          <td>ROADWork ADE↓</td>
+          <td>13.18（AR CoT）</td>
+          <td><strong>12.49</strong></td>
+          <td>-0.69</td>
+      </tr>
+      <tr>
+          <td>Impromptu ADE↓</td>
+          <td>1.42（AR CoT）</td>
+          <td><strong>1.34</strong></td>
+          <td>-0.08</td>
+      </tr>
+      <tr>
+          <td>APR1 ADE↓</td>
+          <td>2.99（AR CoT）</td>
+          <td><strong>2.62</strong></td>
+          <td>-0.37</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>延迟方面：OneVL 在 NAVSIM 上达到 <strong>4.46s</strong>，与 AR Answer（4.49s）几乎相同，比 AR CoT（6.58s）快 <strong>1.5倍</strong>；在 ROADWork 上甚至比 AR Answer 还要快（4.71s vs 4.74s）。</p>
+<p><strong>最重要的发现</strong>：三种隐式CoT对手（COCONUT、CODI、SIM-CoT）在几乎所有基准上都<strong>不如&quot;直接答题&rdquo;</strong>，充分证明纯语言隐式CoT用于驾驶是失败的。</p>
+<h3 id="54-解释质量评估">5.4 解释质量评估
+</h3><p>OneVL 不只是快，还要能讲清楚&quot;为什么这么开&rdquo;。在 NAVSIM 500个测试样本上，用三种维度评估语言解释：</p>
+<ul>
+<li><strong>元动作准确率</strong>（高层驾驶决策的精确匹配）：OneVL 71.0，优于 SIM-CoT 的 67.2</li>
+<li><strong>语义相似度（STS）</strong>：OneVL 78.26，接近 AR CoT 的 79.75</li>
+<li><strong>LLM-as-Judge 评分</strong>：OneVL 79.13，接近 AR CoT 的 81.86</li>
+</ul>
+<p>AR CoT 的语言解释质量仍略胜一筹（毕竟它是直接生成文本的），但 OneVL 以&quot;压缩隐向量还原文本&quot;的方式已经非常接近——而速度快得多。</p>
+<h3 id="55-消融实验每个组件都有贡献">5.5 消融实验：每个组件都有贡献
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型变体</th>
+          <th>NAVSIM PDM ↑</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>去掉视觉解码器</td>
+          <td>87.97（-0.87）</td>
+      </tr>
+      <tr>
+          <td>去掉语言解码器</td>
+          <td>88.53（-0.31）</td>
+      </tr>
+      <tr>
+          <td>去掉三阶段训练</td>
+          <td><strong>67.13（-21.71！）</strong></td>
+      </tr>
+      <tr>
+          <td><strong>完整 OneVL</strong></td>
+          <td><strong>88.84</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>几个关键发现：</p>
+<p>🔥 <strong>去掉三阶段训练 → 直接崩溃</strong>。初始梯度范数爆炸到 <strong>378.22</strong>（正常版本是 0.28），轨迹预测损失高出 37%，最终 PDM 直接掉 21.71 分。这说明三阶段课程不是锦上添花，而是不可或缺的&quot;稳定器&quot;。</p>
+<p>🔥 <strong>视觉解码器的贡献（+0.87）远大于语言解码器（+0.31）</strong>。因为轨迹预测本质上是空间预测任务，视觉未来帧预测是比语义描述更直接的因果监督信号。</p>
+<p>可视化对比也很直观：用完整训练方案时，视觉解码器输出的未来帧与真实场景高度一致；去掉三阶段训练后，解码器退化成&quot;背答案&quot;，输出与输入图像毫无关联的乱码图像。</p>
+<h3 id="56-迈向真实部署">5.6 迈向真实部署
+</h3><p>对于需要极低延迟的车载系统，论文还探索了一个&quot;轻量化&quot;变体：在最后一个隐向量的隐藏状态上接一个<strong>MLP直接回归头</strong>，一次前向传播输出轨迹（不再自回归）。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>变体</th>
+          <th>PDM ↑</th>
+          <th>延迟 ↓</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>OneVL（AR解码）</td>
+          <td>88.84</td>
+          <td>4.46s</td>
+      </tr>
+      <tr>
+          <td>OneVL（MLP头）</td>
+          <td>86.83</td>
+          <td><strong>0.24s（4.16 Hz）</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>0.24s 的延迟相当于 AR 模型延迟的 <strong>5.4%</strong>，满足车载&quot;几赫兹&quot;的预算，同时性能仍然优于之前的 SOTA 方法（如 LaST-VLA 的 87.30）。</p>
+<h3 id="57-深度分析收益从哪里来">5.7 深度分析：收益从哪里来？
+</h3><p><strong>为什么压缩反而更准？</strong> 论文给出信息瓶颈理论的视角：紧凑的隐向量强制模型只保留对轨迹预测真正有用的因果特征，过滤掉冗余的&quot;正确废话&quot;。而显式CoT链里可能充斥着与轨迹决策无关的描述，反而引入噪声。</p>
+<p><strong>为什么先前的隐式CoT在自动驾驶上失败？</strong> 两个根本原因：</p>
+<ol>
+<li>缺少视觉世界模型监督——纯语言隐向量编码的是&quot;世界的语义抽象&quot;，而不是&quot;世界的物理规律&quot;</li>
+<li>没有分阶段训练——优化从一开始就处于混乱状态，各组件无法协同</li>
+</ol>
+<hr>
+<h2 id="第六章结论与展望">第六章：结论与展望
+</h2><h3 id="核心洞见">核心洞见
+</h3><p>OneVL 的核心命题是：<strong>压缩驱动泛化（compression drives generalization）</strong>。但压缩什么很关键——压缩语言描述（已经是抽象）只满足了&quot;效率要求&quot;，没满足&quot;智能要求&quot;。必须压缩<strong>真实世界的因果动力学</strong>，才是真正有意义的压缩。</p>
+<p>视觉世界模型解码器提供了这个&quot;因果锚点&quot;：要预测出未来场景图像，模型就必须真正理解场景运动的物理规律。</p>
+<h3 id="局限性">局限性
+</h3><ul>
+<li>训练时需要同时保持三个4B参数模型在内存中，约为<strong>3倍训练显存</strong>，即使有 DeepSpeed ZeRO-2 也不轻松</li>
+<li>隐向量数量是经验性选择，如何系统性地权衡&quot;隐向量数量 vs 表示容量&quot;有待深入研究</li>
+</ul>
+<h3 id="未来方向">未来方向
+</h3><ol>
+<li><strong>轨迹token并行解码</strong>：目前预填充阶段已经很快，瓶颈在于轨迹token仍需自回归——并行解码轨迹是下一步</li>
+<li><strong>多摄像头世界模型</strong>：扩展到360°全景未来帧预测，提供更全面的因果场景理解</li>
+<li><strong>人机交互界面</strong>：实时向驾驶员展示&quot;视觉+语言双解释&quot;——车为什么这样走，AI来给你说清楚，同时也能为强化学习提供更丰富的训练信号</li>
+</ol>
+<hr>
+<h2 id="附录一瞥">附录一瞥
+</h2><ul>
+<li><strong>数据格式示例</strong>：详细展示了CoT标注的格式，包括对场景感知、关键物体、驾驶意图的结构化描述</li>
+<li><strong>CoT标注构建</strong>：NAVSIM 使用 AdaThinkDrive 的公开标注；ROADWork 内部生成；Impromptu 基于Q&amp;A对重建；APR1 使用&quot;因果链&quot;标注</li>
+<li><strong>定性可视化</strong>：四个数据集各有详细的案例展示，包括未来预测帧和推理文本，充分展示了 OneVL 的可解释性</li>
+</ul>
+<hr>
+<p><strong>一句话总结</strong>：OneVL 找到了自动驾驶AI&quot;既快又聪明&quot;的正确姿势——把推理藏进向量，但用未来视觉图像来&quot;考核&quot;这个向量是否真的懂得了驾驶的物理规律。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/">隐式推理</a>
+        
+            <a href="/tags/vla/">VLA</a>
+        
+            <a href="/tags/chain-of-thought/">Chain-of-Thought</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/law/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LAW - Enhancing End-to-End Autonomous Driving with Latent World Model</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/uad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">End-to-End Autonomous Driving without Costly Modularization and 3D Manual Annotation</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/future-x/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">FutureX: Enhance End-to-End Autonomous Driving via Latent Chain-of-Thought World Model</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/world4-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">World4Drive - 无需感知标注的端到端自动驾驶世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
