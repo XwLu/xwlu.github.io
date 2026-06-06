@@ -3,39 +3,48 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.org/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/post/robotics/e2e/horizon-drive/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/robotics/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/vla/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/x-foresight/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/horizon-drive/</loc>
     <lastmod>2026-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2026-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E6%9A%B4%E9%9C%B2%E5%81%8F%E5%B7%AE/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
-    <lastmod>2026-06-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</loc>
     <lastmod>2026-06-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E8%92%B8%E9%A6%8F%E5%8A%A0%E9%80%9F/</loc>
@@ -183,9 +192,6 @@
     <lastmod>2026-04-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/onevl/</loc>
-    <lastmod>2026-04-01T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/vla/</loc>
     <lastmod>2026-04-01T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</loc>
