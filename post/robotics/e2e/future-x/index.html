@@ -416,8 +416,8 @@
 </ul>
 <h4 id="技术细节开关怎么训练的">技术细节：开关怎么训练的？
 </h4><p>作者定义了一个**&ldquo;提升率 $r_t$&rdquo;**：
-$$r_t = \frac{e_{init} - e_{ref}}{e_{init} + \varepsilon}$$</p>
-<ul>
+</p>
+$$r_t = \frac{e_{init} - e_{ref}}{e_{init} + \varepsilon}$$<ul>
 <li>$e_{init}$：初始轨迹与人类专家轨迹的 L1 误差</li>
 <li>$e_{ref}$：经过思考后修正轨迹的 L1 误差</li>
 </ul>
@@ -433,7 +433,7 @@ $$r_t = \frac{e_{init} - e_{ref}}{e_{init} + \varepsilon}$$</p>
 <li><strong>第二步推演</strong>：基于刚才预测的 $z_t^{(1)}$，如果我接着执行第二段子轨迹 $w_t^{(2)}$，世界又会变成什么样？得到 $z_t^{(2)}$。</li>
 <li>以此类推……</li>
 </ol>
-<p>最终，模型得到了一串包含时空动态信息的**&ldquo;思想链&rdquo;**：$Z_{CoT} = {z_t^{(0)}, z_t^{(1)}, &hellip;, z_t^{(K)}}$。这串数据完美捕捉了&quot;自车行为&quot;和&quot;环境变化&quot;的交互关系。</p>
+<p>最终，模型得到了一串包含时空动态信息的**&ldquo;思想链&rdquo;**：$Z_{CoT} = \{z_t^{(0)}, z_t^{(1)}, ..., z_t^{(K)}\}$。这串数据完美捕捉了&quot;自车行为&quot;和&quot;环境变化&quot;的交互关系。</p>
 <hr>
 <h2 id="四修正路线总结反思trajectory-refinement">四、修正路线：总结反思（Trajectory Refinement）
 </h2><p>脑补完了未来，接下来就是拿这些&quot;想法&quot;来指导行动了。</p>

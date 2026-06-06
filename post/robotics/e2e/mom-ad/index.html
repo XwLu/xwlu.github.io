@@ -537,14 +537,12 @@
 </h3><p><strong>核心目标</strong>：在K个候选轨迹中，找出一个跟上一帧意图最&quot;顺滑&quot;衔接的轨迹。</p>
 <h4 id="1-坐标系转换">1. 坐标系转换
 </h4><p>因为车一直在往前开，前一帧和当前帧的坐标系不一样了。TTM第一步就是把历史轨迹转换到当前的自车坐标系下：</p>
-<p>$$T_{past_aligned} = R^{-1}(T_{past} - \Gamma)$$</p>
-<p>其中 $R^{-1}$ 是旋转矩阵的逆，$\Gamma$ 是位移向量。</p>
+$$T_{past\_aligned} = R^{-1}(T_{past} - \Gamma)$$<p>其中 $R^{-1}$ 是旋转矩阵的逆，$\Gamma$ 是位移向量。</p>
 <h4 id="2-为什么不用简单的欧式距离">2. 为什么不用简单的欧式距离？
 </h4><p>很多模型比对轨迹时用的是欧氏距离（按点算距离），但这玩意儿在过弯道时极其不准，容易被局部干扰。</p>
 <h4 id="3-引入豪斯多夫距离hausdorff-distance">3. 引入豪斯多夫距离（Hausdorff Distance）
 </h4><p>TTM祭出了这个大杀器！豪斯多夫距离测量的是两条轨迹间<strong>最大偏差的最小值</strong>（最坏情况下的对齐程度）。</p>
-<p>$$d_H(T_a, T_b) = \max{d_{forward}(T_a, T_b), d_{backward}(T_b, T_a)}$$</p>
-<p><strong>生动比喻</strong>：</p>
+$$d_H(T_a, T_b) = \max\{d_{forward}(T_a, T_b), d_{backward}(T_b, T_a)\}$$<p><strong>生动比喻</strong>：</p>
 
     <blockquote>
         <p>豪斯多夫距离不仅看两个点离得近不近，更看整个轨迹的&quot;形状（拓扑结构）&ldquo;像不像。这就像比对两条弯曲的山路，不是看某个点对齐没，而是看整体走势是否吻合。</p>
@@ -597,8 +595,7 @@
 </h3><p>以前的评价指标只看&quot;当前帧准不准&quot;，不看&quot;前后帧连不连贯&quot;。</p>
 <h3 id="tpc轨迹预测一致性定义">TPC（轨迹预测一致性）定义
 </h3><p><strong>轨迹预测一致性（Trajectory Prediction Consistency）</strong>：在重叠的时间段内，计算&quot;当前预测的轨迹&quot;和&quot;上一帧预测的轨迹&quot;之间的平方差，然后再用真实的验证集轨迹做掩码过滤。</p>
-<p>$$TPC = \frac{1}{N}\sum_{t}||T_{pred}^{t} - T_{pred}^{t-1}||^2 \cdot Mask$$</p>
-<p><strong>TPC越低，说明车开得越平顺，乘客越不容易晕车！</strong></p>
+$$TPC = \frac{1}{N}\sum_{t}||T_{pred}^{t} - T_{pred}^{t-1}||^2 \cdot Mask$$<p><strong>TPC越低，说明车开得越平顺，乘客越不容易晕车！</strong></p>
 <hr>
 <h2 id="四狂飙的成绩单">四、狂飙的成绩单
 </h2><h3 id="41-首创弯道数据集turning-nuscenes">4.1 首创&quot;弯道数据集（Turning-nuScenes）&quot;
@@ -815,8 +812,8 @@
 <h2 id="十二cross-attention-的数学本质为什么当前为主历史为辅">十二、Cross-Attention 的数学本质：为什么&quot;当前为主，历史为辅&rdquo;？
 </h2><h3 id="权力的游戏谁掌握-query谁就掌握生杀大权">权力的游戏：谁掌握 Query，谁就掌握&quot;生杀大权&rdquo;
 </h3><p>在 Cross-Attention 的公式中：
-$$Attention(Q, K, V) = Softmax(\frac{Q K^T}{\sqrt{d}}) V$$</p>
-<p>这三个字母的地位是<strong>绝对不平等</strong>的：</p>
+</p>
+$$Attention(Q, K, V) = Softmax(\frac{Q K^T}{\sqrt{d}}) V$$<p>这三个字母的地位是<strong>绝对不平等</strong>的：</p>
 <ul>
 <li><strong>Query (Q) 是&quot;带资进组的甲方/大老板&rdquo;</strong>：它是主动方，带着当下的需求去数据库里发起检索。</li>
 <li><strong>Key (K) 和 Value (V) 是&quot;被动的资料库/顾问&quot;</strong>：它们只能安静地躺在那里，等待被点名。</li>

@@ -368,8 +368,10 @@
 <li>
 <p>一般形式</p>
 <ul>
-<li>$$min(f(x))$$</li>
-<li>$$s.t.g(x)\leq 0, h(x)=0$$</li>
+<li>
+$$min(f(x))$$</li>
+<li>
+$$s.t.g(x)\leq 0, h(x)=0$$</li>
 </ul>
 </li>
 <li>
@@ -436,15 +438,16 @@
 </ul>
 <h1 id="凸函数及其性质">凸函数及其性质
 </h1><ul>
-<li>$$f(ax+(1-a)y)\leq af(x)+(1-a)f(y)$$
-<ul>
+<li>
+$$f(ax+(1-a)y)\leq af(x)+(1-a)f(y)$$<ul>
 <li>如果严格&lt;，称为strictly convex function</li>
 </ul>
 </li>
 <li>凸函数一定有convex sub level set</li>
 <li>quasi-convex(拟凸函数)
 <ul>
-<li>$$f(x)=log(\left | x \right |+1)$$</li>
+<li>
+$$f(x)=log(\left | x \right |+1)$$</li>
 <li>拟凸函数的线性加和不一定还是拟凸函数，但凸函数的线性加和肯定是凸函数</li>
 </ul>
 </li>
@@ -520,28 +523,28 @@
 </li>
 <li>凸函数举例
 <ul>
-<li>$$f(x)=trace(A^{T}x)$$
-<ul>
+<li>
+$$f(x)=trace(A^{T}x)$$<ul>
 <li>本质上是线性操作</li>
 </ul>
 </li>
-<li>$$f(x)=max\left | x-y \right |$$
-<ul>
+<li>
+$$f(x)=max\left \| x-y \right \|$$<ul>
 <li>本质上是point-wise max，找凸集合距离x最远的点</li>
 </ul>
 </li>
-<li>$$f(x)=min\left | x-y \right |$$
-<ul>
+<li>
+$$f(x)=min\left \| x-y \right \|$$<ul>
 <li>虽然是point-wise min，但也是凸函数，找凸集合距离x最近的点</li>
 </ul>
 </li>
-<li>$$f(x)=\left | b+A_{i}x_{i} \right |$$
-<ul>
+<li>
+$$f(x)=\left \| b+A_{i}x_{i} \right \|$$<ul>
 <li>本质上是仿射变换</li>
 </ul>
 </li>
-<li>$$f(x)=min_{y}g(x,y)$$
-<ul>
+<li>
+$$f(x)=min_{y}g(x,y)$$<ul>
 <li>\(g(x,y)\)是凸的</li>
 </ul>
 </li>

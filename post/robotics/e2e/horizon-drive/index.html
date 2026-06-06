@@ -402,10 +402,8 @@
 </ol>
 <p><strong>自车动作的 AdaLN-Zero 门控注入：</strong></p>
 <p>AdaLN（自适应层归一化）的缩放参数 γ 和平移参数 β 不是固定的，而是根据条件（扩散步数 + 自车动作）实时计算。它的核心公式是：</p>
-<p>$$x_{modulated} = (1 + \gamma) \cdot \text{LayerNorm}(x) + \beta$$</p>
-<p>残差连接部分使用零门控 α：</p>
-<p>$$x = x + \alpha \cdot \text{Attn/MLP}(x_{modulated})$$</p>
-<p><strong>为什么 Attention 和 MLP 层都要加门控？</strong></p>
+$$x_{modulated} = (1 + \gamma) \cdot \text{LayerNorm}(x) + \beta$$<p>残差连接部分使用零门控 α：</p>
+$$x = x + \alpha \cdot \text{Attn/MLP}(x_{modulated})$$<p><strong>为什么 Attention 和 MLP 层都要加门控？</strong></p>
 <ul>
 <li>Attention 管&quot;往哪走（Spatial）&quot;——空间交互、Token Mixing</li>
 <li>MLP 管&quot;变成啥样（Semantic）&quot;——语义特征转换、Channel Mixing</li>
@@ -452,8 +450,7 @@
 <p><strong>两个精妙的渐进式课程：</strong></p>
 <p>📌 <strong>局部&quot;预测→真值&quot;过渡（Local pred-to-GT transition）</strong></p>
 <p>在生成边界附近开一个混合窗口，用 $α_i$ 系数线性混合预测帧和真实帧：</p>
-<p>$$z_{blended} = \alpha_i \cdot \hat{z}<em>{pred} + (1 - \alpha_i) \cdot z</em>{gt}$$</p>
-<p><strong>关键：这个混合发生在Latent特征层面，而非像素层面！</strong></p>
+$$z_{blended} = \alpha_i \cdot \hat{z}_{pred} + (1 - \alpha_i) \cdot z_{gt}$$<p><strong>关键：这个混合发生在Latent特征层面，而非像素层面！</strong></p>
 <ul>
 <li>像素层面混合会产生&quot;重影&quot;（Ghosting Artifacts）——两辆车变成两辆半透明幽灵车</li>
 <li>Latent层面混合则是语义特征的自然过渡</li>

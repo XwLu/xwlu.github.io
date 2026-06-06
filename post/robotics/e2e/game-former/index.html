@@ -426,9 +426,7 @@
 <li>采用imitation loss作为主要loss来规范agent的行为，以此来学习交通规则和驾驶风格等</li>
 <li>通过negative log-likelihood loss，对比best prediction \(m^{*}\)（和gt最接近的预测结果）和gt来计算imitation loss</li>
 </ul>
-<p>$$L_{IL}=\sum_{t=1}^{T_{f}}{L_{NLL}(\mu_{m^{*}}^{t},\sigma_{m^{*}}^{t},p_{m^{*}},s_{t})}$$</p>
-<p>$$L_{NLL}=log\sigma_{x}+log\sigma_{y}+\frac{1}{2}((\frac{dx}{\sigma_{x}})^{2}+(\frac{dy}{\sigma_{y}})^{2})-log(p_{m^{*}})$$</p>
-<ul>
+$$L_{IL}=\sum_{t=1}^{T_{f}}{L_{NLL}(\mu_{m^{\*}}^{t},\sigma_{m^{\*}}^{t},p_{m^{\*}},s_{t})}$$$$L_{NLL}=log\sigma_{x}+log\sigma_{y}+\frac{1}{2}((\frac{dx}{\sigma_{x}})^{2}+(\frac{dy}{\sigma_{y}})^{2})-log(p_{m^{\*}})$$<ul>
 <li>其中， \(ds=s_{x}-\mu_{x}\)， \(dy=s_{y}-\mu_{y}\)， \((s_{x},s_{y})\)是gt轨迹点； \(p_{m^{*}}\)是best prediction对应的网络输出概率</li>
 </ul>
 <h2 id="auxiliary-loss">Auxiliary Loss
@@ -437,6 +435,7 @@
 <li>通过一个interaction loss鼓励每个agent避免和其他agent在 \(k-1\)次迭代中生成的future traj碰撞。
 <ul>
 <li>通过一个斥力场来拉开各个agent轨迹之间的距离
+
 $$L_{inter}=\sum_{m=1}^{M}{\sum_{t=1}^{T_{f}}{\max\limits_{\forall j\neq i,\forall n \in 1:M}\frac{1}{d(\hat s_{m,t}^{(i,k)},s_{n,t}^{(j,k-1)})+1}}}$$</li>
 <li>其中 \(d(\cdot,\cdot)\)是预测轨迹点的 \(L2\)距离， \(m\)是agent \(i\)的预测轨迹模态， \(n\)是（ \(k-1\)次迭代中）agent \(j\)的预测轨迹模态。</li>
 <li>为了确保安全loss只在近距离被激活，引入一个安全阈值，只有距离小于安全阈值才有loss惩罚</li>
@@ -444,8 +443,7 @@ $$L_{inter}=\sum_{m=1}^{M}{\sum_{t=1}^{T_{f}}{\max\limits_{\forall j\neq i,\fora
 </li>
 </ul>
 <h2 id="total-loss">Total Loss
-</h2><p>$$L_{i}^{k}(\pi_{i}^{(k)})=w_{1}L_{IL}(\pi_{i}^{(k)})+w_{2}L_{inter}(\pi_{i}^{(k)},\pi_{\neg i}^{(k-1)})$$</p>
-<h1 id="实验">实验
+</h2>$$L_{i}^{k}(\pi_{i}^{(k)})=w_{1}L_{IL}(\pi_{i}^{(k)})+w_{2}L_{inter}(\pi_{i}^{(k)},\pi_{\neg i}^{(k-1)})$$<h1 id="实验">实验
 </h1><h2 id="环境">环境
 </h2><ul>
 <li>数据集

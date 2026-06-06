@@ -390,18 +390,22 @@
 <ul>
 <li>对函数进行二阶泰勒展开
 <ul>
-<li>$$f(x)\approx f(x_{k})+\triangledown f(x_{k})^{T}(x-x_{k})+\frac{1}{2}(x-x_{k})^{T}\triangledown ^{2}f(x_{k})(x-x_{k})$$</li>
+<li>
+$$f(x)\approx f(x_{k})&plus;\triangledown f(x_{k})^{T}(x-x_{k})&plus;\frac{1}{2}(x-x_{k})^{T}\triangledown ^{2}f(x_{k})(x-x_{k})$$</li>
 </ul>
 </li>
 <li>导数为0时得到极值点
 <ul>
-<li>$$\triangledown f(x)=\triangledown ^{2} f(x_{k})(x-x_{k})+\triangledown f(x_{k})=0$$</li>
-<li>$$x=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+<li>
+$$\triangledown f(x)=\triangledown ^{2} f(x_{k})(x-x_{k})&plus;\triangledown f(x_{k})=0$$</li>
+<li>
+$$x=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
 </ul>
 </li>
 <li>更新公式
 <ul>
-<li>$$x_{k+1}=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
+<li>
+$$x_{k&plus;1}=x_{k}-\left [ \triangledown ^{2}f(x_{k}) \right ]^{-1}\triangledown f(x_{k})$$</li>
 <li>减号后面的内容就是牛顿步长（Newton step），这里需要满足Hessian严格正定\(\triangledown^{2} f(x_{k})&gt;0\)，因为沿着梯度的负方向才可以保证函数值下降，牛顿步长是一个负号乘Hessian的逆再乘梯度，Hessian的逆必须要和梯度是同向的（正定）才行，从而Hessian也必须是正定的</li>
 </ul>
 </li>
@@ -428,8 +432,10 @@
 </h3><ul>
 <li>当初始点距离最优解较远时，Hessian不一定正定，迭代不一定收敛，因此引入步长因子\(t\)
 <ul>
-<li>$$d=-H^{-1}g$$</li>
-<li>$$x_{k+1}=x_{k}+td_{k}$$</li>
+<li>
+$$d=-H^{-1}g$$</li>
+<li>
+$$x_{k&plus;1}=x_{k}&plus;td_{k}$$</li>
 </ul>
 </li>
 </ul>
@@ -451,14 +457,16 @@
 </li>
 <li>原问题
 <ul>
-<li>$$\left [ \triangledown ^{2}f(x) \right ]d=-\triangledown f(x)$$</li>
+<li>
+$$\left [ \triangledown ^{2}f(x) \right ]d=-\triangledown f(x)$$</li>
 </ul>
 </li>
 <li>用\(M\)拟合Hessian
 <ul>
 <li>如果是凸函数（Hessian半正定）
 <ul>
-<li>$$M=\triangledown ^{2}f(x)+\epsilon I,\epsilon =min(1,\left| \triangledown f(x) \right|_{\infty })/10$$</li>
+<li>
+$$M=\triangledown ^{2}f(x)&plus;\epsilon I,\epsilon =min(1,\left\| \triangledown f(x) \right\|_{\infty })/10$$</li>
 <li>\(M\)严格正定，搜索方向的求解可以用Cholesky factorization快速求解</li>
 <li>\(Md=-\triangledown f(x),M=LL^{T}\)，\(L\)是个下三角矩阵</li>
 </ul>

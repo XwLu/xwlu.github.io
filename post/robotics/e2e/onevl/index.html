@@ -506,8 +506,7 @@
 <p>图像先通过 IBQ 视觉分词器（来自 Emu3.5，codebook 有 131,072 个离散视觉码）离散化；Qwen3 的词表也对应扩充了 131,072 个视觉token ID。</p>
 <p>这一步的逻辑非常优雅：要预测&quot;0.5秒后道路长什么样&quot;，模型就<strong>必须学会车辆运动规律、道路几何结构、障碍物动态</strong>——这正是轨迹预测所需要的因果动力学，而不是模糊的语言标签。</p>
 <h3 id="35-联合训练目标">3.5 联合训练目标
-</h3><p>$$\mathcal{L} = \mathcal{L}_c + \lambda_l \mathcal{L}_l + \lambda_v \mathcal{L}_v$$</p>
-<p>其中：</p>
+</h3>$$\mathcal{L} = \mathcal{L}_c + \lambda_l \mathcal{L}_l + \lambda_v \mathcal{L}_v$$<p>其中：</p>
 <ul>
 <li>Lc：主模型的轨迹预测交叉熵损失</li>
 <li>Ll：语言解码器损失，权重 λl = 1.0</li>

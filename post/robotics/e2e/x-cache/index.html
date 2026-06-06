@@ -437,8 +437,7 @@
 
     </blockquote>
 <p>正确的做法是按照三个维度的比例分别分配采样数量：</p>
-<p>$$k_F : k_H : k_W \approx F : H : W, \quad k_F \cdot k_H \cdot k_W \approx K$$</p>
-<p>这样每个维度都有<strong>保证的覆盖</strong>，不会因为数字巧合而整体偏向某一侧。</p>
+$$k_F : k_H : k_W \approx F : H : W, \quad k_F \cdot k_H \cdot k_W \approx K$$<p>这样每个维度都有<strong>保证的覆盖</strong>，不会因为数字巧合而整体偏向某一侧。</p>
 <h4 id="两个辅助频道">两个辅助频道
 </h4><p>指纹还拼接两个&quot;辅助频道&quot;：</p>
 <ul>
@@ -474,8 +473,8 @@
 </h3><h4 id="什么是余弦相似度">什么是余弦相似度？
 </h4><p>余弦相似度的本质，是衡量两个向量<strong>方向有多一致</strong>，而不是它们有多&quot;大&quot;。</p>
 <p>公式：
-$$s = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}| \cdot |\vec{B}|}$$</p>
-<p>分子是点积，分母是模长相乘——这个操作恰好等于两个向量夹角的余弦值。</p>
+</p>
+$$s = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}| \cdot |\vec{B}|}$$<p>分子是点积，分母是模长相乘——这个操作恰好等于两个向量夹角的余弦值。</p>
 <ul>
 <li>方向完全相同 → 值为 1</li>
 <li>方向垂直 → 值为 0</li>
@@ -504,8 +503,8 @@ $$s = \frac{\vec{A} \cdot \vec{B}}{|\vec{A}| \cdot |\vec{B}|}$$</p>
 <hr>
 <h3 id="-最大-token-偏差捕捉局部突变">📊 最大 Token 偏差：捕捉局部突变
 </h3><p>公式：
-$$d_{\max} = \frac{\max\left|\phi(\mathbf{x}^{(n)}) - \phi(\mathbf{x}^{(n-1)})\right|}{\text{mean}\left|\phi(\mathbf{x}^{(n-1)})\right| + \epsilon}$$</p>
-<p>计算流程：</p>
+</p>
+$$d_{\max} = \frac{\max\left|\phi(\mathbf{x}^{(n)}) - \phi(\mathbf{x}^{(n-1)})\right|}{\text{mean}\left|\phi(\mathbf{x}^{(n-1)})\right| + \epsilon}$$<p>计算流程：</p>
 <ol>
 <li>对 32 个采样位置，每个位置算当前片段和上一片段的<strong>特征差值</strong></li>
 <li>找出差值<strong>最大的那一个位置</strong></li>
@@ -725,7 +724,7 @@ $$d_{\max} = \frac{\max\left|\phi(\mathbf{x}^{(n)}) - \phi(\mathbf{x}^{(n-1)})\r
     
     <section class="article-tags">
         
-            <a href="/tags/e2e-ad/">E2E-AD</a>
+            <a href="/tags/e2e-ad/">E2e-Ad</a>
         
             <a href="/tags/worldmodel/">WorldModel</a>
         

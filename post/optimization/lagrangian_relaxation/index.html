@@ -297,7 +297,8 @@
 <li>我们将它对\(\lambda\)求导，\(\frac{\partial d}{\partial\lambda}=\frac{\partial L}{\partial x^{*}}\cdot\frac{\partial x^{*}}{\partial\lambda}+\frac{\partial L}{\partial\lambda}\)，注意\(\frac{\partial L}{\partial x^{*}}\)就是0，对于凸函数来说，导数为0的点就是最优解所在的点，所以\(\frac{\partial d}{\partial\lambda}=\frac{\partial L}{\partial\lambda}|_{x^{*}(\lambda)}\)，也就说，我们给定一个\(\lambda\)，可以确定一个最优的\(x^{*}\)，然后用\(x^{*}\)求得\(\frac{\partial d}{\partial\lambda}=Ax^{*}-b\)后，通过梯度上升求得新的\(\lambda\).</li>
 <li>总结一下，迭代步骤如下：
 <ul>
-<li>$$\lbrace \begin{matrix}x^{k+1}=argmin_{x}L(x,\lambda^{k}) \\ \lambda^{k+1}=\lambda^{k}+\alpha(Ax^{k+1}-b)\end{matrix}$$</li>
+<li>
+$$\lbrace \begin{matrix}x^{k+1}=argmin_{x}L(x,\lambda^{k}) \\\\ \lambda^{k+1}=\lambda^{k}+\alpha(Ax^{k+1}-b)\end{matrix}$$</li>
 <li>\(\alpha\)是沿梯度方向前进的步长</li>
 </ul>
 </li>

@@ -507,7 +507,8 @@ UCB既考虑了值函数，又考虑了探索的次数 = 回报值/仿真次数<
 <li>估计\(Q(s, a)\)</li>
 <li>对于每一步的仿真，使用Sarsa方法更新Q函数
 <ul>
-<li>$$\Delta Q(S,A)=\alpha (R+\gamma Q({S}&rsquo;,{A}&rsquo;)-Q(S,A))$$</li>
+<li>
+$$\Delta Q(S,A)=\alpha (R+\gamma Q({S}',{A}')-Q(S,A))$$</li>
 </ul>
 </li>
 <li>基于\(Q(s, a)\)选择动作</li>

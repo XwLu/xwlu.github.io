@@ -454,8 +454,8 @@
 
     </blockquote>
 <p><strong>数学表达</strong>：
-$$\text{PDA}(Q_p, F) = \sum_{i \in \mathcal{V}} \text{DeformAttn}(Q_p, \mathcal{P}(A_p), F_i)$$</p>
-<p>规划主脑有一条预测出的未来 3D 轨迹（$A_p$）。它把这条未来轨迹用函数 $\mathcal{P}$ 投影到多视角的图像（$F$）上，然后只在&quot;未来车轮即将压过的图像像素点&quot;周围提取特征！</p>
+</p>
+$$\text{PDA}(Q_p, F) = \sum_{i \in \mathcal{V}} \text{DeformAttn}(Q_p, \mathcal{P}(A_p), F_i)$$<p>规划主脑有一条预测出的未来 3D 轨迹（$A_p$）。它把这条未来轨迹用函数 $\mathcal{P}$ 投影到多视角的图像（$F$）上，然后只在&quot;未来车轮即将压过的图像像素点&quot;周围提取特征！</p>
 <hr>
 <h3 id="绝技三超级大脑圆桌会议--统一解码器unified-decoder">绝技三：超级大脑圆桌会议 —— 统一解码器（Unified Decoder）
 </h3><p>传统的框架是流水线作业：先做感知（找车、找线）→ 再做预测 → 最后做规划。不仅慢，信息还会衰减。</p>
@@ -506,8 +506,7 @@ $$\text{PDA}(Q_p, F) = \sum_{i \in \mathcal{V}} \text{DeformAttn}(Q_p, \mathcal{
 <h4 id="-议程二圆桌激烈讨论--协同交互模块">🗣️ 议程二：圆桌激烈讨论 —— 协同交互模块
 </h4><p>看完历史，大家得互相通气了。主脑需要知道哪里有车、哪里是实线，才能规划路线。</p>
 <p><strong>核心技术细节 —— 几何物理融合（公式 1）</strong>：</p>
-<p>$$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{C}} - \tau D\right)V$$</p>
-<p>常规的注意力机制只有前半部分，决定谁和谁更相关。但这里多了一个极其关键的 <strong>&ldquo;惩罚项&rdquo;</strong>：$- \tau D$</p>
+$$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{C}} - \tau D\right)V$$<p>常规的注意力机制只有前半部分，决定谁和谁更相关。但这里多了一个极其关键的 <strong>&ldquo;惩罚项&rdquo;</strong>：$- \tau D$</p>
 <ul>
 <li><strong>$D$ 是什么？</strong> 两个物体在真实 3D 物理世界里的 <strong>欧几里得距离</strong>（比如动态车与车之间、车与车道线之间）</li>
 <li><strong>$\tau$ 是什么？</strong> 通过多层感知机（MLP）学习出来的系数</li>

@@ -351,9 +351,12 @@
 </h1><ul>
 <li>时间差分就是TD(0)算法，只向后采样一步；MC是向后采样整个片段；多步自举介于两者之间
 <ul>
-<li>TD: $$n=1,G_{t}^{(1)}=R_{t+1}+\gamma V(S_{t+1})$$</li>
-<li>$$n=2,G_{t}^{(2)}=R_{t+1}+\gamma V(S_{t+1})$$</li>
-<li>MC: $$n=3,G_{t}^{(\infty )}=R_{t+1}+\gamma R_{t+2}+&hellip;+\gamma ^{T-t-1}R_{T}$$</li>
+<li>TD:
+$$n=1,G_{t}^{(1)}=R_{t+1}+\gamma V(S_{t+1})$$</li>
+<li>
+$$n=2,G_{t}^{(2)}=R_{t+1}+\gamma V(S_{t+1})$$</li>
+<li>MC:
+$$n=3,G_{t}^{(\infty )}=R_{t+1}+\gamma R_{t+2}+...+\gamma ^{T-t-1}R_{T}$$</li>
 </ul>
 </li>
 <li>经验认为\(n=3-10\)步左右，要好于TD(0)和MC</li>
@@ -388,11 +391,13 @@
 </h1><h2 id="前向视角">前向视角
 </h2><ul>
 <li>就是将\(TD(0),TD(1),&hellip;,TD(n)\)求平均</li>
-<li>$$G_{t}^{\lambda }=(1-\lambda )\sum_{n=1}^{\infty }\lambda ^{n-1}G_{t}^{(n)}$$</li>
+<li>
+$$G_{t}^{\lambda }=(1-\lambda )\sum_{n=1}^{\infty }\lambda ^{n-1}G_{t}^{(n)}$$</li>
 <li>\(\lambda =0\)，退化成TD(0)；\(\lambda =1\)，退化成MC</li>
 <li>\(TD(\lambda )\)更新公式
 <ul>
-<li>$$V(S_{t})\leftarrow V(S_{t})+\alpha (G_{t}^{\lambda }-V(S_{t}))$$</li>
+<li>
+$$V(S_{t})\leftarrow V(S_{t})+\alpha (G_{t}^{\lambda }-V(S_{t}))$$</li>
 </ul>
 </li>
 </ul>
@@ -414,8 +419,10 @@
 <li>
 <h3 id="资格迹的计算公式">资格迹的计算公式
 </h3><ul>
-<li>$$E_{0}(s)=0$$</li>
-<li>$$E_{t}(s)=\gamma \lambda  E_{t-1}(s)+1(S_{t}=s)$$</li>
+<li>
+$$E_{0}(s)=0$$</li>
+<li>
+$$E_{t}(s)=\gamma \lambda  E_{t-1}(s)+1(S_{t}=s)$$</li>
 <li>直观的感觉就是，第一次遇到这个状态s的时候，对它的记忆由0蹦到1，然后慢慢开始遗忘(对应\(\times \gamma \)这个动作)，下一次又遇到了，记忆就一下子清晰了(对应+1这个动作)，然后又慢慢遗忘。</li>
 </ul>
 </li>

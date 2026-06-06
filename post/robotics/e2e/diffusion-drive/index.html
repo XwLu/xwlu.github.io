@@ -375,8 +375,8 @@
 </h2><h3 id="forward-diffusion-process">forward diffusion process
 </h3><ul>
 <li>不断往采样出来的数据上增加噪声
-$$q(\tau^{i}|\tau^{0})=\mathcal{N}(\tau^{i};\sqrt{\bar{\alpha}^{i}}\tau^{0},(1-\bar{\alpha}^{i})I)$$
-<ul>
+
+$$q(\tau^{i}|\tau^{0})=\mathcal{N}(\tau^{i};\sqrt{\bar{\alpha}^{i}}\tau^{0},(1-\bar{\alpha}^{i})I)$$<ul>
 <li>其中 \(\tau^{0}\)是未添加噪声的初始采样数据， \(\tau^{i}\)是第 \(i\)次添加噪声后的数据</li>
 <li>\(\bar{\alpha}^{i}=\prod_{s=1}^{i}\alpha^{s}=\prod_{s=1}^{i}(1-\beta^{s})\)， \(\beta^{s}\)是noise schedule</li>
 </ul>
@@ -387,8 +387,7 @@ $$q(\tau^{i}|\tau^{0})=\mathcal{N}(\tau^{i};\sqrt{\bar{\alpha}^{i}}\tau^{0},(1-\
 <li>训练一个噪声去除模型 \(f_{\theta}(\tau^{i},z,i)\)一步一步从 \(\tau^{i}\)再还原到 \(\tau^{0}\)， \(\theta\)是训练模型的参数。</li>
 <li>还原的过程中输入环境信息 \(z\)作为指导（条件），使得最终还原出来的 \(\tau^{0}\)和周围的环境有合理的交互</li>
 </ul>
-<p>$$p_{\theta}(\tau^{0}|z)=\int p(\tau^{T})\prod_{i=1}^{T}p_{\theta}(\tau^{i-1}|\tau^{i},z)d\tau^{1:T}$$</p>
-<h1 id="预备实验">预备实验
+$$p_{\theta}(\tau^{0}|z)=\int p(\tau^{T})\prod_{i=1}^{T}p_{\theta}(\tau^{i-1}|\tau^{i},z)d\tau^{1:T}$$<h1 id="预备实验">预备实验
 </h1><h2 id="改造transfuser为生成式模型">改造Transfuser为生成式模型
 </h2><ul>
 <li>将transfuser模型最后的MLP回归层替换为conditional diffusion model。</li>
@@ -403,8 +402,8 @@ $$q(\tau^{i}|\tau^{0})=\mathcal{N}(\tau^{i};\sqrt{\bar{\alpha}^{i}}\tau^{0},(1-\
 <p><img alt="pic" class="gallery-image" data-flex-basis="498px" data-flex-grow="207" height="316" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/diffusion-drive/1.png" width="656"></p>
 <ul>
 <li>为了定量分析模态坍缩的现象，定义了一个模态多样性得分\(D\)（通过计算每条去噪后的轨迹和所有去噪后轨迹的平均重叠面积计算）
-$$D=1-\frac{1}{N}\sum_{i=1}^{N}{\frac{Area(\tau_{i}\cap \bigcup_{j=1}^{N}\tau_{j})}{Area(\tau_{i}\cup \bigcup_{j=1}^{N}\tau_{j})}}$$
-<ul>
+
+$$D=1-\frac{1}{N}\sum_{i=1}^{N}{\frac{Area(\tau_{i}\cap \bigcup_{j=1}^{N}\tau_{j})}{Area(\tau_{i}\cup \bigcup_{j=1}^{N}\tau_{j})}}$$<ul>
 <li>\(\tau_{i}\)表示第 \(i\)条去噪轨迹， \(N\)是采样轨迹总数， \(\bigcup_{j=1}^{N} \tau_{j} \)是所有去噪轨迹的并集。</li>
 </ul>
 </li>
@@ -422,20 +421,20 @@ $$D=1-\frac{1}{N}\sum_{i=1}^{N}{\frac{Area(\tau_{i}\cap \bigcup_{j=1}^{N}\tau_{j
 </h3><ul>
 <li>通过K-means算法将训练集中自车行驶的轨迹进行聚类，得到20条anchors \(\lbrace a_{k}\rbrace_{k=1}^{N_{anchor}}\)，其中 \(a_{k}=\lbrace (x_{t},y_{t})\rbrace_{t=1}^{T_{f}}\)</li>
 <li>向anchor添加噪声：
-$$\tau_{k}^{i}=\sqrt{\bar{\alpha}^{i}}a_{k}+\sqrt{1-\bar{\alpha}^{i}}\epsilon,\epsilon \in \mathcal{N}(0,I)$$
-<ul>
+
+$$\tau_{k}^{i}=\sqrt{\bar{\alpha}^{i}}a_{k}+\sqrt{1-\bar{\alpha}^{i}}\epsilon,\epsilon \in \mathcal{N}(0,I)$$<ul>
 <li>其中 \(i \in [1,T_{trunc}],T_{trunc}\ll T\)是扩散步数</li>
 </ul>
 </li>
 <li>diffusion decoder \(f_{\theta}\)输入带噪声的anchor轨迹 \(\lbrace \tau_{k}^{i}\rbrace_{k=1}^{N_{anchor}}\)，输出分类score \(\lbrace{s_{k}}\rbrace_{k=1}^{N_{anchor}}\)和去噪轨迹 \(\lbrace\tau_{k}\rbrace_{k=1}^{N_{anchor}}\)
-$$\lbrace \lbrace s_{k},\tau_{k}\rbrace\rbrace_{k=1}^{N_{anchor}}=f_{\theta}(\lbrace \tau_{k}^{i}\rbrace_{k=1}^{N_{anchor}},z)$$
-<ul>
+
+$$\lbrace \lbrace s_{k},\tau_{k}\rbrace\rbrace_{k=1}^{N_{anchor}}=f_{\theta}(\lbrace \tau_{k}^{i}\rbrace_{k=1}^{N_{anchor}},z)$$<ul>
 <li>其中， \(z\)表示条件信息。</li>
 </ul>
 </li>
 <li>将带噪轨迹中最接近GT的轨迹的分类标签设置为true（ \(y_{k}=1\)），其他为false（ \(y_{k}=0\)），loss设计如下：
-$$L=\sum_{k=1}^{N_{anchor}}{[y_{k}L_{rec}(\tau_{k},\tau_{gt})+\lambda BCE(s_{k},y_{k})]}$$
-<ul>
+
+$$L=\sum_{k=1}^{N_{anchor}}{[y_{k}L_{rec}(\tau_{k},\tau_{gt})+\lambda BCE(s_{k},y_{k})]}$$<ul>
 <li>其中， \(\lambda\)用来平衡L1 reconstruction loss \(L_{rec}\)和binary cross-entropy classification loss</li>
 </ul>
 </li>

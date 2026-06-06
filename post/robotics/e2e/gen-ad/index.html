@@ -348,8 +348,7 @@
 </h3><ul>
 <li>
 <p>初始化一个 \(H\times W\)的BEV query \(B_{0}\)，将摄像头提取的multi-scaled feature \(F\)与之进行deformable cross-attention，得到BEV feature</p>
-<p>$$B=DA(B_{0},F,F)$$</p>
-<ul>
+$$B=DA(B_{0},F,F)$$<ul>
 <li>\(DA(Q,K,V)\)表示deformable cross-attention</li>
 </ul>
 </li>
@@ -358,15 +357,13 @@
 </h3><ul>
 <li>
 <p>借鉴VAD的思路，初始化一个learnable query \(M_{0}\)，集合BEV feature通过global cross-attention得到地图元素表达 \(M\)</p>
-<p>$$M=CA(M_{0},B,B)$$</p>
-</li>
+$$M=CA(M_{0},B,B)$$</li>
 </ul>
 <h3 id="bev-to-agent">BEV to agent
 </h3><ul>
 <li>
 <p>类似地图元素，agent特征的提取方式为：</p>
-<p>$$A=DA(A_{0},B,B)$$</p>
-<ul>
+$$A=DA(A_{0},B,B)$$<ul>
 <li>\(A_{0}\)是learnable query</li>
 <li>这边得到agent特征后，会接一个3D目标检测head进行agent的位置、朝向、种类的解码</li>
 </ul>
@@ -391,8 +388,7 @@
 <p><img alt="pic" class="gallery-image" data-flex-basis="780px" data-flex-grow="325" height="140" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/1.png" width="455"></p>
 </li>
 </ul>
-<p>$$p(z|\mathsf{\mathbf{T}}(T,f)) \thicksim N(\mu_{f},\sigma_{f})$$</p>
-</li>
+$$p(z|\mathsf{\mathbf{T}}(T,f)) \thicksim N(\mu_{f},\sigma_{f})$$</li>
 <li>
 <p>分布 \(p(z|\mathsf{\mathbf{T}}(T,f))\)包含未来轨迹的先验，可用于提高障碍物和自车的运动预测和规划的真实性。</p>
 </li>
@@ -401,8 +397,7 @@
 </h2><ul>
 <li>
 <p>有了未来轨迹的latent distribution作为先验后，我们需要将未来轨迹从latent spaec \(Z\)中解码出来。最直接的办法是用一个MLP在BEV space下解码出轨迹点，但是这种方法无法模拟障碍物和自车随时间变化产生的交互。为了建模每个实例在不同时间戳之间的时间上的联系，对联合概率分布 \(p(\mathsf{\mathbf{T}}(T,f)|z)\)进行分解：</p>
-<p>$$p(\mathsf{\mathbf{T}}(T,f)|z)=p(w^{T+1}|z^{T})\cdot p(w^{T+2}|w^{T+1},z^{T})&hellip;p(w^{T+f}|w^{T+1},&hellip;,w^{T+f-1},z^{T})$$</p>
-</li>
+$$p(\mathsf{\mathbf{T}}(T,f)|z)=p(w^{T+1}|z^{T})\cdot p(w^{T+2}|w^{T+1},z^{T})...p(w^{T+f}|w^{T+1},...,w^{T+f-1},z^{T})$$</li>
 </ul>
 <ul>
 <li>
@@ -436,8 +431,7 @@
 </h2><ul>
 <li>
 <p>轨迹loss</p>
-<p>$$J_{prior}=L_{traj}(\hat{T_{e}},T_{e})+\frac{1}{N_{a}}L_{traj}(\hat{T_{a}},T_{a})+\lambda_{c}L_{focal}(\hat{C_{a}},C_{a})$$</p>
-<ul>
+$$J_{prior}=L_{traj}(\hat{T_{e}},T_{e})+\frac{1}{N_{a}}L_{traj}(\hat{T_{a}},T_{a})+\lambda_{c}L_{focal}(\hat{C_{a}},C_{a})$$<ul>
 <li>\(L_{traj}()\)衡量两条轨迹的L1 loss。 \(N_{a}\)是agent的数量， \(C_{a}\)是agent的预测类别， \(T_{a}\)是agent的预测轨迹。</li>
 </ul>
 </li>
@@ -449,11 +443,10 @@
 <p><img alt="pic" class="gallery-image" data-flex-basis="799px" data-flex-grow="333" height="142" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/8.png" width="473"></p>
 </li>
 </ul>
-<p>$$p(z|I)\thicksim N(\mu_{i},\sigma_{i})$$</p>
-</li>
+$$p(z|I)\thicksim N(\mu_{i},\sigma_{i})$$</li>
 <li>
 <p>通过KL散度衡量 \(p(z|I)\)和GT轨迹 \(p(z|\mathsf{\mathbf{T}}(T,f))\)之间的差异</p>
-<p>$$J_{plan}=D_{KL}(p(z|I),p(z|\mathsf{\mathbf{T}}(T,f)))$$
+$$J_{plan}=D_{KL}(p(z|I),p(z|\mathsf{\mathbf{T}}(T,f)))$$<p>
 <img alt="pic" class="gallery-image" data-flex-basis="338px" data-flex-grow="140" height="708" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/9.png" srcset="/post/robotics/e2e/gen-ad/9_hu_55bf729fd1560f1.png 800w, /post/robotics/e2e/gen-ad/9.png 998w" width="998"></p>
 <ul>
 <li>KL散度衡量的就是上面的output_distribution中present和future的分布差异</li>
@@ -461,8 +454,7 @@
 </li>
 <li>
 <p>总loss</p>
-<p>$$J_{GenAD}=J_{prior}+\lambda_{plan}J_{plan}+\lambda_{map}J_{map}+\lambda_{det}J_{det}$$</p>
-</li>
+$$J_{GenAD}=J_{prior}+\lambda_{plan}J_{plan}+\lambda_{map}J_{map}+\lambda_{det}J_{det}$$</li>
 <li>
 <p>在infer阶段，弃用future trajectory encoder（因为没有GT），从 \(p(z|I)\)中采样latent state，作为轨迹生成模块的输入</p>
 <p><img alt="pic" class="gallery-image" data-flex-basis="305px" data-flex-grow="127" height="348" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/gen-ad/10.png" width="443"></p>

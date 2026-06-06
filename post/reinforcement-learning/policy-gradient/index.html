@@ -430,7 +430,8 @@
 </h2><ul>
 <li>直接用神经网络表示策略</li>
 <li>神经网络输出N维的向量，每一维表示选择该动作的概率大小</li>
-<li>$$Net(state)=[P_{action1},P_{action2},P_{action3},&hellip;]$$</li>
+<li>
+$$Net(state)=[P_{action1},P_{action2},P_{action3},...]$$</li>
 </ul>
 </li>
 <li>
@@ -478,7 +479,8 @@
 <h3 id="我们从经典的a2c算法入手讲解策略梯度算法">我们从经典的A2C算法入手讲解策略梯度算法
 </h3><h1 id="优化目标">优化目标
 </h1><ul>
-<li>$$max_{\theta }U(\theta )=max\sum_{\tau }P(\tau |\theta )R(\tau )$$</li>
+<li>
+$$max_{\theta }U(\theta )=max\sum_{\tau }P(\tau |\theta )R(\tau )$$</li>
 <li>其中，\(\theta \)表示策略网络的参数；\(\tau \)表示一段状态转移轨迹；\(R(\tau ) \)表示该轨迹的最终回报值；\(P(\tau |\theta )\)表示当策略网络的参数为\(\theta \)时，出现\(\tau \)的概率大小。</li>
 <li>在一个固定的环境再，一般来说，\(R(\tau ) \)是稳定不变的。</li>
 </ul>
@@ -487,7 +489,8 @@
 <li>
 <h2 id="梯度表达式">梯度表达式
 </h2><ul>
-<li>$$\frac{\partial U(\theta )}{\partial \theta }=\frac{\partial \sum_{\tau }P(\tau |\theta )R(\tau )}{\partial \theta }$$</li>
+<li>
+$$\frac{\partial U(\theta )}{\partial \theta }=\frac{\partial \sum_{\tau }P(\tau |\theta )R(\tau )}{\partial \theta }$$</li>
 </ul>
 </li>
 <li>
@@ -526,7 +529,8 @@
 </h1><ul>
 <li>上面的reinforce算法中，\(g_{t}\)的方差非常大，为了减小方差，我们引入了Critic函数\(Q_{w}(s_{k},a_{k})\approx \sum_{t=k}^{T}\gamma ^{t-k}R(s_{k},a_{k})\)代替\(g_{t}\)</li>
 <li>再进一步，由于每个Q都是正的，会导致网络对于任何轨迹都想提高其出现的概率，因此，引入一个基线。基线的选择为当前状态的V值。由此得到一个优势函数：</li>
-<li>$$A^{\pi _{\theta }}(s,a)=Q^{\pi _{\theta }}(s,a)-V^{\pi _{\theta }}(s)$$</li>
+<li>
+$$A^{\pi _{\theta }}(s,a)=Q^{\pi _{\theta }}(s,a)-V^{\pi _{\theta }}(s)$$</li>
 <li>上面的方法需要设计一个Q函数一个V函数，为了简化，我们直接用TD误差代替优势函数。TD误差为：</li>
 <li>\(\delta ^{\pi _{\theta }}=r+V^{\pi _{\theta }}({s}&rsquo;)-V^{\pi _{\theta }}(s)\)其中，\({s}&rsquo; \)是\(s\)的后一个状态</li>
 </ul>

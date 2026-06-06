@@ -468,8 +468,7 @@
 </ol>
 <p><strong>左右互搏的精髓：转回去对答案</strong></p>
 <p>真正的&quot;自监督一致性&quot;是在这一步完成的：如果模型真的懂驾驶物理学，那么它在&quot;旋转后视角&quot;规划出的轨迹 $P_{rotated}$，只要在数学上做个简单的<strong>逆向旋转</strong>，就应该和最初的原始轨迹 $P_{orig}$ <strong>完美重合</strong>！</p>
-<p>$$Loss = \text{差距}( \text{逆旋转}(P_{rotated}) , P_{orig} )$$</p>
-<p><strong>为什么这种&quot;旋转一致性&quot;这么牛？</strong></p>
+$$Loss = \text{差距}( \text{逆旋转}(P_{rotated}) , P_{orig} )$$<p><strong>为什么这种&quot;旋转一致性&quot;这么牛？</strong></p>
 <ol>
 <li><strong>信息零损耗</strong>：因为只是坐标系的旋转，马路还是那条马路，障碍物还是那个障碍物，规划条件是绝对充足的</li>
 <li><strong>专治&quot;画龙&quot;和&quot;方向盘不稳&rdquo;</strong>：现实开车中，很多端到端模型在过十字路口时，车头稍微一偏，模型就以为到了一个新场景，规划出的轨迹就会突变，导致车辆在路口&quot;画龙&quot;。通过这种旋转一致性训练，模型被逼着学会了：<strong>不管车头当前偏了多少度，我的宏观行驶轨迹必须死死锚定在那里，不能动摇！</strong></li>

@@ -424,8 +424,7 @@
 </h3><p>这是整个算法的灵魂，分为三个步骤：</p>
 <h4 id="第一步计算惯性参考-inertial-reference">第一步：计算惯性参考 (Inertial Reference)
 </h4><p>假设车辆保持当前的速度 $v_0$ 和方向不变，未来的位置在哪里？</p>
-<p>$$ \mathbf{p}_{t_i} = \mathbf{p}_0 + \mathbf{v}_0 \cdot \Delta t_i $$</p>
-<ul>
+$$ \mathbf{p}_{t_i} = \mathbf{p}_0 + \mathbf{v}_0 \cdot \Delta t_i $$<ul>
 <li>$\mathbf{p}_{t_i}$：未来 $t_i$ 时刻的预测位置</li>
 <li>$\mathbf{p}_0$：当前位置</li>
 <li>$\mathbf{v}_0$：当前速度向量</li>
@@ -452,8 +451,7 @@
 </ul>
 <h4 id="第二步计算残差-residual">第二步：计算残差 (Residual)
 </h4><p>神经网络只预测真实轨迹 $\tau_{gt}$ 和惯性轨迹 $\tau_{ref}$ 之间的差值：</p>
-<p>$$ \boldsymbol{r} = \tau_{gt} - \tau_{ref} $$</p>
-
+$$ \boldsymbol{r} = \tau_{gt} - \tau_{ref} $$
     <blockquote>
         <p><strong>解读</strong>：$\boldsymbol{r}$ 代表了人类驾驶员的&quot;操作意图&quot;（比如为了避让行人向左打方向）。模型只需要学这个意图，而不是学整个坐标。</p>
 
@@ -461,8 +459,7 @@
 <h4 id="第三步逐点残差归一化-point-wise-residual-normalization-prnorm">第三步：逐点残差归一化 (Point-wise Residual Normalization, PRNorm)
 </h4><p><strong>问题</strong>：远处的坐标偏差通常很大（比如几米），近处的偏差很小（几厘米）。如果直接训练，模型会只关注远处的大数字，忽略近处的安全细节。</p>
 <p><strong>解决</strong>：把每个时间步的数值都缩放到同一个范围（比如 -1 到 1）：</p>
-<p>$$ \tilde{r}^d_t = 2\gamma \left( \frac{r^d_t - r^d_{\min}}{r^d_{\max} - r^d_{\min} + \epsilon_0} \right) - \gamma $$</p>
-<ul>
+$$ \tilde{r}^d_t = 2\gamma \left( \frac{r^d_t - r^d_{\min}}{r^d_{\max} - r^d_{\min} + \epsilon_0} \right) - \gamma $$<ul>
 <li>$r^d_{\min}, r^d_{\max}$：该时间步在整个数据集里的最大最小值</li>
 <li>$\gamma$：缩放系数（比如设为1）</li>
 </ul>
@@ -475,11 +472,11 @@
 <h3 id="22-惯性参考微扰-inertial-reference-perturbation-irp">2.2 惯性参考微扰 (Inertial Reference Perturbation, IRP)
 </h3><p>自动驾驶需要考虑多种可能性（Multimodal），比如前面有车，我可以左变道，也可以右变道。</p>
 <p><strong>做法</strong>：作者不在最终结果上加噪声，而是在<strong>初始速度</strong>上加噪声：</p>
-<p>$$ \delta_{v,k} \sim \mathcal{N}(\mathbf{0}, \boldsymbol{\Sigma}) $$
-$$ \mathbf{v}&rsquo;_{0,k} = \mathbf{v}<em>0 + \delta</em>{v,k} $$</p>
-<ul>
+$$ \delta_{v,k} \sim \mathcal{N}(\mathbf{0}, \boldsymbol{\Sigma}) $$<p>
+</p>
+$$ \mathbf{v}'_{0,k} = \mathbf{v}_0 + \delta_{v,k} $$<ul>
 <li>$\delta_{v,k}$：随机生成的微小速度/方向变化</li>
-<li>$\mathbf{v}&rsquo;_{0,k}$：扰动后的新速度</li>
+<li>$\mathbf{v}'_{0,k}$：扰动后的新速度</li>
 </ul>
 <p><strong>效果</strong>：通过改变初始速度，生成一堆略有不同的&quot;惯性轨迹簇&quot;。就像奇异博士看了未来的几种可能性，有的快一点，有的偏左一点。这迫使模型去学习不同初速度下的应对策略，增加了鲁棒性。</p>
 <hr>
@@ -775,8 +772,7 @@ $$ \mathbf{v}&rsquo;_{0,k} = \mathbf{v}<em>0 + \delta</em>{v,k} $$</p>
 </h2><h3 id="这篇论文解决了什么核心问题">这篇论文解决了什么核心问题？
 </h3><p>解决了端到端自动驾驶中，直接预测绝对坐标带来的<strong>训练难、远近权重不平衡、容易学坏</strong>的问题。</p>
 <h3 id="核心公式背后的逻辑">核心公式背后的逻辑
-</h3><p>$$ \text{最终轨迹} = \underbrace{(\text{当前位置} + \text{速度} \times \text{时间})}<em>{\text{物理惯性，本来就会走的路}} + \underbrace{\text{神经网络预测的残差}}</em>{\text{AI根据路况做的智能微调}} $$</p>
-<h3 id="为什么叫-normalized-归一化">为什么叫 &ldquo;Normalized&rdquo; (归一化)？
+</h3>$$ \text{最终轨迹} = \underbrace{(\text{当前位置} + \text{速度} \times \text{时间})}_{\text{物理惯性，本来就会走的路}} + \underbrace{\text{神经网络预测的残差}}_{\text{AI根据路况做的智能微调}} $$<h3 id="为什么叫-normalized-归一化">为什么叫 &ldquo;Normalized&rdquo; (归一化)？
 </h3><p>因为远处偏差大，近处偏差小，不归一化会导致 AI 忽视近处更危险的偏差。</p>
 <h3 id="resad-的优势一句话总结">ResAD 的优势一句话总结
 </h3><p>利用物理学定律（惯性）作为基准，让 AI 只需专注于学习&quot;变化量&rdquo;，并用归一化技术平衡远近视野，从而学得更快、更稳、更准。</p>

@@ -341,12 +341,14 @@
 </h1><ul>
 <li>增量式MC
 <ul>
-<li>$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(G_{t}-V(S_{t}))$$</li>
+<li>
+$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(G_{t}-V(S_{t}))$$</li>
 </ul>
 </li>
 <li>时间差分TD
 <ul>
-<li>$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(R_{t+1}+\gamma V(S_{t+1})-V(S_{t}))$$</li>
+<li>
+$$V(S_{t})=V(S_{t})+\frac{1}{N(S_{t})}(R_{t+1}+\gamma V(S_{t+1})-V(S_{t}))$$</li>
 </ul>
 </li>
 <li>核心差别：
@@ -428,7 +430,8 @@
 <li>
 <h4 id="公式">公式
 </h4><ul>
-<li>$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_{t},A_{t}))$$</li>
+<li>
+$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma Q(S_{t+1},A_{t+1})-Q(S_{t},A_{t}))$$</li>
 </ul>
 </li>
 <li>
@@ -455,7 +458,8 @@
 <li>策略序列\(\pi _{t}(a|s)\)满足GLIE</li>
 <li>步长序列\(\alpha _{t}\)是一个Robbins-Monro序列
 <ul>
-<li>$$\sum_{t=1}^{\infty }\alpha_{t}=\infty ,\sum_{t=1}^{\infty }\alpha_{t}^{2}=\infty $$</li>
+<li>
+$$\sum_{t=1}^{\infty }\alpha_{t}=\infty ,\sum_{t=1}^{\infty }\alpha_{t}^{2}=\infty $$</li>
 </ul>
 </li>
 </ul>
@@ -479,7 +483,8 @@
 <li>
 <h3 id="期望sarsa">期望SARSA
 </h3><ul>
-<li>$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma \sum_{a}\pi (a|S_{t+1})Q(S_{t+1},a)-Q(S_{t},A_{t}))$$</li>
+<li>
+$$Q(S_{t},A_{t})\leftarrow Q(S_{t},A_{t})+\alpha (R_{t+1}+\gamma \sum_{a}\pi (a|S_{t+1})Q(S_{t+1},a)-Q(S_{t},A_{t}))$$</li>
 <li>减少了由于\(A^{&rsquo;}\)的选择带来的方差</li>
 <li>在相同更新步数时,期望 Sarsa 比 Sarsa 的通用性更好</li>
 <li>可以在在策略和离策略中切换
@@ -497,7 +502,8 @@
 <li>
 <h4 id="公式-1">公式
 </h4><ul>
-<li>$$Q(S,A)\leftarrow Q(S,A)+\alpha (R+\gamma \max_{a^{&rsquo;}}Q(S^{&rsquo;},a^{&rsquo;})-Q(S,A))$$</li>
+<li>
+$$Q(S,A)\leftarrow Q(S,A)+\alpha (R+\gamma \max_{a^{'}}Q(S^{'},a^{'})-Q(S,A))$$</li>
 </ul>
 </li>
 <li>

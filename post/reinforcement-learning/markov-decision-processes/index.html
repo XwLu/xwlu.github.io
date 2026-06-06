@@ -451,7 +451,8 @@
 <h2 id="贝尔曼方程">贝尔曼方程
 </h2><ul>
 <li>强化学习的核心</li>
-<li>$$v(s)=R(s)+\gamma \sum_{s&rsquo;}^{ }P_{s{s}&rsquo;}v({s}&rsquo;)$$</li>
+<li>
+$$v(s)=R(s)+\gamma \sum_{s'}^{ }P_{s{s}'}v({s}')$$</li>
 </ul>
 </li>
 <li>
@@ -459,8 +460,10 @@
 </h2><ul>
 <li>状态值函数(\(v_{\pi }(s)\))：是从状态\(s\)开始，使用策略\(\pi\)得到的期望回报值</li>
 <li>状态动作值函数(\(q_{\pi }(s,a)\))：是从状态\(s\)开始,执行动作\(a\)，然后使用策略\(\pi\)得到的期望回报值</li>
-<li>$$v_{\pi }(s)=\sum \pi (a|s)q_{\pi }(s,a)$$</li>
-<li>$$q_{\pi }(s,a)=R(s,a)+\gamma \sum_{s&rsquo;\in S}^{ }P_{s{s}&rsquo;}^{a}v_{\pi }(s)$$</li>
+<li>
+$$v_{\pi }(s)=\sum \pi (a|s)q_{\pi }(s,a)$$</li>
+<li>
+$$q_{\pi }(s,a)=R(s,a)+\gamma \sum_{s'\in S}^{ }P_{s{s}'}^{a}v_{\pi }(s)$$</li>
 </ul>
 </li>
 <li>

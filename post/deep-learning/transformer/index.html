@@ -292,19 +292,23 @@
 </li>
 <li>前向连接层(Feed Forward)
 <ul>
-<li>$$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$
-<ul>
+<li>
+$$FFN(x)=max(0,xW_{1}+b_{1})W_{2}+b_{2}$$<ul>
 <li>max操作就是Relu激活函数</li>
 </ul>
 </li>
-<li>$$W_{1}\in R^{d_{model}\times d_{ff}},W_{2}\in R^{d_{ff}\times d_{model}}$$</li>
+<li>
+$$W_{1}\in R^{d_{model}\times d_{ff}},W_{2}\in R^{d_{ff}\times d_{model}}$$</li>
 </ul>
 </li>
 <li>层归一化(Norm)
 <ul>
-<li>$$\mu^{l}=\frac{1}{H}\sum_{i=1}^{H}\alpha_{i}^{l}$$</li>
-<li>$$\sigma^{l}=\sqrt{\frac{1}{H}\sum_{i=1}^{H}(\alpha_{i}^{l}-\mu^{l})^{2}}$$</li>
-<li>$$x_{i}^{&rsquo;}=\frac{x_{i}-\mu }{\sigma}$$</li>
+<li>
+$$\mu^{l}=\frac{1}{H}\sum_{i=1}^{H}\alpha_{i}^{l}$$</li>
+<li>
+$$\sigma^{l}=\sqrt{\frac{1}{H}\sum_{i=1}^{H}(\alpha_{i}^{l}-\mu^{l})^{2}}$$</li>
+<li>
+$$x_{i}^{'}=\frac{x_{i}-\mu }{\sigma}$$</li>
 <li>这一步的作用是前面的数据经过激活函数之后距离中心分布比较远，归一化后把这个数据分布又拉回到中心区域了，不至于越往后计算偏差越大</li>
 </ul>
 </li>

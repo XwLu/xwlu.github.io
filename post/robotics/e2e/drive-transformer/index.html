@@ -668,8 +668,8 @@
 </li>
 <li>
 <p><strong>施放&quot;自适应层归一化&quot;法术</strong>
-$$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}, ; \text{受 } [\gamma, \beta] \text{ 控制}) $$</p>
-</li>
+</p>
+$$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}, \; \text{受 } [\gamma, \beta] \text{ 控制}) $$</li>
 </ol>
 <hr>
 <h3 id="这样做的绝妙之处">这样做的绝妙之处
@@ -754,7 +754,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <p><strong>位置编码的&quot;现做现卖&quot;</strong></p>
 <ul>
 <li>有一个专门的&quot;编码加工厂&quot;（MLP 网络）</li>
-<li>接收新坐标 $(x&rsquo;, y&rsquo;, z&rsquo;)$，动态生成当前时刻的高维 PE</li>
+<li>接收新坐标 $(x', y', z')$，动态生成当前时刻的高维 PE</li>
 </ul>
 </li>
 <li>
@@ -1014,25 +1014,20 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 </h2><p>DriveTransformer 采用<strong>多任务联合训练</strong>的策略，所有任务共享同一个损失函数，通过权重平衡各任务的贡献。这种设计让模型能够同时学习感知、预测和规划，真正实现端到端的协同优化。</p>
 <hr>
 <h3 id="总体损失函数架构">总体损失函数架构
-</h3><p>$$\mathcal{L}<em>{\text{total}} = \mathcal{L}</em>{\text{agent}} + \lambda_{\text{map}} \mathcal{L}<em>{\text{map}} + \lambda</em>{\text{motion}} \mathcal{L}<em>{\text{motion}} + \lambda</em>{\text{plan}} \mathcal{L}_{\text{plan}}$$</p>
-<p>其中 $\lambda$ 权重系数用于平衡各任务的贡献。</p>
+</h3>$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{agent}} + \lambda_{\text{map}} \mathcal{L}_{\text{map}} + \lambda_{\text{motion}} \mathcal{L}_{\text{motion}} + \lambda_{\text{plan}} \mathcal{L}_{\text{plan}}$$<p>其中 $\lambda$ 权重系数用于平衡各任务的贡献。</p>
 <hr>
 <h3 id="-agent-detection-loss智能体检测损失">🚗 Agent Detection Loss（智能体检测损失）
 </h3><p>Agent Head 需要完成三个子任务：分类（识别物体类别）、检测（输出 3D 边界框）、速度预测。</p>
-<p>$$\mathcal{L}<em>{\text{agent}} = \lambda</em>{\text{cls}} \mathcal{L}<em>{\text{cls}} + \lambda</em>{\text{box}} \mathcal{L}<em>{\text{box}} + \lambda</em>{\text{vel}} \mathcal{L}_{\text{vel}}$$</p>
-<h4 id="分类损失focal-loss">分类损失：Focal Loss
-</h4><p>$$\mathcal{L}<em>{\text{cls}} = -\sum</em>{i} \alpha_{c} (1 - p_i)^{\gamma} \log(p_i)$$</p>
-<ul>
+$$\mathcal{L}_{\text{agent}} = \lambda_{\text{cls}} \mathcal{L}_{\text{cls}} + \lambda_{\text{box}} \mathcal{L}_{\text{box}} + \lambda_{\text{vel}} \mathcal{L}_{\text{vel}}$$<h4 id="分类损失focal-loss">分类损失：Focal Loss
+</h4>$$\mathcal{L}_{\text{cls}} = -\sum_{i} \alpha_{c} (1 - p_i)^{\gamma} \log(p_i)$$<ul>
 <li>$\alpha_c$：类别平衡权重，缓解类别不平衡问题</li>
 <li>$\gamma$：聚焦参数（通常取 2），降低易分类样本的权重</li>
 <li>$p_i$：预测为正确类别的概率</li>
 </ul>
 <h4 id="边界框回归l1-loss">边界框回归：L1 Loss
-</h4><p>$$\mathcal{L}<em>{\text{box}} = \sum</em>{i \in \mathcal{M}} \left( | \hat{b}_i - b_i |_1 \right)$$</p>
-<p>其中 $\hat{b}_i$ 是预测的 3D 边界框参数 $(x, y, z, l, w, h, \theta)$，$b_i$ 是真实值，$\mathcal{M}$ 是匹配成功的探针集合。</p>
+</h4>$$\mathcal{L}_{\text{box}} = \sum_{i \in \mathcal{M}} \left( \| \hat{b}_i - b_i \|_1 \right)$$<p>其中 $\hat{b}_i$ 是预测的 3D 边界框参数 $(x, y, z, l, w, h, \theta)$，$b_i$ 是真实值，$\mathcal{M}$ 是匹配成功的探针集合。</p>
 <h4 id="速度回归l1-loss">速度回归：L1 Loss
-</h4><p>$$\mathcal{L}<em>{\text{vel}} = \sum</em>{i \in \mathcal{M}} \left( | \hat{v}_i - v_i |_1 \right)$$</p>
-<p>其中 $\hat{v}_i = (\hat{v}_x, \hat{v}_y)$ 是预测速度，$v_i$ 是真实速度。</p>
+</h4>$$\mathcal{L}_{\text{vel}} = \sum_{i \in \mathcal{M}} \left( \| \hat{v}_i - v_i \|_1 \right)$$<p>其中 $\hat{v}_i = (\hat{v}_x, \hat{v}_y)$ 是预测速度，$v_i$ 是真实速度。</p>
 
     <blockquote>
         <p><strong>关键细节</strong>：速度损失非常关键！因为预测出的速度会被存入 FIFO 队列，作为下一帧运动补偿的依据。如果速度预测不准，整个时序推理链条都会受影响。</p>
@@ -1041,13 +1036,10 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <hr>
 <h3 id="-map-detection-loss地图构建损失">🗺️ Map Detection Loss（地图构建损失）
 </h3><p>Map Head 负责在线构建矢量地图，输出折线形式的地图元素。</p>
-<p>$$\mathcal{L}<em>{\text{map}} = \lambda</em>{\text{cls}} \mathcal{L}<em>{\text{cls}} + \lambda</em>{\text{pline}} \mathcal{L}_{\text{pline}}$$</p>
-<h4 id="分类损失focal-loss-1">分类损失：Focal Loss
-</h4><p>$$\mathcal{L}<em>{\text{cls}} = -\sum</em>{i} \alpha_{c} (1 - p_i)^{\gamma} \log(p_i)$$</p>
-<p>区分车道线、路面边界、斑马线、红绿灯等地图元素类型。</p>
+$$\mathcal{L}_{\text{map}} = \lambda_{\text{cls}} \mathcal{L}_{\text{cls}} + \lambda_{\text{pline}} \mathcal{L}_{\text{pline}}$$<h4 id="分类损失focal-loss-1">分类损失：Focal Loss
+</h4>$$\mathcal{L}_{\text{cls}} = -\sum_{i} \alpha_{c} (1 - p_i)^{\gamma} \log(p_i)$$<p>区分车道线、路面边界、斑马线、红绿灯等地图元素类型。</p>
 <h4 id="折线回归损失">折线回归损失
-</h4><p>$$\mathcal{L}<em>{\text{pline}} = \sum</em>{i \in \mathcal{M}} \sum_{j=1}^{N_{pts}} | \hat{p}<em>{i,j} - p</em>{i,j} |_1$$</p>
-<p>其中：</p>
+</h4>$$\mathcal{L}_{\text{pline}} = \sum_{i \in \mathcal{M}} \sum_{j=1}^{N_{pts}} \| \hat{p}_{i,j} - p_{i,j} \|_1$$<p>其中：</p>
 <ul>
 <li>$N_{pts}$：每条折线的点数</li>
 <li>$\hat{p}_{i,j} = (x, y, z)$：预测的第 $i$ 条折线上第 $j$ 个点的坐标</li>
@@ -1061,8 +1053,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <hr>
 <h3 id="-motion-prediction-loss运动预测损失">🔮 Motion Prediction Loss（运动预测损失）
 </h3><p>Agent Head 还需要预测周围物体的未来运动轨迹。</p>
-<p>$$\mathcal{L}<em>{\text{motion}} = \sum</em>{i \in \mathcal{M}} \sum_{t=1}^{T} | \hat{traj}<em>{i,t} - traj</em>{i,t} |_1$$</p>
-<p>其中：</p>
+$$\mathcal{L}_{\text{motion}} = \sum_{i \in \mathcal{M}} \sum_{t=1}^{T} \| \hat{traj}_{i,t} - traj_{i,t} \|_1$$<p>其中：</p>
 <ul>
 <li>$T$：预测的未来时间步数（如 12 步，对应 3 秒 @ 4Hz）</li>
 <li>$\hat{traj}_{i,t} = (\Delta x_t, \Delta y_t)$：第 $i$ 个物体在第 $t$ 步的<strong>相对位移</strong>（局部坐标系）</li>
@@ -1081,8 +1072,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <hr>
 <h3 id="-planning-loss规划损失">🏎️ Planning Loss（规划损失）
 </h3><p>Planning Head 输出自车未来应该行驶的轨迹路点。</p>
-<p>$$\mathcal{L}<em>{\text{plan}} = \sum</em>{t=1}^{T} | \hat{wp}_t - wp_t |_1$$</p>
-<p>其中：</p>
+$$\mathcal{L}_{\text{plan}} = \sum_{t=1}^{T} \| \hat{wp}_t - wp_t \|_1$$<p>其中：</p>
 <ul>
 <li>$T$：规划的未来时间步数</li>
 <li>$\hat{wp}_t = (x_t, y_t)$：第 $t$ 步的预测路点（自车坐标系）</li>
@@ -1102,8 +1092,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <h3 id="-hungarian-matching匈牙利匹配">🔄 Hungarian Matching（匈牙利匹配）
 </h3><p>在 DETR 范式中，每个探针（Query）需要和一个真实的 Ground Truth 物体进行匹配。DriveTransformer 使用 <strong>匈牙利算法（Hungarian Matching）</strong> 完成这一任务。</p>
 <h4 id="匹配代价函数">匹配代价函数
-</h4><p>$$\mathcal{C}<em>{\text{match}}(\hat{y}, y) = \lambda</em>{\text{cls}} \mathcal{C}<em>{\text{cls}} + \lambda</em>{\text{box}} \mathcal{C}<em>{\text{box}} + \lambda</em>{\text{vel}} \mathcal{C}<em>{\text{vel}} + \lambda</em>{\text{motion}} \mathcal{C}_{\text{motion}}$$</p>
-<p>其中各代价项定义：</p>
+</h4>$$\mathcal{C}_{\text{match}}(\hat{y}, y) = \lambda_{\text{cls}} \mathcal{C}_{\text{cls}} + \lambda_{\text{box}} \mathcal{C}_{\text{box}} + \lambda_{\text{vel}} \mathcal{C}_{\text{vel}} + \lambda_{\text{motion}} \mathcal{C}_{\text{motion}}$$<p>其中各代价项定义：</p>
 <div class="table-wrapper"><table>
   <thead>
       <tr>
@@ -1115,29 +1104,28 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
   <tbody>
       <tr>
           <td>$\mathcal{C}_{\text{cls}}$</td>
-          <td>$-\log(p_{\text{gt_class}})$</td>
+          <td>$-\log(p_{\text{gt\_class}})$</td>
           <td>分类代价，预测为 GT 类别的概率越高，代价越低</td>
       </tr>
       <tr>
           <td>$\mathcal{C}_{\text{box}}$</td>
-          <td>$|\hat{b} - b|_1$</td>
+          <td>$\|\hat{b} - b\|_1$</td>
           <td>边界框代价，预测框与 GT 框的距离</td>
       </tr>
       <tr>
           <td>$\mathcal{C}_{\text{vel}}$</td>
-          <td>$|\hat{v} - v|_1$</td>
+          <td>$\|\hat{v} - v\|_1$</td>
           <td>速度代价，预测速度与真实速度的差异</td>
       </tr>
       <tr>
           <td>$\mathcal{C}_{\text{motion}}$</td>
-          <td>$|\hat{traj} - traj|_1$</td>
+          <td>$\|\hat{traj} - traj\|_1$</td>
           <td>轨迹代价，预测轨迹与真实轨迹的差异</td>
       </tr>
   </tbody>
 </table></div>
 <h4 id="最优匹配求解">最优匹配求解
-</h4><p>$$\hat{\sigma} = \arg\min_{\sigma \in \mathfrak{S}<em>N} \sum</em>{i=1}^{N} \mathcal{C}_{\text{match}}(\hat{y}<em>i, y</em>{\sigma(i)})$$</p>
-<p>其中：</p>
+</h4>$$\hat{\sigma} = \arg\min_{\sigma \in \mathfrak{S}_N} \sum_{i=1}^{N} \mathcal{C}_{\text{match}}(\hat{y}_i, y_{\sigma(i)})$$<p>其中：</p>
 <ul>
 <li>$\mathfrak{S}_N$ 是所有可能匹配方案的集合</li>
 <li>$\sigma$ 是匹配函数，将第 $i$ 个探针映射到第 $\sigma(i)$ 个 GT 物体</li>
@@ -1157,8 +1145,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
 <li><strong>每一层都计算损失</strong>：所有层的预测都与 GT 匹配并计算损失</li>
 <li><strong>总损失汇总</strong>：</li>
 </ul>
-<p>$$\mathcal{L}<em>{\text{total}} = \sum</em>{l=1}^{L} \mathcal{L}^{(l)}$$</p>
-
+$$\mathcal{L}_{\text{total}} = \sum_{l=1}^{L} \mathcal{L}^{(l)}$$
     <blockquote>
         <p><strong>优势</strong>：深层监督逼迫网络从第一层就开始&quot;干活&quot;，而不是等到最后一层才输出有意义的结果。这大大加速了训练收敛，提高了模型的优化效率。</p>
 
@@ -1196,7 +1183,7 @@ $$ \hat{PE}^t_{agent} = \text{LayerNorm}(\text{原始历史 } \hat{PE}^t_{agent}
       </tr>
       <tr>
           <td>Map Classification</td>
-          <td>$\lambda_{\text{map_cls}}$</td>
+          <td>$\lambda_{\text{map\_cls}}$</td>
           <td>2.0</td>
           <td>地图元素分类</td>
       </tr>

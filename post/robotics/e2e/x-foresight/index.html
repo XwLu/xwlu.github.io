@@ -546,8 +546,7 @@
 </table></div>
 <p>模型输出三路：<strong>驾驶动作</strong>（方向盘、油门刹车）、<strong>相机 latent token</strong>（未来场景的压缩摘要）、<strong>鸟瞰图 BEV token</strong>（辅助空间感知）。</p>
 <p>训练损失是三者的加权和：</p>
-<p>$$L_{total} = L_{act} + \alpha L_{cam} + \beta L_{bev}$$</p>
-<h4 id="分块预测同时解决两大拦路虎">分块预测：同时解决两大拦路虎
+$$L_{total} = L_{act} + \alpha L_{cam} + \beta L_{bev}$$<h4 id="分块预测同时解决两大拦路虎">分块预测：同时解决两大拦路虎
 </h4><p>核心设计是<strong>分块自回归（chunk-wise autoregressive）</strong>：每次预测一整个&quot;块&quot;（1 秒内的 $K=4$ 帧），而非单帧。</p>
 <p>这个设计一石二鸟：</p>
 <ul>
@@ -630,8 +629,7 @@
 <p><strong>非对称设计</strong>：视觉预测可以跳帧（学长期因果），动作预测始终保持高时间分辨率（不能跳帧，实时控制不等人）。计算代价不变（序列长度相同），但监督信号覆盖的物理时间跨度大幅提升。</p>
 <h4 id="时序重要性采样tis">时序重要性采样（TIS）
 </h4><p>均匀采样会让 AI 把大量训练时间花在&quot;直道巡航&quot;这种无聊场景上。TIS 对每个候选训练步计算重要性分数：</p>
-<p>$$w_k = \sum_{W \in {W_1^k, W_2^k, W_3^k}} \max_{t \in W}(\lambda_x |a_x(t)| + \lambda_y |a_y(t)|)$$</p>
-<p>把纵向加速度和横向加速度的最大值加权求和，覆盖三个时间窗口（即将发生的、正在发酵的、刚完成的）。凡是有剧烈加减速或转向的时刻，评分高，被抽到的概率大。温度参数 $\tau$ 控制采样集中程度。</p>
+$$w_k = \sum_{W \in \{W_1^k, W_2^k, W_3^k\}} \max_{t \in W}(\lambda_x |a_x(t)| + \lambda_y |a_y(t)|)$$<p>把纵向加速度和横向加速度的最大值加权求和，覆盖三个时间窗口（即将发生的、正在发酵的、刚完成的）。凡是有剧烈加减速或转向的时刻，评分高，被抽到的概率大。温度参数 $\tau$ 控制采样集中程度。</p>
 <h4 id="exposure-bias训练与推理的裂缝">Exposure Bias：训练与推理的裂缝
 </h4><p>Teacher forcing 带来一个经典问题：训练时模型永远看到完美的真实 Chunk，但推理时（闭环场景下）它要消化自己预测出来的（有误差的）Chunk。模型从未在训练中练习过&quot;在有误差的输入下继续预测&quot;，推理时一旦第 i 步出了偏差，误差会在后续步骤里雪球式累积。</p>
 <p>这正是论文引入 latent augmentation 和 latent sink 两个补救手段的根本原因——它们的存在本身就是在承认 exposure bias 是一个需要处理的真实问题。</p>

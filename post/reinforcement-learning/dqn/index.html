@@ -423,7 +423,8 @@
 <li>DQN中的TD目标值\(r+\gamma max_{a}Q({s}&rsquo;,a)\)存在max操作，会引入一个正向偏差</li>
 <li>因此建模两个Q网络，一个用于选动作，一个用于评估动作：
 <ul>
-<li>$$r+\gamma Q^{B}({s}&rsquo;,argmax_{a}Q^{A}({s}&rsquo;,a))$$</li>
+<li>
+$$r+\gamma Q^{B}({s}',argmax_{a}Q^{A}({s}',a))$$</li>
 </ul>
 </li>
 <li>其实只要把DQN的target network也变成独立更新的就行了</li>
@@ -484,7 +485,8 @@
 </h3><ul>
 <li>两种变体：
 <ul>
-<li>$$p_{i}=|\delta _{i}|+e$$</li>
+<li>
+$$p_{i}=|\delta _{i}|+e$$</li>
 <li>其中，\(\delta _{i}\)表示TD误差，\(e\)表示人为施加的噪声，通过这个噪声保证多样性</li>
 <li>\(p_{i}=\frac{1}{rank(i)}\)，序号的倒数来表示权重，对噪声的敏感度下降。简单的说，即使TD误差有0.1的误差，但顺序上依然是排第二，这时，误差就没有影响了。</li>
 </ul>

@@ -411,8 +411,10 @@
 <ul>
 <li>将Soft &amp; Hard Attention结合起来，每次先为decoder端当前的词，预测一个source端对齐位置（aligned position）\(p_{t}\)。然后基于\(p_{t}\)选择一个窗口，用于计算背景向量\(c_{t}\)。
 <ul>
-<li>$$p_{t}=S\cdot sigmod(v_{p}^{t}tanh(W_{p}h_{t}))$$</li>
-<li>$$a_{t}(s)=align(h_{t},h_{t}^{&rsquo;})exp(-\frac{(s-p_{t}^{2})}{2\sigma^{2}})$$</li>
+<li>
+$$p_{t}=S\cdot sigmod(v_{p}^{t}tanh(W_{p}h_{t}))$$</li>
+<li>
+$$a_{t}(s)=align(h_{t},h_{t}^{'})exp(-\frac{(s-p_{t}^{2})}{2\sigma^{2}})$$</li>
 </ul>
 </li>
 </ul>
@@ -422,7 +424,8 @@
 </h3><ul>
 <li>本质上，Attention机制是对source中元素的value（指代source中的\(h_{i}\)或\(x_{i}\)）值进行加权求和，而query（上文中的\(h_{i}^{&rsquo;}\)）和key（source中的\(h_{j}\)）用来计算对应value的权重系数
 <ul>
-<li>$$attention(query,key)=\sum_{i=1}^{t}sim(query,key_{i})*value_{i}$$</li>
+<li>
+$$attention(query,key)=\sum_{i=1}^{t}sim(query,key_{i})*value_{i}$$</li>
 </ul>
 </li>
 <li>聚焦的过程体现在权重系数的计算上，权重越大越聚焦到其对应的value上，即权重代表了信息的重要性，而value是其对应的信息。</li>
@@ -433,18 +436,21 @@
 <li>阶段二：原始分值归一化、概率化</li>
 <li>阶段三：根据权重系数对value进行加权求和</li>
 <li><img alt="process" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../process.png"></li>
-<li>$$Attention(Q,K,V)=softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V$$
-<ul>
-<li>$$Q\in R^{n\times d_{k}}$$</li>
-<li>$$K\in R^{m\times d_{k}}$$</li>
-<li>$$V\in R^{m\times d_{v}}$$</li>
+<li>
+$$Attention(Q,K,V)=softmax(\frac{QK^{T}}{\sqrt{d_{k}}})V$$<ul>
+<li>
+$$Q\in R^{n\times d_{k}}$$</li>
+<li>
+$$K\in R^{m\times d_{k}}$$</li>
+<li>
+$$V\in R^{m\times d_{v}}$$</li>
 </ul>
 </li>
 <li>公式理解
 <ul>
 <li>如果忽略激活函数softmax的话，那么事实上它就是三个\(n\times d_{k}\), \(d_{k}\times m\), \(m\times d_{v}\)的矩阵相乘，最后的结果也是一个\(n\times d_{v}\)的矩阵。即\(n\times d_{k}\)的序列\(Q\)编码成了一个新的\(n\times d_{v}\)</li>
-<li>$$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{&lt;Q,k_{s}&gt;}{d_{k}})v_{s}$$
-<ul>
+<li>
+$$Attention(q_{t},K,V)=\sum_{s=1}^{m}\frac{1}{Z}exp(\frac{<Q,k_{s}>}{d_{k}})v_{s}$$<ul>
 <li>\(K\)和\(V\)是一一对应的，每次拿一个\(q_{t}\)和各个key做内积并softmax，得到\(q_{t}\)与各个\(v_{s}\)的相似程度，然后加权求和，得到一个\(d_{v}\)的向量。</li>
 <li>其中，因子\(\sqrt{d_{k}}\)起到调节的作用，使得内积不至于太大（太大的话softmax就是非0即1了，不够soft）</li>
 <li>这个定义只是注意力的一种形式，还有一些其他的选择，比如query和key的运算方式并不一定是点乘，还可以是拼接后再内积一个参数向量，甚至是权重都不一定要归一化等。</li>
@@ -461,9 +467,12 @@
 <ul>
 <li>Mutil-Head Attention是Google提出的新概念，是Attention机制的完善，不过从形式上看，它其实就是把Q,K,V通过参数矩阵映射一下，然后再做Attention，把这个过程重复做了h次，结果拼接起来就行了。</li>
 <li><img alt="multi-head attention" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../attention_multi_head.png"></li>
-<li>$$head_{i}=Attention(QW_{i}^{Q},KW_{i}^{K},VW_{i}^{V})$$</li>
-<li>$$W_{i}^{Q}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{K}\in R^{d_{k}\times \breve{d}<em>{k}},W</em>{i}^{V}\in R^{d_{v}\times \breve{d}_{v}}$$</li>
-<li>$$MultiHead(Q,K,V)=Concat(head_{1},&hellip;,head_{n})$$</li>
+<li>
+$$head_{i}=Attention(QW_{i}^{Q},KW_{i}^{K},VW_{i}^{V})$$</li>
+<li>
+$$W_{i}^{Q}\in R^{d_{k}\times \breve{d}_{k}},W_{i}^{K}\in R^{d_{k}\times \breve{d}_{k}},W_{i}^{V}\in R^{d_{v}\times \breve{d}_{v}}$$</li>
+<li>
+$$MultiHead(Q,K,V)=Concat(head_{1},...,head_{n})$$</li>
 <li>最后得到一个\(n\times (h\breve{d}_{k})\)的序列，所谓的“多头”，就是多做几次同样的事情（参数不共享），然后把结果进行拼接。</li>
 </ul>
 </li>
@@ -487,8 +496,10 @@
 <li>以前的RNN，CNN模型中都出现过Position Embedding，但是那些模型本身就能够学习到序列的位置信息，所以Position Embedding(PE)不是必须的。但是在Attention模型中，PE是位置信息的唯一来源，因此它是模型的核心成分之一，并非仅仅是简单的辅助手段。</li>
 <li>在之前的PE中，基本都是根据任务训练出来的向量，而Google直接给出了一个构造PE的公式：
 <ul>
-<li>$$PE_{2i}(p)=sin(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
-<li>$$PE_{2i+1}(p)=cos(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+<li>
+$$PE_{2i}(p)=sin(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
+<li>
+$$PE_{2i+1}(p)=cos(\frac{p}{10000^{\frac{2i}{d_{pos}}}})$$</li>
 </ul>
 </li>
 <li>Position Embedding 本身是一个绝对位置的信息，但是在语言中，相对位置也很重要，Google选择前述的位置向量公式一个重要的原因是：由于有\(sin(\alpha +\beta )=sin\alpha cos\beta +cos\alpha sin\beta\)和\(cos(\alpha +\beta )=cos\alpha cos\beta -sin\alpha sin\beta\)，这表明位置\(p+k\)的向量可以表明位置为\(p\)的向量的线性变换，这提供了表达相对位置的可能性。</li>

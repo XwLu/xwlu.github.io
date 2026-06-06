@@ -556,20 +556,19 @@
 └─────────────────────────────────────────────────────┘
 </code></pre><h3 id="35-训练-loss-设计">3.5 训练 Loss 设计
 </h3><p>Fast-WAM 的 Loss 设计是一个**&ldquo;双头并进、联合练兵&rdquo;**的策略：</p>
-<p>$$L_{total} = L_{video} + \lambda L_{action}$$</p>
-<h4 id="l_video物理规律的强制灌输">$L_{video}$：物理规律的&quot;强制灌输&rdquo;
+$$L_{total} = L_{video} + \lambda L_{action}$$<h4 id="物理规律的强制灌输">$L_{video}$：物理规律的&quot;强制灌输&rdquo;
 </h4><ul>
 <li><strong>技术细节</strong>：基于 <strong>Flow Matching（流匹配）</strong> 或标准的 <strong>Diffusion Loss</strong></li>
 <li><strong>通俗解释</strong>：给模型一张模糊的、加了噪声的未来画面，它必须想办法还原出清晰的画面</li>
 <li><strong>作用</strong>：让模型的大脑对物理世界保持敏感，练就&quot;火眼金睛&rdquo;</li>
 </ul>
-<h4 id="l_action肌肉记忆的精准打磨">$L_{action}$：肌肉记忆的&quot;精准打磨&quot;
+<h4 id="肌肉记忆的精准打磨">$L_{action}$：肌肉记忆的&quot;精准打磨&quot;
 </h4><ul>
 <li><strong>技术细节</strong>：采用 <strong>Diffusion-based Loss</strong></li>
 <li><strong>通俗解释</strong>：教练在旁边看着机器人折毛巾，每动一下就对比专业动作给出差评</li>
 <li><strong>精妙之处</strong>：这个损失作用在 Action Expert 那个 1B 大小的&quot;专家插件&quot;上，同时也会通过反向传播微调底座</li>
 </ul>
-<h4 id="lambda-系数动态平衡的调音师">$\lambda$ 系数：动态平衡的&quot;调音师&quot;
+<h4 id="系数动态平衡的调音师">$\lambda$ 系数：动态平衡的&quot;调音师&quot;
 </h4><p>决定模型是更想当一个&quot;画家&quot;（视频生成）还是&quot;工人&quot;（动作执行）。</p>
 <h4 id="为什么这样设计能借力打力">为什么这样设计能&quot;借力打力&quot;？
 </h4><p>在训练时，由于 $L_{video}$ 和 $L_{action}$ 在同一个 Transformer 结构中同时优化，它们会共享中间的 Hidden States：</p>

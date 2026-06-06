@@ -334,19 +334,22 @@
 </h3><ul>
 <li>沿着梯度（grad或least-norm sub-grad）的负方向更新
 <ul>
-<li>$$x^{k+1}=x^{k}-\tau \triangledown f(x^{k})$$</li>
+<li>
+$$x^{k&plus;1}=x^{k}-\tau \triangledown f(x^{k})$$</li>
 </ul>
 </li>
 <li>步长选择
 <ul>
 <li>Constant step size（固定步长）
 <ul>
-<li>$$\tau=c$$</li>
+<li>
+$$\tau=c$$</li>
 </ul>
 </li>
 <li>Diminishing step size（渐消步长）
 <ul>
-<li>$$\tau=c/k$$</li>
+<li>
+$$\tau=c/k$$</li>
 <li>Robbins-Monro rule for expensive function</li>
 <li>鲁棒性很强，一定可以收敛到local minimize</li>
 <li>如果函数是非光滑的或者梯度的计算存在一个方差较大的噪声时，可以用这种方法，但收敛速度相对比较慢</li>
@@ -354,13 +357,15 @@
 </li>
 <li>Exact line search（精确线搜索）
 <ul>
-<li>$$\tau=argmin_{\alpha}f(x^{k}+\alpha d)$$</li>
+<li>
+$$\tau=argmin_{\alpha}f(x^{k}&plus;\alpha d)$$</li>
 <li>找到一个\(\alpha\)使得函数下降最多，这本身就是个优化问题（将多维优化变成了一维优化），求解很难，因此工程中常用下面一种方法</li>
 </ul>
 </li>
 <li>Inexact line search（非精确线搜索）
 <ul>
-<li>$$\tau\in\lbrace \alpha | f(x^{k}) - f(x^{k}+\alpha d)\geq -c\cdot \alpha d^{T}\triangledown f(x^{k})\rbrace$$</li>
+<li>
+$$\tau\in\lbrace \alpha | f(x^{k}) - f(x^{k}&plus;\alpha d)\geq -c\cdot \alpha d^{T}\triangledown f(x^{k})\rbrace$$</li>
 <li>Armijo condition（充分下降条件）
 <ul>
 <li><img alt="Armijo line search" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="../armijo_line_search.png"></li>

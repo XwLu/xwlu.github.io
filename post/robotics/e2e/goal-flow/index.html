@@ -395,19 +395,16 @@
 <li>高质量轨迹通常具备以下特征：与真实轨迹距离接近且位于可行驶区域内。为此，我们通过距离评分\(\hat{\delta}^{dis}\)与可行驶区域合规评分\(\hat{\delta}^{dac}\)对目标点词典\(V\)中的每个候选点\(g_{i}\)进行双重评估。距离评分衡量目标点\(g_{i}\)与真实轨迹终点\(g^{gt}\)的接近程度，采用连续值表示，取值范围\(\hat{\delta}^{dis}\in\lbrack0,1\rbrack\)，数值越大表示与\(g^{gt}\)越接近；可行驶区域合规评分确保目标点位于合法驾驶区域，采用二元值\(\hat{\delta}^{dac}\in\lbrace 0,1\rbrace\)，1表示目标点符合可行驶区域要求，0则表示处于非驾驶区域。</li>
 <li>为构建目标距离评分\(\hat{\delta_{i}}^{dis}\)，我们采用softmax函数将目标点\(g_{i}\)与真实目标点\(g^{gt}\)之间的欧氏距离映射至\(\lbrack0,1\rbrack\)区间：</li>
 </ul>
-<p>$$\hat{\delta_{i}}^{dis}=\frac{exp(-\Vert g_{i}-g^{gt}\Vert_{2})}{\sum_{j} exp(-\Vert g_{j}-g^{gt}\Vert_{2})}$$</p>
-<ul>
+$$\hat{\delta_{i}}^{dis}=\frac{exp(-\Vert g_{i}-g^{gt}\Vert_{2})}{\sum_{j} exp(-\Vert g_{j}-g^{gt}\Vert_{2})}$$<ul>
 <li>针对可行驶区域合规评分\(\hat{\delta_{i}}^{dac}\)的构建，我们引入影子车辆概念——其边界框根据目标点\(g_{i}\)的位置与航向角\((x_{i},y_{i},\theta_{i})\)以及自车几何参数确定。设\(\lbrace p^{j}\rbrace^{4}\)表示影子车辆四个角点的位置集合，\(DA \)为表征可行驶区域的多边形区域，则合规评分定义为：</li>
 </ul>
-<p>$$\hat{\delta_{i}}^{dac}=\begin{cases}
-1 &amp;\text{if } \forall j,p^{j} \in DA \
-0 &amp;\text{if } otherwise
-\end{cases}$$</p>
-<ul>
+$$\hat{\delta_{i}}^{dac}=\begin{cases}
+  1 &\text{if } \forall j,p^{j} \in DA \\
+  0 &\text{if } otherwise
+\end{cases}$$<ul>
 <li>我们通过综合\(\hat{\delta_{i}}^{dis}\)与\(\hat{\delta_{i}}^{dac}\)计算最终评分，选取最终评分最高的目标点作为轨迹生成依据。</li>
 </ul>
-<p>$$\hat{\delta_{i}}^{final}=w_{1}log\hat{\delta_{i}}^{dis}+w_{2}log\hat{\delta_{i}}^{dac}$$</p>
-<ul>
+$$\hat{\delta_{i}}^{final}=w_{1}log\hat{\delta_{i}}^{dis}+w_{2}log\hat{\delta_{i}}^{dac}$$<ul>
 <li>如图3(a)所示，基于Transformer的评分解码器以特征向量\(F_{v}\)与\(F_{ego}\)的加和结果作为查询向量，BEV特征\(F_{bev}\)作为键/值向量。解码输出经两个独立的多层感知机(MLP)处理后，为词典\(V\)中各候选点生成\(\hat{\delta}^{dis}\)与\(\hat{\delta}^{dac}\)评分。图3(b)展示了双评分分布可视化结果，其中暖色调点表示更高评分。实验观测表明：\(\hat{\delta}^{dis}\)有效指示期望未来位置，而\(\hat{\delta}^{dac}\)可精准识别目标点是否位于可行驶区域</li>
 </ul>
 <p><img alt="pic" class="gallery-image" data-flex-basis="490px" data-flex-grow="204" height="662" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/goal-flow/2.png" srcset="/post/robotics/e2e/goal-flow/2_hu_b2b02d34df599bbb.png 800w, /post/robotics/e2e/goal-flow/2.png 1354w" width="1354"></p>
@@ -416,32 +413,23 @@
 <li>在轨迹规划模块中，我们通过生成模型产生受约束的高质量轨迹候选集，并基于评分机制筛选最优轨迹。基于扩散方法的生成模型如DDPM和DDIM通常需要复杂的去噪路径，导致推理阶段产生显著时间开销，难以满足自动驾驶等实时系统的需求。相比之下，基于flow matching中最优传输路径的rectified flow仅需少量推理步骤即可获得理想结果。本工作采用rectified flow作为生成模型，以BEV特征\(F_{bev}\)与目标点\(g\)为条件，生成多模态轨迹集合。</li>
 <li>我们通过建模从噪声分布到目标轨迹分布的迁移过程生成多模态轨迹。在此分布迁移过程中，给定当前状态\(x_{t}\)及时序参数\(t\)预测轨迹偏移量\(v_{t}\)。</li>
 </ul>
-<p>$$v_{t}=\tau^{norm}-x_{0}$$</p>
-<p>$$x_{t} = (1-t)x_{0}+t\tau^{norm}$$</p>
-<p>$$\tau^{norm} = \cal H(\tau^{gt})$$</p>
-<ul>
+$$v_{t}=\tau^{norm}-x_{0}$$$$x_{t} = (1-t)x_{0}+t\tau^{norm}$$$$\tau^{norm} = \cal H(\tau^{gt})$$<ul>
 <li>其中\(\tau^{gt}\)是轨迹GT，\(\tau^{norm}\)是它的归一化形式。定义\(\cal H(\cdot)\)为轨迹归一化运算。\(x_{0}\)变量表征噪声分布，服从\(x_{0}\thicksim N(0,\sigma^{2}I)\)。通过\(x_{0}\)与\(\tau^{norm}\)的线性插值获得中间状态\(x_{t}\)。</li>
 <li>如图4所示，通过级联编码器提取多维度特征：\(x_{t}\)经线性层编码，时序参数\(t\)与目标点通过正弦编码转化为特征向量，BEV特征\(F_{bev}\)与自车特征\(F_{ego}\)经环境编码器融合获得环境特征\(F_{env}\)。</li>
 </ul>
 <p><img alt="pic" class="gallery-image" data-flex-basis="369px" data-flex-grow="153" height="452" loading="lazy" sizes="(max-width: 767px) calc(100vw - 30px), (max-width: 1023px) 700px, (max-width: 1279px) 950px, 1232px" src="/post/robotics/e2e/goal-flow/3.png" width="696"></p>
-<p>$$F_{env}=E_{env}(Q,(F_{BEV}+F_{ego}),(F_{BEV}+F_{ego}))$$</p>
-<ul>
+$$F_{env}=E_{env}(Q,(F_{BEV}+F_{ego}),(F_{BEV}+F_{ego}))$$<ul>
 <li>其中，\(E_{env}\)指基于Transformer架构的编码器，\( Q\)表示可学习嵌入向量，\(F_{ego}\)表征自车状态特征，其中编码了自车的运动学信息（如速度、加速度等）。</li>
 <li>通过将环境特征\(F_{env}\)、目标点特征\(F_{goal}\)、轨迹特征\(F_{traj}\)及时序特征\(F_{t}\)进行特征拼接，形成综合特征\(F_{all}\)——该特征集成当前状态、时序信息及场景上下文。组合特征随后输入多层注意力网络，最终预测分布迁移量\(v_{t}\)。</li>
 </ul>
-<p>$$\hat{v_{t}}=\cal G(F_{all},F_{all},F_{all})$$</p>
-<p>$$F_{all} = Concat(F_{env}, F_{goal}, F_{traj}, F_{t})$$</p>
-<ul>
+$$\hat{v_{t}}=\cal G(F_{all},F_{all},F_{all})$$$$F_{all} = Concat(F_{env}, F_{goal}, F_{traj}, F_{t})$$<ul>
 <li>其中，网络\(\cal G\)由\(N\)层注意力模块构成。我们基于噪声分布\(x_{0}\)与预测迁移量\(\hat{v_{t}}\)重构轨迹分布。具体而言，通过修正流执行多次推理步骤，逐步将噪声分布\(x_{0}\)转换为目标分布\(\tau^{norm}\)，最终对\(\tau^{norm}\)实施去归一化处理得到最终轨迹\(\hat{\tau}\)</li>
 </ul>
-<p>$$\hat{\tau} = \cal H^{-1}(\hat{\tau}^{norm})$$</p>
-<p>$$\hat{\tau}^{norm}=x_{0}+\frac{1}{n}\sum_{i}^n\hat{v} _{t _{i}}$$</p>
-<ul>
+$$\hat{\tau} = \cal H^{-1}(\hat{\tau}^{norm})$$$$\hat{\tau}^{norm}=x_{0}+\frac{1}{n}\sum_{i}^n\hat{v} _{t _{i}}$$<ul>
 <li>式中，\(n\)表示总推理步数，\(t_{i}\)为第\(i\)步采样的时间步参数，满足\(t_{i}\in\lbrack0,1\rbrack\)。\(\cal H^{-1}(\cdot)\)表示去归一化运算，将归一化轨迹恢复至实际物理尺度。</li>
 <li>在轨迹选择环节，SparseDrive与Diffusion-ES等方法需对生成轨迹进行运动学仿真，预测其与周边交通参与者的潜在碰撞风险以筛选最优轨迹，该过程显著增加推理耗时。本方法通过目标点引导实现轨迹选择的流程简化：综合考虑轨迹与目标点的距离偏差及自车行驶进度，借助轨迹评分器完成最优轨迹选择。<em>TODO：没有显示碰撞检测了，只关注导航进度和轨迹终点约束，真的能选出合理的轨迹吗?</em></li>
 </ul>
-<p>$$f(\hat{x} _{i})=-\lambda _{1}\Phi(f _{dis}(\hat{\tau} _{i}))+\lambda _{2}\Phi(f _{pg}(\hat{\tau} _{i}))$$</p>
-<ul>
+$$f(\hat{x} _{i})=-\lambda _{1}\Phi(f _{dis}(\hat{\tau} _{i}))+\lambda _{2}\Phi(f _{pg}(\hat{\tau} _{i}))$$<ul>
 <li>式中，\(\Phi(\cdot)\)表示极小极大运算。\(f_{dis}( \hat{\tau_{i}} )\)计算轨迹\(\hat{\tau_{i}}\)与目标点\(g\)的\(L2\)距离偏差，\(f_{pg}(\hat{\tau_{i}})\)评估轨迹\(\hat{\tau_{i}}\)形势进度的\(L_{2}\)距离指标。</li>
 <li>此外，预测目标点可能存在偏差误导轨迹生成。为此，我们在生成阶段对目标点进行屏蔽处理，构建影子轨迹。若影子轨迹与主轨迹呈现显著偏离，则判定该目标点不可靠，转而采用影子轨迹作为最终输出。<em>影子轨迹应该就是没有goal引导的情况下得到的一条fallback轨迹</em></li>
 </ul>
@@ -449,18 +437,13 @@
 </h3><ul>
 <li>首先，我们专门优化感知特征提取器，施加多感知监督损失，包括高精地图交叉熵损失\(L_{HD}\)、3D边界框分类损失\(L_{bbox}\)以及边界框位置回归的\(L_{1}\)损失\(L_{loc}\)。该阶段旨在通过多感知监督增强BEV特征的信息表征能力。具体损失函数定义如下：</li>
 </ul>
-<p>$$L_{perception}=w_{1}L_{HD}+w_{2}L_{bbox}+w_{3}L_{loc}$$</p>
-<ul>
+$$L_{perception}=w_{1}L_{HD}+w_{2}L_{bbox}+w_{3}L_{loc}$$<ul>
 <li>其中，\(w_{1}=10,w_{2}=1,w_{3}=10\)。对目标生成器的distance score(\(L_{dis}\)) 和 DAC score(\(L_{Ldac}\))采用cross entropy loss，\(w_{4}=1,w_{5}=0.005\)。</li>
 </ul>
-<p>$$L_{goal} = w_{4} L_{dis} + w_{5} L_{dac}$$</p>
-<p>$$L_{dis}=-\sum_{i=i}^{N} \delta_{i}^{dis}log(\hat{\delta}_{i}^{dis})$$</p>
-<p>$$L_{dac} = −\delta^{dac}log\hat{\delta}^{dac}−(1−\delta^{dac})log(1−\hat{\delta}^{dac})$$</p>
-<ul>
+$$L_{goal} = w_{4} L_{dis} + w_{5} L_{dac}$$$$L_{dis}=-\sum_{i=i}^{N} \delta_{i}^{dis}log(\hat{\delta}_{i}^{dis})$$$$L_{dac} = −\delta^{dac}log\hat{\delta}^{dac}−(1−\delta^{dac})log(1−\hat{\delta}^{dac})$$<ul>
 <li>对多模态规划器施加\(L_{1}\)loss</li>
 </ul>
-<p>$$L_{planner} = \vert v_{t} − \hat{v}_{t}\vert$$</p>
-<h2 id="实验">实验
+$$L_{planner} = \vert v_{t} − \hat{v}_{t}\vert$$<h2 id="实验">实验
 </h2><h3 id="数据集">数据集
 </h3><ul>
 <li>本实验在Openscene数据集完成验证。该数据集包含120小时自动驾驶数据，其端到端仿真环境Navsim采用1192个训练验证场景与136个测试场景，共计超10万样本（采样频率2Hz）。每个样本包含：8个视角的摄像头图像、5个激光雷达的融合点云、自车状态信息以及高精地图与目标物的标注信息。</li>
@@ -469,8 +452,7 @@
 </h3><ul>
 <li>在Navsim仿真环境中，生成的2Hz、4秒时长的初始轨迹通过LQR控制器进行插值处理，得到10Hz、4秒时长的平滑轨迹。通过以下闭环指标对轨迹进行综合评分：无责任碰撞率(\(S_{NC}\))、可行驶区域合规率(\(S_{DAC}\))、带边界约束的碰撞时间(\(S_{TTC}\))、自车行驶进度(\(S_{EP}\))、舒适性指数(\(S_{CF}\))及行驶方向合规率(\(S_{DDC}\))。最终评分通过加权聚合上述指标获得。由于实际约束条件限制，\(S_{DDC}\)指标未纳入最终评分计算。</li>
 </ul>
-<p>$$S_{PDM}=S_{NC}\times S_{DAC}\times S_{TTC}\times (\frac{5\times S_{EP} + 5 \times S_{CF} + 2\times S_{DDC} }{12})$$</p>
-<h3 id="基线算法">基线算法
+$$S_{PDM}=S_{NC}\times S_{DAC}\times S_{TTC}\times (\frac{5\times S_{EP} + 5 \times S_{CF} + 2\times S_{DDC} }{12})$$<h3 id="基线算法">基线算法
 </h3><ul>
 <li>恒定速度模型(Constant Velocity)：假设自车保持当前速度匀速前进</li>
 <li>自车状态MLP(Ego Status MLP)：仅以自车当前状态为输入，通过多层感知机生成轨迹</li>

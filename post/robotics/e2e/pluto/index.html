@@ -437,8 +437,11 @@
 <li>随后通过 \(N\)层transform decoder进行特征提取
 <ul>
 <li>第 \(i\)层的decoder步骤如下：
-$$E_{i-1}^{&rsquo;}=LayerNorm(E_{i-1})$$
-$$E_{i}=E_{i-1}+MHA(E_{i-1}^{&rsquo;},E_{i-1}^{&rsquo;},E_{i-1}^{&rsquo;})$$
+
+$$E_{i-1}^{'}=LayerNorm(E_{i-1})$$
+
+$$E_{i}=E_{i-1}+MHA(E_{i-1}^{'},E_{i-1}^{'},E_{i-1}^{'})$$
+
 $$E_{i}=E_{i}+FFN(LayerNorm(E_{i}))$$</li>
 <li>其中MHA是标准的multi-head attention操作</li>
 </ul>
@@ -488,13 +491,18 @@ $$E_{i}=E_{i}+FFN(LayerNorm(E_{i}))$$</li>
 <h3 id="轨迹解码">轨迹解码
 </h3><ul>
 <li>遍历 \(L_{dec}\)次self-attention和cross-attention操作:
-$$Q_{i-1}^{&rsquo;}=SelfAttn(Q_{i-1},dim=0)$$
-$$Q_{i-1}^{<em>}=SelfAttn(Q_{i-1}^{&rsquo;},dim=1)$$
-$$Q_{i}=CrossAttn(Q_{i-1}^{</em>},E_{enc},E_{enc})$$</li>
+
+$$Q_{i-1}^{'}=SelfAttn(Q_{i-1},dim=0)$$
+
+$$Q_{i-1}^{*}=SelfAttn(Q_{i-1}^{'},dim=1)$$
+
+$$Q_{i}=CrossAttn(Q_{i-1}^{*},E_{enc},E_{enc})$$</li>
 <li>最终得到 \(Q_{dec}\)，通过两个MLP分别解码得到ego的未来轨迹和对应scores。其中每个轨迹点包含 \([p_{x},p_{y},cos\theta,sin\theta,v_{x},v_{y}]\)
+
 $$T_{0}=MLP(Q_{dec}),\pi_{0}=MLP(Q_{dec})$$</li>
 <li>此外，为了应对某些没有参考线的场景，用一个MLP直接解码\(E_{AV}\)得到一条轨迹
-$$\tau^{free}=MLP(E^{&rsquo;}_{AV})$$</li>
+
+$$\tau^{free}=MLP(E^{'}_{AV})$$</li>
 </ul>
 <h1 id="loss设计">Loss设计
 </h1><h3 id="imitation-loss">Imitation Loss
@@ -502,20 +510,24 @@ $$\tau^{free}=MLP(E^{&rsquo;}_{AV})$$</li>
 <li>首先将GT轨迹的末状态投影到参考线上，找横向距离最近的参考线作为目标参考线。</li>
 <li>将目标参考线等分 \(N_{L}-1\)份，每一份对应上面 \(Q_{lon}\)的每个区域（格子）。包含GT状态投影的query被标记为目标query。</li>
 <li>通过将目标参考线和目标纵向query结合，得到目标监督轨迹 \(\hat{\tau}\)，通过 \(L1\)loss进行轨迹监督，通过corss-entropy loss进行score classification监督。
+
 $$L_{reg}=L1_{smooth}(\hat{\tau},\tau^{gt})+L1_{smooth}(\tau^{free},\tau^{gt})$$
-$$L_{cls}=CrossEntropy(\pi_{0},\pi_{0}^{*})$$
-<ul>
+
+$$L_{cls}=CrossEntropy(\pi_{0},\pi_{0}^{*})$$<ul>
 <li>其中， \(\pi_{0}^{*}\)是根据 \(\hat{\tau}\)的编号计算得到的one-hot编码</li>
 </ul>
 </li>
 <li>最终的Imitation Loss是上面两个loss的加和
+
 $$L_{i}=L_{reg}+L_{cls}$$</li>
 </ul>
 <h3 id="prediction-loss">Prediction Loss
 </h3><ul>
 <li>针对每个动态agent，通过一个简单的双层MLP生成单一模态的预测轨迹
-$$P_{1:N_{A}}=MLP(E_{A}^{&rsquo;})$$</li>
+
+$$P_{1:N_{A}}=MLP(E_{A}^{'})$$</li>
 <li>预测loss设计如下：
+
 $$L_{p}=L1_{smooth}(P_{1:N_{A}},P_{1:N_{A}}^{gt})$$</li>
 </ul>
 <h3 id="efficient-differentiable-auxiliary-loss">Efficient Differentiable Auxiliary Loss
@@ -539,8 +551,8 @@ $$L_{p}=L1_{smooth}(P_{1:N_{A}},P_{1:N_{A}}^{gt})$$</li>
 <ul>
 <li>用 \(N_{C}\)个覆盖ego的圆进行建模，ego轨迹点决定了这些圆的中心，这些圆可以用可微分的方式推导出来。</li>
 <li>对于与轨迹点关联的每个覆盖圆 \(i\)，我们通过投影和双线性插值得到其有符号距离值 \(d_{i}\)。为了确保ego遵守可行驶区域约束，当 \(d_{i}\)低于圆的半径 \(R_{c}\)时，我们对模型施加惩罚：
-$$L_{aux}=\frac{1}{T_{f}}\sum_{t=1}^{T_{f}}{\sum_{i=1}^{N_{c}}{max(0,R_{c}+\epsilon-d_{i}^{t})}}$$
-<ul>
+
+$$L_{aux}=\frac{1}{T_{f}}\sum_{t=1}^{T_{f}}{\sum_{i=1}^{N_{c}}{max(0,R_{c}+\epsilon-d_{i}^{t})}}$$<ul>
 <li>其中 \(\epsilon\)是安全阈值</li>
 </ul>
 </li>
@@ -558,9 +570,10 @@ $$L_{aux}=\frac{1}{T_{f}}\sum_{t=1}^{T_{f}}{\sum_{i=1}^{N_{c}}{max(0,R_{c}+\epsi
 </li>
 <li>在实际操作中，我们随机采样 \(N_{bs}\)个样本，每个样本都过一遍positive和negative augmentation，从而得到 \(3N_{bs}\)个样本。</li>
 <li>每个样本都过一遍encoder和projection head。softmax-based triple contrastive loss公式如下：
+
 $$L_{c}=-log\frac{exp(sim(z,z^{+})/\sigma)}{exp(sim(z,z^{+})/\sigma) + exp(sim(z,z^{-})/\sigma)}$$
-$$sim(u,v)=u^{T}v/\lVert u \rVert \lVert v \rVert$$
-<ul>
+
+$$sim(u,v)=u^{T}v/\lVert u \rVert \lVert v \rVert$$<ul>
 <li>\(\sigma\)表示温度参数（temperature parameter）</li>
 </ul>
 </li>
@@ -601,8 +614,7 @@ $$sim(u,v)=u^{T}v/\lVert u \rVert \lVert v \rVert$$
 </li>
 </ul>
 <h3 id="total-loss">Total Loss
-</h3><p>$$L=w_{1}L_{i}+w_{2}L_{p}+w_{3}L_{aux}+w_{4}L_{c}$$</p>
-<h1 id="后处理">后处理
+</h3>$$L=w_{1}L_{i}+w_{2}L_{p}+w_{3}L_{aux}+w_{4}L_{c}$$<h1 id="后处理">后处理
 </h1><ul>
 <li>前面的轨迹解码器模块会输出多模态的自车规划轨迹 \(T_{0} \in R^{N_{R}N_{L}*T_{F}*6}\)和对应score \(\pi_{0} \in R^{N_{R}N_{L}}\)</li>
 <li>为了计算复杂度满足要求，先根据scores从前面的轨迹中选出top K</li>
