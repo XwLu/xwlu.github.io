@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="一个算法，固定超参数，打遍8大领域150+任务，史上第一个从零挖到Minecraft钻石的AI。">
+<title>DreamerV3 - 固定超参数打穿150&#43;任务的通用世界模型</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/worldmodel/dreamer-v3/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DreamerV3 - 固定超参数打穿150+任务的通用世界模型">
+<meta property='og:description' content="一个算法，固定超参数，打遍8大领域150+任务，史上第一个从零挖到Minecraft钻石的AI。">
+<meta property='og:url' content='https://example.org/post/robotics/worldmodel/dreamer-v3/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='WorldModel' /><meta property='article:tag' content='ReinforcementLearning' /><meta property='article:tag' content='RSSM' /><meta property='article:tag' content='RepresentationLearning' /><meta property='article:tag' content='LatentPlanning' /><meta property='article:tag' content='Minecraft' /><meta property='article:published_time' content='2026-06-09T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-09T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="DreamerV3 - 固定超参数打穿150+任务的通用世界模型">
+<meta name="twitter:description" content="一个算法，固定超参数，打遍8大领域150+任务，史上第一个从零挖到Minecraft钻石的AI。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一句话定位">一句话定位</a></li>
+    <li><a href="#1-三网络架构总览">1. 三网络架构总览</a></li>
+    <li><a href="#2-世界模型脑中的沙盘">2. 世界模型：脑中的沙盘</a>
+      <ul>
+        <li><a href="#21-整体结构">2.1 整体结构</a></li>
+        <li><a href="#22-深挖什么是表示退化如何防止">2.2 深挖：什么是表示退化，如何防止？</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-演员决策执行者">3. 演员：决策执行者</a></li>
+    <li><a href="#4-批评家战略顾问">4. 批评家：战略顾问</a>
+      <ul>
+        <li><a href="#41-批评家的职责">4.1 批评家的职责</a></li>
+        <li><a href="#42-奖励预测器-vs-批评家容易混淆的两兄弟">4.2 奖励预测器 vs 批评家：容易混淆的两兄弟</a></li>
+        <li><a href="#43-深挖分布式价值预测">4.3 深挖：分布式价值预测</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-鲁棒预测技术让万物皆可预测">5. 鲁棒预测技术：让万物皆可预测</a>
+      <ul>
+        <li><a href="#51-symlog-变换">5.1 Symlog 变换</a></li>
+        <li><a href="#52-symexp-twohot-损失">5.2 Symexp Twohot 损失</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-实验结果八大擂台">6. 实验结果：八大擂台</a>
+      <ul>
+        <li><a href="#61-minecraft-钻石历史性突破">6.1 Minecraft 钻石——历史性突破</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-消融实验每个技巧都不是废话">7. 消融实验：每个技巧都不是废话</a></li>
+    <li><a href="#8-可扩展性越大越强越大越省数据">8. 可扩展性：越大越强，越大越省数据</a></li>
+    <li><a href="#9-相关工作定位">9. 相关工作定位</a></li>
+    <li><a href="#10-结论与展望">10. 结论与展望</a></li>
+    <li><a href="#附录关键超参数速查">附录：关键超参数速查</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/worldmodel/dreamer-v3/">DreamerV3 - 固定超参数打穿150&#43;任务的通用世界模型</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-06-09T00:00:00Z'>Tuesday, June 9, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一句话定位">一句话定位</a></li>
+    <li><a href="#1-三网络架构总览">1. 三网络架构总览</a></li>
+    <li><a href="#2-世界模型脑中的沙盘">2. 世界模型：脑中的沙盘</a>
+      <ul>
+        <li><a href="#21-整体结构">2.1 整体结构</a></li>
+        <li><a href="#22-深挖什么是表示退化如何防止">2.2 深挖：什么是表示退化，如何防止？</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-演员决策执行者">3. 演员：决策执行者</a></li>
+    <li><a href="#4-批评家战略顾问">4. 批评家：战略顾问</a>
+      <ul>
+        <li><a href="#41-批评家的职责">4.1 批评家的职责</a></li>
+        <li><a href="#42-奖励预测器-vs-批评家容易混淆的两兄弟">4.2 奖励预测器 vs 批评家：容易混淆的两兄弟</a></li>
+        <li><a href="#43-深挖分布式价值预测">4.3 深挖：分布式价值预测</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-鲁棒预测技术让万物皆可预测">5. 鲁棒预测技术：让万物皆可预测</a>
+      <ul>
+        <li><a href="#51-symlog-变换">5.1 Symlog 变换</a></li>
+        <li><a href="#52-symexp-twohot-损失">5.2 Symexp Twohot 损失</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-实验结果八大擂台">6. 实验结果：八大擂台</a>
+      <ul>
+        <li><a href="#61-minecraft-钻石历史性突破">6.1 Minecraft 钻石——历史性突破</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-消融实验每个技巧都不是废话">7. 消融实验：每个技巧都不是废话</a></li>
+    <li><a href="#8-可扩展性越大越强越大越省数据">8. 可扩展性：越大越强，越大越省数据</a></li>
+    <li><a href="#9-相关工作定位">9. 相关工作定位</a></li>
+    <li><a href="#10-结论与展望">10. 结论与展望</a></li>
+    <li><a href="#附录关键超参数速查">附录：关键超参数速查</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="dreamerv3-mastering-diverse-domains-through-world-models">DreamerV3: Mastering Diverse Domains through World Models
+</h1>
+    <blockquote>
+        <p><strong>论文</strong>：<em>Mastering Diverse Domains through World Models</em>
+<strong>机构</strong>：Google DeepMind × 多伦多大学
+<strong>arXiv</strong>：2301.04104</p>
+
+    </blockquote>
+<hr>
+<h2 id="一句话定位">一句话定位
+</h2>
+    <blockquote>
+        <p>一个算法，固定超参数，打遍 8 大领域 150+ 任务，还是史上第一个<strong>从零挖到 Minecraft 钻石</strong>的 AI。</p>
+
+    </blockquote>
+<p>DreamerV3 的核心哲学是：<strong>让 AI 先建立一个&quot;世界模型&quot;，然后在脑子里反复推演&quot;如果我这样做，会发生什么&quot;，从而学会最优策略</strong>——而不是每次都要去真实环境里碰壁。</p>
+<hr>
+<h2 id="1-三网络架构总览">1. 三网络架构总览
+</h2><p>DreamerV3 由三个神经网络协同工作，分工如下：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>网络</th>
+          <th>角色比喻</th>
+          <th>核心职责</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>世界模型</strong></td>
+          <td>脑中的沙盘</td>
+          <td>把图像压缩成隐状态，预测未来会发生什么</td>
+      </tr>
+      <tr>
+          <td><strong>演员（Actor）</strong></td>
+          <td>决策执行者</td>
+          <td>在脑内想象中选择动作，最大化回报</td>
+      </tr>
+      <tr>
+          <td><strong>批评家（Critic）</strong></td>
+          <td>战略顾问</td>
+          <td>估算当前状态的长远价值，监督演员学习</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>三者的完整协作循环分三圈：</strong></p>
+<p><strong>第一圈——收集经验</strong>：演员把当前隐状态 $s_t$ 输入进去，采样出动作 $a_t$，去真实环境里执行一步，得到新的图像观测 $x_{t+1}$ 和奖励 $r_t$，存入经验回放池。</p>
+<p><strong>第二圈——世界模型学习</strong>：从回放池采一批历史轨迹，编码器把图像压成 $z_t$，GRU 更新记忆 $h_t$，解码器重建图像验收信息量，三路损失一起反传更新参数。</p>
+<p><strong>第三圈——想象训练（纯脑内）</strong>：从某个真实隐状态 $s_1$ 出发，演员选动作，动态预测器推算下一个 $s_2$（不看任何图像），如此滚动 15 步，奖励预测器对每步打分，批评家在终点估算长远价值，合并成 $\lambda$-回报，同时反传给演员和批评家。</p>
+<p>三网络<strong>并行更新</strong>——世界模型在学认识世界，演员和批评家在世界模型的&quot;梦境&quot;里学习决策，更好的演员又产生更高质量的真实经验……这个飞轮就这样一圈一圈转下去。</p>
+<hr>
+<h2 id="2-世界模型脑中的沙盘">2. 世界模型：脑中的沙盘
+</h2><h3 id="21-整体结构">2.1 整体结构
+</h3><p>世界模型使用 <strong>RSSM（循环状态空间模型）</strong>，由以下组件构成：</p>
+<pre tabindex="0"><code>图像 xₜ
+  │
+  ▼
+编码器（CNN/MLP）──→ 离散隐变量 zₜ ──→ 解码器──→ 重建 x̂ₜ
+                          │
+                     (h_{t-1}, a_{t-1})
+                          │
+                          ▼
+                     GRU 序列模型──→ 更新记忆 hₜ
+                          │
+                          ▼
+                     动态预测器──→ 预测 ẑₜ（不看图像）
+                          │
+                    奖励预测器、终止预测器
+</code></pre><ul>
+<li><strong>编码器</strong>：把当前图像/传感器输入压缩成随机离散表示 $z_t$——就像把一张照片压成一句&quot;精髓摘要&quot;</li>
+<li><strong>序列模型（GRU）</strong>：维护隐藏状态 $h_t$，记住&quot;历史上都发生了什么&quot;</li>
+<li><strong>动态预测器</strong>：在没有真实图像输入的情况下预测 $\hat{z}_t$，让 AI 可以纯靠&quot;脑补&quot;向前推演</li>
+<li><strong>奖励预测器</strong>：预测下一步的即时奖励 $\hat{r}_t$</li>
+<li><strong>终止预测器</strong>：预测当前 episode 是否会结束</li>
+<li><strong>解码器</strong>：把隐变量还原成图像，用于&quot;验收&quot;表示是否足够有信息量</li>
+</ul>
+<p>世界模型的训练目标是三项损失的加权组合：</p>
+$$\mathcal{L} = \mathcal{L}_\text{pred} + \beta_\text{dyn} \cdot \mathcal{L}_\text{dyn} + \beta_\text{rep} \cdot \mathcal{L}_\text{rep}$$<ul>
+<li><strong>$\mathcal{L}_\text{pred}$（预测损失）</strong>：解码器、奖励预测器、终止预测器的重建误差</li>
+<li><strong>$\mathcal{L}_\text{dyn}$（动态损失）</strong>：序列模型预测的分布 vs 真实编码分布的 KL 散度——让&quot;脑补&quot;接近&quot;真实&quot;</li>
+<li><strong>$\mathcal{L}_\text{rep}$（表示损失）</strong>：让编码表示变得更容易被预测（$\beta_\text{rep} = 0.1$，权重很小，只起轻微正则化作用）</li>
+</ul>
+<h3 id="22-深挖什么是表示退化如何防止">2.2 深挖：什么是表示退化，如何防止？
+</h3><p><strong>表示退化（Representation Collapse）</strong> 是训练时的一个隐患。</p>
+<p>理解它，需要先看懂两个损失之间的内在张力：</p>
+<ul>
+<li><strong>动态损失的目标</strong>：让序列模型仅凭历史动作，不看当前图像，就能预测出下一个 $z_t$</li>
+<li><strong>预测损失的目标</strong>：让 $z_t$ 包含足够丰富的信息，能还原出原始图像</li>
+</ul>
+<p>这两个目标天然对立。想象一个&quot;懒惰的学生&quot;策略：如果编码器把所有状态都编码成<strong>几乎相同的东西</strong>（比如全是 0），那么序列模型就超容易预测——&ldquo;不管发生什么，下一个 $z$ 都差不多&rdquo;！动态损失（KL 散度）就会变得极小，优化器非常&quot;满意&quot;。但代价是 $z_t$ 已经什么信息都不包含了，整个表示系统名存实亡。</p>
+<p><strong>一个直觉比喻</strong>：你要给朋友写旅行日记（还原图像），同时你妈妈要根据行程猜出日记内容（动态预测）。退化就是：你每天都写&quot;今天天气不错&quot;——妈妈当然每次都能猜对！但日记毫无信息量。</p>
+<p>DreamerV3 用<strong>两个机制联合对抗</strong>退化：</p>
+<p><strong>① 自由比特（Free Bits）</strong>：对 KL 损失设置下限（1 nat）</p>
+$$\mathcal{L}_\text{dyn} = \max(1,\ \text{KL}[\hat{z}_t \| z_t])$$<p>当 KL 已经足够小时，<strong>停止继续压缩它</strong>，把优化器的注意力强制转回到重建损失上。就像告诉那个懒学生：&ldquo;日记写得太水了，你妈妈猜得再准也没用，还是给我好好写！&rdquo;</p>
+<p><strong>② 小表示损失权重（$\beta_\text{rep} = 0.1$）</strong>：表示损失只起轻微正则化作用，不让它主导训练，避免过度压缩。</p>
+<p><strong>为什么以前的方法容易踩坑？</strong> DreamerV2 在复杂 3D 环境（如 DMLab）里需要调大 KL 权重防止退化，但在 Atari 像素细节很重要的场景里又需要调小——需要根据环境的视觉复杂度手动调参，是通用化的死敌。&ldquo;自由比特 + 小表示权重&quot;的组合拳，让同一套超参数在所有环境都能稳定工作。</p>
+
+    <blockquote>
+        <p><strong>与 <a class="link" href="../le-world-model/" >LeWorldModel</a> 的 SIGReg 对比</strong></p>
+<p>LeWM 是另一个世界模型框架，用 <strong>SIGReg 正则化</strong>防止同一个问题，但哲学截然不同：</p>
+<ul>
+<li>
+<p><strong>DreamerV3</strong>（被动防御）：靠重建损失托底——编码器不敢把表示压成废物，因为解码器随时&quot;验收&rdquo;。Free Bits 只是说&quot;别过度压缩&quot;，真正让表示有意义的是重建任务本身，防退化是副产品。</p>
+</li>
+<li>
+<p><strong><a class="link" href="../le-world-model/" >LeWorldModel</a>（主动塑形）</strong>：完全不做像素重建，没有重建任务托底，所以 SIGReg <strong>直接规定隐空间的几何形状</strong>——基于 Cramér-Wold 定理，将所有一维投影约束为高斯分布，迫使整体分布趋近各向同性高斯球形。如果所有表示塌缩到一个点，球形不可能成立，损失函数就会反弹，从数学上让退化不可能发生。</p>
+</li>
+</ul>
+<p>SIGReg 是更简洁的数学答案（一个定理、一个损失项、一个超参数），DreamerV3 的 Free Bits 是工程经验的结晶。两者是趋同的两条路线，下一代世界模型很可能会融合这两种思想。</p>
+
+    </blockquote>
+<hr>
+<h2 id="3-演员决策执行者">3. 演员：决策执行者
+</h2><p>演员的职责是选择动作，通过熵正则化保持探索，同时最大化预期回报。</p>
+<p>最核心的工程挑战是：<strong>不同环境的奖励尺度天差地别</strong>——有的环境奖励以百万计（Atari Atlantis），有的稀疏得十几步才得一分（Minecraft）。如何用<strong>固定的熵系数 $\eta = 3 \times 10^{-4}$</strong> 适配所有环境？</p>
+<p>答案是<strong>回报归一化（Return Normalization）</strong>：</p>
+<ol>
+<li>计算想象轨迹中回报的第 5 到第 95 百分位之间的范围 $S$（剔除离群值）</li>
+<li>用指数移动平均平滑这个范围</li>
+<li>把回报除以 $\max(S, 1)$（保留下限 $L=1$，小回报不被放大）</li>
+</ol>
+<p>这比直接归一化优势（Advantage Normalization）更聪明：奖励稀疏时不会把噪声放大、强行压制探索；奖励密集时又能高效收敛。</p>
+<hr>
+<h2 id="4-批评家战略顾问">4. 批评家：战略顾问
+</h2><h3 id="41-批评家的职责">4.1 批评家的职责
+</h3><p>批评家的任务是估算&quot;从当前状态出发，未来总共能拿多少分&quot;。它在世界模型&quot;脑补&quot;出来的想象轨迹中学习，不需要真实环境的每步反馈。</p>
+<p>几个关键设计：</p>
+<ul>
+<li><strong>$\lambda$-回报（Bootstrapped $\lambda$-returns）</strong>：结合短期预测奖励和长期价值估计，折扣因子 $\gamma = 0.997$，预测视野 $T = 16$ 步</li>
+<li><strong>指数移动平均目标网络</strong>：防止学习目标漂移</li>
+<li><strong>零初始化输出层</strong>：输出层权重初始化为零，避免训练初期产生&quot;幻觉价值&quot;，加速早期学习</li>
+</ul>
+<h3 id="42-奖励预测器-vs-批评家容易混淆的两兄弟">4.2 奖励预测器 vs 批评家：容易混淆的两兄弟
+</h3><p>两者都和&quot;回报&quot;有关，但预测的是<strong>完全不同的东西</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>奖励预测器</th>
+          <th>批评家</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>角色比喻</strong></td>
+          <td>裁判</td>
+          <td>战略顾问</td>
+      </tr>
+      <tr>
+          <td><strong>预测对象</strong></td>
+          <td>即时奖励 $\hat{r}_t$（这一步得几分）</td>
+          <td>累积回报 $v_t$（从现在到结束的总分）</td>
+      </tr>
+      <tr>
+          <td><strong>时间跨度</strong></td>
+          <td>只看当下这一步</td>
+          <td>未来所有折扣奖励之和</td>
+      </tr>
+      <tr>
+          <td><strong>训练信号</strong></td>
+          <td>真实环境的 $r_t$，直接监督</td>
+          <td>$\lambda$-回报（自举，用自己预测引导自己）</td>
+      </tr>
+      <tr>
+          <td><strong>网络规模</strong></td>
+          <td>1 层 MLP（轻量）</td>
+          <td>3 层 MLP（较深）</td>
+      </tr>
+      <tr>
+          <td><strong>归属</strong></td>
+          <td>世界模型的一部分</td>
+          <td>独立网络</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>依赖关系是单向的</strong>——奖励预测器是批评家的&quot;上游供应商&quot;：</p>
+<pre tabindex="0"><code>真实环境的 rₜ
+      │ 训练
+      ▼
+  奖励预测器
+      │ 在想象中输出 r̂₁, r̂₂ ... r̂ₕ
+      │ + 批评家自己的 vₕ（自举）
+      │ 合并成 λ-回报
+      │ 训练
+      ▼
+    批评家
+</code></pre><p>批评家学会估算长远价值，依赖的那些虚拟奖励全都是奖励预测器在想象轨迹里预测出来的。如果奖励预测器学得不好，批评家再聪明也没用——它喝的是&quot;假奶&quot;。</p>
+<h3 id="43-深挖分布式价值预测">4.3 深挖：分布式价值预测
+</h3><p>批评家不输出一个数字，而是输出一个<strong>完整的概率分布</strong>，捕捉价值预测的不确定性。</p>
+<p><strong>为什么点估计不够用？</strong> 问朋友考试能得多少分：</p>
+<ul>
+<li>朋友 A：&ldquo;72 分。&quot;（点估计，隐藏了所有不确定性）</li>
+<li>朋友 B：&ldquo;可能在 60~85 之间，最可能 72 分，但也有小概率考到 90+。&quot;（分布，信息量更丰富）</li>
+</ul>
+<p>强化学习里未来回报本来就充满不确定性（随机世界、运气、策略随机性），所以批评家输出概率分布更合理。</p>
+<p><strong>具体实现：指数间隔分箱 + Twohot 编码</strong></p>
+<p><em>为什么需要指数间隔？</em></p>
+<p>不同环境回报尺度天差地别（BSuite: 0<del>1，Atari Atlantis: 0</del>1,500,000）。均匀分箱要覆盖百万级范围同时保持小值精度，需要几百万个格子——不现实。</p>
+<p>指数间隔的思路是<strong>近处密，远处稀</strong>，就像地图的比例尺：市区街道要精细，全国地图可以粗略。用 symexp 函数定位格子边界，大约 41 个格子就能覆盖从负无穷到正无穷的整个范围：</p>
+<pre tabindex="0"><code>格子编号     边界值（大约）
+  0        -485,165,195    ← 极大负值
+ 15        -54
+ 18        -7
+ 20         0              ← 中间格子
+ 22        +7
+ 25        +54
+ 40        +485,165,195    ← 极大正值
+</code></pre><p><em>Twohot 如何处理连续目标？</em></p>
+<p>训练时真实回报是连续值（如 7.3），但格子是离散的。解决方案：<strong>按距离比例把概率分给最近两个格子</strong>：</p>
+<ul>
+<li>格子 5 的位置是 7.0，格子 6 的位置是 8.0，真实回报是 7.3</li>
+<li>格子 5 分到权重 = $(8.0 - 7.3)/(8.0 - 7.0) = 0.7$</li>
+<li>格子 6 分到权重 = $(7.3 - 7.0)/(8.0 - 7.0) = 0.3$</li>
+<li>训练目标：<code>[..., 0.7, 0.3, ...]</code>，用交叉熵损失训练</li>
+</ul>
+<p>读出预测值时用<strong>期望值</strong>（加权平均）：$\hat{v} = \sum_i p_i \cdot b_i$</p>
+<p><em>最大的好处是什么？</em></p>
+<p><strong>梯度大小与预测目标的量级解耦</strong>：</p>
+<ul>
+<li>MSE 损失：梯度 $\propto$（预测值 - 真实值）。真实值 1,000,000、预测值 500,000 → 梯度 500,000，直接炸掉训练</li>
+<li>Twohot 交叉熵：梯度 $\propto$（预测概率 - 目标分布），这个差值<strong>永远在 0~1 之间</strong>，无论真实值是 7 还是 7,000,000，梯度都保持稳定</li>
+</ul>
+<p>这就是为什么 DreamerV3 能用完全相同的批评家，同时在 Atari（回报上百万）和 Minecraft（回报 0~12）上稳定工作。</p>
+<hr>
+<h2 id="5-鲁棒预测技术让万物皆可预测">5. 鲁棒预测技术：让万物皆可预测
+</h2><h3 id="51-symlog-变换">5.1 Symlog 变换
+</h3><p>不同环境的输入和奖励尺度可能相差千倍。DreamerV3 提出 <strong>Symlog</strong> 作为&quot;万能压缩器&rdquo;：</p>
+$$\text{symlog}(x) = \text{sign}(x) \cdot \ln(|x| + 1)$$<p>
+</p>
+$$\text{symexp}(x) = \text{sign}(x) \cdot (e^{|x|} - 1)$$<p>三个优良特性：</p>
+<ul>
+<li>关于原点<strong>对称</strong>（可处理负值）</li>
+<li>零点附近近似恒等变换（小值不受影响）</li>
+<li>大值被对数压缩（防止梯度爆炸）</li>
+</ul>
+<p>所有向量观测值通过 symlog 变换编码，解码目标也用 symlog 表示。</p>
+<h3 id="52-symexp-twohot-损失">5.2 Symexp Twohot 损失
+</h3><p>对于可能随机的目标（奖励、价值），使用指数间隔分箱的 Symexp Twohot 损失（已在上一节详细介绍）。核心收益：<strong>梯度稳定性与目标量级完全解耦</strong>。</p>
+<hr>
+<h2 id="6-实验结果八大擂台">6. 实验结果：八大擂台
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>领域</th>
+          <th>环境步数</th>
+          <th>主要竞争者</th>
+          <th>结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Atari 57 游戏</td>
+          <td>200M</td>
+          <td>MuZero, Rainbow</td>
+          <td>🏆 超越 MuZero，计算量更少</td>
+      </tr>
+      <tr>
+          <td>ProcGen 16 游戏</td>
+          <td>50M</td>
+          <td>PPG, Rainbow</td>
+          <td>🏆 匹配专用调参的 PPG</td>
+      </tr>
+      <tr>
+          <td>DMLab 30 任务</td>
+          <td>100M</td>
+          <td>IMPALA@1B, R2D2+@1B</td>
+          <td>🏆 <strong>效率提升 10 倍以上</strong></td>
+      </tr>
+      <tr>
+          <td>Atari 100k 26 游戏</td>
+          <td>400K</td>
+          <td>IRIS, TWM, SPR</td>
+          <td>🏆 游戏者均值 125%（超越人类）</td>
+      </tr>
+      <tr>
+          <td>本体感知控制 18 任务</td>
+          <td>500K</td>
+          <td>D4PG, DMPO</td>
+          <td>🏆 新 SOTA</td>
+      </tr>
+      <tr>
+          <td>视觉控制 20 任务</td>
+          <td>1M</td>
+          <td>DrQ-v2, CURL</td>
+          <td>🏆 新 SOTA</td>
+      </tr>
+      <tr>
+          <td>BSuite 23 环境</td>
+          <td>—</td>
+          <td>Boot DQN, DQN</td>
+          <td>🏆 新 SOTA</td>
+      </tr>
+      <tr>
+          <td><strong>Minecraft 钻石</strong></td>
+          <td>100M</td>
+          <td>IMPALA, PPO</td>
+          <td>🏆 <strong>全球唯一成功者</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="61-minecraft-钻石历史性突破">6.1 Minecraft 钻石——历史性突破
+</h3><p>在 Minecraft 中收集钻石需要完成完整的 12 步技术树（砍树→木板→木棍→工作台→木镐→圆石→石镐→铁矿→熔炉→铁锭→铁镐→钻石），每步奖励 +1 分，约需 20 分钟游戏时间，在<strong>随机生成的无限世界</strong>中进行。</p>
+<p>DreamerV3 训练了 10 个随机种子，<strong>100% 最终都收集到了钻石</strong>，在 0.4% 的 episode 中能成功。相比之下，IMPALA 和 Rainbow 最多推进到铁镐，无一挖到钻石。</p>
+<p>更惊人的对比：此前唯一成功的方案（VPT）需要 <strong>720 个 GPU 运行 9 天</strong> + 大量人类键鼠操作数据；DreamerV3 只用了 <strong>1 个 A100 GPU 跑 9 天</strong>，全程无人类数据。</p>
+<hr>
+<h2 id="7-消融实验每个技巧都不是废话">7. 消融实验：每个技巧都不是废话
+</h2><p>在 14 个多样任务上逐项消融，所有改动都导致性能下降：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>去掉的模块</th>
+          <th>影响</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>观测 Symlog</td>
+          <td>学习不稳定，大幅掉分</td>
+      </tr>
+      <tr>
+          <td>回报归一化（改用优势归一化）</td>
+          <td>稀疏奖励任务严重退化</td>
+      </tr>
+      <tr>
+          <td>Symexp Twohot（改用 Huber 损失）</td>
+          <td>平均性能明显下降</td>
+      </tr>
+      <tr>
+          <td><strong>KL 平衡 &amp; 自由比特</strong></td>
+          <td><strong>影响最大！世界模型质量严重下降</strong></td>
+      </tr>
+      <tr>
+          <td>全部去掉</td>
+          <td>表现大幅下滑</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>一个反直觉的发现：<strong>DreamerV3 的核心驱动力是世界模型的无监督重建目标，而非任务的奖励/价值梯度</strong>。这与 DQN、MuZero 等完全依赖任务信号的算法范式不同，暗示未来可以通过无监督预训练来快速适配新任务。</p>
+<hr>
+<h2 id="8-可扩展性越大越强越大越省数据">8. 可扩展性：越大越强，越大越省数据
+</h2><p>论文测试了从 12M 到 400M 参数的 6 种规模，以及不同的 Replay Ratio（每步环境交互对应的梯度更新次数）：</p>
+<ul>
+<li><strong>模型越大</strong>：最终性能单调提升，需要的环境交互步数反而<strong>更少</strong></li>
+<li><strong>Replay Ratio 越高</strong>：数据效率更高（但计算量更大）</li>
+<li><strong>全程超参数固定</strong>：不需要针对不同规模重新调参</li>
+</ul>
+<p>这为从业者提供了清晰的&quot;加钱升配&quot;路线——算力有限就跑小模型，算力充裕就上大模型，速度更快性能更强。</p>
+<hr>
+<h2 id="9-相关工作定位">9. 相关工作定位
+</h2><p>DreamerV3 是第三代：</p>
+<pre tabindex="0"><code>DreamerV1 ──→ 仅限连续控制
+DreamerV2 ──→ Atari 超越人类，但需要调参
+DreamerV3 ──→ 跨域开箱即用，征服 Minecraft
+</code></pre><p>主要竞品对比：</p>
+<ul>
+<li><strong>PPO</strong>：泛用但需要大量数据，性能偏低</li>
+<li><strong>MuZero</strong>：Atari+棋类利器，但未开源且组件复杂</li>
+<li><strong>Gato</strong>：需要专家示范数据</li>
+<li><strong>Voyager</strong>：同样在 Minecraft 取得深度，但依赖 MineFlayer 脚本层的高级动作抽象和 LLM API 调用</li>
+</ul>
+<hr>
+<h2 id="10-结论与展望">10. 结论与展望
+</h2><p>DreamerV3 不仅是一个强大的强化学习算法，更重要的是揭示了一条路线图：</p>
+
+    <blockquote>
+        <p><strong>让 AI 通过互联网视频学习世界知识，并建立跨域的通用世界模型</strong></p>
+
+    </blockquote>
+<p>一个智能体，一个世界模型，无限域的经验积累——这或许正是通往更通用人工智能的道路。</p>
+<hr>
+<h2 id="附录关键超参数速查">附录：关键超参数速查
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>参数</th>
+          <th>值</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$\gamma$</td>
+          <td>0.997</td>
+          <td>折扣因子</td>
+      </tr>
+      <tr>
+          <td>$T$</td>
+          <td>16 步</td>
+          <td>想象轨迹长度</td>
+      </tr>
+      <tr>
+          <td>$\eta$</td>
+          <td>$3 \times 10^{-4}$</td>
+          <td>演员熵系数</td>
+      </tr>
+      <tr>
+          <td>$\beta_\text{dyn}$</td>
+          <td>0.5</td>
+          <td>动态损失权重</td>
+      </tr>
+      <tr>
+          <td>$\beta_\text{rep}$</td>
+          <td>0.1</td>
+          <td>表示损失权重</td>
+      </tr>
+      <tr>
+          <td>Free Bits 下限</td>
+          <td>1 nat</td>
+          <td>KL 损失的最低值</td>
+      </tr>
+      <tr>
+          <td>分箱数</td>
+          <td>约 41</td>
+          <td>Twohot 的格子数量</td>
+      </tr>
+      <tr>
+          <td>模型规模</td>
+          <td>12M~400M</td>
+          <td>测试范围</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="../le-world-model/" >LeWorldModel</a> - LeCun 团队的 JEPA 架构世界模型，用 SIGReg 正则化对抗表示退化（对比见 §2.2）</li>
+<li><a class="link" href="../fast-wam/" >Fast-WAM</a> - 世界动作模型，探讨视频生成在训练与推理中的角色差异</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/worldmodel/">WorldModel</a>
+        
+            <a href="/tags/reinforcementlearning/">ReinforcementLearning</a>
+        
+            <a href="/tags/rssm/">RSSM</a>
+        
+            <a href="/tags/representationlearning/">RepresentationLearning</a>
+        
+            <a href="/tags/latentplanning/">LatentPlanning</a>
+        
+            <a href="/tags/minecraft/">Minecraft</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/le-world-model/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeWorldModel - 稳定的端到端联合嵌入预测架构世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-cache/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Cache</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/fast-wam/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Fast-WAM - 世界动作模型在推理时真的需要&#34;脑补&#34;未来吗？</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/world-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WorldDrive</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

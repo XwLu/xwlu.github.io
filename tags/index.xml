@@ -5,7 +5,43 @@
         <description>Recent content in Tags on 朝花夕拾</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 06 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Tue, 09 Jun 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>LatentPlanning</title>
+            <link>https://example.org/tags/latentplanning/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/latentplanning/</guid>
+            <description></description>
+        </item><item>
+            <title>Minecraft</title>
+            <link>https://example.org/tags/minecraft/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/minecraft/</guid>
+            <description></description>
+        </item><item>
+            <title>ReinforcementLearning</title>
+            <link>https://example.org/tags/reinforcementlearning/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/reinforcementlearning/</guid>
+            <description></description>
+        </item><item>
+            <title>RepresentationLearning</title>
+            <link>https://example.org/tags/representationlearning/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/representationlearning/</guid>
+            <description></description>
+        </item><item>
+            <title>RSSM</title>
+            <link>https://example.org/tags/rssm/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/rssm/</guid>
+            <description></description>
+        </item><item>
+            <title>WorldModel</title>
+            <link>https://example.org/tags/worldmodel/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/worldmodel/</guid>
+            <description></description>
+        </item><item>
             <title>VLA</title>
             <link>https://example.org/tags/vla/</link>
             <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
@@ -106,12 +142,6 @@
             <link>https://example.org/tags/inferenceacceleration/</link>
             <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
             <guid>https://example.org/tags/inferenceacceleration/</guid>
-            <description></description>
-        </item><item>
-            <title>WorldModel</title>
-            <link>https://example.org/tags/worldmodel/</link>
-            <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
-            <guid>https://example.org/tags/worldmodel/</guid>
             <description></description>
         </item><item>
             <title>Xpeng</title>
@@ -238,24 +268,6 @@
             <link>https://example.org/tags/jepa/</link>
             <pubDate>Wed, 08 Apr 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/jepa/</guid>
-            <description></description>
-        </item><item>
-            <title>LatentPlanning</title>
-            <link>https://example.org/tags/latentplanning/</link>
-            <pubDate>Wed, 08 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/latentplanning/</guid>
-            <description></description>
-        </item><item>
-            <title>ReinforcementLearning</title>
-            <link>https://example.org/tags/reinforcementlearning/</link>
-            <pubDate>Wed, 08 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/reinforcementlearning/</guid>
-            <description></description>
-        </item><item>
-            <title>RepresentationLearning</title>
-            <link>https://example.org/tags/representationlearning/</link>
-            <pubDate>Wed, 08 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/representationlearning/</guid>
             <description></description>
         </item><item>
             <title>Chain-of-Thought</title>
