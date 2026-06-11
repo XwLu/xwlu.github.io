@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="CLEAR 证明了一件事：高保真的多模态规划不需要密集几何标注，不需要迭代采样，也不需要巨无霸 LLM。一个 0.8B 的小模型，配上精心设计的&quot;隐藏状态复用&quot;策略，就足以驱动一个跑到 99 FPS 的安全驾驶系统，还能拿下 NAVSIM 榜首。">
+<title>CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/clear/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学">
+<meta property='og:description' content="CLEAR 证明了一件事：高保真的多模态规划不需要密集几何标注，不需要迭代采样，也不需要巨无霸 LLM。一个 0.8B 的小模型，配上精心设计的&quot;隐藏状态复用&quot;策略，就足以驱动一个跑到 99 FPS 的安全驾驶系统，还能拿下 NAVSIM 榜首。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/clear/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='JEPA' /><meta property='article:tag' content='MLP-Mixer' /><meta property='article:tag' content='LLM推理' /><meta property='article:tag' content='多模态规划' /><meta property='article:tag' content='潜在空间' /><meta property='article:tag' content='PCA投影' /><meta property='article:published_time' content='2026-06-11T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-11T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学">
+<meta name="twitter:description" content="CLEAR 证明了一件事：高保真的多模态规划不需要密集几何标注，不需要迭代采样，也不需要巨无霸 LLM。一个 0.8B 的小模型，配上精心设计的&quot;隐藏状态复用&quot;策略，就足以驱动一个跑到 99 FPS 的安全驾驶系统，还能拿下 NAVSIM 榜首。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一论文要解决的核心问题">一、论文要解决的核心问题</a></li>
+    <li><a href="#二整体架构四件套分工">二、整体架构：四件套分工</a></li>
+    <li><a href="#三视觉骨干drive-jepa">三、视觉骨干：Drive-JEPA</a>
+      <ul>
+        <li><a href="#31-为什么不用普通的-vit-或-mae">3.1 为什么不用普通的 ViT 或 MAE</a></li>
+        <li><a href="#32-v-jepa-预训练用完形填空逼出理解能力">3.2 V-JEPA 预训练：用&quot;完形填空&quot;逼出理解能力</a></li>
+        <li><a href="#33-vit-vs-resnet为什么遮挡预测天然偏爱-vit">3.3 ViT vs ResNet：为什么遮挡预测天然偏爱 ViT</a></li>
+      </ul>
+    </li>
+    <li><a href="#四潜在空间中的单步条件漂移">四、潜在空间中的单步条件漂移</a>
+      <ul>
+        <li><a href="#41-潜在空间是什么">4.1 潜在空间是什么</a></li>
+        <li><a href="#42-为什么要漂移不直接回归">4.2 为什么要&quot;漂移&quot;，不直接回归</a></li>
+        <li><a href="#43-目标点的构成α-是核心旋钮">4.3 目标点的构成：α 是核心旋钮</a></li>
+        <li><a href="#44-可行目标点和候选轨迹的对应关系">4.4 可行目标点和候选轨迹的对应关系</a></li>
+        <li><a href="#45-排斥机制防止所有候选堆在一起">4.5 排斥机制：防止所有候选堆在一起</a></li>
+        <li><a href="#46-pca-投影给轨迹加合法性滤网">4.6 PCA 投影：给轨迹加&quot;合法性滤网&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#五clear-解码器mlp-mixer-详解">五、CLEAR 解码器：MLP-Mixer 详解</a>
+      <ul>
+        <li><a href="#51-mlp-mixer-的来历">5.1 MLP-Mixer 的来历</a></li>
+        <li><a href="#52-核心思想两个方向的信息流动">5.2 核心思想：两个方向的信息流动</a></li>
+        <li><a href="#53-token-mixing候选之间的串联">5.3 Token-mixing：候选之间的&quot;串联&quot;</a></li>
+        <li><a href="#54-channel-mixing每个候选自己的并联">5.4 Channel-mixing：每个候选自己的&quot;并联&quot;</a></li>
+        <li><a href="#55-adalnα-如何渗透进每一层">5.5 adaLN：α 如何渗透进每一层</a></li>
+        <li><a href="#56-视觉特征如何注入">5.6 视觉特征如何注入</a></li>
+        <li><a href="#57-n-个模态是怎么来的">5.7 N 个模态是怎么来的</a></li>
+        <li><a href="#58-完整解码流程">5.8 完整解码流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#六llm-的两个角色">六、LLM 的两个角色</a>
+      <ul>
+        <li><a href="#61-qwen-35-08b不说话只思考">6.1 Qwen 3.5 0.8B：不说话，只思考</a></li>
+        <li><a href="#62-角色一自适应调度器决定-α-和-n">6.2 角色一：自适应调度器（决定 α 和 N）</a></li>
+        <li><a href="#63-角色二交叉注意力评分器从-n-条候选里选最优">6.3 角色二：交叉注意力评分器（从 N 条候选里选最优）</a></li>
+        <li><a href="#64-对-llm-角色设计的质疑与反思">6.4 对 LLM 角色设计的质疑与反思</a></li>
+      </ul>
+    </li>
+    <li><a href="#七实验结果">七、实验结果</a>
+      <ul>
+        <li><a href="#71-训练流程">7.1 训练流程</a></li>
+        <li><a href="#72-navsim-v1-结果pdms越高越好">7.2 NAVSIM v1 结果（PDMS，越高越好）</a></li>
+        <li><a href="#73-navsim-v2-结果epdms更严苛">7.3 NAVSIM v2 结果（EPDMS，更严苛）</a></li>
+        <li><a href="#74-消融实验">7.4 消融实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#八局限性与未来方向">八、局限性与未来方向</a></li>
+    <li><a href="#九一句话总结">九、一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/clear/">CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-06-11T00:00:00Z'>Thursday, June 11, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        5 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一论文要解决的核心问题">一、论文要解决的核心问题</a></li>
+    <li><a href="#二整体架构四件套分工">二、整体架构：四件套分工</a></li>
+    <li><a href="#三视觉骨干drive-jepa">三、视觉骨干：Drive-JEPA</a>
+      <ul>
+        <li><a href="#31-为什么不用普通的-vit-或-mae">3.1 为什么不用普通的 ViT 或 MAE</a></li>
+        <li><a href="#32-v-jepa-预训练用完形填空逼出理解能力">3.2 V-JEPA 预训练：用&quot;完形填空&quot;逼出理解能力</a></li>
+        <li><a href="#33-vit-vs-resnet为什么遮挡预测天然偏爱-vit">3.3 ViT vs ResNet：为什么遮挡预测天然偏爱 ViT</a></li>
+      </ul>
+    </li>
+    <li><a href="#四潜在空间中的单步条件漂移">四、潜在空间中的单步条件漂移</a>
+      <ul>
+        <li><a href="#41-潜在空间是什么">4.1 潜在空间是什么</a></li>
+        <li><a href="#42-为什么要漂移不直接回归">4.2 为什么要&quot;漂移&quot;，不直接回归</a></li>
+        <li><a href="#43-目标点的构成α-是核心旋钮">4.3 目标点的构成：α 是核心旋钮</a></li>
+        <li><a href="#44-可行目标点和候选轨迹的对应关系">4.4 可行目标点和候选轨迹的对应关系</a></li>
+        <li><a href="#45-排斥机制防止所有候选堆在一起">4.5 排斥机制：防止所有候选堆在一起</a></li>
+        <li><a href="#46-pca-投影给轨迹加合法性滤网">4.6 PCA 投影：给轨迹加&quot;合法性滤网&quot;</a></li>
+      </ul>
+    </li>
+    <li><a href="#五clear-解码器mlp-mixer-详解">五、CLEAR 解码器：MLP-Mixer 详解</a>
+      <ul>
+        <li><a href="#51-mlp-mixer-的来历">5.1 MLP-Mixer 的来历</a></li>
+        <li><a href="#52-核心思想两个方向的信息流动">5.2 核心思想：两个方向的信息流动</a></li>
+        <li><a href="#53-token-mixing候选之间的串联">5.3 Token-mixing：候选之间的&quot;串联&quot;</a></li>
+        <li><a href="#54-channel-mixing每个候选自己的并联">5.4 Channel-mixing：每个候选自己的&quot;并联&quot;</a></li>
+        <li><a href="#55-adalnα-如何渗透进每一层">5.5 adaLN：α 如何渗透进每一层</a></li>
+        <li><a href="#56-视觉特征如何注入">5.6 视觉特征如何注入</a></li>
+        <li><a href="#57-n-个模态是怎么来的">5.7 N 个模态是怎么来的</a></li>
+        <li><a href="#58-完整解码流程">5.8 完整解码流程</a></li>
+      </ul>
+    </li>
+    <li><a href="#六llm-的两个角色">六、LLM 的两个角色</a>
+      <ul>
+        <li><a href="#61-qwen-35-08b不说话只思考">6.1 Qwen 3.5 0.8B：不说话，只思考</a></li>
+        <li><a href="#62-角色一自适应调度器决定-α-和-n">6.2 角色一：自适应调度器（决定 α 和 N）</a></li>
+        <li><a href="#63-角色二交叉注意力评分器从-n-条候选里选最优">6.3 角色二：交叉注意力评分器（从 N 条候选里选最优）</a></li>
+        <li><a href="#64-对-llm-角色设计的质疑与反思">6.4 对 LLM 角色设计的质疑与反思</a></li>
+      </ul>
+    </li>
+    <li><a href="#七实验结果">七、实验结果</a>
+      <ul>
+        <li><a href="#71-训练流程">7.1 训练流程</a></li>
+        <li><a href="#72-navsim-v1-结果pdms越高越好">7.2 NAVSIM v1 结果（PDMS，越高越好）</a></li>
+        <li><a href="#73-navsim-v2-结果epdms更严苛">7.3 NAVSIM v2 结果（EPDMS，更严苛）</a></li>
+        <li><a href="#74-消融实验">7.4 消融实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#八局限性与未来方向">八、局限性与未来方向</a></li>
+    <li><a href="#九一句话总结">九、一句话总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p><strong>论文全称</strong>：<em>CLEAR: Cognition and Latent Evaluation for Adaptive Routing in End-to-End Autonomous Driving</em>
+<strong>作者</strong>：Yining Xing, Zehong Ke, Zhiyuan Liu, Yanbo Jiang, Wenhao Yu, Jianqiang Wang
+<strong>发表时间</strong>：2026 年 6 月 4 日 | arXiv:2606.06219</p>
+
+    </blockquote>
+<hr>
+<h2 id="一论文要解决的核心问题">一、论文要解决的核心问题
+</h2><p>端到端自动驾驶长期面临一个两难困境——</p>
+<p><strong>难题一：多模态规划。</strong> 现实驾驶场景充满歧义，同一个路口可以左转、直行、减速，多条路都是&quot;正确的&quot;。传统的确定性回归只会把所有可能性取平均，生成一条&quot;物理上不存在&quot;的鬼路径。</p>
+<p><strong>难题二：速度与质量的矛盾。</strong> 扩散模型（Diffusion Model）能很好地捕捉多模态分布，但每次预测需要数十乃至数百次迭代，远超 100 毫秒的控制预算，根本无法实时部署。</p>
+<p><strong>难题三：LLM 用作生成器的代价。</strong> 多模态大语言模型理解交通语义，但直接让它生成轨迹坐标会陷入自回归，延迟不可接受，输出格式也不稳定。</p>
+<p>CLEAR 的破局思路是：<strong>把&quot;极快生成&quot;和&quot;深度语义推理&quot;彻底分工</strong>——LLM 只负责思考，不负责输出；生成器只需一步前向传播，不做任何迭代。最终在 NAVSIM v1 基准上取得 PDMS 93.7 的最优成绩，推理速度达到 99 FPS。</p>
+<hr>
+<h2 id="二整体架构四件套分工">二、整体架构：四件套分工
+</h2><pre tabindex="0"><code>前视图像 + 导航指令
+        │
+        ├──→ Drive-JEPA（冻结）──────────────────→ 视觉几何特征
+        │
+        └──→ Qwen 3.5 0.8B（全量微调）──────────→ 隐藏状态
+                        │
+          ┌─────────────┴──────────────┐
+          ↓                            ↓
+   自适应调度器                  交叉注意力评分器
+   （选 α 和 N）                  （给候选轨迹打分）
+          │
+          ↓ 场景摘要 + α
+   CLEAR 解码器（MLP-Mixer）
+   单步漂移 → N 条候选轨迹
+          │
+          ↓ PCA 投影
+   N 条物理轨迹 → 取最高分 → 执行
+</code></pre><p>Drive-JEPA 是&quot;眼睛&quot;，Qwen 是&quot;大脑&quot;，MLP-Mixer 是&quot;手&quot;，评分器是&quot;终审法官&quot;。这四个模块各司其职，LLM 的隐藏状态被复用于两个下游任务（调度器 + 评分器），只跑一次 LLM 前向传播即可服务全部流程。</p>
+<hr>
+<h2 id="三视觉骨干drive-jepa">三、视觉骨干：Drive-JEPA
+</h2><h3 id="31-为什么不用普通的-vit-或-mae">3.1 为什么不用普通的 ViT 或 MAE
+</h3><p>传统 MAE 在像素空间重建被遮挡区域，网络被迫学习&quot;天空是什么颜色、路面纹理是什么样&quot;这些对驾驶决策毫无价值的细节，浪费了大量模型容量。Drive-JEPA 选择在<strong>潜在特征空间</strong>做预测，把无关的像素细节过滤掉，只保留场景的语义和几何结构。</p>
+<h3 id="32-v-jepa-预训练用完形填空逼出理解能力">3.2 V-JEPA 预训练：用&quot;完形填空&quot;逼出理解能力
+</h3><p><strong>第一步：切 patch。</strong> ViT（Vision Transformer）把视频帧切成 16×16 像素的小方块（patch），每个 patch 压缩成一个特征向量，就像 NLP 里把每个词变成词向量。一段视频 → 几百个时空 patch token。</p>
+<p><strong>第二步：随机遮挡。</strong> 随机挡住一部分 patch（遮挡比例 50%～90%），被遮的区域就是网络的&quot;考题&quot;。这强迫网络真正理解场景结构，而不是靠记忆死背。</p>
+<p><strong>第三步：双分支架构。</strong></p>
+<pre tabindex="0"><code>上下文分支（可训练）：
+  被遮挡的视频 x → 编码器 E_θ（ViT） → 上下文特征
+                                              ↓
+                        预测器 P_φ（ViT）+ 位置 token Δ_y
+                                              ↓
+                                    预测目标区域的特征
+
+目标分支（停止梯度）：
+  完整视频 y → EMA 编码器 E_θ̄ → 目标特征（正确答案）
+</code></pre><p>损失函数只在被遮位置计算 L1 距离：</p>
+$$\min_{\theta,\phi} \left\| P_\phi(\Delta_y, E_\theta(x)) - \text{sg}(E_{\bar{\theta}}(y)) \right\|_1$$<p><strong>为什么要 EMA 目标编码器，而不是直接用同一个编码器？</strong></p>
+<p>如果用同一个编码器既出题又答题，两边同步更新，网络会找到捷径：把所有输出变成同一个向量，loss 永远为零——但什么都没学到，这叫<strong>表示坍塌</strong>。</p>
+<p>EMA（指数移动平均）的更新规则：</p>
+$$\bar{\theta} \leftarrow m \cdot \bar{\theta} + (1 - m) \cdot \theta \quad (m \approx 0.996)$$<p>目标编码器是上下文编码器参数的&quot;慢速历史平均&quot;，变化极其缓慢。这给预测器提供了一个稳定可追的目标，彻底避免坍塌。初始化时，两个编码器的参数完全相同（θ̄₀ = θ₀），从同一起点出发，之后通过不同的更新规则逐渐分开。</p>
+<p>实际使用中，Drive-JEPA 进一步用 V-JEPA 2 的公开预训练权重来初始化 θ₀，在 208 小时的驾驶视频（来自 CoVLA、DrivingDojo、OpenScene）上做领域适应微调，视频分辨率 512×256、帧率 2Hz。</p>
+<p><strong>和&quot;预测未来帧&quot;方法的对比：</strong></p>
+<p>预测遮挡特征（JEPA 风格）和在潜在空间预测未来帧（世界模型风格，如 LeWM）都避免了像素重建的浪费。两者各有侧重：</p>
+<ul>
+<li>JEPA 的优势在于训练稳定（任务确定性强，无多模态歧义）、特征语义质量高、计算高效。</li>
+<li>潜在空间时序预测的优势在于同时建模了空间和时序演变，监督信号更丰富。&ldquo;预测下一帧特征&quot;要求模型同时理解&quot;现在有什么&quot;和&quot;接下来会怎么变&rdquo;，理论上学到的表示对规划更全面。</li>
+</ul>
+<p>但&quot;监督信号更强&quot;不等于&quot;一定学得更好&quot;——时序预测面临<strong>未来多模态歧义</strong>问题：同一个当前帧的下一帧可能有多种完全不同的合理结果（直行、转弯、刹车），确定性预测被迫对所有可能性取平均，反而学到模糊表示。解决这个问题需要<strong>多模态目标设计</strong>——不强迫网络预测唯一未来，而是用 min-over K 或 conditional 等方式允许多种可能，只要有一个足够准确就算对。这正是当前领域的前沿方向，也是 CLEAR 在轨迹生成层面要解决的同一个问题。</p>
+<h3 id="33-vit-vs-resnet为什么遮挡预测天然偏爱-vit">3.3 ViT vs ResNet：为什么遮挡预测天然偏爱 ViT
+</h3><p>ViT 把图像切成 patch token，遮挡某些 token 等于直接丢弃，干净利落。ResNet 没有 token 概念，遮挡要么在输入像素层面涂黑（卷积会污染边界特征），要么在特征图层面置零（感受野粒度粗糙，边界模糊），都需要额外工程改造。</p>
+<p>更根本的差异在于<strong>感受野</strong>：ViT 的自注意力让每个 patch 第一层就能看到所有其他 patch，全局上下文即时可用，对猜测被遮区域极为重要。ResNet 的卷积是局部的，全局信息要经过很多层才能传播。未来帧预测的时序建模同样更适合 ViT 的显式位置编码。</p>
+<p>ResNet 唯一的优势在于：高分辨率下计算量是线性增长（而非 ViT 的二次方），且内置平移不变性的归纳偏置让它在小数据上表现更好。但对于驾驶视频预训练这个场景，ViT 是更自然的选择。</p>
+<hr>
+<h2 id="四潜在空间中的单步条件漂移">四、潜在空间中的单步条件漂移
+</h2><p>这是整篇论文技术上最核心的部分。</p>
+<h3 id="41-潜在空间是什么">4.1 潜在空间是什么
+</h3><p>把一条驾驶轨迹（比如未来 8 帧的位置序列）想象成一个高维向量。一个 VAE（变分自编码器）把这个向量&quot;压缩&quot;成潜在空间里的一个坐标点。语义相近的轨迹（&ldquo;缓缓左转&quot;和&quot;慢慢左转&rdquo;）在潜在空间里挨得近，风格迥异的（&ldquo;急刹车&quot;和&quot;全速冲&rdquo;）则相距甚远。</p>
+<p>VAE 还带有一个辅助动作分类头，让潜在空间围绕有行为意义的驾驶基元（左转、直行、右转、减速…）有序组织，而不是杂乱无章。</p>
+<h3 id="42-为什么要漂移不直接回归">4.2 为什么要&quot;漂移&quot;，不直接回归
+</h3><p>扩散模型从随机噪声出发，经过数十步迭代去噪才能到达合理轨迹，太慢。CLEAR 的单步漂移做的是：<strong>直接把候选点推向目标区域，只走一步</strong>。就像已经知道大概方向，大步走过去，而不是在黑暗里一点点摸索。</p>
+<h3 id="43-目标点的构成α-是核心旋钮">4.3 目标点的构成：α 是核心旋钮
+</h3><p>训练时每个候选轨迹 $i$ 有自己的漂移目标：</p>
+$$\mathbf{A}_i = (1-\alpha)\cdot\mathbf{V}_{\text{pos}(i)} + \alpha\cdot\mathbf{V}_{\text{GT}}$$<ul>
+<li><strong>可行目标点</strong> $\mathbf{V}_{\text{pos}(i)}$（绿色吸引子）：多个合理的参考路径，代表&quot;这个场景里各种可行的开法&quot;。来源通常是数据集中几何可行的邻近轨迹，或用运动学规则批量生成后过滤的候选路径。</li>
+<li><strong>专家真值</strong> $\mathbf{V}_{\text{GT}}$（紫色星星）：人类专家驾驶的标准轨迹。</li>
+<li><strong>α</strong>：混合系数，由 LLM 驱动的调度器动态决定。</li>
+</ul>
+<p>当 <strong>α → 0</strong>：每个候选被各自的可行目标拉向不同方向，多样性最大，适合复杂路口。
+当 <strong>α → 1</strong>：所有候选向专家真值收拢，精度最高，适合高速直行。</p>
+<p><strong>关键设计：专家真值只在训练时存在。</strong> 推理时，解码器已经通过训练把&quot;怎么漂&quot;这个能力烙进了权重里，直接根据视觉特征和 α 一步输出 N 条候选，不再需要 GT 参与计算。α 在推理时的作用变成：通过 adaLN 注入解码器，调节生成分布的形状（散或聚）。</p>
+<h3 id="44-可行目标点和候选轨迹的对应关系">4.4 可行目标点和候选轨迹的对应关系
+</h3><p>N 个候选轨迹和 M 个可行目标点之间是<strong>一一对应、动态软分配</strong>的。每个候选轨迹 $i$ 被分配给一个吸引子 $\text{pos}(i)$，但分配不是死绑定的——训练中每个样本都动态地用匹配算法（匈牙利匹配或最近邻）重新分配，目标是让所有候选的整体覆盖度最大。这种软分配防止了&quot;候选 1 永远学左转&quot;导致的模式退化。</p>
+<p>当 N &lt; M 时，N 个候选从更大的池子里各挑一个吸引子，没被挑到的吸引子本次不参与。
+当 N &gt; M 时，多个候选争抢同一吸引子，但排斥力会把它们推开，在同一区域附近形成细粒度多样性。</p>
+<p>匹配和 loss 的计算都发生在<strong>潜在空间</strong>里，不是在轨迹坐标空间里。</p>
+<h3 id="45-排斥机制防止所有候选堆在一起">4.5 排斥机制：防止所有候选堆在一起
+</h3><p>只有吸引力不够——如果多个候选被分配到同一吸引子，它们会完全重叠。排斥 loss 直接惩罚潜在空间里太近的候选对：</p>
+$$\mathcal{L}_{\text{repel}} = \sum_{i \neq j} \max(0,\ \text{margin} - \|\mathbf{z}_i - \mathbf{z}_j\|)$$<p>完整训练 loss：</p>
+$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{drift}} + \lambda \cdot \mathcal{L}_{\text{repel}}$$<p>吸引力 + 排斥力的对立统一，让 N 条候选自动&quot;占领&quot;潜在空间的不同区域，既不重复，又不飞出合理范围。</p>
+<h3 id="46-pca-投影给轨迹加合法性滤网">4.6 PCA 投影：给轨迹加&quot;合法性滤网&quot;
+</h3><p>MLP-Mixer 在潜在空间工作，最终需要把潜在向量翻译成物理坐标（每帧的 x、y 位置）。最朴素的做法是用 MLP 直接映射，但这样可能生成物理上不可能的轨迹（两帧之间位移 50 米、曲率违反车辆转弯半径）。</p>
+<p>PCA 投影的做法：在训练前离线对大量专家轨迹做主成分分析，找到这些轨迹变化最集中的 k 个方向（主成分）：</p>
+$$\mathbf{P} = [\mathbf{p}_1, \mathbf{p}_2, \dots, \mathbf{p}_k] \in \mathbb{R}^{D \times k}$$<p>解码器不直接输出轨迹坐标，而是输出 k 维系数向量 $\mathbf{c}$，然后重建：</p>
+$$\text{轨迹} = \bar{\mathbf{x}} + \mathbf{P} \cdot \mathbf{c}$$<p>其中 $\bar{\mathbf{x}}$ 是专家轨迹均值。结果天然是&quot;专家轨迹的线性组合&quot;，永远在合法轨迹的流形上。k 通常取覆盖 95%～99% 方差的最小值，对于驾驶轨迹往往只需 10～20 维——这说明驾驶轨迹的内在维度其实很低，车的运动规律有很强的结构性。</p>
+<p>PCA 基底 P 和均值 $\bar{\mathbf{x}}$ 在推理时是固定的常数矩阵，计算量极小（一次矩阵乘法），不增加延迟。</p>
+<hr>
+<h2 id="五clear-解码器mlp-mixer-详解">五、CLEAR 解码器：MLP-Mixer 详解
+</h2><h3 id="51-mlp-mixer-的来历">5.1 MLP-Mixer 的来历
+</h3><p>MLP-Mixer 由 Google Brain 的 Ilya Tolstikhin 等 12 位作者提出，发表于 NeurIPS 2021（arXiv:2105.01601）。其核心观点颇具挑衅性：CNN 的卷积和 Transformer 的自注意力对于视觉任务都是&quot;足够的&quot;，但都不是&quot;必要的&quot;——只用 MLP 也能在图像分类上取得有竞争力的结果。有趣的是，作者之一 Alexey Dosovitskiy 正是 ViT 的第一作者，提出&quot;注意力统治视觉&quot;的人，转头参与证明了&quot;其实不用注意力也行&quot;。</p>
+<h3 id="52-核心思想两个方向的信息流动">5.2 核心思想：两个方向的信息流动
+</h3><p>MLP-Mixer 的输入是一个二维矩阵 $X \in \mathbb{R}^{N \times C}$，在 CLEAR 里：</p>
+<ul>
+<li>$N$：候选轨迹数量（比如 5 条）</li>
+<li>$C$：每条候选的特征维度</li>
+</ul>
+<p>把它想象成一张表格：每行是一条候选轨迹，每列是一个特征维度。Transformer 用自注意力让所有 token 互相通信，计算量是 $O(N^2)$。MLP-Mixer 把这件事拆成两个更便宜的操作：</p>
+<pre tabindex="0"><code>纵向通信（跨行）：Token-mixing MLP   → 候选之间互相感知
+横向通信（跨列）：Channel-mixing MLP → 每个候选内部整合特征
+</code></pre><p>两个方向交替做，计算量只有 $O(N \cdot C)$。对于 N 很小（4～8 条候选）的场景，自注意力的 $O(N^2)$ 优势体现不出来，MLP-Mixer 更轻量，完全匹配 99 FPS 的目标。</p>
+<h3 id="53-token-mixing候选之间的串联">5.3 Token-mixing：候选之间的&quot;串联&quot;
+</h3><pre tabindex="0"><code>X [N×C]
+  ↓ 转置 → X^T [C×N]
+  ↓ 对每行独立做 MLP_token（共享权重）
+  ↓ 转置回来
+[N×C]
+  ↓ + 残差 X
+</code></pre><p>先转置，让&quot;同一特征维度下所有候选的值&quot;排成一行，然后对每行做共享 MLP。操作完再转置回来，加残差。这一步让每个候选能&quot;看见&quot;其他候选的存在，是排斥机制在网络结构层面的体现——网络在这里学会了&quot;我的邻居在哪，我该往哪偏&quot;。</p>
+<h3 id="54-channel-mixing每个候选自己的并联">5.4 Channel-mixing：每个候选自己的&quot;并联&quot;
+</h3><p>对每一行（每个候选）独立做 MLP，让该候选自己的 C 个特征维度整合信息，没有跨 token 交互。中间维度通常是 4C，类似 Transformer FFN 的扩展层。</p>
+<h3 id="55-adalnα-如何渗透进每一层">5.5 adaLN：α 如何渗透进每一层
+</h3><p>普通 Layer Norm 的缩放参数 γ 和偏移参数 β 是固定的可学习值。adaLN（自适应层归一化）让它们动态生成：</p>
+$$\gamma, \beta = \text{MLP}_{\text{ada}}(\alpha)$$<p>
+</p>
+$$\text{adaLN}(x, \alpha) = \gamma \cdot \frac{x - \mu}{\sigma} + \beta$$<p>α 在 Mixer 的每一层都注入一次，整个网络的行为随 α 平滑变化——α=0.1 时输出多样，α=0.9 时输出聚拢。这个设计借鉴自 DiT（扩散 Transformer）。</p>
+<p>一层 Mixer 的完整数学：</p>
+$$Y = X + \text{MLP}_{\text{token}}\!\left(\text{adaLN}(X, \alpha)^T\right)^T$$<p>
+</p>
+$$Z = Y + \text{MLP}_{\text{channel}}\!\left(\text{adaLN}(Y, \alpha)\right)$$<h3 id="56-视觉特征如何注入">5.6 视觉特征如何注入
+</h3><p>Drive-JEPA 输出密集的 token 序列（如 196 个 patch token），不能直接喂给 MLP-Mixer（太长，格式不匹配）。压缩方式是<strong>交叉注意力</strong>：</p>
+<pre tabindex="0"><code>可学习的场景查询 Q（比如 16 个固定向量，训练时学习）
+        ↓ 交叉注意力 ↑
+视觉特征 token 序列（Key / Value）
+        ↓
+16 个场景摘要向量（拼接/池化成一个向量 s）
+</code></pre><p>场景查询是可学习的，网络会自动学会&quot;哪些视觉信息对轨迹生成有用&quot;——前方障碍物位置、道路边界、他车朝向。</p>
+<p>视觉特征注入 MLP-Mixer 的完整方式是两步叠加：</p>
+<p><strong>第一步（进 Mixer 之前）</strong>：场景摘要与 N 个可学习候选查询向量拼接，线性投影，给每个候选&quot;预热&quot;：</p>
+<pre tabindex="0"><code>初始输入 = Linear([q_i; s])，对每个候选 i
+</code></pre><p><strong>第二步（Mixer 每层内）</strong>：条件向量 <code>c = MLP([s; α])</code> 通过 adaLN 持续注入每一层，场景信息贯穿始终不被稀释。</p>
+<h3 id="57-n-个模态是怎么来的">5.7 N 个模态是怎么来的
+</h3><p>MLP-Mixer 的输入不是&quot;N 条已有的轨迹&quot;，而是 <strong>N 个可学习的查询向量</strong>（网络参数，随机初始化），代表 N 个候选轨迹的占位符。训练结束后，这些向量在参数空间里自然分化出不同的&quot;专业分工&quot;——某个向量负责左转模态，某个负责直行，以此类推。</p>
+<p>多样性由三重机制共同保证：token-mixing 让候选互相感知，排斥 loss 直接惩罚相似，漂移 loss 的软分配把不同候选拉向不同目标。</p>
+<h3 id="58-完整解码流程">5.8 完整解码流程
+</h3><pre tabindex="0"><code>输入：视觉特征图 + 自车历史位姿 + 导航指令 + α
+        ↓
+交叉注意力压缩 → 场景摘要向量 s
+        ↓
+Linear([q_i; s]) → N 个初始候选向量
+        ↓
+MLP-Mixer 主干（L 层，每层 adaLN 注入 [s; α]）
+  [Token-mixing] ← 候选间排斥感知
+  [Channel-mixing] ← 每个候选内部整合
+        ↓
+N 个输出向量 → MLP → N 个 k 维 PCA 系数
+        ↓
+轨迹_i = x̄ + P × c_i → N 条物理轨迹
+</code></pre><hr>
+<h2 id="六llm-的两个角色">六、LLM 的两个角色
+</h2><h3 id="61-qwen-35-08b不说话只思考">6.1 Qwen 3.5 0.8B：不说话，只思考
+</h3><p>LLM 的价值不在于输出文字，而在于<strong>隐藏状态</strong>——最后几层的激活值已经编码了场景语义、交通规则和风险先验，可以直接作为特征向量使用，完全不需要解码成自然语言。一次前向传播，隐藏状态复用于两个下游任务。</p>
+<h3 id="62-角色一自适应调度器决定-α-和-n">6.2 角色一：自适应调度器（决定 α 和 N）
+</h3><p>训练时预先定义好若干离散方案，比如：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方案</th>
+          <th>α</th>
+          <th>N</th>
+          <th>适合场景</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>0.1</td>
+          <td>8</td>
+          <td>复杂路口，需多样性</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>0.3</td>
+          <td>6</td>
+          <td>一般城区</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>0.5</td>
+          <td>4</td>
+          <td>均衡</td>
+      </tr>
+      <tr>
+          <td>4</td>
+          <td>0.7</td>
+          <td>4</td>
+          <td>较简单</td>
+      </tr>
+      <tr>
+          <td>5</td>
+          <td>0.9</td>
+          <td>2</td>
+          <td>高速直行，要精准</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>调度器是一个轻量级 Transformer 解码器，把 LLM 隐藏状态映射为方案上的 softmax 分布，推理时 argmax 选方案。</p>
+<p><strong>训练调度器的监督标签怎么构造？</strong> 对每个场景跑遍所有预定义方案，每个方案生成 N 条候选，用 NAVSIM 的仿真器对每条候选算 PDMS 分，取该方案下最好的那条成绩（<code>max over N</code>）作为该方案的得分。PDMS 最高的方案成为这个场景的监督标签。</p>
+<h3 id="63-角色二交叉注意力评分器从-n-条候选里选最优">6.3 角色二：交叉注意力评分器（从 N 条候选里选最优）
+</h3><pre tabindex="0"><code>候选轨迹特征 → 作为 Query
+LLM 隐藏状态 → 作为 Key / Value（语义记忆）
+        ↓ 交叉注意力
+每条候选输出标量分数 S_i
+        ↓ argmax → 执行最高分轨迹
+</code></pre><p>评分器用两个 loss 联合训练：</p>
+<ul>
+<li><strong>MSE loss</strong>：<code>||S_i - PDMS_i||²</code>，让预测分数贴近真实 PDMS。</li>
+<li><strong>排序 loss</strong>：若 PDMS_i &gt; PDMS_j，则惩罚 S_j ≥ S_i，保证相对顺序正确。</li>
+</ul>
+<p>两者互补：排序 loss 保证&quot;谁更好&quot;判断正确，MSE loss 保证绝对数值准确。</p>
+<h3 id="64-对-llm-角色设计的质疑与反思">6.4 对 LLM 角色设计的质疑与反思
+</h3><p>这里有几个值得深思的设计问题：</p>
+<p><strong>质疑一：评分器也需要几何理解，LLM 够用吗？</strong>
+判断&quot;这条轨迹会不会在 3 米后擦到行人&quot;是几何计算问题，LLM 隐藏状态只提供&quot;这个场景有行人，需要谨慎&quot;这类语义先验，缺乏行人在自车坐标系下的精确位置。这也解释了为什么 CLEAR 在 TTC（碰撞时间）和几何相关指标上提升显著，但在 LK（车道保持）和 TL（交通灯合规）上仍有短板。<strong>更合理的评分器应该同时融合 LLM 语义特征和视觉几何特征。</strong></p>
+<p><strong>质疑二：LLM 隐藏状态可以压缩后作为生成条件</strong>
+将 LLM 隐藏状态（1024 维）用 MLP 压缩到 128 维再注入解码器，计算量和视觉特征注入完全对称，没有算力障碍。论文选择&quot;LLM 不参与生成、只参与调度和评分&quot;，真正的原因是<strong>信息类型差异</strong>：LLM 隐藏状态是全局语义混合，缺乏空间对应关系和几何精度，而视觉特征对空间结构的编码更精确。但这并不意味着两者不能联合——将两者都注入解码器是一个合理的改进方向。</p>
+<p><strong>质疑三：可以直接用 LLM 隐藏状态 MLP 回归 PCA 系数</strong>
+<code>LLM 隐藏状态 → MLP → k 维 PCA 系数 → 轨迹</code>，完全绕过 MLP-Mixer，既不自回归也不慢。论文没有做这个消融。理论上可行，但多模态多样性的保证需要额外设计（N 个独立 MLP 头 + 排斥 loss），且几何精度受限于 LLM 特征本身。</p>
+<p>这三个质疑共同指向同一个改进方向：<strong>让 LLM 语义特征和视觉几何特征在解码器和评分器里都充分融合，而不是严格划分边界。</strong></p>
+<hr>
+<h2 id="七实验结果">七、实验结果
+</h2><h3 id="71-训练流程">7.1 训练流程
+</h3><p>训练分三个解耦阶段，确保稳定性：</p>
+<ol>
+<li><strong>预训练 VAE + CLEAR 解码器</strong>（约 13 万条轨迹，500 epoch）</li>
+<li><strong>微调 Qwen 3.5 0.8B</strong>（1.7 万场景，15 万组驾驶问答对，20 epoch）</li>
+<li><strong>训练调度器 + 评分器</strong>（1 万场景，每场景生成大量方案对比数据，100 epoch）</li>
+</ol>
+<p>上游 VAE 和 LLM 的参数在第三阶段全部冻结。</p>
+<h3 id="72-navsim-v1-结果pdms越高越好">7.2 NAVSIM v1 结果（PDMS，越高越好）
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>TTC</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ReCogDrive</td>
+          <td>94.9</td>
+          <td>90.8</td>
+      </tr>
+      <tr>
+          <td>iPad</td>
+          <td>94.9</td>
+          <td>91.7</td>
+      </tr>
+      <tr>
+          <td>DriveSuprim</td>
+          <td>95.5</td>
+          <td>93.5</td>
+      </tr>
+      <tr>
+          <td>Drive-JEPA</td>
+          <td>95.9</td>
+          <td>93.3</td>
+      </tr>
+      <tr>
+          <td><strong>CLEAR（本文）</strong></td>
+          <td><strong>97.2</strong></td>
+          <td><strong>93.7</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>CLEAR 在安全关键指标 TTC 上提升最显著（95.9 → 97.2），说明 LLM 驱动的调度器和评分器有效提升了安全感知规划能力。</p>
+<h3 id="73-navsim-v2-结果epdms更严苛">7.3 NAVSIM v2 结果（EPDMS，更严苛）
+</h3><p>在 ViT/L 规模方法中，CLEAR 取得最高 EPDMS（88.6），在 NC、DAC、EP、TTC、EC 上均领先。但在 LK（车道保持）和 TL（交通灯合规）上仍落后，印证了评分器缺乏几何特征的短板。</p>
+<h3 id="74-消融实验">7.4 消融实验
+</h3><p>将 LLM 评分器替换为仅视觉特征评分，或将自适应调度改为固定 α=0.5、N=64，性能均出现明显下滑。每个组件都不可或缺。</p>
+<hr>
+<h2 id="八局限性与未来方向">八、局限性与未来方向
+</h2><p><strong>当前短板：</strong></p>
+<ul>
+<li>车道保持（LK）和交通灯合规（TLC）指标仍有差距，纯前视图像 + 高层导航指令在需要精确感知车道线和信号灯的场景下力有不逮。</li>
+<li>评分器只用 LLM 语义特征，缺乏几何感知能力。</li>
+</ul>
+<p><strong>自然的改进方向：</strong></p>
+<ul>
+<li>引入高清地图、多摄像头融合等更丰富的感知输入。</li>
+<li>在解码器和评分器里同时融合 LLM 语义特征和视觉几何特征，打破当前&quot;LLM 管语义、视觉管生成&quot;的硬划分。</li>
+<li>在视频预训练阶段引入更显式的时序建模（如潜在空间时序预测 + 多模态目标），弥补 JEPA 风格预训练的时序短板。</li>
+</ul>
+<hr>
+<h2 id="九一句话总结">九、一句话总结
+</h2><p>CLEAR 证明了一件事：高保真的多模态规划不需要密集几何标注，不需要迭代采样，也不需要巨无霸 LLM。一个 0.8B 的小模型，配上精心设计的&quot;隐藏状态复用&quot;策略，就足以驱动一个跑到 99 FPS 的安全驾驶系统，还能拿下 NAVSIM 榜首。</p>
+<p>论文最令人击节称赏之处，在于它没有去发明更大的模型，而是极其精巧地重新分工——<strong>让 LLM 不说话只思考，把思考的成果转化为生成器的指挥棒</strong>，在速度、安全性和多样性之间找到了一个漂亮的平衡点。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/jepa/">JEPA</a>
+        
+            <a href="/tags/mlp-mixer/">MLP-Mixer</a>
+        
+            <a href="/tags/llm%E6%8E%A8%E7%90%86/">LLM推理</a>
+        
+            <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/">多模态规划</a>
+        
+            <a href="/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/">潜在空间</a>
+        
+            <a href="/tags/pca%E6%8A%95%E5%BD%B1/">PCA投影</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-foresight/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Foresight 论文阅读笔记</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/horizon-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HorizonDrive: Self-Corrective Autoregressive World Model for Long-horizon Driving Simulation</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/rad-2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mosaic/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MOSAIC: 基于规模感知的自动驾驶数据挑选魔法阵</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
