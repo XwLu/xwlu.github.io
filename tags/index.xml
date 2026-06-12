@@ -24,10 +24,28 @@
             <guid>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item><item>
+            <title>历史引导</title>
+            <link>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</link>
+            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</guid>
+            <description></description>
+        </item><item>
             <title>强化学习</title>
             <link>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</link>
             <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</guid>
+            <description></description>
+        </item><item>
+            <title>扩散模型</title>
+            <link>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</link>
+            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>时间一致性</title>
+            <link>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</link>
+            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</guid>
             <description></description>
         </item><item>
             <title>端到端</title>
@@ -136,12 +154,6 @@
             <link>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</link>
             <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</guid>
-            <description></description>
-        </item><item>
-            <title>扩散模型</title>
-            <link>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item><item>
             <title>暴露偏差</title>
