@@ -3,10 +3,46 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.org/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/grpo/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/iclr2026/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/plan-r1/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/categories/robotics/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/</loc>
+    <lastmod>2026-06-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/clear/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
@@ -23,25 +59,10 @@
     <loc>https://example.org/tags/pca%E6%8A%95%E5%BD%B1/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.org/post/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/categories/robotics/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://example.org/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</loc>
-    <lastmod>2026-06-11T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</loc>
     <lastmod>2026-06-11T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/worldmodel/dreamer-v3/</loc>
@@ -69,12 +90,6 @@
     <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/x-foresight/</loc>
-    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</loc>
-    <lastmod>2026-06-06T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</loc>
     <lastmod>2026-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</loc>
@@ -143,9 +158,6 @@
     <loc>https://example.org/post/robotics/e2e/rad-2/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2026-04-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://example.org/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/</loc>
     <lastmod>2026-04-24T00:00:00+00:00</lastmod>
   </url><url>
@@ -189,9 +201,6 @@
     <lastmod>2026-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/</loc>
-    <lastmod>2026-04-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/</loc>
     <lastmod>2026-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/actionprediction/</loc>
@@ -249,9 +258,6 @@
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/future-x/</loc>
-    <lastmod>2026-03-17T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/grpo/</loc>
     <lastmod>2026-03-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/hi-p-ad/</loc>

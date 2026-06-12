@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="不讲条件，不找借口，坚定信念，完美执行！">
+<title>Page 4 - E2E Paper Reading</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="E2E Paper Reading">
+<meta property='og:description' content="不讲条件，不找借口，坚定信念，完美执行！">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='website'><meta property='og:updated_time' content=' 2026-06-12T00:00:00&#43;00:00 '/>
+<meta name="twitter:title" content="E2E Paper Reading">
+<meta name="twitter:description" content="不讲条件，不找借口，坚定信念，完美执行！"><link rel="alternate" type="application/rss&#43;xml" href="https://example.org/post/robotics/e2e/index.xml">
+    </head>
+    <body class="">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                <form action="/page/search/" class="search-form widget" >
+        <p>
+            <label>Search</label>
+            <input name="keyword" required placeholder="Type something..." />
+        
+            <button title="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+            </button>
+        </p>
+    </form>
+            
+        
+            
+                <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-infinity" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M9.828 9.172a4 4 0 1 0 0 5.656 a10 10 0 0 0 2.172 -2.828a10 10 0 0 1 2.172 -2.828 a4 4 0 1 1 0 5.656a10 10 0 0 1 -2.172 -2.828a10 10 0 0 0 -2.172 -2.828" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">
+            <a href="/page/archives/">
+                Archives
+            </a>
+        </h2>
+
+        
+        
+        
+        <div class="widget-archive--list">
+            <div class="archives-year">
+                    <a href="/page/archives/#2026">
+                        
+                            <span class="year">2026</span>
+                            <span class="count">28</span>
+                        
+                    </a> 
+                </div>
+            <div class="archives-year">
+                    <a href="/page/archives/#2025">
+                        
+                            <span class="year">2025</span>
+                            <span class="count">89</span>
+                        
+                    </a> 
+                </div>
+            <div class="archives-year">
+                    <a href="/page/archives/#2024">
+                        
+                            <span class="year">2024</span>
+                            <span class="count">1</span>
+                        
+                    </a> 
+                </div>
+            
+        </div>
+    </section>
+            
+        
+            
+                
+<section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">
+        
+            <a href="/categories/">
+                Categories
+            </a>
+        
+    </h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/categories/robotics/">
+                Robotics
+            </a>
+        
+            <a href="/categories/coding/">
+                Coding
+            </a>
+        
+            <a href="/categories/optimization/">
+                Optimization
+            </a>
+        
+            <a href="/categories/reinforcement-learning/">
+                Reinforcement Learning
+            </a>
+        
+            <a href="/categories/tools/">
+                Tools
+            </a>
+        
+            <a href="/categories/deep-learning/">
+                Deep Learning
+            </a>
+        
+            <a href="/categories/climbing/">
+                Climbing
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+            
+                
+<section class="widget tagCloud">
+    <div class="widget-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tag" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11 3L20 12a1.5 1.5 0 0 1 0 2L14 20a1.5 1.5 0 0 1 -2 0L3 11v-4a4 4 0 0 1 4 -4h4" />
+  <circle cx="9" cy="9" r="2" />
+</svg>
+
+
+
+    </div>
+    <h2 class="widget-title section-title">
+        
+            <a href="/tags/">
+                Tags
+            </a>
+        
+    </h2>
+
+    <div class="tagCloud-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">
+                自动驾驶
+            </a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">
+                端到端
+            </a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">
+                世界模型
+            </a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">
+                轨迹规划
+            </a>
+        
+            <a href="/tags/worldmodel/">
+                WorldModel
+            </a>
+        
+            <a href="/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">
+                扩散模型
+            </a>
+        
+            <a href="/tags/e2e-ad/">
+                E2e-Ad
+            </a>
+        
+            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">
+                强化学习
+            </a>
+        
+            <a href="/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/">
+                自回归生成
+            </a>
+        
+            <a href="/tags/autonomousdriving/">
+                AutonomousDriving
+            </a>
+        
+    </div>
+</section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+<header>
+    <h1>E2E Paper Reading</h1>
+</header>
+
+<ul class="tree-list"><li class="tree-leaf">
+        <a href="/post/robotics/e2e/plan-r1/">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/clear/">CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/x-foresight/">X-Foresight 论文阅读笔记</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/horizon-drive/">HorizonDrive: Self-Corrective Autoregressive World Model for Long-horizon Driving Simulation</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/reflect-drive-2/">ReflectDrive-2 论文阅读笔记</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/x-cache/">X-Cache</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/rad-2/">RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/mosaic/">MOSAIC: 基于规模感知的自动驾驶数据挑选魔法阵</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/drive-transformer/">DriveTransformer: Unified Transformer for Scalable End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/sparse-drive-v2/">SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/onevl/">OneVL - 双模态隐式推理框架</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/world-drive/">WorldDrive</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/diffusion-drive-v2/">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/uad/">End-to-End Autonomous Driving without Costly Modularization and 3D Manual Annotation</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/epona/">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/future-x/">FutureX: Enhance End-to-End Autonomous Driving via Latent Chain-of-Thought World Model</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/hi-p-ad/">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/law/">LAW - Enhancing End-to-End Autonomous Driving with Latent World Model</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/mom-ad/">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/motion-lm/">MotionLM: Multi-Agent Motion Forecasting as Language Modeling</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/res-ad/">ResAD: Normalized Residual Trajectory Modeling for End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/sng-vla/">SNG-VLA: Navigation Understanding in End-to-End Autonomous Driving</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/world4-drive/">World4Drive - 无需感知标注的端到端自动驾驶世界模型</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/car-planner/">CarPlanner</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/diffusion-drive/">DiffusionDrive</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/game-former/">GameFormer</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/gen-ad/">GenAD</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/goal-flow/">GoalFlow</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/pluto/">Pluto</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/way-former/">WayFormer</a>
+    </li><li class="tree-leaf">
+        <a href="/post/robotics/e2e/emma/">EMMA: End-to-End Multimodal Model for Autonomous Driving</a>
+    </li></ul>
+
+<footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
