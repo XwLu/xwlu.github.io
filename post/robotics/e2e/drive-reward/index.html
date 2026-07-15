@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="用微调过的 1B VLM 当裁判给自动驾驶轨迹打分，补齐规则难以量化的指令遵循与合法性两个维度，作为离线 RL 训练的奖励信号——扎实但不 exciting 的工程报告，落地场景是离线训练而非车端实时。">
+<title>DriveReward 论文阅读笔记</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/drive-reward/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DriveReward 论文阅读笔记">
+<meta property='og:description' content="用微调过的 1B VLM 当裁判给自动驾驶轨迹打分，补齐规则难以量化的指令遵循与合法性两个维度，作为离线 RL 训练的奖励信号——扎实但不 exciting 的工程报告，落地场景是离线训练而非车端实时。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/drive-reward/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='强化学习' /><meta property='article:tag' content='奖励模型' /><meta property='article:tag' content='VLM' /><meta property='article:tag' content='轨迹规划' /><meta property='article:tag' content='语义评估' /><meta property='article:published_time' content='2026-07-15T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-15T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="DriveReward 论文阅读笔记">
+<meta name="twitter:description" content="用微调过的 1B VLM 当裁判给自动驾驶轨迹打分，补齐规则难以量化的指令遵循与合法性两个维度，作为离线 RL 训练的奖励信号——扎实但不 exciting 的工程报告，落地场景是离线训练而非车端实时。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一核心思想一句话概括">一、核心思想（一句话概括）</a></li>
+    <li><a href="#二论文背景与动机">二、论文背景与动机</a>
+      <ul>
+        <li><a href="#问题来源">问题来源</a></li>
+        <li><a href="#解决思路">解决思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#三主要贡献">三、主要贡献</a>
+      <ul>
+        <li><a href="#31-drivereward-数据集">3.1 DriveReward 数据集</a></li>
+        <li><a href="#32-drivereward-1b-模型">3.2 DriveReward-1B 模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实验结果">四、实验结果</a>
+      <ul>
+        <li><a href="#41-drivereward-bench表1">4.1 DriveReward-Bench（表1）</a></li>
+        <li><a href="#42-rl-训练提升表2表3表4">4.2 RL 训练提升（表2、表3、表4）</a></li>
+        <li><a href="#43-消融实验表6">4.3 消融实验（表6）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五论文价值评估">五、论文价值评估</a>
+      <ul>
+        <li><a href="#-真实价值">✅ 真实价值</a></li>
+        <li><a href="#-主要局限">❌ 主要局限</a></li>
+      </ul>
+    </li>
+    <li><a href="#六真实定位总结">六、真实定位总结</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/drive-reward/">DriveReward 论文阅读笔记</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-15T00:00:00Z'>Wednesday, July 15, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        2 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一核心思想一句话概括">一、核心思想（一句话概括）</a></li>
+    <li><a href="#二论文背景与动机">二、论文背景与动机</a>
+      <ul>
+        <li><a href="#问题来源">问题来源</a></li>
+        <li><a href="#解决思路">解决思路</a></li>
+      </ul>
+    </li>
+    <li><a href="#三主要贡献">三、主要贡献</a>
+      <ul>
+        <li><a href="#31-drivereward-数据集">3.1 DriveReward 数据集</a></li>
+        <li><a href="#32-drivereward-1b-模型">3.2 DriveReward-1B 模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#四实验结果">四、实验结果</a>
+      <ul>
+        <li><a href="#41-drivereward-bench表1">4.1 DriveReward-Bench（表1）</a></li>
+        <li><a href="#42-rl-训练提升表2表3表4">4.2 RL 训练提升（表2、表3、表4）</a></li>
+        <li><a href="#43-消融实验表6">4.3 消融实验（表6）</a></li>
+      </ul>
+    </li>
+    <li><a href="#五论文价值评估">五、论文价值评估</a>
+      <ul>
+        <li><a href="#-真实价值">✅ 真实价值</a></li>
+        <li><a href="#-主要局限">❌ 主要局限</a></li>
+      </ul>
+    </li>
+    <li><a href="#六真实定位总结">六、真实定位总结</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="-drivereward用-vlm-当裁判给自动驾驶轨迹打分">🚗 DriveReward：用 VLM 当裁判，给自动驾驶轨迹打分
+</h1>
+    <blockquote>
+        <p><strong>核心洞见：</strong> 把&quot;规则难以量化的语义判断&quot;——比如闯红灯、压实线、是否听从导航指令——交给一个微调过的 1B 视觉语言模型来打分，再把这个分数当成 RL 训练的奖励信号。它不是架构创新，而是一份扎实但不 exciting 的工程报告，真正能落地的地方是离线训练阶段，而非车端实时运行。</p>
+
+    </blockquote>
+<hr>
+<h2 id="一核心思想一句话概括">一、核心思想（一句话概括）
+</h2><p>用一个微调后的 1B VLM 作为奖励模型，对自动驾驶端到端规划模型生成的轨迹进行多维度打分，并将打分结果作为 RL 训练的奖励信号，以提升规划模型的表现。</p>
+<hr>
+<h2 id="二论文背景与动机">二、论文背景与动机
+</h2><h3 id="问题来源">问题来源
+</h3><p>端到端自动驾驶系统通常生成多条候选轨迹，需要评估并选出最优轨迹。现有评估方法分两类：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>类型</th>
+          <th>代表方法</th>
+          <th>核心缺陷</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Model-free（规则派）</td>
+          <td>MSE、PDMS</td>
+          <td>依赖精确感知标注，无法理解高层语义规则（如闯红灯）</td>
+      </tr>
+      <tr>
+          <td>Model-based（模型派）</td>
+          <td>评分头、轻量世界模型</td>
+          <td>优化的是数据集特定代理指标，缺乏语义推理能力</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="解决思路">解决思路
+</h3><p>引入 VLM 作为裁判，利用其视觉语义理解能力，对轨迹进行&quot;看图说话&quot;式的综合评估，绕过对精确感知标注的依赖。</p>
+<hr>
+<h2 id="三主要贡献">三、主要贡献
+</h2><h3 id="31-drivereward-数据集">3.1 DriveReward 数据集
+</h3><p><strong>数据来源</strong>：NAVSIM 训练集（nuPlan 子集）</p>
+<p><strong>核心设计：反事实数据增强</strong></p>
+<ul>
+<li>现有驾驶数据集几乎全是正常驾驶，缺少失败案例</li>
+<li>系统性合成各类驾驶失误（急并道、压线、轨迹偏离等）</li>
+<li>大幅丰富负样本，使奖励模型具备分辨好坏轨迹的能力</li>
+</ul>
+<p><strong>七维评分体系</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>来源</th>
+          <th>说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>NC（无碰撞）</td>
+          <td>NAVSIM 协议</td>
+          <td>是否发生碰撞</td>
+      </tr>
+      <tr>
+          <td>DAC（可行驶区域合规）</td>
+          <td>NAVSIM 协议</td>
+          <td>是否驶出路面</td>
+      </tr>
+      <tr>
+          <td>EP（自车进度）</td>
+          <td>NAVSIM 协议</td>
+          <td>向前行驶距离</td>
+      </tr>
+      <tr>
+          <td>TTC（碰撞时间）</td>
+          <td>NAVSIM 协议</td>
+          <td>与周围车辆的安全间距</td>
+      </tr>
+      <tr>
+          <td>C（舒适度）</td>
+          <td>NAVSIM 协议</td>
+          <td>加减速平顺性</td>
+      </tr>
+      <tr>
+          <td><strong>CF（指令遵循）</strong></td>
+          <td>⭐ 新提出</td>
+          <td>是否执行了导航指令（转向等）</td>
+      </tr>
+      <tr>
+          <td><strong>LG（合法性）</strong></td>
+          <td>⭐ 新提出 + Qwen3.5</td>
+          <td>是否闯红灯、压实线</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>CF 和 LG 是最核心的新增价值</strong>：这两个维度是规则算法难以量化的语义判断，必须靠 VLM 的视觉理解能力来实现。</p>
+<p><strong>标注方式</strong>：用 Qwen3.5-35B-A3B 生成带推理链的标注，并在图像上叠加视觉提示辅助模型理解（绿线=轨迹、红点=碰撞点、品红点=越界点）。</p>
+<p><strong>数据规模</strong>：共 200K 样本；DriveReward-Bench 基于 NAVSIM 测试集，包含 5K 样本。</p>
+<h3 id="32-drivereward-1b-模型">3.2 DriveReward-1B 模型
+</h3><p><strong>基础骨架</strong>：InternVL3-1B</p>
+<p><strong>核心创新：几何对齐模块（Geometry Adapter）</strong></p>
+<ul>
+<li>模型输出几何特征 $f_{geo}$，通过 MLP 投影到几何基础模型 VGGT 的潜在空间</li>
+<li>用 $L_2$ 损失对齐，强迫模型内化空间几何直觉（如判断轨迹是否越出可行驶区域边界）</li>
+<li>不需要额外的密集 3D 标注</li>
+</ul>
+<p><strong>输出设计</strong>：纯文本自回归生成，无额外 MLP 回归头</p>
+<ul>
+<li><code>&lt;reasoning&gt;...&lt;/reasoning&gt;</code>：详细语义推理链（CoT）</li>
+<li><code>&lt;reward&gt;...&lt;/reward&gt;</code>：结构化七维评分</li>
+</ul>
+<p><strong>两阶段训练</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>数据规模</th>
+          <th>目标</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Stage 1：领域预训练</td>
+          <td>800K 条跨领域驾驶 QA</td>
+          <td>注入驾驶领域知识</td>
+      </tr>
+      <tr>
+          <td>Stage 2：任务 SFT</td>
+          <td>300K 条 DriveReward 数据</td>
+          <td>学习多维度轨迹打分</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>训练硬件</strong>：32 张 NVIDIA H20 GPU</p>
+<hr>
+<h2 id="四实验结果">四、实验结果
+</h2><h3 id="41-drivereward-bench表1">4.1 DriveReward-Bench（表1）
+</h3>
+    <blockquote>
+        <p>结论：专门调优的 1B 小模型在任务上显著超过零样本的 8B 通用大模型</p>
+
+    </blockquote>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型</th>
+          <th>参数量</th>
+          <th>Safety↑</th>
+          <th>EP-MAE↓</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>InternVL3（零样本）</td>
+          <td>2B</td>
+          <td>29.6</td>
+          <td>0.62</td>
+      </tr>
+      <tr>
+          <td>Qwen3.5（零样本）</td>
+          <td>4B</td>
+          <td>59.9</td>
+          <td>0.60</td>
+      </tr>
+      <tr>
+          <td>InternVL3-1B（SFT）</td>
+          <td>1B</td>
+          <td>72.2</td>
+          <td>0.34</td>
+      </tr>
+      <tr>
+          <td><strong>DriveReward-1B</strong></td>
+          <td><strong>1B</strong></td>
+          <td><strong>80.6</strong></td>
+          <td><strong>0.23</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="42-rl-训练提升表2表3表4">4.2 RL 训练提升（表2、表3、表4）
+</h3><p><strong>开环（NAVSIM-V1）</strong>：DriveReward 作为奖励信号，在所有基础规划模型上一致超过 SFT 基线（约 +1~2% PDMS）</p>
+<p><strong>复合奖励设计</strong>：</p>
+$$PDMS_{CFLG} = NC \times DAC \times \frac{5 \times EP + 5 \times TTC + 2 \times C + 2 \times CF_{pred} + 2 \times LG_{pred}}{16}$$<p>加入 CF 和 LG 后，安全性提升最明显，效率微降。</p>
+<p><strong>闭环（Bench2Drive / CARLA）</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>Driving Score↑</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SFT 基线</td>
+          <td>40.2</td>
+      </tr>
+      <tr>
+          <td>RL（RM 预测 PDMS）</td>
+          <td>51.4</td>
+      </tr>
+      <tr>
+          <td>RL（规则 PDMS）</td>
+          <td>55.0</td>
+      </tr>
+      <tr>
+          <td><strong>RL（规则 PDMS + RM 的 CF&amp;LG）</strong></td>
+          <td><strong>57.1</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>跨数据集零样本泛化效果良好，模型仅在 nuPlan 上训练，迁移到 CARLA 仍有效。</p>
+<h3 id="43-消融实验表6">4.3 消融实验（表6）
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>去掉的组件</th>
+          <th>Safety 变化</th>
+          <th>结论</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>推理 CoT</td>
+          <td>-9.3</td>
+          <td><strong>影响最大，是模型的灵魂</strong></td>
+      </tr>
+      <tr>
+          <td>几何 Adapter</td>
+          <td>-1.5</td>
+          <td>空间感知有效但非关键</td>
+      </tr>
+      <tr>
+          <td>预训练阶段</td>
+          <td>-0.06</td>
+          <td>贡献较小</td>
+      </tr>
+  </tbody>
+</table></div>
+<hr>
+<h2 id="五论文价值评估">五、论文价值评估
+</h2><h3 id="-真实价值">✅ 真实价值
+</h3><ol>
+<li>
+<p><strong>CF 和 LG 两个新评估维度</strong>：把&quot;规则难以量化的语义判断&quot;转交给模型处理，这是最实质性的贡献。闯红灯、压实线的判断靠几何规则要么需要精确高精地图，要么容易误判，VLM 是更自然的解法。</p>
+</li>
+<li>
+<p><strong>离线 RL 训练的实用工具</strong>：在数据工厂和离线训练阶段，提供了一个比人工规则更丰富的奖励信号，工程上有使用价值。</p>
+</li>
+<li>
+<p><strong>系统性工作的一块拼图</strong>：结合小米汽车团队同期的 AdaThinkDrive、ReCogDrive、VILTA 等工作，DriveReward 是其整体 VLA 研发体系的基础设施组件，系统价值大于单篇价值。</p>
+</li>
+</ol>
+<h3 id="-主要局限">❌ 主要局限
+</h3><ol>
+<li>
+<p><strong>学术创新密度不高</strong></p>
+<ul>
+<li>反事实数据增强思路并不新颖</li>
+<li>&ldquo;用 VLM 做奖励模型&quot;在其他领域早有先例，只是搬到了驾驶场景</li>
+<li>模型架构改动偏工程技巧，非架构创新</li>
+</ul>
+</li>
+<li>
+<p><strong>车端部署存在根本性障碍</strong></p>
+<ul>
+<li>论文声称选 1B 是考虑&quot;real-time deployment feasibility&rdquo;，但全部实验均为离线评估</li>
+<li>高通 SA8797 等智驾芯片的实际可用算力约 15<del>20 TOPS FP16，内存带宽约 50</del>60 GB/s</li>
+<li>自回归生成 300 个 token 需要约 10 秒，距离 10Hz 要求差约两个数量级</li>
+<li><strong>结论：该模型无法部署到车端实时运行</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>论文定位存在过度包装</strong></p>
+<ul>
+<li>Introduction 强调实时轨迹选择和车端部署价值，但实验中没有任何车端部署数据</li>
+<li>真实定位应该是：<strong>用轻量模型近似大模型的打分能力，降低离线 RL 训练阶段的奖励计算成本</strong></li>
+</ul>
+</li>
+<li>
+<p><strong>实验提升幅度有限</strong></p>
+<ul>
+<li>RL 训练提升在 1~2 个百分点量级</li>
+<li>测试时轨迹选择仅捕获理论上限（Best-of-4）的一小部分</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="六真实定位总结">六、真实定位总结
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>评价</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>学术创新性</td>
+          <td>⭐⭐☆☆☆ 偏低，是已有思路的领域迁移</td>
+      </tr>
+      <tr>
+          <td>工程实用性（离线）</td>
+          <td>⭐⭐⭐☆☆ 有用，作为训练工具有价值</td>
+      </tr>
+      <tr>
+          <td>工程实用性（车端）</td>
+          <td>⭐☆☆☆☆ 无法落地，存在根本性能瓶颈</td>
+      </tr>
+      <tr>
+          <td>系统完整性</td>
+          <td>⭐⭐⭐☆☆ 作为小米团队整体体系的一环尚可</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>一句话定性</strong>：这是一篇<strong>扎实但不 exciting 的工程报告</strong>，核心贡献是用 VLM 实现了两个规则难以量化的打分维度（CF 和 LG），并将其接入 RL 训练流程。车端实时部署的说法站不住脚，真正的使用场景仅限于离线训练阶段的奖励计算。</p>
+<hr>
+<p><em>笔记整理时间：2026年7月</em></p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">强化学习</a>
+        
+            <a href="/tags/%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B/">奖励模型</a>
+        
+            <a href="/tags/vlm/">VLM</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+            <a href="/tags/%E8%AF%AD%E4%B9%89%E8%AF%84%E4%BC%B0/">语义评估</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/plan-r1/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/post/robotics/e2e/dfp/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post DFP - 扩散强迫规划与历史退火" height="150" loading="lazy" src="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png" srcset="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png 1x, /post/robotics/e2e/dfp/cover_hu_288927617631db25.png 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #5071bd80 0%, #f4f6f8C0 100%);">
+            <h2 class="article-title">DFP - 扩散强迫规划与历史退火</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/rad-2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">RAD-2: Scaling Reinforcement Learning in a Generator-Discriminator Framework</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/sparse-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
