@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="把未来视频预测和驾驶轨迹规划放进同一个基于DiT的flow matching联合去噪过程里，实现NAVSIM SOTA和强零样本跨数据集迁移能力。">
+<title>DriveVA - 视频动作模型即零样本驾驶员</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/drive-va/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DriveVA - 视频动作模型即零样本驾驶员">
+<meta property='og:description' content="把未来视频预测和驾驶轨迹规划放进同一个基于DiT的flow matching联合去噪过程里，实现NAVSIM SOTA和强零样本跨数据集迁移能力。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/drive-va/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='论文阅读' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='视频生成' /><meta property='article:tag' content='flow_matching' /><meta property='article:tag' content='DiT' /><meta property='article:tag' content='零样本迁移' /><meta property='article:published_time' content='2026-07-16T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-16T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="DriveVA - 视频动作模型即零样本驾驶员">
+<meta name="twitter:description" content="把未来视频预测和驾驶轨迹规划放进同一个基于DiT的flow matching联合去噪过程里，实现NAVSIM SOTA和强零样本跨数据集迁移能力。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#1-一句话核心思想">1. 一句话核心思想</a></li>
+    <li><a href="#2-核心结果一览">2. 核心结果一览</a></li>
+    <li><a href="#3-预备知识flow-matching">3. 预备知识：Flow Matching</a></li>
+    <li><a href="#4-方法细节">4. 方法细节</a>
+      <ul>
+        <li><a href="#41-问题定义sec-41">4.1 问题定义（Sec 4.1）</a></li>
+        <li><a href="#42-数据预处理">4.2 数据预处理</a></li>
+        <li><a href="#43-tokenization-与联合生成eq5-9">4.3 Tokenization 与联合生成（Eq.5-9）</a></li>
+        <li><a href="#44-flow-matching-目标函数与关键数学论证">4.4 Flow Matching 目标函数与关键数学论证</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-关键问题的最终结论按主题">5. 关键问题的最终结论（按主题）</a>
+      <ul>
+        <li><a href="#51-什么是跨数据集零样本迁移">5.1 什么是跨数据集零样本迁移</a></li>
+        <li><a href="#52-松耦合-vs-紧耦合pwm-是否是松耦合代表最终结论经历两轮修正">5.2 松耦合 vs 紧耦合，PWM 是否是松耦合代表（最终结论，经历两轮修正）</a></li>
+        <li><a href="#53-一次推理的具体参数">5.3 一次推理的具体参数</a></li>
+        <li><a href="#54-滑动窗口-vs-视频续播两个不同层次的机制最终结论">5.4 滑动窗口 vs 视频续播——两个不同层次的机制（最终结论）</a></li>
+        <li><a href="#55-为什么会有没有足够真实观测帧的情况navsim-非反应式-vs-反应式最终结论">5.5 为什么会有&quot;没有足够真实观测帧&quot;的情况——NAVSIM 非反应式 vs 反应式（最终结论）</a></li>
+        <li><a href="#56-用户内部2帧循环假设的证伪及-table-5-消融真正测的是什么重要自我修正">5.6 用户&quot;内部2帧循环&quot;假设的证伪，及 Table 5 消融真正测的是什么（重要自我修正）</a></li>
+        <li><a href="#57-单次8帧预测算长视频还是短想象最终结论">5.7 单次8帧预测算&quot;长视频&quot;还是&quot;短想象&quot;（最终结论）</a></li>
+        <li><a href="#58-实车部署时是否还存在长时程预测问题最终结论">5.8 实车部署时是否还存在&quot;长时程预测&quot;问题（最终结论）</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-实验结果汇总消融实验表">6. 实验结果汇总（消融实验表）</a></li>
+    <li><a href="#7-术语速查">7. 术语速查</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/drive-va/">DriveVA - 视频动作模型即零样本驾驶员</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-16T00:00:00Z'>Thursday, July 16, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        5 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#1-一句话核心思想">1. 一句话核心思想</a></li>
+    <li><a href="#2-核心结果一览">2. 核心结果一览</a></li>
+    <li><a href="#3-预备知识flow-matching">3. 预备知识：Flow Matching</a></li>
+    <li><a href="#4-方法细节">4. 方法细节</a>
+      <ul>
+        <li><a href="#41-问题定义sec-41">4.1 问题定义（Sec 4.1）</a></li>
+        <li><a href="#42-数据预处理">4.2 数据预处理</a></li>
+        <li><a href="#43-tokenization-与联合生成eq5-9">4.3 Tokenization 与联合生成（Eq.5-9）</a></li>
+        <li><a href="#44-flow-matching-目标函数与关键数学论证">4.4 Flow Matching 目标函数与关键数学论证</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-关键问题的最终结论按主题">5. 关键问题的最终结论（按主题）</a>
+      <ul>
+        <li><a href="#51-什么是跨数据集零样本迁移">5.1 什么是跨数据集零样本迁移</a></li>
+        <li><a href="#52-松耦合-vs-紧耦合pwm-是否是松耦合代表最终结论经历两轮修正">5.2 松耦合 vs 紧耦合，PWM 是否是松耦合代表（最终结论，经历两轮修正）</a></li>
+        <li><a href="#53-一次推理的具体参数">5.3 一次推理的具体参数</a></li>
+        <li><a href="#54-滑动窗口-vs-视频续播两个不同层次的机制最终结论">5.4 滑动窗口 vs 视频续播——两个不同层次的机制（最终结论）</a></li>
+        <li><a href="#55-为什么会有没有足够真实观测帧的情况navsim-非反应式-vs-反应式最终结论">5.5 为什么会有&quot;没有足够真实观测帧&quot;的情况——NAVSIM 非反应式 vs 反应式（最终结论）</a></li>
+        <li><a href="#56-用户内部2帧循环假设的证伪及-table-5-消融真正测的是什么重要自我修正">5.6 用户&quot;内部2帧循环&quot;假设的证伪，及 Table 5 消融真正测的是什么（重要自我修正）</a></li>
+        <li><a href="#57-单次8帧预测算长视频还是短想象最终结论">5.7 单次8帧预测算&quot;长视频&quot;还是&quot;短想象&quot;（最终结论）</a></li>
+        <li><a href="#58-实车部署时是否还存在长时程预测问题最终结论">5.8 实车部署时是否还存在&quot;长时程预测&quot;问题（最终结论）</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-实验结果汇总消融实验表">6. 实验结果汇总（消融实验表）</a></li>
+    <li><a href="#7-术语速查">7. 术语速查</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="driveva-视频动作模型即零样本驾驶员">DriveVA: 视频动作模型即零样本驾驶员
+</h1>
+    <blockquote>
+        <p>论文：<em>DriveVA: Video Action Models are Zero-Shot Drivers</em>
+arXiv: 2604.04198（v2，本地 PDF：<code>2604.04198v2.pdf</code>，30页含正文+附录）
+机构：University of Twente、Xiaomi EV、University of Cambridge、University of Bath
+提交：2026-04-05；v2 修订：2026-07-01
+本笔记基于对论文原文的完整通读 + 多轮追问讨论整理，按主题汇总<strong>最终结论</strong>，保留关键推导过程和论文原文依据。</p>
+
+    </blockquote>
+<blockquote class="alert alert-tip">
+        <div class="alert-header">
+            <span class="alert-icon">💡</span>
+            <span class="alert-title">相关笔记</span>
+        </div>
+        <div class="alert-body">
+            <p>本论文与知识库中已有的世界模型融合类驾驶工作一脉相承：LAW - Latent World Model for E2E Driving、Epona - 自回归扩散世界模型、WorldDrive - 统一视觉与运动表征的端到端自动驾驶框架、World4Drive - 无需感知标注的端到端世界模型、HorizonDrive - 自回归世界模型的自我纠偏炼金术；闭环评测中对比的 DriveTransformer 论文阅读笔记；以及世界模型方向的 Fast-WAM（世界动作模型）。</p>
+        </div>
+    </blockquote>
+<hr>
+<h2 id="1-一句话核心思想">1. 一句话核心思想
+</h2><p>DriveVA 把&quot;未来视频预测&quot;和&quot;驾驶轨迹（动作）规划&quot;放进<strong>同一个基于 DiT 的 flow matching 联合去噪过程</strong>里，而不是像以往方法那样分开建模、事后用特征传递做&quot;软对齐&quot;。核心论点：<strong>视频级别的监督才是规划能力提升的主要驱动力</strong>，去掉视频监督后 NAVSIM PDMS 从 90.9 暴跌到 71.4。</p>
+<p>四大贡献：① 统一视频-动作世界模型；② 基于 DiT 的统一解码器同时生成未来视频潜码和动作 token；③ 视频续播（Video Continuation）策略维持长时程一致性；④ NAVSIM SOTA + 强零样本跨数据集迁移能力。</p>
+<hr>
+<h2 id="2-核心结果一览">2. 核心结果一览
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>评测</th>
+          <th>结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>NAVSIM v1（闭环，仅前视摄像头，无 LiDAR）</td>
+          <td>PDMS <strong>90.9</strong>，超过 LAW(84.6)、Epona(86.2)、PWM(88.1)、DriveVLA-W0(87.2)</td>
+      </tr>
+      <tr>
+          <td>nuScenes（零样本，NAVSIM 训练直接测）</td>
+          <td>平均 L2 <strong>0.84m</strong>、碰撞率 <strong>0.06%</strong>；相比 PWM 分别降低 <strong>78.9%</strong> / <strong>83.3%</strong>；且超过所有在 nuScenes 上微调过的 baseline</td>
+      </tr>
+      <tr>
+          <td>CARLA v2 Bench2Drive（跨域零样本）</td>
+          <td>L2、碰撞率分别降低 <strong>52.5%</strong> / <strong>52.4%</strong></td>
+      </tr>
+      <tr>
+          <td>Bench2Drive Dev10（附录 E.1，闭环）</td>
+          <td>Driving Score <strong>67.47</strong>，Success Rate <strong>70.00</strong>，优于 DriveTransformer、DriveMamba-12L</td>
+      </tr>
+      <tr>
+          <td>视频-轨迹一致性验证（DPVO 重建相机轨迹 vs 参考轨迹）</td>
+          <td>NAVSIM 平均 L2 误差 <strong>0.16m</strong>，nuScenes 上 <strong>0.14m</strong></td>
+      </tr>
+      <tr>
+          <td>推理效率</td>
+          <td>仅需 <strong>2 步</strong>流匹配采样即可达到近最优闭环性能</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>定性案例</strong>：同一左转场景下，PWM 生成的未来视频显示左转，但预测轨迹却近乎直行——视频与轨迹脱节；DriveVA 的轨迹与生成视频完全吻合。</p>
+<hr>
+<h2 id="3-预备知识flow-matching">3. 预备知识：Flow Matching
+</h2><ul>
+<li>建模为噪声分布到数据分布的连续时间变换，学习时间相关速度场 $v_\theta(x,s)$，满足 ODE：
+
+$$\frac{dx^{(s)}}{ds} = v_\theta(x^{(s)}, s)$$</li>
+<li>训练：线性插值路径 $x^{(s)} = (1-s)\epsilon + s\cdot x_{\text{data}}$，网络回归目标速度 $\dot x^{(s)} = x_{\text{data}} - \epsilon$（MSE 损失，Eq.1-2）。</li>
+<li>推理：从高斯噪声出发，对速度场做数值积分（Euler 法）即可采样，通常比传统扩散模型步数少得多。</li>
+</ul>
+<hr>
+<h2 id="4-方法细节">4. 方法细节
+</h2><h3 id="41-问题定义sec-41">4.1 问题定义（Sec 4.1）
+</h3><p>给定：语言指令 $T$、历史观测缓冲区 $O_l=\{F_{l-m+1},...,F_l\}$（$m=4$ 帧）、自车状态（$v_x, v_y$）。</p>
+<p>联合预测：</p>
+<ul>
+<li>$K=8$ 步未来动作 $A_{l+1:l+K}$，每步 $a_{l+i}\in\mathbb{R}^3$（x, y, yaw）</li>
+<li>$N=8$ 帧未来视频 $F_{l+1:l+N}$（&ldquo;实际不直接预测原始帧，而是预测其潜在表示&rdquo;）</li>
+</ul>
+<p>闭环滚动：<strong>执行完 $A_{l+1:l+K}$ 后，获得新观测，用滑动窗口更新 $O_l$，重复此过程直到任务完成</strong>。原文明确定性了这个设计的意义：</p>
+
+    <blockquote>
+        <p>&ldquo;This rolling-horizon setup reduces difficulty in long-horizon prediction to a progressive sequence of <strong>short video-continuation problems</strong>.&rdquo;</p>
+
+    </blockquote>
+<p>即：长时程预测的难题，被拆解为一连串&quot;短&quot;续播子问题的链式拼接（详见 §5.7）。</p>
+<h3 id="42-数据预处理">4.2 数据预处理
+</h3><p><strong>文本编码通过交叉注意力注入，而非拼接进视觉/动作流</strong>——原文（4.2节）：&ldquo;保持时空 token 序列紧凑，并解耦文本长度以获得更灵活的控制能力&rdquo;。具体理由（最终结论）：</p>
+<ol>
+<li><strong>避免自注意力开销膨胀、保持时空结构纯粹</strong>：视觉/动作 token 带有时空坐标含义（配合 RoPE 等位置编码），文本 token 没有这种坐标语义，硬拼进同一自注意力序列会破坏位置编码一致性，且每多拼接 $L_T$ 个文本 token，整个视频-动作序列的每一层每个 token 都要多算一遍与文本的注意力（$O(L^2)$）。交叉注意力把复杂度降为 $O(L_{video}\times L_{text})$。</li>
+<li><strong>解耦文本长度，保持条件块/目标块形状固定</strong>：$X_{cond}$、$Y_0$ 的固定形状是训练/推理接口一致的基础（见附录 B &ldquo;conditioning interface&rdquo;）。若文本拼进视觉/动作流，指令长度变化会直接改变整个序列长度，打破这个固定形状设计。通过交叉注意力，文本编码器可输出任意长度 token 而不影响视频/动作序列的核心生成结构。</li>
+<li><strong>（论文未明说，但符合背景的隐含原因）</strong>：骨干 Wan2.2-TI2V-5B 本身就是用交叉注意力接入文本编码器的预训练视频生成模型，沿用这个接口可以直接复用预训练好的文本-视觉交叉注意力权重，符合论文&quot;充分继承预训练视频生成先验&quot;的整体思路。</li>
+</ol>
+<p><strong>视频因果 VAE（Eq.4）</strong>：采用 Wan2.2-TI2V-5B 的 3D 因果 VAE 编码器，保证<strong>潜码帧 $j$ 只依赖原始帧 $\le j$</strong>，不依赖任何未来帧。</p>
+
+    <blockquote>
+        <p>为什么要保证第一个潜在特征只依赖第一帧观测（最终结论）：
+非因果（双向对称）VAE 编码任意一帧都需要同时拿到前后帧，若只有单帧（无过去无未来）就必须复制/补零&quot;造假&quot;填满时间窗口，导致潜码分布外、质量下降。因果 VAE 强制 $V_0' = f(\text{frame}_0)$，与后续帧无关，单帧输入就能得到&quot;货真价实&quot;、在分布内的潜码，不需要造假。这在两处是刚需：
+① <strong>rollout 起步阶段</strong>历史帧可能不足 $m=4$ 帧，因果 VAE 让&quot;有多少真实帧就编多少&quot;成为可能；
+② <strong>续播时历史窗口是真实帧+生成帧的混合体</strong>，窗口里最新的生成帧根本没有&quot;未来帧&quot;可以做对称窗口，因果 VAE 保证每帧潜码只依赖自己和更早的帧，不管来源是真实采集还是刚生成的，编码方式始终自洽。
+这个因果性继承自 Wan2.2-TI2V-5B 本身的 TI2V（文本+单图→视频）需求，DriveVA 复用基座权重顺带获得这个性质，恰好契合自己&quot;历史窗口长度可变、真实帧生成帧混杂&quot;的场景。</p>
+
+    </blockquote>
+<p><strong>单帧条件 → 视频续播设置的扩展（Sec 4.2 原文核对，最终结论）</strong>：</p>
+
+    <blockquote>
+        <p>&ldquo;we further extend this single-frame conditioning to a video-continuation setting by conditioning on a history observation buffer rather than only the current frame. Specifically, at current timestep $l$, we encode the observation buffer $\mathcal{O}_l=\{F_{l-m+1},...,F_l\}$ into a sequence of history latents: $\mathcal{V}_l^{his}=\{V_{l-m+1},...,V_l\}$&rdquo;</p>
+<p>&ldquo;During training, we encode the full clip to obtain both history latents $V_l^{his}$ and future latents $V_l^{fut}$; during inference, we encode only $O_l$ and generate future latents conditioned on the encoded history latents $V_l^{his}$.&rdquo;</p>
+
+    </blockquote>
+<p>字面意义：<strong>用同一个因果 VAE 编码器，把喂入对象从&quot;1帧&quot;扩展为&quot;m帧历史缓冲区&quot;</strong>，得到 m 个历史潜码，各自 flatten+投影后拼进条件块。训练时历史/未来潜码都是真实编码（监督信号意义上不涉及续播）；推理时只有历史可编码，未来必须由模型从噪声&quot;续&quot;出来——这正是&quot;续播（continuation）&ldquo;字面含义：历史潜码序列是已经写好的&quot;上半段&rdquo;，flow matching 生成的是它的延续。<strong>&ldquo;video continuation&rdquo; 本质上不是一个独立训练的神经网络子模块，而是&quot;扩大条件窗口 + 跨窗口递归&quot;这两个简单机制的组合</strong>，复用的是基座模型本身&quot;单帧→视频&quot;的因果 VAE 能力。</p>
+<h3 id="43-tokenization-与联合生成eq5-9">4.3 Tokenization 与联合生成（Eq.5-9）
+</h3><ul>
+<li>$V_t' = \text{Proj}(\text{Flatten}(V_t))$（Eq.5）</li>
+<li>条件块：$X_{cond}^{(l)} = [S_l, V'_{l-m+1},...,V'_l]$（Eq.6，$S_l$=ego状态token）——<strong>全程无噪声、形状固定</strong>，是训练/推理接口一致的基础</li>
+<li>生成目标块：$Y_0^{(l)} = [V'_{l+1},...,V'_{l+n_{pred}},\ A_{l+1:l+K}]$（Eq.7）——<strong>未来全部潜码帧和全部动作 token 拼成同一个块，一起加噪一起去噪</strong></li>
+<li>DiT 前向：$\hat v_\theta^{(l,s)} = f_\theta([X_{cond}^{(l)}, Y^{(l,s)}], s\mid T)$（Eq.8）——拼接 $[X_{cond}, Y_{noisy}]$ 做自注意力（视频↔动作双向交互，文本 T 走交叉注意力单独注入），只取目标块部分输出作为速度场预测。</li>
+</ul>
+<p><strong>为什么 <code>dit_forward</code> 必须把 $Y$（当前带噪目标）也输入进去，而不是只用 $X_{cond}$+time 算出速度场后让 $Y$ 在外部自行积分（最终结论，三层论证）</strong>：</p>
+<ol>
+<li><strong>数学上</strong>：$v_\theta(x,s)$ 是一个向量场，定义域包含 $x$ 本身（类比流体在空间每一点的速度）。若 $v_\theta$ 真不依赖 $Y$，积分后 $Y^{(1)}=\epsilon+(\text{只依赖条件的固定向量})$——这只是对高斯噪声做整体刚性平移，生成分布仍是高斯（只是均值变了），永远无法弯曲成真实视频/轨迹那种复杂多峰分布。速度场必须在空间不同位置指向不同方向，才能把简单噪声&quot;揉捏&quot;成复杂目标分布。</li>
+<li><strong>架构上</strong>：$Y$ 里的视频 token 和动作 token 拼在同一自注意力序列里，是&quot;视频-动作紧耦合&quot;真正实现的位置——动作 token 预测的速度依赖视频 token <strong>当前</strong>（部分去噪）的状态，反之亦然。若不把 $Y$ 传入，自注意力对目标块部分根本没有内容可 attend，模型会退化成只根据固定条件生成一个和随机噪声无关的固定输出。</li>
+<li><strong>数值积分上</strong>：采样是欧拉法数值解 ODE，&ldquo;走一步、看一眼、再走一步&rdquo;——第二步要算的速度必须依赖第一步更新后的 $Y$，不可能提前一次性算完（类比求解普通微分方程 $dx/dt=f(x,t)$ 时 $f$ 离不开 $x$）。</li>
+</ol>
+<h3 id="44-flow-matching-目标函数与关键数学论证">4.4 Flow Matching 目标函数与关键数学论证
+</h3><p><strong>若 $Y$ 不依赖，flow matching 精确退化为 MSE 回归模型（最终结论，严格推导）</strong>：</p>
+<p>假设 $v_\theta(s\mid c)$ 不依赖 $Y$，代入损失 $\mathcal{L}=\mathbb{E}[\|v_\theta(s\mid c)-(x_{data}-\epsilon)\|^2]$，最优解为条件期望：
+</p>
+$$v_\theta^*(s\mid c) = \mathbb{E}[x_{data}-\epsilon\mid c] = \mathbb{E}[x_{data}\mid c]$$<p>
+（$\epsilon$ 均值为0且与数据独立）。此时 $Y^{(1)}=\epsilon+\mathbb{E}[x_{data}\mid c]$——一个固定条件均值加噪声偏移，本质是披着 flow matching 外壳的回归器。</p>
+<p><strong>驾驶场景是多模态的</strong>（同一路口&quot;直行/左转/右转&quot;都合理），退化成回归条件均值会把不同模式<strong>平均混合</strong>——视频层面生成模糊叠加帧，轨迹层面输出&quot;左转右转的中间值&quot;。这反过来解释附录 F 失败案例的细节：DriveVA 预测错误时（该通行却预测停车），输出仍是&quot;清晰但选错模式&quot;而非&quot;模糊介于两者之间&quot;——说明模型没有退化成回归，只是采样到了错误但自洽的单一模式。</p>
+<p><strong>$s=0$ 处最优速度场必然等于&quot;回归到条件均值&quot;，与网络架构、自注意力、是否依赖 $Y$ 均无关（最终结论，更锋利的版本）</strong>：</p>
+<p>flow matching 边际最优速度场的经典结论：
+</p>
+$$v^*(x,s) = \mathbb{E}[x_{data}-\epsilon \mid x^{(s)}=x, c]$$<p>
+由于线性插值 $x^{(s)}=(1-s)\epsilon+s\cdot x_{data}$，当 $s=0$ 时 $x^{(0)}=\epsilon$ <strong>恒等成立、与 $x_{data}$ 完全无关</strong>（训练时 $\epsilon$、$x_{data}$ 独立采样）。所以 $s=0$ 处条件 &ldquo;$x^{(0)}=x$&rdquo; 不提供任何关于目标模态的信息，于是：
+</p>
+$$v^*(x,0) = \mathbb{E}[x_{data}\mid c] - x$$<p>
+——<strong>这是目标函数本身逼出的数学下限，不是网络偷懒或退化</strong>。</p>
+<p><strong>由此解释 Table 8 采样步数消融（1步崩溃/2步近最优/3步无提升）</strong>：</p>
+<ul>
+<li>1 步 Euler 积分只在 $s=0$ 评估一次速度场并一步走到底：$Y^{(1)}\approx\mathbb{E}[Y_0\mid c]$——这是&quot;所有可能未来的平均&quot;，跟纯回归模型没有本质区别，对应 PDMS 崩溃到 13.2。</li>
+<li>第一步走完后 $x^{(\Delta s)}$ 不再是纯噪声，$s>0$ 时插值路径开始真正携带 $x_{data}$ 信息——条件期望 $v^*(x,s>0)=\mathbb{E}[x_{data}-\epsilon\mid x^{(s)}=x,c]$ 平均的范围会随 $x$ 携带信息增多而自动收窄（不同模态如左/右转对应路径逐渐分开）。<strong>更精确地说，第一步的作用不是&quot;直接告诉模型走哪个模态&quot;，而是把采样点从&quot;对所有模态一视同仁的原点&quot;挪到了&quot;已隐含偏向某个模态的位置&quot;</strong>——这个位置本身就是后续 committal 的信息载体，关于目标模态的互信息随 $s$ 增加单调增加，只能通过让轨迹真正移动才能被利用。</li>
+<li>补充：这不只是&quot;离散化误差&quot;的教科书解释——path 之所以在 $s\to0$ 附近必须剧烈弯曲/分岔，根源正是 $s=0$ 处&quot;信息量为零→只能输出均值&quot;这个数学边界条件。这也解释了为何 3 步相比 2 步提升有限：2 步大概已经足够跨过 $s=0$ 附近这个&quot;必须是均值&quot;的陡峭区域，进入模态基本分离清楚的区域，后续步数只是精修。</li>
+</ul>
+<p><strong>附录 B 联合分布链式分解（Eq.10-11）</strong>：
+</p>
+$$\pi_\theta(F_{l+1:l+N}, A_{l+1:l+K}\mid O_l, T, q_l) = \pi_\theta(F\mid C)\cdot\pi_\theta(A\mid C, F)$$<p>
+即&quot;视频续播&quot;因子 × &ldquo;IDM 风格动作锚定&quot;因子。</p>
+<p><strong>附录 B &ldquo;Conditioning interface&rdquo;</strong>：$X_{cond}$ 在整个流匹配过程中保持无噪声；只有目标块 $Y$（未来视频+动作）接收高斯噪声。默认设置下，未来视频和动作 target token 在去噪时<strong>互相 attend（双向耦合）</strong>。</p>
+<hr>
+<h2 id="5-关键问题的最终结论按主题">5. 关键问题的最终结论（按主题）
+</h2><h3 id="51-什么是跨数据集零样本迁移">5.1 什么是跨数据集零样本迁移
+</h3><p>类比&quot;在北京学车（NAVSIM 训练），直接扔到上海街头开车（nuScenes 测试）&quot;——目标域数据一条没见过、未做任何针对性微调，模型依然正常工作，说明学到的是真正通用的知识而非死记硬背。DriveVA 做得好的原因：联合建模视频和轨迹迫使模型理解&quot;世界怎么运动&quot;这种跨数据集通用的物理直觉，而不是&quot;背答案&quot;式的驾驶习惯。</p>
+<h3 id="52-松耦合-vs-紧耦合pwm-是否是松耦合代表最终结论经历两轮修正">5.2 松耦合 vs 紧耦合，PWM 是否是松耦合代表（最终结论，经历两轮修正）
+</h3><p><strong>松耦合的典型症状</strong>：视频预测模块和轨迹规划模块各自独立损失函数，梯度流单向，推理时视频可以&quot;说谎&rdquo;（生成左转视频但轨迹仍直行——论文 Fig.3 中 PWM 的经典错误）。</p>
+<p><strong>最初的错误论证</strong>：&ldquo;自注意力互相看见对方&rdquo;→紧耦合。<strong>这个论证被追问推翻</strong>：自注意力只是信息共享，不天然等于硬约束（动作 token 完全可能&quot;看了视频一眼但仍我行我素&quot;）。</p>
+<p><strong>修正后的最终结论</strong>：真正确保紧耦合的关键是两点组合：</p>
+<ol>
+<li><strong>共享同一个流匹配噪声过程</strong>：视频潜码和动作 token 被拼成同一个生成目标块 $Y_0$，一起加噪一起去噪，走同一条从噪声到数据的路径。</li>
+<li><strong>单一联合损失，没有给动作&quot;开后门&quot;</strong>：只有一个流匹配损失同时作用于视频和动作，没有独立动作损失让动作模块&quot;另辟蹊径&quot;。</li>
+</ol>
+<p>但需要诚实承认更深一层：<strong>这是统计意义上的约束，而非几何/逻辑意义上的硬约束</strong>——DriveVA 学到的是联合分布 $p(\text{视频},\text{动作}\mid\text{条件})$，&ldquo;视频左转但动作直行&quot;这种组合在训练数据里不存在，所以学到的联合分布在这个区域概率密度低，但这是训练数据分布决定的统计低概率，不是显式的几何规则禁止。</p>
+<p>PWM 并非论文直接点名的&quot;松耦合代表&rdquo;，但其 Fig.3 暴露的视频-轨迹脱节现象是松耦合的典型症状：视频和动作生成过程虽有特征传递，但本质是两条并行的河流，特征传递只是架了一座小桥，桥不够宽，两条河最终仍会各自流向不同方向。</p>
+<h3 id="53-一次推理的具体参数">5.3 一次推理的具体参数
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>数值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>历史输入帧数 $m$</td>
+          <td>4帧（2秒）</td>
+      </tr>
+      <tr>
+          <td>预测未来帧数 $N$</td>
+          <td>8帧（4秒）</td>
+      </tr>
+      <tr>
+          <td>预测动作步数 $K$</td>
+          <td>8步（4秒，与视频时长对齐）</td>
+      </tr>
+      <tr>
+          <td>帧率</td>
+          <td>2 FPS</td>
+      </tr>
+      <tr>
+          <td>分辨率</td>
+          <td>832×480</td>
+      </tr>
+      <tr>
+          <td>采样步数（推理）</td>
+          <td>2步</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>VAE 会对时间维度降采样，DiT 实际处理的是降采样后的潜码步数 $n_{pred}$（论文未写出具体压缩比例）。</p>
+<h3 id="54-滑动窗口-vs-视频续播两个不同层次的机制最终结论">5.4 滑动窗口 vs 视频续播——两个不同层次的机制（最终结论）
+</h3><p>这是本次讨论中被反复澄清、最终厘清的核心区分：</p>
+<ul>
+<li><strong>滑动窗口（sliding window）<strong>解决&quot;历史条件如何更新&quot;——窗口大小恒定为 $m$，丢弃最旧帧、补入最新帧。它依赖</strong>真实观测帧</strong>来更新。</li>
+<li>**视频续播（video continuation）<strong>解决的不是&quot;补监督信号&quot;（这是个伪问题——任何条件生成模型推理时都不需要 ground truth 算 loss，这与续播无关），而是</strong>&ldquo;下一轮推理的条件输入从哪里来&rdquo;**这个流程可行性问题：
+<ul>
+<li>如果是反应式环境（真实上路/CARLA）：执行完动作后摄像头给出新的真实帧，直接编码即可，<strong>不涉及续播</strong>。</li>
+<li>如果是非反应式评测（NAVSIM）：根本没有新的真实帧出现，第2轮推理要跑，历史条件除了用第1轮<strong>生成</strong>出来的未来潜码去顶替，别无选择。</li>
+</ul>
+</li>
+</ul>
+<p>这跟自回归语言模型&quot;把生成的 token 喂回去继续生成下一个 token&quot;是同一种结构——不是监督信号的问题，而是&quot;要不要有下一步输入&quot;的问题。</p>
+<p><strong>消融实验里去掉 Video Continuation 后 PDMS 90.9→84.6</strong>：不是丢失了监督信号，而是多轮 rollout 时视频-动作的耦合链条在窗口交接处断掉——第二轮推理没有第一轮生成的视觉历史作为条件，视频对动作的约束力在跨窗口时消失（但见 §5.6 的进一步修正：Table 5 的这个消融实际测的可能是更基础的一层）。</p>
+<h3 id="55-为什么会有没有足够真实观测帧的情况navsim-非反应式-vs-反应式最终结论">5.5 为什么会有&quot;没有足够真实观测帧&quot;的情况——NAVSIM 非反应式 vs 反应式（最终结论）
+</h3><p>真实部署中摄像头（如20Hz）远快于模型推理速度（2步流匹配很快），真实帧理论上随时管够，&ldquo;没有足够真实帧&quot;的说法在真实闭环部署里站不住脚。真正的答案在于<strong>评测基准的性质</strong>：</p>
+
+    <blockquote>
+        <p>论文引用 [14] 原题为 <em>&ldquo;Navsim: Data-driven <strong>non-reactive</strong> autonomous vehicle simulation and benchmarking&rdquo;</em></p>
+
+    </blockquote>
+<p>NAVSIM 是非反应式仿真——它给你固定的历史帧片段，你预测完直接用预设回放评分，<strong>根本不存在&quot;执行动作→采集新的真实观测&quot;这个真实闭环</strong>。</p>
+<p>若追问&quot;多轮推理后历史窗口是否会稳定收敛为纯真实帧&rdquo;（用户提出的假设），结论是<strong>分场景而定</strong>：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>场景</th>
+          <th>真实帧是否会&quot;追上来&quot;填满窗口</th>
+          <th>视频续播的必要性</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>真实部署 / CARLA 反应式闭环</td>
+          <td>会——只要重规划节奏不快于传感器采集节奏</td>
+          <td>只是短暂过渡期的补丁，几轮后可退场</td>
+      </tr>
+      <tr>
+          <td>NAVSIM 非反应式评测</td>
+          <td>永远不会——没有仿真器会告诉你预测的未来实际长什么样</td>
+          <td>永久刚需，贯穿整个多轮 rollout</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>这也从另一个角度佐证：视频续播之所以在论文里被当作核心贡献单独消融，很可能是为了应对 NAVSIM 里&quot;历史窗口永远无法被真实数据重新填满&quot;的极端情况。</p>
+<h3 id="56-用户内部2帧循环假设的证伪及-table-5-消融真正测的是什么重要自我修正">5.6 用户&quot;内部2帧循环&quot;假设的证伪，及 Table 5 消融真正测的是什么（重要自我修正）
+</h3><p><strong>用户假设</strong>：模型一次推理无法生成完整8帧，可能只生成2帧，通过反复把生成的2帧送回历史窗口、持续向后推理凑够8帧，理论上前后一致性更好。</p>
+<p><strong>核对原文后证伪</strong>：Eq.7 明确显示，一次推理是把<strong>整个 $N=8$ 帧未来 + $K=8$ 步动作，作为同一个目标块 $Y_0^{(l)}$，共享同一噪声、同一次 DiT 前向、同一条 $s{=}0\to1$ 的流，一次性通过一次 flow-matching 积分生成完的</strong>。Table 8 的&quot;采样步数&quot;（1/2/3）指的是这整个目标块的 Euler 离散化步数，不是&quot;每生成2帧就往回喂一次&quot;的分段计数。Table 6 里 N=4/8/12 的比较，测的是<strong>单次生成窗口的长度</strong>（&ldquo;longer rollouts introduce additional drift&rdquo; 说的是单次生成更远未来导致漂移，不是多次拼接导致漂移）。原文从头到尾没有&quot;生成2帧→反馈→再生成2帧&quot;这种内部链式结构的描述。</p>
+<p><strong>但用户的元层面质疑是对的</strong>——&ldquo;既然论文专门做了消融实验，不该是个只在 NAVSIM 有效的把戏&rdquo;。重新核对 Table 5 脚注发现了此前理解范围过窄的问题：</p>
+
+    <blockquote>
+        <p>Table 5 脚注：&quot;<strong>&lsquo;Video Continuation&rsquo; refers to video-to-video generation.</strong>&quot;</p>
+
+    </blockquote>
+<p>这句定义比&quot;跨窗口递归续播&quot;朴素得多：它测的是<strong>模型生成未来视频时，是否以过去的视觉帧为条件</strong>（video-to-video），对比&quot;non-video-conditioned generation&quot;（可能是仅凭文本+自车状态生成，即条件块中去掉视觉历史 token $V'_{l-m+1...l}$，只留 $S_l$ 和文本）。这与&quot;4.2节：extend single-frame conditioning to a video-continuation setting&quot;一节的定义一致——都是计算机视觉里&quot;video continuation/video prediction&quot;任务的标准含义（类比&quot;文本续写&quot;），跟&quot;是否跨多轮递归喂自己生成的帧&quot;是两件不同的事。</p>
+<p>去掉 Video Continuation（ID3，PDMS 90.9→84.6）大概率对应&quot;车辆凭速度和语言指令盲想未来&quot;，跟 Action-only 消融（PDMS 暴跌到 47.0，连未来视频都不生成）相比降幅温和得多，符合&quot;少了视觉历史条件、但仍要生成视频+动作&quot;的描述。<strong>这个能力（生成未来时要不要参考刚看到的画面）在真实上路场景里同样重要，与 NAVSIM 是否非反应式完全无关</strong>——这正是一个放之四海皆准的架构设计问题，用户的质疑成立。</p>
+<p><strong>结论</strong>：此前几轮讨论把&quot;续播&quot;和&quot;NAVSIM非反应式→只能拿生成帧续接历史窗口&quot;这件事强绑定，这个跨窗口递归机制在 Sec 4.1/Fig.2 里确实存在，但<strong>它不是 Table 5 消融测的东西</strong>。Table 5 测的是更基础的一层：&ldquo;生成未来时要不要以视觉历史为条件&rdquo;——这一层的价值通用，不依赖评测协议是否反应式。</p>
+<h3 id="57-单次8帧预测算长视频还是短想象最终结论">5.7 单次8帧预测算&quot;长视频&quot;还是&quot;短想象&quot;（最终结论）
+</h3><p>这是&quot;局部 vs 全局&quot;的两个不同层级，均由原文明确定性：</p>
+
+    <blockquote>
+        <p>Sec 4.1：&ldquo;This rolling-horizon setup reduces difficulty in long-horizon prediction to a progressive sequence of <strong>short video-continuation problems</strong>.&rdquo;</p>
+
+    </blockquote>
+<ul>
+<li><strong>单次推理（8帧/4秒）= 短想象单元</strong>，刻意设计成&quot;短&quot;。Table 6 证实：单次生成窗口从8帧延长到12帧（6秒），PDMS 就从90.9掉到86.7（drift accumulation）——单次生成越长越容易失控，这正印证了外部评论&quot;长视频一次性生成容易结构漂移&quot;的道理。</li>
+<li><strong>真正的&quot;长视频&quot;（覆盖几十秒甚至几分钟任务）靠链式拼接实现，不是单次生成出来的</strong>：Fig.2 &ldquo;Progressive Video Continuation&rdquo; 画的就是一个个4秒窗口首尾相接、不断向后滚动的过程。DriveVA 从未让模型在一次前向传播里直接生成很长的序列，而是把&quot;生成很长未来&quot;的高难度问题转换成&quot;重复很多次生成很短未来&quot;的低难度问题。</li>
+</ul>
+<p>类比自回归语言模型：GPT 不会一次前向传播吐出几万字文章（丧失连贯性），而是逐 token 生成、不断把已生成内容喂回作为新上下文。DriveVA 的 Progressive Video Continuation 本质是把这个思路从&quot;逐 token&quot;换成&quot;逐4秒窗口&quot;——<strong>短窗口内部保证生成质量（避免单次生成过长导致漂移），长时程覆盖靠窗口间链式滚动实现</strong>。</p>
+<h3 id="58-实车部署时是否还存在长时程预测问题最终结论">5.8 实车部署时是否还存在&quot;长时程预测&quot;问题（最终结论）
+</h3><p><strong>用户结论</strong>：&ldquo;实车部署不会遇到长时程预测问题，每次生成4s未来给控制执行，下一轮再生成新的4s，滚动进行&rdquo;——这个判断<strong>基本成立，但需要两点补充精确化</strong>：</p>
+<ol>
+<li>
+<p><strong>消失的具体风险，不是&quot;长时程预测的需求&quot;本身</strong>：实车摄像头（如20Hz）远快于模型2步流匹配推理，下一轮推理需要的历史帧真实传感器早已备好，滑动窗口更新永远用真实观测帧，不会触碰&quot;用生成帧续接历史&quot;这条路径——这正是 §5.5 讨论的&quot;续播用生成帧&quot;机制本质上是为了应付 NAVSIM 非反应式评测，而非实车真实需求。但**&ldquo;预测4秒→滚动→再预测4秒&quot;这个滚动闭环结构本身，在实车和仿真评测里是共用的**——因为模型单次推理能力天生只能吐出4秒未来，无论是否用生成帧续接，长时程任务都必须靠多轮推理链式拼接完成。变化的只是&quot;续接历史用什么帧&rdquo;（NAVSIM被迫用生成帧，实车永远用真实帧），架构本身不是仿真专属的。</p>
+</li>
+<li>
+<p><strong>重规划节奏的粒度</strong>：论文 Sec 4.1 原文描述的闭环节奏是&quot;执行完整个 $K=8$ 步（4秒）动作序列后才重新推理一次&quot;，即<strong>每4秒重规划一次</strong>的粗粒度版本，而非用户设想的&quot;每帧都重新推理&quot;。用户设想的更高频重规划（每帧/每几帧重规划一次，只执行预测轨迹的前几步）其实是更标准的 <strong>receding horizon / MPC 思路</strong>，实车部署通常会采用以获得更强的安全裕度和响应性——但这是比论文原始闭环描述更保守、更工程化的实现方式。两种节奏（每4秒 vs 更高频）都不会触发&quot;生成帧续接历史&quot;的风险，因为无论多高频，只要推理够快，真实帧都追得上。</p>
+</li>
+</ol>
+<hr>
+<h2 id="6-实验结果汇总消融实验表">6. 实验结果汇总（消融实验表）
+</h2><p><strong>Table 5（关键设计消融，NAVSIM PDMS）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>设置</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>完整 DriveVA</td>
+          <td>90.9</td>
+      </tr>
+      <tr>
+          <td>去掉视频损失（Action-only 式，不生成视频）</td>
+          <td>71.4（最大降幅）</td>
+      </tr>
+      <tr>
+          <td>去掉 Video Continuation（即不以视觉历史为条件，ID3）</td>
+          <td>84.6</td>
+      </tr>
+      <tr>
+          <td>+CARLA 仿真混合训练</td>
+          <td>90.5 → 90.9</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Table 6（预测时间跨度/单次生成窗口长度）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>未来帧数 N</th>
+          <th>时长</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>4帧</td>
+          <td>2秒</td>
+          <td>82.1（太短，视频对轨迹约束不足）</td>
+      </tr>
+      <tr>
+          <td><strong>8帧</strong></td>
+          <td><strong>4秒</strong></td>
+          <td><strong>90.9（最优，与8步/4秒动作序列时长对齐）</strong></td>
+      </tr>
+      <tr>
+          <td>12帧</td>
+          <td>6秒</td>
+          <td>86.7（漂移累积，反而损害一致性）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Table 7（训练策略）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>策略</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>从头训练</td>
+          <td>62.9</td>
+      </tr>
+      <tr>
+          <td>LoRA 微调</td>
+          <td>74.9</td>
+      </tr>
+      <tr>
+          <td><strong>全量微调</strong></td>
+          <td><strong>90.9</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Table 8（采样步数）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>步数</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1</td>
+          <td>13.2（崩溃，见 §4.4 数学论证）</td>
+      </tr>
+      <tr>
+          <td>2</td>
+          <td>90.9（近最优）</td>
+      </tr>
+      <tr>
+          <td>3</td>
+          <td>90.9（无进一步提升）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Table 9（模型规模，LoRA适配）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>配置</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>5B, LoRA</td>
+          <td>74.9</td>
+      </tr>
+      <tr>
+          <td>14B, LoRA</td>
+          <td>80.6</td>
+      </tr>
+      <tr>
+          <td>5B, 全量微调</td>
+          <td>90.9（仍最高，全量微调比单纯放大模型更重要）</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>附录 E.2 Table 11（掩码策略 / 预测目标消融）</strong></p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>设置</th>
+          <th>PDMS</th>
+          <th>Comfort</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>双向注意力（默认）</td>
+          <td>90.9</td>
+          <td>100</td>
+      </tr>
+      <tr>
+          <td>因果掩码（动作可看视频，视频不能看动作）</td>
+          <td>90.1</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td>Video+Action（默认预测目标）</td>
+          <td>90.9</td>
+          <td>100</td>
+      </tr>
+      <tr>
+          <td>Action-only（不预测视频）</td>
+          <td>47.0</td>
+          <td>34.9</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>说明未来视频预测不只是辅助可视化输出，它为动作 token 提供了稠密的时序锚定。</p>
+<p><strong>附录 E.1 Table 10（Bench2Drive Dev10 闭环）</strong>：DriveVA Driving Score 67.47，Success Rate 70.00，优于 DriveTransformer、DriveMamba-12L。</p>
+<p><strong>附录 F（失败案例）</strong>：即使预测错误（如遇骑行者/路口本该通行却预测停车），预测轨迹依然与生成视频保持一致——说明失败原因是视觉因果推理不足，而非视频-轨迹耦合设计有问题（也印证了 §4.4 中&quot;模型没有退化成回归&quot;的论证：输出是清晰但选错模式，而非模糊平均态）。</p>
+<hr>
+<h2 id="7-术语速查">7. 术语速查
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>术语</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>PDMS</td>
+          <td>NC × DAC × (5·EP + 5·TTC + 2·Comf.) / 12，NAVSIM 综合闭环评分</td>
+      </tr>
+      <tr>
+          <td>NC/DAC/TTC/EP/Comf.</td>
+          <td>No Collision / Drivable Area Compliance / Time-to-Collision / Ego Progress / Comfort</td>
+      </tr>
+      <tr>
+          <td>$X_{cond}$</td>
+          <td>条件块：ego状态 token + 历史视频潜码，全程无噪声、形状固定</td>
+      </tr>
+      <tr>
+          <td>$Y_0$ / $Y$</td>
+          <td>生成目标块：未来视频潜码 + 动作 token，共同加噪去噪</td>
+      </tr>
+      <tr>
+          <td>Video Continuation</td>
+          <td>以视觉历史帧为条件生成未来视频的设置（video-to-video），非&quot;跨窗口递归&quot;本身</td>
+      </tr>
+      <tr>
+          <td>Sliding Window</td>
+          <td>历史缓冲区更新机制，依赖真实观测帧</td>
+      </tr>
+      <tr>
+          <td>Progressive Video Continuation</td>
+          <td>Fig.2 描述的跨多个时间窗口的滚动闭环链式拼接策略</td>
+      </tr>
+      <tr>
+          <td>反应式 / 非反应式</td>
+          <td>是否存在&quot;执行动作→获得真实新观测&quot;的真实闭环；NAVSIM 是非反应式</td>
+      </tr>
+  </tbody>
+</table></div>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/">视频生成</a>
+        
+            <a href="/tags/flow_matching/">Flow_matching</a>
+        
+            <a href="/tags/dit/">DiT</a>
+        
+            <a href="/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/">零样本迁移</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/onevl/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OneVL - 双模态隐式推理框架</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/law/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LAW - Enhancing End-to-End Autonomous Driving with Latent World Model</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/plan-r1/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-foresight/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Foresight 论文阅读笔记</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
