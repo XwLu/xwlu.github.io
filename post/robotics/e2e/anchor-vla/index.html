@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="AnchorVLA 提出&quot;轨迹模式锚点&quot;作为语义决策与连续轨迹之间的接口，用 DAAR 完成行为级决策、DARF 在锚点残差空间上做少步 flow matching 精细化，在 Bench2Drive 闭环基准上取得 SOTA 成功率。">
+<title>AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/anchor-vla/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning">
+<meta property='og:description' content="AnchorVLA 提出&quot;轨迹模式锚点&quot;作为语义决策与连续轨迹之间的接口，用 DAAR 完成行为级决策、DARF 在锚点残差空间上做少步 flow matching 精细化，在 Bench2Drive 闭环基准上取得 SOTA 成功率。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/anchor-vla/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='VLA' /><meta property='article:tag' content='流匹配' /><meta property='article:tag' content='轨迹规划' /><meta property='article:published_time' content='2026-07-17T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-07-17T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning">
+<meta name="twitter:description" content="AnchorVLA 提出&quot;轨迹模式锚点&quot;作为语义决策与连续轨迹之间的接口，用 DAAR 完成行为级决策、DARF 在锚点残差空间上做少步 flow matching 精细化，在 Bench2Drive 闭环基准上取得 SOTA 成功率。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#论文信息">论文信息</a></li>
+    <li><a href="#一核心问题与动机">一、核心问题与动机</a>
+      <ul>
+        <li><a href="#相关工作定位">相关工作定位</a></li>
+      </ul>
+    </li>
+    <li><a href="#二方法">二、方法</a>
+      <ul>
+        <li><a href="#21-整体问题分解">2.1 整体问题分解</a></li>
+        <li><a href="#22-vla-backbone">2.2 VLA Backbone</a></li>
+        <li><a href="#23-daar决策即锚点表示decision-as-anchor-representation">2.3 DAAR:决策即锚点表示(Decision-as-Anchor Representation)</a></li>
+        <li><a href="#24-darf决策锚定残差流decision-anchored-residual-flow">2.4 DARF:决策锚定残差流(Decision-Anchored Residual Flow)</a></li>
+        <li><a href="#25-完整轨迹空间-vs-锚点残差空间的区别">2.5 完整轨迹空间 vs 锚点残差空间的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#三实验">三、实验</a>
+      <ul>
+        <li><a href="#31-设置">3.1 设置</a></li>
+        <li><a href="#32-主结果table-1">3.2 主结果(Table 1)</a></li>
+        <li><a href="#33-multi-ability-评估table-2">3.3 Multi-Ability 评估(Table 2)</a></li>
+        <li><a href="#34-消融实验">3.4 消融实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#四失败案例分析附录-a">四、失败案例分析(附录 A)</a></li>
+    <li><a href="#五结论">五、结论</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/anchor-vla/">AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-07-17T00:00:00Z'>Friday, July 17, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        4 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#论文信息">论文信息</a></li>
+    <li><a href="#一核心问题与动机">一、核心问题与动机</a>
+      <ul>
+        <li><a href="#相关工作定位">相关工作定位</a></li>
+      </ul>
+    </li>
+    <li><a href="#二方法">二、方法</a>
+      <ul>
+        <li><a href="#21-整体问题分解">2.1 整体问题分解</a></li>
+        <li><a href="#22-vla-backbone">2.2 VLA Backbone</a></li>
+        <li><a href="#23-daar决策即锚点表示decision-as-anchor-representation">2.3 DAAR:决策即锚点表示(Decision-as-Anchor Representation)</a></li>
+        <li><a href="#24-darf决策锚定残差流decision-anchored-residual-flow">2.4 DARF:决策锚定残差流(Decision-Anchored Residual Flow)</a></li>
+        <li><a href="#25-完整轨迹空间-vs-锚点残差空间的区别">2.5 完整轨迹空间 vs 锚点残差空间的区别</a></li>
+      </ul>
+    </li>
+    <li><a href="#三实验">三、实验</a>
+      <ul>
+        <li><a href="#31-设置">3.1 设置</a></li>
+        <li><a href="#32-主结果table-1">3.2 主结果(Table 1)</a></li>
+        <li><a href="#33-multi-ability-评估table-2">3.3 Multi-Ability 评估(Table 2)</a></li>
+        <li><a href="#34-消融实验">3.4 消融实验</a></li>
+      </ul>
+    </li>
+    <li><a href="#四失败案例分析附录-a">四、失败案例分析(附录 A)</a></li>
+    <li><a href="#五结论">五、结论</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="anchorvla-论文笔记">AnchorVLA 论文笔记
+</h1><h2 id="论文信息">论文信息
+</h2><ul>
+<li><strong>标题</strong>:AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning</li>
+<li><strong>作者</strong>:刘琦¹²³＊、李亚蓓⁴＊、王洪松³、张恒⁵、贺磊¹²†(＊同等贡献,†通讯作者)</li>
+<li><strong>单位</strong>:¹清华大学车辆与运载学院 ²清华大学智能绿色车辆与移动全国重点实验室 ³东南大学计算机科学与工程学院 ⁴美团 ⁵东风汽车</li>
+<li><strong>arXiv</strong>:2607.03182(cs.RO)</li>
+<li><strong>Benchmark</strong>:Bench2Drive(CARLA闭环),达到 SOTA 成功率 SR=77.28,驾驶分数 DS=89.92(有竞争力但非最高)</li>
+</ul>
+<hr>
+<h2 id="一核心问题与动机">一、核心问题与动机
+</h2><p>自动驾驶规划需要把导航意图、交通规则、动态交互、语言指令,转化为可执行的连续轨迹。VLA(视觉-语言-动作)模型被引入以提升长尾泛化、常识推理、语义理解和可解释性,但现有方案存在两种范式,各有缺陷:</p>
+<ul>
+<li><strong>规划头方式(Planning-Head-based)</strong>:LLM/VLM 输出只作为条件/引导信号喂给独立的规划模块。问题:VLA 推理对轨迹空间的约束很弱,语义和动作难以对齐。</li>
+<li><strong>全轨迹自回归方式(Full-trajectory Autoregressive)</strong>:把轨迹离散化成坐标/路点 token,逐个自回归生成。问题:token 序列长、信息密度低,语义-动作对齐差,离散化误差累积,推理慢。</li>
+</ul>
+<p><strong>AnchorVLA 的解法</strong>:把动作表示从&quot;低层坐标 token&quot;提升为&quot;高层轨迹模式锚点(trajectory-pattern anchor)&quot;。每个锚点编码一个完整的局部运动模式(如车道保持、刹车、让行、转弯、超车),LLM 只需在语义化的锚点空间里推理决策,而不是生成冗长的路点序列。</p>
+<p>一个直观的类比:以前要么是&quot;大脑说一句&rsquo;左转吧&rsquo;然后手脚瞎猜&quot;(规划头),要么是&quot;大脑一毫米一毫米地指挥手脚&quot;(全轨迹自回归);AnchorVLA 让大脑先说&quot;走这个弯道模式&quot;(锚点),手脚再在这个模式上精细调整。</p>
+<h3 id="相关工作定位">相关工作定位
+</h3><ul>
+<li><strong>端到端自动驾驶</strong>:UniAD、VAD、TransFuser++、DriveTransformer 等统一感知/预测/规划;DiffusionDrive、BridgeDrive、GoalFlow 等引入扩散/流匹配做生成式规划。</li>
+<li><strong>VLA 驾驶规划</strong>:ORION、SimLingo、DiffVLA 等属于&quot;规划头&quot;范式;AutoVLA、LinkVLA 属于&quot;全轨迹自回归&quot;范式。<strong>LinkVLA 是本文的直接基础和对比对象</strong>——AnchorVLA 在 LinkVLA 的 VLM backbone 上,用 DAAR + DARF 替换了其全轨迹自回归生成模块。</li>
+<li>AnchorVLA 的 VLA backbone 直接复用 <strong>SimLingo</strong>,backbone 冻结,只替换规划接口。</li>
+</ul>
+<hr>
+<h2 id="二方法">二、方法
+</h2><h3 id="21-整体问题分解">2.1 整体问题分解
+</h3><p>不把轨迹分布 $p(\tau\mid x)$ 当作一个整体的连续预测问题,而是拆成&quot;行为级决策 + 局部残差精细化&quot;两阶段:</p>
+$$\tau = a_k + r_k \tag{1}$$$$p(\tau \mid x) = \sum_{k=1}^{K} p(a_k \mid x)\, p(r_k \mid x, a_k), \quad r_k = \tau - a_k \tag{2}$$<p><strong>关键点</strong>:锚点不只是额外的条件输入,而是<strong>显式定义了残差坐标系和局部行为生成空间的决策接口</strong>。</p>
+<h3 id="22-vla-backbone">2.2 VLA Backbone
+</h3><ul>
+<li>编码器:<strong>InternVL2-1B</strong>(图像 → InternViT-300M;文本 → Qwen2-0.5B-Instruct)</li>
+<li>GPS 目标点通过 MLP 投影为 token embedding,与语言 token 融合</li>
+<li>多模态 token 提供两类输出:
+<ol>
+<li><strong>上下文特征(context features)</strong>:LLM 中间层/末端隐状态向量,供 DAAR、DARF 使用</li>
+<li><strong>CoT 推理 token</strong>:LLM 自回归生成的人类可读推理文字</li>
+</ol>
+</li>
+<li>在自回归建模变体下,CoT 文字与锚点 token 处于同一自回归序列中(先文字推理,后锚点 token),因此锚点选择建立在模型已生成的推理内容之上,而不是独立模块</li>
+<li>上下文特征的隐状态维度约定取最后一个 token(锚点 token)位置的隐状态,量级对应 Qwen2-0.5B 的隐层大小(<strong>896 维,此数值来自 Qwen2-0.5B 已公开的模型结构,论文正文未直接给出具体数字</strong>)</li>
+</ul>
+<h3 id="23-daar决策即锚点表示decision-as-anchor-representation">2.3 DAAR:决策即锚点表示(Decision-as-Anchor Representation)
+</h3><p><strong>目标</strong>:把高层 VLA 推理映射到紧凑的轨迹模式锚点空间,用锚点分布估计代替坐标级自回归生成。</p>
+<p><strong>码本构建</strong>:对训练集轨迹做 <strong>K-means 聚类</strong>,得到码本 $\mathcal{A}=\{a_k\}_{k=1}^{K}$,<strong>K=100</strong>。每个锚点 $a_k$ 是聚类中心,本质是一条<strong>完整的 T 步时序轨迹</strong>(该簇内所有轨迹的&quot;平均形状&quot;),不是单个坐标点:</p>
+$$a_k = (a_k^1, \dots, a_k^T),\quad a_k^t \in \mathbb{R}^2$$<p><strong>锚点-真值距离</strong>(逐时间步 L2 距离取平均):</p>
+$$d(\tau_{gt}, a_k) = \frac{1}{T}\sum_{t=1}^{T}\left\| \tau_{gt}^t - a_k^t \right\|_2 \tag{3}$$<p><strong>软标签</strong>(注意是 softmax 形式,而非简单的&quot;距离反比例&quot;):不用单一硬标签,在最近的 top-N 邻域 $\mathcal{N}$ 上构造 softmax 形式的软目标:</p>
+$$q_k = \frac{\mathbb{I}[k\in\mathcal{N}]\exp\left(-d(\tau_{gt}, a_k)/\gamma\right)}{\sum_{j\in\mathcal{N}} \exp\left(-d(\tau_{gt}, a_j)/\gamma\right)} \tag{4}$$<p>其中 $\gamma$ 为温度系数。距离越近权重越大,邻域外锚点权重为 0,从而在离散锚点集合上保留轨迹空间的局部连续性,并对 K-means 聚类边界误差更鲁棒。</p>
+<p><strong>两种 DAAR 实例化方式</strong>(共享同一套软标签监督):</p>
+<ol>
+<li>
+<p><strong>Query-based 建模</strong>:可学习 query token 附加到输入序列,经 LLM 编码后取该位置输出特征过 MLP 得到 K 维 logits,softmax 得到锚点分布:
+</p>
+$$s_k^{qry}=f_{MLP}(h_{qry})_k,\quad p_\theta^{qry}(a_k\mid x)=\text{softmax}(s^{qry})_k$$<p>
+</p>
+$$\mathcal{L}_{qry} = -\sum_k q_k \log p_\theta^{qry}(a_k\mid x)$$<p>
+不使用 LLM 的 next-token 预测接口,纯粹是基于特征的分类器。</p>
+</li>
+<li>
+<p><strong>Autoregressive 建模</strong>:向 LLM 词表引入 K 个特殊锚点 token $\{y_k\}$,与锚点一一固定映射。训练时插入一个 control token 标记锚点预测开始,其后紧跟最近锚点 token 以保持自回归格式;训练目标从 control token 位置在锚点 token 子集上的 logits 计算,同样用软标签交叉熵:
+</p>
+$$p_\theta^{ar}(a_k\mid x)=\text{softmax}(s^{ar})_k,\qquad \mathcal{L}_{ar}=-\sum_k q_k\log p_\theta^{ar}(a_k\mid x)$$<p>
+本质是复用 LLM 的 next-token 预测接口,但把输出空间限制在紧凑的锚点词表上。</p>
+</li>
+</ol>
+<p><strong>推理</strong>:两种方式都输出 K 维锚点分布,取 <strong>top-M(M=6)</strong> 个锚点作为候选高层决策,保留行为级多模态性,再送入 DARF 并行生成候选轨迹。</p>
+<p><strong>训练/推理不对称性小结</strong>:训练阶段学习整个 K 维分布形状(软标签,无&quot;选择&quot;动作);推理阶段才做 top-M 选择。软标签训练让相邻锚点也获得合理概率,是 top-M 候选有意义的前提——若用硬标签训练,分布会退化为近似 one-hot,top-M 退化成 top-1,多候选优势消失。</p>
+<h3 id="24-darf决策锚定残差流decision-anchored-residual-flow">2.4 DARF:决策锚定残差流(Decision-Anchored Residual Flow)
+</h3><p><strong>动机</strong>:确定性残差回归会把多个合理的修正方案平均成模糊结果(因为同一锚点+场景下可能存在多种合理的精调方式),因此用 <strong>flow matching</strong> 建模残差分布,支持多模态精细化。</p>
+<p>给定 top-M 候选锚点集合 $\mathcal{I}_M$,对每个候选 $a_k$:</p>
+$$\tau_k = a_k + r_k \tag{9}$$<p>目标残差:$r_{gt}^k = \tau_{gt} - a_k$。采样噪声 $\epsilon\sim\mathcal{N}(0,I)$ 和时间步 $t\in[0,1]$,构造流路径:</p>
+$$z_t^k=(1-t)\epsilon+t\,r_{gt}^k,\quad v_k^*=r_{gt}^k-\epsilon,\quad \hat v_k=v_\theta(z_t^k,t,x,a_k) \tag{10}$$<p><strong>匹配锚点监督</strong>:只在 top-M 中离真值最近的锚点 $k^\dagger=\arg\min_{k\in\mathcal{I}_M} d(\tau_{gt},a_k)$ 上计算 flow matching loss(L1):</p>
+$$\mathcal{L}_{flow}=\|\hat v_{k^\dagger}-v_{k^\dagger}^*\|_1 \tag{11}$$<p><strong>置信度分支</strong>:为每个候选轨迹预测置信度 $s_k$,评估锚点与驾驶 context 的兼容性,训练时用 softmax 交叉熵监督到匹配锚点:</p>
+$$\mathcal{L}_{conf}=-\log\frac{\exp(s_{k^\dagger})}{\sum_{k\in\mathcal{I}_M}\exp(s_k)} \tag{12}$$<p><strong>推理</strong>:从初始噪声 $z_0^k=\epsilon$ 出发,用<strong>少量 Euler 步</strong>积分速度场,得到候选轨迹后按置信度选最终输出:</p>
+$$z_{t+\Delta t}^k=z_t^k+\Delta t\,v_\theta(z_t^k,t,x,a_k),\quad \hat\tau_k=a_k+z_1^k,\quad \hat\tau=\hat\tau_{\arg\max_k s_k} \tag{13}$$<p><strong>采样步数</strong>:主实验中 <strong>Flow Step = 2</strong>(Table 3、Table 4 明确写出),这是 DARF 相对全轨迹 flow matching 的效率优势来源之一。</p>
+<p><strong>Decoder 架构(附录 B)</strong>:双分支解耦设计,共享输入锚点 $a_k$ 与多模态上下文特征 $H_x$:</p>
+<ul>
+<li><strong>Velocity 分支</strong>:噪声残差 $z_t^k$ 和锚点各自过 2D sine-cosine 位置编码 + MLP;每层用 AdaLN 式的 feature-wise affine modulation 把时间步特征注入隐状态:
+
+$$\text{Mod}(h,c)=h\odot(1+s(c))+b(c) \tag{15}$$
+锚点位置特征作为 query 的位置偏置叠加(而非直接替换残差隐状态):$q_l^k=h_l^k+h_{a,k}^{pos}$;query 对 $H_x$ 做 cross-attention 融合视觉/语言/导航信息;过残差连接、LayerNorm、FFN 后输出速度场 $\hat v_l^k\in\mathbb{R}^{T\times2}$。</li>
+<li><strong>Confidence 分支</strong>:完全<strong>不使用</strong> $z_t^k$ 和 $t$——因为置信度只评估&quot;锚点与驾驶 context 的兼容性&quot;,不评估某个具体噪声/去噪中间状态的质量(借鉴 DiffusionDrive 的候选选择策略)。以锚点特征 $h_{a,k}^{conf}$(独立 MLP 编码)为初始隐状态,对 $H_x$ 做 cross-attention,最终输出标量置信度。</li>
+</ul>
+<h3 id="25-完整轨迹空间-vs-锚点残差空间的区别">2.5 完整轨迹空间 vs 锚点残差空间的区别
+</h3><p>两者都用 flow matching,区别在于<strong>生成目标不同</strong>:</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th></th>
+          <th>Full Flow(完整轨迹空间)</th>
+          <th>DARF(锚点残差空间)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>流路径</td>
+          <td>$z_t^{full}=(1-t)\epsilon+t\tau_{gt}$</td>
+          <td>$z_t^k=(1-t)\epsilon+t\,r_{gt}^k$</td>
+      </tr>
+      <tr>
+          <td>目标</td>
+          <td>绝对坐标轨迹本身</td>
+          <td>相对锚点的残差</td>
+      </tr>
+      <tr>
+          <td>目标分布形态</td>
+          <td>高度多峰、分散(直行/左转/刹车差异很大)</td>
+          <td>紧凑、近似单峰、以 0 为中心</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>论文(Section 3.4 + Figure 3 标注)指出:当锚点提供了良好的粗粒度参考时,残差目标比完整轨迹目标更紧凑,<strong>传输路径更短</strong>($d_{ResFlow}\le d_{FullFlow}$),因而少量步数的流积分(few-step Euler)更容易逼近准确。Table 4 消融在<strong>相同 2 步</strong>条件下验证了这一点:DARF(89.92/77.28)明显优于 Full Flow(88.34/72.73)。</p>
+<p><strong>追问:能否直接从锚点(而非噪声)出发,流向绝对坐标轨迹以进一步缩短路径?</strong></p>
+<ul>
+<li><strong>若从锚点这个确定点出发</strong>($z_0=a_k$,无随机性):给定相同锚点和 context,映射退化为确定性函数,本质等价于 Table 4 中的 <strong>Deterministic</strong> 基线(1 步,直接回归残差),效果最差(86.74/70.45)——因为丢失了随机源,多个合理修正被平均成模糊解。</li>
+<li><strong>若从&quot;以锚点为中心的噪声&quot;出发</strong>($z_0=a_k+\epsilon$)流向绝对坐标:做变量代换 $\zeta_t=a_k+z_t^k$($a_k$ 对 $t$ 是常数,速度场不变),可证明这在数学上<strong>与 DARF 完全等价</strong>,只是坐标系表达方式不同,并非新方案。</li>
+</ul>
+<p><strong>结论</strong>:决定传输路径长短、采样步数多少的关键是&quot;目标分布相对噪声中心的紧凑程度,以及是否保留了随机性&quot;,而不是&quot;从哪个点出发&quot;;去掉噪声只会退化为效果更差的确定性回归。</p>
+<hr>
+<h2 id="三实验">三、实验
+</h2><h3 id="31-设置">3.1 设置
+</h3><ul>
+<li><strong>训练数据</strong>:沿用 SimLingo 设定——专家轨迹、指令条件的 &ldquo;dream&rdquo; 轨迹、以及 VQA/驾驶评论/无语言样本等混合语言监督</li>
+<li><strong>Benchmark</strong>:Bench2Drive(基于 CARLA 的闭环基准),报告 Driving Score (DS)、Success Rate (SR)、Efficiency、Comfort、Multi-Ability;SR 衡量任务是否完成,反映闭环可靠性</li>
+<li><strong>Backbone</strong>:复用 SimLingo 的 VLA backbone 并冻结,只修改规划接口</li>
+<li><strong>码本/候选数</strong>:K-means 聚类 K=100 锚点;推理阶段候选数 M=6</li>
+<li><strong>训练</strong>:两阶段。① 训练 DAAR 锚点决策模型,15 epoch,8×A100,batch size 16;② 冻结 backbone,训练 DARF 残差生成,15 epoch,4×A100,batch size 32</li>
+</ul>
+<h3 id="32-主结果table-1">3.2 主结果(Table 1)
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>VLA</th>
+          <th>Generative Planning</th>
+          <th>DS</th>
+          <th>SR(%)</th>
+          <th>Efficiency</th>
+          <th>Comfort</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LinkVLA</td>
+          <td>✓</td>
+          <td>×</td>
+          <td><strong>91.01</strong></td>
+          <td>74.55</td>
+          <td>255.84</td>
+          <td>34.62</td>
+      </tr>
+      <tr>
+          <td>BridgeDrive</td>
+          <td>×</td>
+          <td>✓</td>
+          <td>87.99</td>
+          <td>74.99</td>
+          <td>236.49</td>
+          <td>20.98</td>
+      </tr>
+      <tr>
+          <td><strong>AnchorVLA</strong></td>
+          <td>✓</td>
+          <td>✓</td>
+          <td>89.92</td>
+          <td><strong>77.28</strong></td>
+          <td>251.14</td>
+          <td>28.94</td>
+      </tr>
+  </tbody>
+</table></div>
+<ul>
+<li>SR 为所有对比方法中最高(77.28)</li>
+<li>相比 LinkVLA:DS 略低(89.92 vs 91.01),SR 更高(77.28 vs 74.55)</li>
+<li>相比 BridgeDrive:DS、SR 均更高</li>
+<li>Comfort(28.94)低于部分基线,作者认为是生成式精细化灵活性与轨迹平滑度之间的权衡,未来可引入平滑约束改进</li>
+</ul>
+<h3 id="33-multi-ability-评估table-2">3.3 Multi-Ability 评估(Table 2)
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Merging</th>
+          <th>Overtake</th>
+          <th>Brake</th>
+          <th>Give-Way</th>
+          <th>Traffic-Sign</th>
+          <th>Mean</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LinkVLA</td>
+          <td>60.00</td>
+          <td>80.00</td>
+          <td><strong>93.33</strong></td>
+          <td>50.00</td>
+          <td>83.68</td>
+          <td>73.40</td>
+      </tr>
+      <tr>
+          <td>BridgeDrive</td>
+          <td><strong>69.92</strong></td>
+          <td>66.67</td>
+          <td>90.00</td>
+          <td>50.00</td>
+          <td><strong>89.47</strong></td>
+          <td>73.15</td>
+      </tr>
+      <tr>
+          <td><strong>AnchorVLA</strong></td>
+          <td>65.00</td>
+          <td><strong>81.11</strong></td>
+          <td>90.00</td>
+          <td>50.00</td>
+          <td>85.00</td>
+          <td><strong>74.22</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>均分最高(74.22),Overtake 最佳,但 Merging/Traffic-Sign 不敌 BridgeDrive,Brake 不敌 LinkVLA。</p>
+<h3 id="34-消融实验">3.4 消融实验
+</h3><p><strong>决策建模方式(Table 3)</strong>——核心结论:性能提升不仅来自&quot;使用锚点&quot;本身,更来自<strong>把锚点预测紧密建模在 LLM token 空间里</strong>:</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Method</th>
+          <th>Extra Latency</th>
+          <th>DS</th>
+          <th>SR(%)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LinkVLA-AR(全轨迹自回归基线,无锚点)</td>
+          <td>361 ms</td>
+          <td>89.57</td>
+          <td>73.18</td>
+      </tr>
+      <tr>
+          <td>None(无锚点决策,直接把所有锚点扔进DARF)</td>
+          <td>–</td>
+          <td>87.49</td>
+          <td>70.91</td>
+      </tr>
+      <tr>
+          <td>Query Based</td>
+          <td>33 ms</td>
+          <td>88.67</td>
+          <td>73.81</td>
+      </tr>
+      <tr>
+          <td><strong>Autoregressive</strong></td>
+          <td><strong>64 ms</strong></td>
+          <td><strong>89.92</strong></td>
+          <td><strong>77.28</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Autoregressive 相比 Query-based,把锚点表示为 LLM 动作词表中的 token,让高层决策和锚点预测在同一 token 空间建模,SR 从 73.81 提升到 77.28;同时相比全轨迹自回归基线,额外延迟从 361ms 降到 64ms。</p>
+<p><strong>Flow Matching 形式(Table 4)</strong>——同为 Autoregressive 决策方法:</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Flow Matching Method</th>
+          <th>Flow Step</th>
+          <th>DS</th>
+          <th>SR(%)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Deterministic($t=0,z_t=0$ 直接回归)</td>
+          <td>1</td>
+          <td>86.74</td>
+          <td>70.45</td>
+      </tr>
+      <tr>
+          <td>Full Flow(完整轨迹空间)</td>
+          <td>2</td>
+          <td>88.34</td>
+          <td>72.73</td>
+      </tr>
+      <tr>
+          <td><strong>DARF</strong>(锚点残差空间)</td>
+          <td>2</td>
+          <td><strong>89.92</strong></td>
+          <td><strong>77.28</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>同样 2 步条件下,锚点残差空间显著优于完整轨迹空间,验证了残差空间紧凑性带来的收益(见 2.5 节)。</p>
+<p><strong>导航模态(Table 5)</strong>:GPS 目标点(89.92/77.28)与导航文字指令(90.26/76.82)效果相当,说明 AnchorVLA 对不同形式的导航输入较为鲁棒。</p>
+<hr>
+<h2 id="四失败案例分析附录-a">四、失败案例分析(附录 A)
+</h2><p>主要失败模式是<strong>锚点预测错误导致的误差传播</strong>:由于 DARF 在锚点定义的残差空间内生成轨迹,倾向于&quot;精调&quot;而非&quot;推翻&quot;已选定的行为,因此当预测锚点偏离路线或与语言指令不一致时,最终轨迹也会继承该错误行为;此外即便锚点大致正确,DARF 残差精调也可能引入局部几何偏差。作者认为改进方向是引入<strong>反思机制(reflective anchor selection)</strong>,在 DARF 精细化之前重新评估语言推理、导航意图、场景 context 与候选锚点之间的一致性,修正潜在的错误锚点预测。</p>
+<hr>
+<h2 id="五结论">五、结论
+</h2><p>AnchorVLA 是一个分层的决策锚定 VLA 规划框架,用&quot;轨迹模式锚点&quot;作为显式接口,桥接高层 VLA 推理与连续轨迹生成:</p>
+<ul>
+<li><strong>DAAR</strong> 负责行为级决策——把语义推理映射为紧凑锚点分布,两种实例化中&quot;自回归建模&quot;(锚点预测复用 LLM next-token 接口)显著优于&quot;query-based 建模&quot;,说明关键收益来自决策与预测的紧密耦合,而非锚点概念本身</li>
+<li><strong>DARF</strong> 负责连续执行——在锚点定义的残差子空间上做 flow matching,仅需 2 步 Euler 积分即可生成精细轨迹,残差空间的紧凑性是&quot;少步数也能生成好&quot;的根本原因</li>
+</ul>
+<p>在 Bench2Drive 闭环基准上取得 SOTA 成功率(SR=77.28)与有竞争力的驾驶分数(DS=89.92),同时把自回归推理的额外延迟从全轨迹自回归基线的 361ms 压缩到约 64ms,验证了轨迹模式锚点作为语言级推理与连续轨迹规划接口的有效性。</p>
+<p>本工作受国家重点研发计划(2024YFB2505500)资助。</p>
+<hr>
+<h2 id="相关笔记">相关笔记
+</h2><ul>
+<li><a class="link" href="../res-ad/" >ResAD - 归一化残差轨迹建模</a> —— 同样采用&quot;残差建模&quot;思想,但 ResAD 的参考系是物理惯性先验轨迹,AnchorVLA 的参考系是 K-means 聚类得到的离散行为锚点;两者都验证了&quot;缩小学习目标分布&quot;对轨迹生成的收益</li>
+<li><a class="link" href="../diffusion-drive-v2/" >DiffusionDriveV2 论文阅读笔记</a> —— AnchorVLA 的置信度候选选择策略借鉴自 DiffusionDrive 系列;两者同属&quot;锚点/截断+生成式精细化&quot;路线</li>
+<li><a class="link" href="../dfp/" >DFP - 扩散强迫规划与历史退火</a> —— 同为少步数生成式规划的代表工作,可对比扩散强迫与锚点残差流两种少步数策略</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/vla/">VLA</a>
+        
+            <a href="/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/">流匹配</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/drive-reward/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DriveReward 论文阅读笔记</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/post/robotics/e2e/dfp/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post DFP - 扩散强迫规划与历史退火" height="150" loading="lazy" src="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png" srcset="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png 1x, /post/robotics/e2e/dfp/cover_hu_288927617631db25.png 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #5071bd80 0%, #f4f6f8C0 100%);">
+            <h2 class="article-title">DFP - 扩散强迫规划与历史退火</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/plan-r1/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-foresight/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Foresight 论文阅读笔记</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/sparse-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">SparseDriveV2: Scoring is All You Need for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
