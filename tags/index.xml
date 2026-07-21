@@ -5,167 +5,53 @@
         <description>Recent content in Tags on 朝花夕拾</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Fri, 17 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 03 Jul 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
             <title>VLA</title>
             <link>https://example.org/tags/vla/</link>
-            <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/vla/</guid>
             <description></description>
         </item><item>
             <title>流匹配</title>
             <link>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</link>
-            <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</guid>
             <description></description>
         </item><item>
             <title>端到端</title>
             <link>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</link>
-            <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</guid>
             <description></description>
         </item><item>
             <title>自动驾驶</title>
             <link>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</link>
-            <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</guid>
             <description></description>
         </item><item>
             <title>轨迹规划</title>
             <link>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/</link>
-            <pubDate>Fri, 17 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/</guid>
-            <description></description>
-        </item><item>
-            <title>DiT</title>
-            <link>https://example.org/tags/dit/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/dit/</guid>
-            <description></description>
-        </item><item>
-            <title>Flow_matching</title>
-            <link>https://example.org/tags/flow_matching/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/flow_matching/</guid>
             <description></description>
         </item><item>
             <title>世界模型</title>
             <link>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
+            <pubDate>Tue, 30 Jun 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</guid>
-            <description></description>
-        </item><item>
-            <title>视频生成</title>
-            <link>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</guid>
-            <description></description>
-        </item><item>
-            <title>论文阅读</title>
-            <link>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</guid>
-            <description></description>
-        </item><item>
-            <title>零样本迁移</title>
-            <link>https://example.org/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/</link>
-            <pubDate>Thu, 16 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/</guid>
-            <description></description>
-        </item><item>
-            <title>VLM</title>
-            <link>https://example.org/tags/vlm/</link>
-            <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/vlm/</guid>
-            <description></description>
-        </item><item>
-            <title>奖励模型</title>
-            <link>https://example.org/tags/%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B/</guid>
-            <description></description>
-        </item><item>
-            <title>强化学习</title>
-            <link>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</link>
-            <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</guid>
-            <description></description>
-        </item><item>
-            <title>语义评估</title>
-            <link>https://example.org/tags/%E8%AF%AD%E4%B9%89%E8%AF%84%E4%BC%B0/</link>
-            <pubDate>Wed, 15 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%AF%AD%E4%B9%89%E8%AF%84%E4%BC%B0/</guid>
-            <description></description>
-        </item><item>
-            <title>GRPO</title>
-            <link>https://example.org/tags/grpo/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/grpo/</guid>
-            <description></description>
-        </item><item>
-            <title>ICLR2026</title>
-            <link>https://example.org/tags/iclr2026/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/iclr2026/</guid>
-            <description></description>
-        </item><item>
-            <title>历史引导</title>
-            <link>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</guid>
-            <description></description>
-        </item><item>
-            <title>扩散模型</title>
-            <link>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</guid>
-            <description></description>
-        </item><item>
-            <title>时间一致性</title>
-            <link>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</guid>
             <description></description>
         </item><item>
             <title>自回归生成</title>
             <link>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</link>
-            <pubDate>Fri, 12 Jun 2026 00:00:00 +0000</pubDate>
+            <pubDate>Tue, 30 Jun 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%87%AA%E5%9B%9E%E5%BD%92%E7%94%9F%E6%88%90/</guid>
             <description></description>
         </item><item>
-            <title>JEPA</title>
-            <link>https://example.org/tags/jepa/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/jepa/</guid>
-            <description></description>
-        </item><item>
-            <title>LLM推理</title>
-            <link>https://example.org/tags/llm%E6%8E%A8%E7%90%86/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/llm%E6%8E%A8%E7%90%86/</guid>
-            <description></description>
-        </item><item>
-            <title>MLP-Mixer</title>
-            <link>https://example.org/tags/mlp-mixer/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/mlp-mixer/</guid>
-            <description></description>
-        </item><item>
-            <title>PCA投影</title>
-            <link>https://example.org/tags/pca%E6%8A%95%E5%BD%B1/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/pca%E6%8A%95%E5%BD%B1/</guid>
-            <description></description>
-        </item><item>
-            <title>多模态规划</title>
-            <link>https://example.org/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/</guid>
-            <description></description>
-        </item><item>
-            <title>潜在空间</title>
-            <link>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</link>
-            <pubDate>Thu, 11 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</guid>
+            <title>辅助任务学习</title>
+            <link>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</link>
+            <pubDate>Tue, 30 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</guid>
             <description></description>
         </item><item>
             <title>LatentPlanning</title>
@@ -204,154 +90,178 @@
             <guid>https://example.org/tags/worldmodel/</guid>
             <description></description>
         </item><item>
-            <title>辅助任务学习</title>
-            <link>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</link>
-            <pubDate>Sat, 06 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</guid>
+            <title>历史引导</title>
+            <link>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</guid>
+            <description></description>
+        </item><item>
+            <title>扩散模型</title>
+            <link>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>时间一致性</title>
+            <link>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</link>
+            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</guid>
+            <description></description>
+        </item><item>
+            <title>VLM</title>
+            <link>https://example.org/tags/vlm/</link>
+            <pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/vlm/</guid>
+            <description></description>
+        </item><item>
+            <title>奖励模型</title>
+            <link>https://example.org/tags/%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B/</link>
+            <pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%A5%96%E5%8A%B1%E6%A8%A1%E5%9E%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>强化学习</title>
+            <link>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</link>
+            <pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</guid>
+            <description></description>
+        </item><item>
+            <title>语义评估</title>
+            <link>https://example.org/tags/%E8%AF%AD%E4%B9%89%E8%AF%84%E4%BC%B0/</link>
+            <pubDate>Sun, 07 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%AF%AD%E4%B9%89%E8%AF%84%E4%BC%B0/</guid>
+            <description></description>
+        </item><item>
+            <title>JEPA</title>
+            <link>https://example.org/tags/jepa/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/jepa/</guid>
+            <description></description>
+        </item><item>
+            <title>LLM推理</title>
+            <link>https://example.org/tags/llm%E6%8E%A8%E7%90%86/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/llm%E6%8E%A8%E7%90%86/</guid>
+            <description></description>
+        </item><item>
+            <title>MLP-Mixer</title>
+            <link>https://example.org/tags/mlp-mixer/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/mlp-mixer/</guid>
+            <description></description>
+        </item><item>
+            <title>PCA投影</title>
+            <link>https://example.org/tags/pca%E6%8A%95%E5%BD%B1/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/pca%E6%8A%95%E5%BD%B1/</guid>
+            <description></description>
+        </item><item>
+            <title>多模态规划</title>
+            <link>https://example.org/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E8%A7%84%E5%88%92/</guid>
+            <description></description>
+        </item><item>
+            <title>潜在空间</title>
+            <link>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</link>
+            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</guid>
+            <description></description>
+        </item><item>
+            <title>GRPO</title>
+            <link>https://example.org/tags/grpo/</link>
+            <pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/grpo/</guid>
+            <description></description>
+        </item><item>
+            <title>无感知标注</title>
+            <link>https://example.org/tags/%E6%97%A0%E6%84%9F%E7%9F%A5%E6%A0%87%E6%B3%A8/</link>
+            <pubDate>Thu, 14 May 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%A0%E6%84%9F%E7%9F%A5%E6%A0%87%E6%B3%A8/</guid>
             <description></description>
         </item><item>
             <title>暴露偏差</title>
             <link>https://example.org/tags/%E6%9A%B4%E9%9C%B2%E5%81%8F%E5%B7%AE/</link>
-            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E6%9A%B4%E9%9C%B2%E5%81%8F%E5%B7%AE/</guid>
             <description></description>
         </item><item>
             <title>蒸馏加速</title>
             <link>https://example.org/tags/%E8%92%B8%E9%A6%8F%E5%8A%A0%E9%80%9F/</link>
-            <pubDate>Thu, 04 Jun 2026 00:00:00 +0000</pubDate>
+            <pubDate>Tue, 12 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%92%B8%E9%A6%8F%E5%8A%A0%E9%80%9F/</guid>
-            <description></description>
-        </item><item>
-            <title>无感知标注</title>
-            <link>https://example.org/tags/%E6%97%A0%E6%84%9F%E7%9F%A5%E6%A0%87%E6%B3%A8/</link>
-            <pubDate>Sun, 17 May 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%97%A0%E6%84%9F%E7%9F%A5%E6%A0%87%E6%B3%A8/</guid>
             <description></description>
         </item><item>
             <title>Autoedit</title>
             <link>https://example.org/tags/autoedit/</link>
-            <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+            <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/autoedit/</guid>
             <description></description>
         </item><item>
             <title>Discrete-Diffusion</title>
             <link>https://example.org/tags/discrete-diffusion/</link>
-            <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+            <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/discrete-diffusion/</guid>
             <description></description>
         </item><item>
-            <title>E2E-AD</title>
+            <title>E2e-Ad</title>
             <link>https://example.org/tags/e2e-ad/</link>
-            <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+            <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e-ad/</guid>
             <description></description>
         </item><item>
             <title>Paper-Reading</title>
             <link>https://example.org/tags/paper-reading/</link>
-            <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+            <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/paper-reading/</guid>
             <description></description>
         </item><item>
             <title>Reinforcement-Learning</title>
             <link>https://example.org/tags/reinforcement-learning/</link>
-            <pubDate>Sat, 09 May 2026 00:00:00 +0000</pubDate>
+            <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/reinforcement-learning/</guid>
             <description></description>
         </item><item>
             <title>AutonomousDriving</title>
             <link>https://example.org/tags/autonomousdriving/</link>
-            <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
+            <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/autonomousdriving/</guid>
             <description></description>
         </item><item>
             <title>DiffusionModel</title>
             <link>https://example.org/tags/diffusionmodel/</link>
-            <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
+            <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/diffusionmodel/</guid>
             <description></description>
         </item><item>
             <title>InferenceAcceleration</title>
             <link>https://example.org/tags/inferenceacceleration/</link>
-            <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
+            <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/inferenceacceleration/</guid>
             <description></description>
         </item><item>
             <title>Xpeng</title>
             <link>https://example.org/tags/xpeng/</link>
-            <pubDate>Thu, 30 Apr 2026 00:00:00 +0800</pubDate>
+            <pubDate>Wed, 22 Apr 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/xpeng/</guid>
             <description></description>
         </item><item>
-            <title>运动规划</title>
-            <link>https://example.org/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/</link>
-            <pubDate>Fri, 24 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/</guid>
-            <description></description>
-        </item><item>
-            <title>数据挑选</title>
-            <link>https://example.org/tags/%E6%95%B0%E6%8D%AE%E6%8C%91%E9%80%89/</link>
-            <pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%95%B0%E6%8D%AE%E6%8C%91%E9%80%89/</guid>
-            <description></description>
-        </item><item>
-            <title>神经缩放定律</title>
-            <link>https://example.org/tags/%E7%A5%9E%E7%BB%8F%E7%BC%A9%E6%94%BE%E5%AE%9A%E5%BE%8B/</link>
-            <pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E7%A5%9E%E7%BB%8F%E7%BC%A9%E6%94%BE%E5%AE%9A%E5%BE%8B/</guid>
-            <description></description>
-        </item><item>
-            <title>训练优化</title>
-            <link>https://example.org/tags/%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96/</link>
-            <pubDate>Tue, 21 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96/</guid>
-            <description></description>
-        </item><item>
-            <title>DETR范式</title>
-            <link>https://example.org/tags/detr%E8%8C%83%E5%BC%8F/</link>
+            <title>Chain-of-Thought</title>
+            <link>https://example.org/tags/chain-of-thought/</link>
             <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/detr%E8%8C%83%E5%BC%8F/</guid>
+            <guid>https://example.org/tags/chain-of-thought/</guid>
             <description></description>
         </item><item>
-            <title>ICLR2025</title>
-            <link>https://example.org/tags/iclr2025/</link>
+            <title>论文阅读</title>
+            <link>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</link>
             <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/iclr2025/</guid>
+            <guid>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</guid>
             <description></description>
         </item><item>
-            <title>Transformer</title>
-            <link>https://example.org/tags/transformer/</link>
+            <title>隐式推理</title>
+            <link>https://example.org/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/</link>
             <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/transformer/</guid>
-            <description></description>
-        </item><item>
-            <title>因式分解</title>
-            <link>https://example.org/tags/%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3/</link>
-            <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3/</guid>
-            <description></description>
-        </item><item>
-            <title>打分机制</title>
-            <link>https://example.org/tags/%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/</link>
-            <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/</guid>
-            <description></description>
-        </item><item>
-            <title>时序处理</title>
-            <link>https://example.org/tags/%E6%97%B6%E5%BA%8F%E5%A4%84%E7%90%86/</link>
-            <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%97%B6%E5%BA%8F%E5%A4%84%E7%90%86/</guid>
-            <description></description>
-        </item><item>
-            <title>稀疏表示</title>
-            <link>https://example.org/tags/%E7%A8%80%E7%96%8F%E8%A1%A8%E7%A4%BA/</link>
-            <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E7%A8%80%E7%96%8F%E8%A1%A8%E7%A4%BA/</guid>
-            <description></description>
-        </item><item>
-            <title>词表构建</title>
-            <link>https://example.org/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/</link>
-            <pubDate>Mon, 20 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/</guid>
+            <guid>https://example.org/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/</guid>
             <description></description>
         </item><item>
             <title>ActionPrediction</title>
@@ -384,100 +294,106 @@
             <guid>https://example.org/tags/videogeneration/</guid>
             <description></description>
         </item><item>
-            <title>Chain-of-Thought</title>
-            <link>https://example.org/tags/chain-of-thought/</link>
-            <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/chain-of-thought/</guid>
+            <title>运动规划</title>
+            <link>https://example.org/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/</link>
+            <pubDate>Thu, 16 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%BF%90%E5%8A%A8%E8%A7%84%E5%88%92/</guid>
             <description></description>
         </item><item>
-            <title>隐式推理</title>
-            <link>https://example.org/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/</link>
-            <pubDate>Wed, 01 Apr 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/</guid>
+            <title>数据挑选</title>
+            <link>https://example.org/tags/%E6%95%B0%E6%8D%AE%E6%8C%91%E9%80%89/</link>
+            <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%95%B0%E6%8D%AE%E6%8C%91%E9%80%89/</guid>
+            <description></description>
+        </item><item>
+            <title>神经缩放定律</title>
+            <link>https://example.org/tags/%E7%A5%9E%E7%BB%8F%E7%BC%A9%E6%94%BE%E5%AE%9A%E5%BE%8B/</link>
+            <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E7%A5%9E%E7%BB%8F%E7%BC%A9%E6%94%BE%E5%AE%9A%E5%BE%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>训练优化</title>
+            <link>https://example.org/tags/%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96/</link>
+            <pubDate>Thu, 09 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96/</guid>
+            <description></description>
+        </item><item>
+            <title>DiT</title>
+            <link>https://example.org/tags/dit/</link>
+            <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/dit/</guid>
+            <description></description>
+        </item><item>
+            <title>Flow_matching</title>
+            <link>https://example.org/tags/flow_matching/</link>
+            <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/flow_matching/</guid>
+            <description></description>
+        </item><item>
+            <title>视频生成</title>
+            <link>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</link>
+            <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</guid>
+            <description></description>
+        </item><item>
+            <title>零样本迁移</title>
+            <link>https://example.org/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/</link>
+            <pubDate>Sun, 05 Apr 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/</guid>
+            <description></description>
+        </item><item>
+            <title>因式分解</title>
+            <link>https://example.org/tags/%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3/</link>
+            <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%9B%A0%E5%BC%8F%E5%88%86%E8%A7%A3/</guid>
+            <description></description>
+        </item><item>
+            <title>打分机制</title>
+            <link>https://example.org/tags/%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/</link>
+            <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%89%93%E5%88%86%E6%9C%BA%E5%88%B6/</guid>
+            <description></description>
+        </item><item>
+            <title>词表构建</title>
+            <link>https://example.org/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/</link>
+            <pubDate>Tue, 31 Mar 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%AF%8D%E8%A1%A8%E6%9E%84%E5%BB%BA/</guid>
             <description></description>
         </item><item>
             <title>TrajectoryPlanning</title>
             <link>https://example.org/tags/trajectoryplanning/</link>
-            <pubDate>Tue, 24 Mar 2026 00:00:00 +0800</pubDate>
+            <pubDate>Mon, 16 Mar 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/trajectoryplanning/</guid>
-            <description></description>
-        </item><item>
-            <title>BEV</title>
-            <link>https://example.org/tags/bev/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/bev/</guid>
             <description></description>
         </item><item>
             <title>E2E</title>
             <link>https://example.org/tags/e2e/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 12 Dec 2025 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e/</guid>
-            <description></description>
-        </item><item>
-            <title>动量感知</title>
-            <link>https://example.org/tags/%E5%8A%A8%E9%87%8F%E6%84%9F%E7%9F%A5/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%8A%A8%E9%87%8F%E6%84%9F%E7%9F%A5/</guid>
-            <description></description>
-        </item><item>
-            <title>多智能体</title>
-            <link>https://example.org/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/</guid>
-            <description></description>
-        </item><item>
-            <title>多粒度规划</title>
-            <link>https://example.org/tags/%E5%A4%9A%E7%B2%92%E5%BA%A6%E8%A7%84%E5%88%92/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E5%A4%9A%E7%B2%92%E5%BA%A6%E8%A7%84%E5%88%92/</guid>
             <description></description>
         </item><item>
             <title>思维链</title>
             <link>https://example.org/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+            <pubDate>Fri, 12 Dec 2025 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/</guid>
-            <description></description>
-        </item><item>
-            <title>无监督学习</title>
-            <link>https://example.org/tags/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
-            <description></description>
-        </item><item>
-            <title>时序一致性</title>
-            <link>https://example.org/tags/%E6%97%B6%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%97%B6%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</guid>
-            <description></description>
-        </item><item>
-            <title>注意力机制</title>
-            <link>https://example.org/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</guid>
-            <description></description>
-        </item><item>
-            <title>自监督学习</title>
-            <link>https://example.org/tags/%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
-            <description></description>
-        </item><item>
-            <title>解码器</title>
-            <link>https://example.org/tags/%E8%A7%A3%E7%A0%81%E5%99%A8/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%A7%A3%E7%A0%81%E5%99%A8/</guid>
-            <description></description>
-        </item><item>
-            <title>语言模型</title>
-            <link>https://example.org/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item><item>
             <title>轨迹预测</title>
             <link>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</link>
-            <pubDate>Tue, 17 Mar 2026 00:00:00 +0000</pubDate>
+            <pubDate>Thu, 09 Oct 2025 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>无监督学习</title>
+            <link>https://example.org/tags/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
+            <pubDate>Tue, 01 Jul 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%A0%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
+            <description></description>
+        </item><item>
+            <title>ICLR2026</title>
+            <link>https://example.org/tags/iclr2026/</link>
+            <pubDate>Fri, 23 May 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/iclr2026/</guid>
             <description></description>
         </item><item>
             <title>Editor</title>
@@ -532,6 +448,90 @@
             <link>https://example.org/tags/vscode/</link>
             <pubDate>Wed, 02 Apr 2025 10:32:39 +0800</pubDate>
             <guid>https://example.org/tags/vscode/</guid>
+            <description></description>
+        </item><item>
+            <title>多粒度规划</title>
+            <link>https://example.org/tags/%E5%A4%9A%E7%B2%92%E5%BA%A6%E8%A7%84%E5%88%92/</link>
+            <pubDate>Tue, 11 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%A4%9A%E7%B2%92%E5%BA%A6%E8%A7%84%E5%88%92/</guid>
+            <description></description>
+        </item><item>
+            <title>注意力机制</title>
+            <link>https://example.org/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</link>
+            <pubDate>Tue, 11 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%B3%A8%E6%84%8F%E5%8A%9B%E6%9C%BA%E5%88%B6/</guid>
+            <description></description>
+        </item><item>
+            <title>解码器</title>
+            <link>https://example.org/tags/%E8%A7%A3%E7%A0%81%E5%99%A8/</link>
+            <pubDate>Tue, 11 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%A7%A3%E7%A0%81%E5%99%A8/</guid>
+            <description></description>
+        </item><item>
+            <title>DETR范式</title>
+            <link>https://example.org/tags/detr%E8%8C%83%E5%BC%8F/</link>
+            <pubDate>Fri, 07 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/detr%E8%8C%83%E5%BC%8F/</guid>
+            <description></description>
+        </item><item>
+            <title>ICLR2025</title>
+            <link>https://example.org/tags/iclr2025/</link>
+            <pubDate>Fri, 07 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/iclr2025/</guid>
+            <description></description>
+        </item><item>
+            <title>Transformer</title>
+            <link>https://example.org/tags/transformer/</link>
+            <pubDate>Fri, 07 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/transformer/</guid>
+            <description></description>
+        </item><item>
+            <title>时序处理</title>
+            <link>https://example.org/tags/%E6%97%B6%E5%BA%8F%E5%A4%84%E7%90%86/</link>
+            <pubDate>Fri, 07 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%B6%E5%BA%8F%E5%A4%84%E7%90%86/</guid>
+            <description></description>
+        </item><item>
+            <title>稀疏表示</title>
+            <link>https://example.org/tags/%E7%A8%80%E7%96%8F%E8%A1%A8%E7%A4%BA/</link>
+            <pubDate>Fri, 07 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E7%A8%80%E7%96%8F%E8%A1%A8%E7%A4%BA/</guid>
+            <description></description>
+        </item><item>
+            <title>动量感知</title>
+            <link>https://example.org/tags/%E5%8A%A8%E9%87%8F%E6%84%9F%E7%9F%A5/</link>
+            <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%8A%A8%E9%87%8F%E6%84%9F%E7%9F%A5/</guid>
+            <description></description>
+        </item><item>
+            <title>时序一致性</title>
+            <link>https://example.org/tags/%E6%97%B6%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</link>
+            <pubDate>Wed, 05 Mar 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%97%B6%E5%BA%8F%E4%B8%80%E8%87%B4%E6%80%A7/</guid>
+            <description></description>
+        </item><item>
+            <title>BEV</title>
+            <link>https://example.org/tags/bev/</link>
+            <pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/bev/</guid>
+            <description></description>
+        </item><item>
+            <title>自监督学习</title>
+            <link>https://example.org/tags/%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</link>
+            <pubDate>Wed, 12 Jun 2024 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%87%AA%E7%9B%91%E7%9D%A3%E5%AD%A6%E4%B9%A0/</guid>
+            <description></description>
+        </item><item>
+            <title>多智能体</title>
+            <link>https://example.org/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/</link>
+            <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%A4%9A%E6%99%BA%E8%83%BD%E4%BD%93/</guid>
+            <description></description>
+        </item><item>
+            <title>语言模型</title>
+            <link>https://example.org/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/</link>
+            <pubDate>Thu, 28 Sep 2023 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%AF%AD%E8%A8%80%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item></channel>
 </rss>
