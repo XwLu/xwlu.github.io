@@ -155,6 +155,12 @@
     <loc>https://example.org/categories/climbing/</loc>
     <lastmod>2026-05-17T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://example.org/post/robotics/e2e/epona-v2/</loc>
+    <lastmod>2026-05-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E6%97%A0%E6%84%9F%E7%9F%A5%E6%A0%87%E6%B3%A8/</loc>
+    <lastmod>2026-05-17T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://example.org/post/climbing/crags/</loc>
     <lastmod>2026-05-17T00:00:00+00:00</lastmod>
   </url><url>
