@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="用不对称注意力掩码让视频与动作专家&quot;训练时联合、推理时解耦&quot;——一把钥匙同开性能与效率两扇门的端到端世界动作模型。">
+<title>Metis：不对称注意力解锁联合训练与解耦推理</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/metis/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Metis：不对称注意力解锁联合训练与解耦推理">
+<meta property='og:description' content="用不对称注意力掩码让视频与动作专家&quot;训练时联合、推理时解耦&quot;——一把钥匙同开性能与效率两扇门的端到端世界动作模型。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/metis/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='论文阅读' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='世界动作模型' /><meta property='article:tag' content='视频生成' /><meta property='article:tag' content='扩散模型' /><meta property='article:tag' content='FlowMatching' /><meta property='article:tag' content='Mixture-of-Transformers' /><meta property='article:tag' content='轨迹规划' /><meta property='article:tag' content='城市导航' /><meta property='article:published_time' content='2026-06-14T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-06-14T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Metis：不对称注意力解锁联合训练与解耦推理">
+<meta name="twitter:description" content="用不对称注意力掩码让视频与动作专家&quot;训练时联合、推理时解耦&quot;——一把钥匙同开性能与效率两扇门的端到端世界动作模型。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#一故事的起点一个想得太慢和一个想得太乱的世界">一、故事的起点：一个&quot;想得太慢&quot;和一个&quot;想得太乱&quot;的世界</a></li>
+    <li><a href="#二三大门派的对决引言">二、三大门派的对决（引言）</a></li>
+    <li><a href="#三方法metis-的解耦魔法">三、方法：Metis 的&quot;解耦&quot;魔法</a>
+      <ul>
+        <li><a href="#31-问题形式化把未来从推理里请出去">3.1 问题形式化：把未来从推理里&quot;请出去&quot;</a></li>
+        <li><a href="#32-整体架构mixture-of-transformersmot">3.2 整体架构：Mixture-of-Transformers（MoT）</a></li>
+        <li><a href="#33-灵魂设计不对称注意力掩码">3.3 灵魂设计：不对称注意力掩码</a></li>
+        <li><a href="#34-训练目标联合-flow-matching">3.4 训练目标：联合 Flow Matching</a></li>
+      </ul>
+    </li>
+    <li><a href="#四深挖细节几个把人绕进去的问题">四、深挖细节：几个把人绕进去的问题</a>
+      <ul>
+        <li><a href="#41-mot-到底混合了什么不是共享-kv-权重">4.1 MoT 到底&quot;混合&quot;了什么？——不是共享 K/V 权重</a></li>
+        <li><a href="#42-梯度是怎么单向流动的掩码一石二鸟">4.2 梯度是怎么&quot;单向&quot;流动的？——掩码一石二鸟</a></li>
+        <li><a href="#43-为什么-mask-用--屏蔽而不是-0">4.3 为什么 mask 用 $-\infty$ 屏蔽，而不是 0？</a></li>
+        <li><a href="#44-为什么不能先-softmax-再乘-0来屏蔽">4.4 为什么不能&quot;先 softmax 再乘 0&quot;来屏蔽？</a></li>
+        <li><a href="#45-flow-matching-的目标为什么和时间步--无关">4.5 Flow Matching 的目标为什么和时间步 $s$ 无关？</a></li>
+      </ul>
+    </li>
+    <li><a href="#五核心伪代码">五、核心伪代码</a></li>
+    <li><a href="#六实验全面压测">六、实验：全面压测</a>
+      <ul>
+        <li><a href="#61-配置速览">6.1 配置速览</a></li>
+        <li><a href="#62-主结果">6.2 主结果</a></li>
+        <li><a href="#63-消融实验最能说明设计价值">6.3 消融实验（最能说明设计价值）</a></li>
+        <li><a href="#64-推理延迟table-7单张-rtx-4090">6.4 推理延迟（Table 7，单张 RTX 4090）</a></li>
+      </ul>
+    </li>
+    <li><a href="#七结论局限与影响">七、结论、局限与影响</a></li>
+    <li><a href="#八一张表看懂-metis">八、一张表看懂 Metis</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/metis/">Metis：不对称注意力解锁联合训练与解耦推理</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-06-14T00:00:00Z'>Sunday, June 14, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        8 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#一故事的起点一个想得太慢和一个想得太乱的世界">一、故事的起点：一个&quot;想得太慢&quot;和一个&quot;想得太乱&quot;的世界</a></li>
+    <li><a href="#二三大门派的对决引言">二、三大门派的对决（引言）</a></li>
+    <li><a href="#三方法metis-的解耦魔法">三、方法：Metis 的&quot;解耦&quot;魔法</a>
+      <ul>
+        <li><a href="#31-问题形式化把未来从推理里请出去">3.1 问题形式化：把未来从推理里&quot;请出去&quot;</a></li>
+        <li><a href="#32-整体架构mixture-of-transformersmot">3.2 整体架构：Mixture-of-Transformers（MoT）</a></li>
+        <li><a href="#33-灵魂设计不对称注意力掩码">3.3 灵魂设计：不对称注意力掩码</a></li>
+        <li><a href="#34-训练目标联合-flow-matching">3.4 训练目标：联合 Flow Matching</a></li>
+      </ul>
+    </li>
+    <li><a href="#四深挖细节几个把人绕进去的问题">四、深挖细节：几个把人绕进去的问题</a>
+      <ul>
+        <li><a href="#41-mot-到底混合了什么不是共享-kv-权重">4.1 MoT 到底&quot;混合&quot;了什么？——不是共享 K/V 权重</a></li>
+        <li><a href="#42-梯度是怎么单向流动的掩码一石二鸟">4.2 梯度是怎么&quot;单向&quot;流动的？——掩码一石二鸟</a></li>
+        <li><a href="#43-为什么-mask-用--屏蔽而不是-0">4.3 为什么 mask 用 $-\infty$ 屏蔽，而不是 0？</a></li>
+        <li><a href="#44-为什么不能先-softmax-再乘-0来屏蔽">4.4 为什么不能&quot;先 softmax 再乘 0&quot;来屏蔽？</a></li>
+        <li><a href="#45-flow-matching-的目标为什么和时间步--无关">4.5 Flow Matching 的目标为什么和时间步 $s$ 无关？</a></li>
+      </ul>
+    </li>
+    <li><a href="#五核心伪代码">五、核心伪代码</a></li>
+    <li><a href="#六实验全面压测">六、实验：全面压测</a>
+      <ul>
+        <li><a href="#61-配置速览">6.1 配置速览</a></li>
+        <li><a href="#62-主结果">6.2 主结果</a></li>
+        <li><a href="#63-消融实验最能说明设计价值">6.3 消融实验（最能说明设计价值）</a></li>
+        <li><a href="#64-推理延迟table-7单张-rtx-4090">6.4 推理延迟（Table 7，单张 RTX 4090）</a></li>
+      </ul>
+    </li>
+    <li><a href="#七结论局限与影响">七、结论、局限与影响</a></li>
+    <li><a href="#八一张表看懂-metis">八、一张表看懂 Metis</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="metis不对称注意力解锁联合训练与解耦推理">Metis：不对称注意力解锁联合训练与解耦推理
+</h1>
+    <blockquote>
+        <p><strong>论文全名</strong>：<em>Metis: A Generalizable and Efficient World-Action Model for Autonomous Driving and Urban Navigation</em>
+<strong>arXiv</strong>：2606.15869v1（2026-06-14）
+<strong>代码</strong>：<a class="link" href="https://github.com/LogosRoboticsGroup/Metis"  target="_blank" rel="noopener"
+    >github.com/LogosRoboticsGroup/Metis</a>
+<strong>机构</strong>：复旦大学、上海创新研究院、香港大学、同济大学、理想汽车、华中科技大学、帝国理工、萨里大学
+<strong>一句话</strong>：训练时让视频和动作互相学习，推理时让动作专家独立飞奔——用一把&quot;不对称的注意力钥匙&quot;，同时打开性能与效率两扇门。</p>
+
+    </blockquote>
+<hr>
+<h2 id="一故事的起点一个想得太慢和一个想得太乱的世界">一、故事的起点：一个&quot;想得太慢&quot;和一个&quot;想得太乱&quot;的世界
+</h2><p>想象你是一辆自动驾驶汽车的大脑。要决定&quot;要不要右转&quot;，你不能只盯着此刻的画面，还得在脑海里预演接下来几秒：路口会不会窜出行人？对向车速多少？先&quot;想象&quot;未来，再规划轨迹——这就是**世界动作模型（World Action Model, WAM）**的核心思路。它把&quot;动作生成&quot;和&quot;未来预测&quot;揉进同一个框架，比只会应激反应的 VLA（视觉-语言-动作）模型更懂物理世界。</p>
+<p>但当时的 WAM 有两个致命伤，论文开篇就点破：</p>
+<ul>
+<li><strong>太慢</strong>：VLA 增强派必须先自回归地把未来画面一帧帧&quot;脑补&quot;出来，才能动手规划。想象很丰富，反应很迟钝。</li>
+<li><strong>太乱</strong>：视频生成派把视频和动作紧耦合在一起，高维的视觉表示会去干扰低维的动作空间，轨迹规划反而变差。</li>
+</ul>
+<p>Metis 的哲学一句话概括：<strong>动作才是目的，视频理解只是手段</strong>。既然推理时最终只要动作，那就训练时让二者共同学习、推理时把视频这根拐杖直接扔掉。</p>
+<hr>
+<h2 id="二三大门派的对决引言">二、三大门派的对决（引言）
+</h2><p>论文把当时的 WAM 设计分成三大流派，像武林三大门派：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>门派</th>
+          <th>做法</th>
+          <th>比喻</th>
+          <th>痛点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>(a) VLA 增强派</strong></td>
+          <td>给 VLM 加&quot;未来预测 token&quot;，先自回归生成未来画面再出动作</td>
+          <td>司机先闭眼脑补前方 5 秒再开车</td>
+          <td>自回归视频 → 延迟高</td>
+      </tr>
+      <tr>
+          <td><strong>(b) 视频生成派</strong></td>
+          <td>在视频生成模型上嫁接动作头，视频与动作共享特征</td>
+          <td>视频剪辑师兼职开车</td>
+          <td>紧耦合 → 分布干扰</td>
+      </tr>
+      <tr>
+          <td><strong>(c) Metis（本文）</strong></td>
+          <td>不对称注意力掩码解耦二者，推理无需生成视频</td>
+          <td>训练时看老师做题，考试时自己独立作答</td>
+          <td>——</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Metis 属于第三派，核心贡献有三：</p>
+<ol>
+<li><strong>解耦的 WAM 框架</strong>：动作模型与视频模型分家，各自保持自己的分布结构，泛化更好。</li>
+<li><strong>不对称注意力掩码</strong>：强制视频与动作 token 之间&quot;单向可见&quot;，实现&quot;联合训练、解耦推理&quot;，训练推理保持一致。</li>
+<li><strong>全面 SOTA</strong>：NAVSIM（navhard / navtest）自动驾驶基准 + CityWalker 城市导航基准双双领先，零样本真机部署验证泛化性。</li>
+</ol>
+<hr>
+<h2 id="三方法metis-的解耦魔法">三、方法：Metis 的&quot;解耦&quot;魔法
+</h2><h3 id="31-问题形式化把未来从推理里请出去">3.1 问题形式化：把未来从推理里&quot;请出去&quot;
+</h3><p>传统 WAM 训练时联合建模动作和未来观测：</p>
+$$p_\theta(a_{t:t+H},\; v_{t+1:t+N} \mid o_t, l)$$<p>推理时要么联合去噪同时生成动作和未来帧，要么先生成未来帧再反推动作（inverse dynamics）。<strong>两种都逃不开对高维未来观测 $v_{t+1:t+N}$ 的采样/递归去噪</strong>，这就是延迟的根源。</p>
+<p>Metis 改成<strong>解耦推理范式</strong>：未来帧只在训练时作监督信号，推理只靠当前观测。</p>
+$$a_{t:t+H} \sim p_\theta\big(a_{t:t+H} \mid z(o_t, l)\big)$$<p>其中 $z(o_t,l)$ 是 backbone 对当前观测的一次前向编码。<strong>推理时一次前向拿到当前上下文，直接出轨迹</strong>，未来帧从此缺席。</p>
+<h3 id="32-整体架构mixture-of-transformersmot">3.2 整体架构：Mixture-of-Transformers（MoT）
+</h3><p>为了避免&quot;异质任务分布互相打架&quot;，Metis 用 MoT 把任务拆成两个专属专家：</p>
+<ul>
+<li><strong>VGE（Video Generation Expert，视频生成专家）</strong>
+以 <strong>Wan2.2-5B</strong> 为骨干，<strong>继承其预训练权重</strong>（视频/物理先验），并复用它的 <strong>video VAE</strong>（视觉编码）和 <strong>T5 文本编码器</strong>（语言条件）。负责捕捉时空动态，约 5B 参数。</li>
+<li><strong>AE（Action Expert，动作专家）</strong>
+一个 diffusion transformer，<strong>层深与 VGE 完全相同，但隐藏维度缩小到 $d_a=1024$</strong>，约 1B 参数。整体模型约 <strong>6B</strong>。</li>
+</ul>
+<blockquote class="alert alert-warning">
+        <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">易错点（本轮讨论纠正）</span>
+        </div>
+        <div class="alert-body">
+            <p>AE 只是<strong>沿用 Wan 的 DiT 结构和层深</strong>，并<strong>不加载 Wan2.2 的预训练权重</strong>（维度都对不上），而是<strong>从头训练</strong>。只有 VGE 继承 Wan2.2-5B 权重、并复用它的 VAE 与 T5。</p>
+        </div>
+    </blockquote>
+<p><strong>为什么层深必须相同？</strong> 因为 VGE 和 AE 要<strong>逐层配对</strong>做跨专家注意力交互。深度不对齐，就没法在每一层让视频 token 和动作 token 坐到同一张桌子上&quot;对话&quot;了。</p>
+<p>模型输入被组织成三类 token：</p>
+<ol>
+<li>当前观测的 latent token（$V_{cur}$，$z_t$）</li>
+<li>未来观测的加噪 token（$V_{fut}$，$z_{t+1:t+N}$，仅训练存在）</li>
+<li>动作的加噪 token（$A$，即加噪 waypoints）</li>
+</ol>
+<p>所有 token 先通过 <strong>cross-attention</strong> 关注语言/ego 条件，再经<strong>各专家独立的投影</strong>进入共享潜在空间，交互由<strong>结构化注意力</strong>调控，最后<strong>各专家用自己的 FFN 和输出头</strong>做各自的预测。</p>
+<h3 id="33-灵魂设计不对称注意力掩码">3.3 灵魂设计：不对称注意力掩码
+</h3><p>这是全文最&quot;神来之笔&quot;的地方。序列布局为 <code>[ V_cur | V_fut | A ]</code>，掩码规则（对应论文 Figure 3）：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Query 来自 ＼ Key/Value 来自</th>
+          <th>$V_{cur}$（当前观测）</th>
+          <th>$V_{fut}$（未来视频）</th>
+          <th>$A$（动作）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>$V_{fut}$（视频专家）</strong></td>
+          <td>✅ 可见</td>
+          <td>✅ 可见</td>
+          <td>✅ <strong>可见（视频看得到动作）</strong></td>
+      </tr>
+      <tr>
+          <td><strong>$A$（动作专家）</strong></td>
+          <td>✅ 可见</td>
+          <td>❌ <strong>屏蔽（唯一必要约束）</strong></td>
+          <td>✅ 可见</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>一句话：<strong>未来视频能 attend 到未来动作，反方向被封死；动作只被允许 attend 当前观测和它自己</strong>。</p>
+<p>为什么这样设计？</p>
+<ul>
+<li><strong>视频看得到动作</strong> → VGE 能根据&quot;这辆车打算怎么走&quot;，生成物理上更合理的未来演化。</li>
+<li><strong>动作看不到未来视频</strong> → 保护低维动作空间不被高维视觉生成的噪声污染，这正是解决&quot;分布干扰&quot;的命门。</li>
+</ul>
+<p>这个单向信息流带来两个好处一次到手：<strong>训练时</strong>两个专家联合优化，VGE 的预测能力隐式参与动作精修；<strong>推理时</strong>整条视频生成分支可以被完全绕过，实现实时效率。</p>
+<h3 id="34-训练目标联合-flow-matching">3.4 训练目标：联合 Flow Matching
+</h3><p>VGE 和 AE 在<strong>同一个 flow matching 框架</strong>下联合优化。</p>
+<blockquote class="alert alert-warning">
+        <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">方向约定（本轮讨论纠正）</span>
+        </div>
+        <div class="alert-body">
+            <p>严格按论文公式 (5)(6)，<strong>$s=0$ 是纯噪声、$s=1$ 是真实数据</strong>，与常见的另一种坐标方向相反。二者数学等价，但既然对着论文实现，全篇统一用论文的约定。</p>
+        </div>
+    </blockquote>
+<p><strong>动作损失</strong>（公式 5）——监督动作速度场：</p>
+$$\mathcal{L}_{act} = \mathbb{E}\left[\big\|\, u_\theta(a^{(s)}_{t:t+H}, s \mid o_t, l) - \dot a_{t:t+H} \,\big\|^2\right]$$<p>其中 $a^{(s)}_{t:t+H} = (1-s)\epsilon + s\,a_{t:t+H}$，$\epsilon \sim \mathcal N(0,I)$，速度场目标 $\dot a_{t:t+H} = a_{t:t+H} - \epsilon$。</p>
+<p><strong>视频损失</strong>（公式 6）——监督未来视频速度场，<strong>注意它的条件里显式带了预测的动作 $\hat a_{t:t+H}$</strong>：</p>
+$$\mathcal{L}_{video} = \mathbb{E}\left[\big\|\, u_\phi(z^{(s)}_{t+1:t+H}, s \mid o_t, \hat a_{t:t+H}, l) - \dot z_{t+1:t+H} \,\big\|^2\right]$$<p>这一处&quot;$\hat a$ 出现在视频损失的条件里&quot;，正是&quot;视频能看到动作&quot;的数学落地。</p>
+<p><strong>总损失</strong>：</p>
+$$\mathcal{L} = \mathcal{L}_{act} + \lambda\,\mathcal{L}_{video}, \qquad \lambda = 1$$<hr>
+<h2 id="四深挖细节几个把人绕进去的问题">四、深挖细节：几个把人绕进去的问题
+</h2><p>这一节把 raw 讨论纪要里那些&quot;追问到底&quot;的问题梳理成最终结论。</p>
+<h3 id="41-mot-到底混合了什么不是共享-kv-权重">4.1 MoT 到底&quot;混合&quot;了什么？——不是共享 K/V 权重
+</h3><blockquote class="alert alert-warning">
+        <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">纠正一个措辞</span>
+        </div>
+        <div class="alert-body">
+            <p>早期讨论里说&quot;共享 K/V&quot;，不够精确。</p>
+        </div>
+    </blockquote>
+<p>MoT 的真相是：<strong>VGE 和 AE 各自拥有独立的 Q、K、V 投影权重和独立的 FFN</strong>。所谓&quot;联合注意力&quot;，是把两条流的 token 序列<strong>拼接（concat）<strong>在一起做</strong>一次</strong> self-attention，但每个 token 的 Q/K/V 都由<strong>它自己专家的投影矩阵</strong>算出。</p>
+<pre tabindex="0"><code>Q_v, K_v, V_v = X_v · W_{Q/K/V}^{VGE}     # 视频流, 用 VGE 的投影
+Q_a, K_a, V_a = X_a · W_{Q/K/V}^{AE}      # 动作流, 用 AE 的投影
+[X_v&#39;, X_a&#39;] = Attention(concat(Q), concat(K), concat(V), mask=M)
+</code></pre><p><strong>&ldquo;混合&quot;体现在两处</strong>：注意力处两条流拼接交互（共享 latent space），但<strong>投影和 FFN 各自独立</strong>（保各自分布纯净）。这就是 MoT 相比普通 MoE 的特点——按模态分专家，而非按 token 稀疏路由。</p>
+<h3 id="42-梯度是怎么单向流动的掩码一石二鸟">4.2 梯度是怎么&quot;单向&quot;流动的？——掩码一石二鸟
+</h3><p>这是最精妙的地方：<strong>掩码 $M_{av}=-\infty$ 在前向阻断信息流的同时，反向自动阻断梯度流，不需要任何 <code>stop_gradient</code>，纯靠链式法则实现。</strong></p>
+<p>前向时，动作输出对未来视频 token 的 softmax 权重精确为 0，于是 $\text{Attn}_a$ 的值与 $K_v, V_v$ <strong>完全无关</strong>。反向时，链式法则在这里乘以 0，梯度自然消失。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>梯度</th>
+          <th>流入 VGE 权重</th>
+          <th>流入 AE 权重</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$\partial\mathcal{L}_{video}$</td>
+          <td>$W_{FFN}^{VGE}$、$W_{Q/K/V}^{VGE}$</td>
+          <td>$W_{K/V}^{AE}$（<strong>跨流</strong>：因为 VGE 的 Query attend 了 AE 的 K/V）</td>
+      </tr>
+      <tr>
+          <td>$\partial\mathcal{L}_{act}$</td>
+          <td>无（掩码封死）</td>
+          <td>$W_{FFN}^{AE}$、$W_{Q/K/V}^{AE}$</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>深层意义</strong>：</p>
+<ul>
+<li>AE 的 K/V 权重<strong>同时</strong>被 $\mathcal{L}_{act}$（直接）和 $\mathcal{L}_{video}$（间接、跨流）训练 → 逼着 AE 的 Key/Value 表示学会&quot;对视频生成也有用&quot;的特征，从而<strong>隐式编码了对未来场景动态的理解</strong>。这就是&quot;隐式世界知识&quot;传递的确切通道。</li>
+<li>VGE 的 K/V 权重只被 $\mathcal{L}_{video}$ 训练 → 视觉生成分布保持纯净。</li>
+<li>FFN 完全独立 → 两路分布互不污染。</li>
+</ul>
+<h3 id="43-为什么-mask-用--屏蔽而不是-0">4.3 为什么 mask 用 $-\infty$ 屏蔽，而不是 0？
+</h3><p>这是很多人（包括讨论里）的直觉盲区：&ldquo;我一直以为 0 是屏蔽、1 是不屏蔽。&rdquo;</p>
+<p>关键在于 mask <strong>加在 softmax 之前的 logit 上</strong>：</p>
+$$\text{Attn}(Q,K,V) = \text{softmax}\!\left(\frac{QK^T}{\sqrt{d}} + M\right)V$$<ul>
+<li>$M_{ij}=0$：logit 不变，权重照常非零 → 其实是<strong>不屏蔽</strong>。</li>
+<li>$M_{ij}=-\infty$：$e^{-\infty}=0$，该位置权重精确为 0，对应 V 完全不参与 → <strong>这才是真正的屏蔽</strong>。</li>
+</ul>
+<p>所以规则是反的：<strong>0 = 不屏蔽，$-\infty$ = 屏蔽</strong>。</p>
+<p>那&quot;0 屏蔽、1 不屏蔽&quot;的印象哪来的？那是 HuggingFace 的 <strong>padding mask 用户接口约定</strong>（<code>1=保留, 0=pad</code>），但库内部会把它转成加法 mask <code>(1 - mask) * (-inf)</code> 再送进 softmax。两套命名作用的层不同：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>约定</th>
+          <th>作用层</th>
+          <th>屏蔽值</th>
+          <th>允许值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>HuggingFace 布尔 mask</td>
+          <td>softmax 外部，框架转换</td>
+          <td>0</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>PyTorch 加法 <code>attn_mask</code></td>
+          <td>直接加到 logit</td>
+          <td>$-\infty$ / <code>-1e9</code></td>
+          <td>0</td>
+      </tr>
+      <tr>
+          <td><strong>Metis 不对称掩码</strong></td>
+          <td>直接加到 logit</td>
+          <td>$-\infty$</td>
+          <td>0</td>
+      </tr>
+  </tbody>
+</table></div>
+
+    <blockquote>
+        <p>工程上常用 <code>-1e4</code>/<code>-1e9</code> 或 <code>torch.finfo(dtype).min</code> 代替真 <code>-inf</code>，避免整行被屏蔽时 <code>0/0=NaN</code>，或 bf16 下 <code>-inf+inf=NaN</code>。</p>
+
+    </blockquote>
+<h3 id="44-为什么不能先-softmax-再乘-0来屏蔽">4.4 为什么不能&quot;先 softmax 再乘 0&quot;来屏蔽？
+</h3><p>数学上可以，但<strong>会破坏概率分布的归一化</strong>。</p>
+<ul>
+<li><strong>正确（先加 $-\infty$ 再 softmax）</strong>：<code>[1, 2, 0.5] → [1, -inf, 0.5] → softmax → [0.37, 0, 0.63]</code>，权重和 = 1，剩余位置自动重新归一。</li>
+<li><strong>错误（先 softmax 再乘 0）</strong>：<code>[1,2,0.5] → softmax → [0.27, 0.53, 0.20] → ×[1,0,1] → [0.27, 0, 0.20]</code>，权重和 = 0.47 ≠ 1，分布缩水。</li>
+</ul>
+<p><strong>本质</strong>：softmax 的分母 $\sum_k e^{s_k}$ 在计算时已经把被屏蔽位置的 $e^{s_2}$ 算进去了。事后清零分子，分母里那部分永远消不掉。形象说：被屏蔽的位置像一个人&quot;点了满桌菜挤占了别人份额&rdquo;，事后把菜端走，但占用份额已无法挽回；而 $-\infty$ 相当于这个人<strong>根本没来餐厅</strong>。</p>
+<p>输出 $\text{output}=\sum_i w_i V_i$ 的模长会系统性偏小（约 47%），且不同样本 mask 模式不同、偏差程度不同，模型无法用统一缩放系数纠正。若一定要后置，需再补一次重新归一化（<code>weights /= weights.sum()</code>），数学等价但多一次除法且可能 NaN，所以实践中直接用 $-\infty$ 一步到位。</p>
+<h3 id="45-flow-matching-的目标为什么和时间步--无关">4.5 Flow Matching 的目标为什么和时间步 $s$ 无关？
+</h3><blockquote class="alert alert-warning">
+        <div class="alert-header">
+            <span class="alert-icon">⚠️</span>
+            <span class="alert-title">本轮讨论纠正的一个误解</span>
+        </div>
+        <div class="alert-body">
+            <p>直觉上以为&quot;target 应该和时间步有关&quot;，其实<strong>不然</strong>。</p>
+        </div>
+    </blockquote>
+<p>Metis 用的是最朴素的直线插值路径 $x_s=(1-s)\epsilon + s\,x$，它对 $s$ 的导数是<strong>常数</strong>：</p>
+$$\frac{dx_s}{ds} = x - \epsilon \quad(\text{与 } s \text{ 无关})$$<p>这正是 rectified/直线流的精髓——不管问哪个 $s$ 点，网络都要回归<strong>同一个方向</strong> $x-\epsilon$。<strong>和 $s$ 有关的是网络的输入 $x_s$ 和网络的预测 $u_\theta(x_s,s)$</strong>（$s$ 通过 AdaLN 喂进网络），而<strong>不是回归目标本身</strong>。给 target 乘时间系数反而会破坏直线流的定义。</p>
+<p>（对照：确实存在&quot;目标随时间步变&quot;的情形，但那是 $\epsilon$-prediction / $v$-prediction 某些参数化，或带 SNR 权重 $w(s)$ 的损失。Metis 不属于这些。）</p>
+<hr>
+<h2 id="五核心伪代码">五、核心伪代码
+</h2>
+    <blockquote>
+        <p>只把 <strong>MoT 不对称注意力</strong> 和 <strong>联合 Flow Matching</strong> 写细；Wan2.2 调用、VAE、文本编码、数据加载一笔带过。约定同 §3.4：$s=0$ 噪声、$s=1$ 数据，速度场 $\dot x = x-\epsilon$。</p>
+
+    </blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e"># ---------- 0. 外部组件(一笔带过) ----------</span>
+</span></span><span style="display:flex;"><span>vae          <span style="color:#f92672">=</span> load_wan22_vae()          <span style="color:#75715e"># 视频 VAE, Wan2.2 预训练, 复用</span>
+</span></span><span style="display:flex;"><span>text_encoder <span style="color:#f92672">=</span> load_wan22_t5()           <span style="color:#75715e"># T5 文本编码器, Wan2.2 预训练, 复用</span>
+</span></span><span style="display:flex;"><span>ego_encoder  <span style="color:#f92672">=</span> AgentStateEncoder()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>VGE <span style="color:#f92672">=</span> build_dit(dim<span style="color:#f92672">=</span>d_v, depth<span style="color:#f92672">=</span>L); VGE<span style="color:#f92672">.</span>load_pretrained(<span style="color:#e6db74">&#34;Wan2.2-5B&#34;</span>)  <span style="color:#75715e"># 继承权重</span>
+</span></span><span style="display:flex;"><span>AE  <span style="color:#f92672">=</span> build_dit(dim<span style="color:#f92672">=</span>d_a, depth<span style="color:#f92672">=</span>L)        <span style="color:#75715e"># d_a=1024, ~1B, 同层深, 从头训练(不加载 Wan 权重)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 1. 时间步嵌入 + AdaLN ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">timestep_feature</span>(s):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> timestep_mlp(sinusoidal_embed(s))          <span style="color:#75715e"># s → t_emb, VGE/AE 共享同一个 s</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">modulate</span>(x_norm, shift, scale):
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> x_norm <span style="color:#f92672">*</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">+</span> scale) <span style="color:#f92672">+</span> shift               <span style="color:#75715e"># AdaLN 仿射调制</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 每个 block 从 t_emb 产出 self-attn 与 FFN 两组 (shift, scale, gate) —— DiT 的 AdaLN-Zero</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 2. 不对称注意力掩码 ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">build_asymmetric_mask</span>(n_cur, n_fut, n_act):
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;&#34;&#34;[ V_cur | V_fut | A ]; 0=可见, -inf=屏蔽(加在 softmax 之前)。&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>    N <span style="color:#f92672">=</span> n_cur <span style="color:#f92672">+</span> n_fut <span style="color:#f92672">+</span> n_act
+</span></span><span style="display:flex;"><span>    M <span style="color:#f92672">=</span> zeros(N, N)
+</span></span><span style="display:flex;"><span>    act <span style="color:#f92672">=</span> slice(n_cur <span style="color:#f92672">+</span> n_fut, N); fut <span style="color:#f92672">=</span> slice(n_cur, n_cur <span style="color:#f92672">+</span> n_fut)
+</span></span><span style="display:flex;"><span>    M[act, fut] <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>inf        <span style="color:#75715e"># 唯一必要约束: 动作看不到未来视频; 反向保留(视频看得到动作)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> M
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 3. 单个 MoT 层: cross-attn → 联合 self-attn → FFN(全文最核心) ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mot_layer</span>(h_v, h_a, t_emb, text_emb, mask, blk_v, blk_a):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (1) 跨注意力到语言/ego(文本作 K/V)</span>
+</span></span><span style="display:flex;"><span>    h_v <span style="color:#f92672">=</span> h_v <span style="color:#f92672">+</span> blk_v<span style="color:#f92672">.</span>cross_attn(q<span style="color:#f92672">=</span>blk_v<span style="color:#f92672">.</span>norm_ca(h_v), k<span style="color:#f92672">=</span>text_emb, v<span style="color:#f92672">=</span>text_emb)
+</span></span><span style="display:flex;"><span>    h_a <span style="color:#f92672">=</span> h_a <span style="color:#f92672">+</span> blk_a<span style="color:#f92672">.</span>cross_attn(q<span style="color:#f92672">=</span>blk_a<span style="color:#f92672">.</span>norm_ca(h_a), k<span style="color:#f92672">=</span>text_emb, v<span style="color:#f92672">=</span>text_emb)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (2) 时间步 AdaLN(各专家独立投影 t_emb)</span>
+</span></span><span style="display:flex;"><span>    sh_v, sc_v, g_v <span style="color:#f92672">=</span> blk_v<span style="color:#f92672">.</span>adaln_sa(t_emb);  x_v <span style="color:#f92672">=</span> modulate(blk_v<span style="color:#f92672">.</span>norm_sa(h_v), sh_v, sc_v)
+</span></span><span style="display:flex;"><span>    sh_a, sc_a, g_a <span style="color:#f92672">=</span> blk_a<span style="color:#f92672">.</span>adaln_sa(t_emb);  x_a <span style="color:#f92672">=</span> modulate(blk_a<span style="color:#f92672">.</span>norm_sa(h_a), sh_a, sc_a)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (3) 联合掩码自注意力: 两流独立 QKV 投影, 拼接后一次 attention</span>
+</span></span><span style="display:flex;"><span>    q_v, k_v, v_v <span style="color:#f92672">=</span> blk_v<span style="color:#f92672">.</span>qkv(x_v)            <span style="color:#75715e"># VGE 的 W_Q/K/V</span>
+</span></span><span style="display:flex;"><span>    q_a, k_a, v_a <span style="color:#f92672">=</span> blk_a<span style="color:#f92672">.</span>qkv(x_a)            <span style="color:#75715e"># AE  的 W_Q/K/V</span>
+</span></span><span style="display:flex;"><span>    Q <span style="color:#f92672">=</span> concat([q_v, q_a]); K <span style="color:#f92672">=</span> concat([k_v, k_a]); V <span style="color:#f92672">=</span> concat([v_v, v_a])
+</span></span><span style="display:flex;"><span>    out <span style="color:#f92672">=</span> softmax(Q <span style="color:#f92672">@</span> K<span style="color:#f92672">.</span>transpose() <span style="color:#f92672">/</span> sqrt(head_dim) <span style="color:#f92672">+</span> mask) <span style="color:#f92672">@</span> V   <span style="color:#75715e"># -inf 处权重=0</span>
+</span></span><span style="display:flex;"><span>    out_v, out_a <span style="color:#f92672">=</span> split(out, [len(h_v), len(h_a)])
+</span></span><span style="display:flex;"><span>    h_v <span style="color:#f92672">=</span> h_v <span style="color:#f92672">+</span> g_v <span style="color:#f92672">*</span> blk_v<span style="color:#f92672">.</span>o_proj(out_v)
+</span></span><span style="display:flex;"><span>    h_a <span style="color:#f92672">=</span> h_a <span style="color:#f92672">+</span> g_a <span style="color:#f92672">*</span> blk_a<span style="color:#f92672">.</span>o_proj(out_a)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># (4) 各自独立 FFN + 各自 AdaLN(分布互不污染)</span>
+</span></span><span style="display:flex;"><span>    sh_v2, sc_v2, g_v2 <span style="color:#f92672">=</span> blk_v<span style="color:#f92672">.</span>adaln_ffn(t_emb)
+</span></span><span style="display:flex;"><span>    sh_a2, sc_a2, g_a2 <span style="color:#f92672">=</span> blk_a<span style="color:#f92672">.</span>adaln_ffn(t_emb)
+</span></span><span style="display:flex;"><span>    h_v <span style="color:#f92672">=</span> h_v <span style="color:#f92672">+</span> g_v2 <span style="color:#f92672">*</span> blk_v<span style="color:#f92672">.</span>ffn(modulate(blk_v<span style="color:#f92672">.</span>norm_ffn(h_v), sh_v2, sc_v2))
+</span></span><span style="display:flex;"><span>    h_a <span style="color:#f92672">=</span> h_a <span style="color:#f92672">+</span> g_a2 <span style="color:#f92672">*</span> blk_a<span style="color:#f92672">.</span>ffn(modulate(blk_a<span style="color:#f92672">.</span>norm_ffn(h_a), sh_a2, sc_a2))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> h_v, h_a
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># M[act,fut]=-inf: 前向阻断信息流, 反向自动阻断梯度流, 无需 stop_gradient</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 4. 训练前向 ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mot_forward</span>(V_cur, V_fut, A, text_emb, s):
+</span></span><span style="display:flex;"><span>    t_emb <span style="color:#f92672">=</span> timestep_feature(s)
+</span></span><span style="display:flex;"><span>    h_v <span style="color:#f92672">=</span> VGE<span style="color:#f92672">.</span>patch_embed(concat([V_cur, V_fut]));  h_a <span style="color:#f92672">=</span> AE<span style="color:#f92672">.</span>patch_embed(A)
+</span></span><span style="display:flex;"><span>    mask <span style="color:#f92672">=</span> build_asymmetric_mask(len(V_cur), len(V_fut), len(A))
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> blk_v, blk_a <span style="color:#f92672">in</span> zip(VGE<span style="color:#f92672">.</span>blocks, AE<span style="color:#f92672">.</span>blocks):          <span style="color:#75715e"># 逐层配对</span>
+</span></span><span style="display:flex;"><span>        h_v, h_a <span style="color:#f92672">=</span> mot_layer(h_v, h_a, t_emb, text_emb, mask, blk_v, blk_a)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> VGE<span style="color:#f92672">.</span>head(h_v[len(V_cur):]), AE<span style="color:#f92672">.</span>head(h_a)          <span style="color:#75715e"># 视频只取 V_fut 部分</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 5. 训练 step(联合 Flow Matching) ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train_step</span>(batch):
+</span></span><span style="display:flex;"><span>    V_cur <span style="color:#f92672">=</span> patchify(vae<span style="color:#f92672">.</span>encode(batch<span style="color:#f92672">.</span>current_frame))        <span style="color:#75715e"># z_t</span>
+</span></span><span style="display:flex;"><span>    z_fut <span style="color:#f92672">=</span> patchify(vae<span style="color:#f92672">.</span>encode(batch<span style="color:#f92672">.</span>future_frames))        <span style="color:#75715e"># z_{t+1:t+N} 真值</span>
+</span></span><span style="display:flex;"><span>    a     <span style="color:#f92672">=</span> batch<span style="color:#f92672">.</span>waypoints                                  <span style="color:#75715e"># (x,y,θ)×H 真值</span>
+</span></span><span style="display:flex;"><span>    text_emb <span style="color:#f92672">=</span> concat([text_encoder(batch<span style="color:#f92672">.</span>instruction), ego_encoder(batch<span style="color:#f92672">.</span>ego_state)])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    s <span style="color:#f92672">=</span> sample_logit_normal()                                <span style="color:#75715e"># 时间步(Logit-Normal)</span>
+</span></span><span style="display:flex;"><span>    eps_v, eps_a <span style="color:#f92672">=</span> randn_like(z_fut), randn_like(a)
+</span></span><span style="display:flex;"><span>    V_fut_s <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> s) <span style="color:#f92672">*</span> eps_v <span style="color:#f92672">+</span> s <span style="color:#f92672">*</span> z_fut                    <span style="color:#75715e"># 加噪未来视频</span>
+</span></span><span style="display:flex;"><span>    A_s     <span style="color:#f92672">=</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">-</span> s) <span style="color:#f92672">*</span> eps_a <span style="color:#f92672">+</span> s <span style="color:#f92672">*</span> a                        <span style="color:#75715e"># 加噪动作</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    v_pred_video, v_pred_act <span style="color:#f92672">=</span> mot_forward(V_cur, V_fut_s, A_s, text_emb, s)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    target_video <span style="color:#f92672">=</span> z_fut <span style="color:#f92672">-</span> eps_v                             <span style="color:#75715e"># 速度场目标 = 数据 - 噪声</span>
+</span></span><span style="display:flex;"><span>    target_act   <span style="color:#f92672">=</span> a     <span style="color:#f92672">-</span> eps_a                             <span style="color:#75715e"># (与 s 无关, 直线流常数导数)</span>
+</span></span><span style="display:flex;"><span>    loss <span style="color:#f92672">=</span> mse(v_pred_act, target_act) <span style="color:#f92672">+</span> <span style="color:#ae81ff">1.0</span> <span style="color:#f92672">*</span> mse(v_pred_video, target_video)  <span style="color:#75715e"># λ=1</span>
+</span></span><span style="display:flex;"><span>    loss<span style="color:#f92672">.</span>backward(); optimizer<span style="color:#f92672">.</span>step()
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># L_video 跨流回流到 AE 的 K/V → 逼 AE 编码&#34;对视频也有用&#34;的世界动态 = 隐式先验</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ---------- 6. 推理: 只跑 AE 流, 不生成任何未来帧 ----------</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">inference</span>(current_frame, instruction, ego_state, N<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span>, cfg<span style="color:#f92672">=</span><span style="color:#ae81ff">1.0</span>):
+</span></span><span style="display:flex;"><span>    V_cur <span style="color:#f92672">=</span> patchify(vae<span style="color:#f92672">.</span>encode(current_frame))              <span style="color:#75715e"># 只编码当前帧</span>
+</span></span><span style="display:flex;"><span>    text_emb <span style="color:#f92672">=</span> concat([text_encoder(instruction), ego_encoder(ego_state)])
+</span></span><span style="display:flex;"><span>    ctx_cur_kv <span style="color:#f92672">=</span> VGE<span style="color:#f92672">.</span>encode_current_and_cache_kv(V_cur)      <span style="color:#75715e"># VGE 对当前帧跑一次, 缓存 K/V</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    A <span style="color:#f92672">=</span> randn(H, action_dim)                                 <span style="color:#75715e"># 纯噪声轨迹, s=0</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(N):                                       <span style="color:#75715e"># 10 步 Euler</span>
+</span></span><span style="display:flex;"><span>        s <span style="color:#f92672">=</span> i <span style="color:#f92672">/</span> N; t_emb <span style="color:#f92672">=</span> timestep_feature(s)
+</span></span><span style="display:flex;"><span>        h_a <span style="color:#f92672">=</span> AE<span style="color:#f92672">.</span>patch_embed(A)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> blk_a <span style="color:#f92672">in</span> AE<span style="color:#f92672">.</span>blocks:                              <span style="color:#75715e"># A 只 attend [V_cur, 自己], 无 V_fut</span>
+</span></span><span style="display:flex;"><span>            h_a <span style="color:#f92672">=</span> ae_only_layer(h_a, ctx_cur_kv, t_emb, text_emb, blk_a)
+</span></span><span style="display:flex;"><span>        A <span style="color:#f92672">=</span> A <span style="color:#f92672">+</span> (<span style="color:#ae81ff">1.0</span> <span style="color:#f92672">/</span> N) <span style="color:#f92672">*</span> AE<span style="color:#f92672">.</span>head(h_a)                     <span style="color:#75715e"># x ← x + (1/N)·v</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> A
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 训练时 A 从不 attend V_fut → 推理删掉整条视频分支, AE 输出逐位不变(非近似)</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 相比带视频变体约 8× 加速(0.17s vs 1.38s, 论文 Tab.7)</span>
+</span></span></code></pre></div><hr>
+<h2 id="六实验全面压测">六、实验：全面压测
+</h2><h3 id="61-配置速览">6.1 配置速览
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项</th>
+          <th>设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>模型</td>
+          <td>VGE = Wan2.2-5B；AE $d_a=1024$（~1B）；总 ~6B</td>
+      </tr>
+      <tr>
+          <td>输入</td>
+          <td>仅<strong>前视单目</strong>摄像头；视频与动作 1:1 时间对齐</td>
+      </tr>
+      <tr>
+          <td>动作 horizon</td>
+          <td>NAVSIMv2：8 步（4s@0.5s），$(x,y,\theta)$；CityWalker：5 步，$(x,y)$</td>
+      </tr>
+      <tr>
+          <td>分辨率 / epoch</td>
+          <td>NAVSIMv2：640×768 / 60；CityWalker：384×384 / 30；batch 64</td>
+      </tr>
+      <tr>
+          <td>推理</td>
+          <td>10 步去噪，CFG=1.0</td>
+      </tr>
+      <tr>
+          <td>优化</td>
+          <td>AdamW（lr 1e-4，wd 0.01），cosine，混合精度，grad clip 1.0；8× H200</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="62-主结果">6.2 主结果
+</h3><ul>
+<li><strong>NAVSIM-v2 navhard</strong>（安全攸关闭环）：EPDMS <strong>32.2</strong>，Stage 1/Stage 2 双双第一，显著超过 LTF（24.4）、DiffusionDrive（27.5）等。相比 VLA 方法，Stage 2 的 DAC 至少高 7.9、DDC 至少高 2.5 → 世界建模在无显式地图监督下提供了更强的&quot;环境约束&quot;归纳偏置。</li>
+<li><strong>NAVSIM-v2 navtest</strong>（12,146 场景，测泛化）：EPDMS <strong>89.5</strong>（best-of-N=6 达 <strong>90.3</strong>，追平 Human Agent），且<strong>没用多阶段训练/强化学习/额外数据集</strong>，比先前 VLA 方法至少高 2.4。在 EP、LK、EC 上尤其亮眼。</li>
+<li><strong>CityWalker</strong>（城市导航）：L2 误差和 MAOE 全面领先，Mean L2 <strong>0.71m</strong>、MAOE <strong>11.8°</strong>；在 Turn / Detour / Crowd 等复杂场景优于大规模预训练的 ABot-N0。</li>
+<li><strong>真机部署</strong>：Unitree Go2 四足机器人，室内白天 + 室外夜间<strong>零样本</strong>避障导航成功，验证泛化落地能力。</li>
+</ul>
+<h3 id="63-消融实验最能说明设计价值">6.3 消融实验（最能说明设计价值）
+</h3><p><strong>① 注意力掩码</strong>（Table 4 / 8）——三种策略对比：</p>
+
+    <blockquote>
+        <p><strong>不对称掩码 &gt; 孤立注意力 &gt; 联合注意力</strong>，且困难场景差距更明显。</p>
+
+    </blockquote>
+<ul>
+<li>vs <strong>联合注意力</strong>（完全耦合）：联合方式推理时动作空间被生成噪声大量注入，DAC/EP 明显掉队 → 印证&quot;解耦保护动作空间稳定性&quot;。</li>
+<li>vs <strong>孤立注意力</strong>（完全解耦）：孤立方式动作无法利用当前观测视觉上下文，虽 DAC/EP 相当但总分更低 → 印证&quot;需要通过生成专家隐式优化动作专家&quot;。</li>
+</ul>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>320×384</th>
+          <th>DAC(navtest)</th>
+          <th>EP</th>
+          <th>EPDMS(navtest)</th>
+          <th>EPDMS(navhard)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Joint</td>
+          <td>95.7</td>
+          <td>81.6</td>
+          <td>87.4</td>
+          <td>28.0</td>
+      </tr>
+      <tr>
+          <td>Isolated</td>
+          <td>96.5</td>
+          <td>82.6</td>
+          <td>88.3</td>
+          <td>29.4</td>
+      </tr>
+      <tr>
+          <td><strong>Ours</strong></td>
+          <td><strong>96.9</strong></td>
+          <td><strong>82.9</strong></td>
+          <td><strong>88.8</strong></td>
+          <td><strong>31.6</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>② 输入分辨率</strong>（Table 4）：降到 320×384，navtest/navhard EPDMS 分别掉 0.7 / 0.6，DAC、LK 也降 → 高分辨率提供更丰富的空间几何线索。</p>
+<p><strong>③ 去噪步数</strong>（Table 5/12）：1→10 步性能持续提升，困难场景增益更明显；但延迟也随之上升（H200 上 1 步 100ms → 10 步 430ms）。</p>
+<p><strong>④ VGE/AE 容量</strong>（Table 6/10）：更强 VGE（Wan2.2-14B 蒸出的分支 vs Wan2.1-1.3B）在 navhard 上优势明显 → 更强世界模型隐式增强 AE 推理；固定 VGE 增大 AE（0.21B→1.04B）泛化持续提升。</p>
+<p><strong>⑤ 是否 co-train</strong>（Table 11）：只训 AE 已经很强，但加上视频生成联合训练进一步把 PDMS/EPDMS 各提升一截 → 直接证明&quot;不对称掩码让 AE 隐式学到世界动态&quot;。</p>
+<h3 id="64-推理延迟table-7单张-rtx-4090">6.4 推理延迟（Table 7，单张 RTX 4090）
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>PDMS</th>
+          <th>EPDMS</th>
+          <th>延迟</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Epona</td>
+          <td>86.2</td>
+          <td>85.1</td>
+          <td>0.32s</td>
+      </tr>
+      <tr>
+          <td>PWM</td>
+          <td>87.3</td>
+          <td>—</td>
+          <td>0.57s</td>
+      </tr>
+      <tr>
+          <td>PWM (w/ video)</td>
+          <td>88.1</td>
+          <td>—</td>
+          <td>0.83s</td>
+      </tr>
+      <tr>
+          <td>Metis (w/ video)</td>
+          <td>89.0</td>
+          <td>89.5</td>
+          <td>1.38s</td>
+      </tr>
+      <tr>
+          <td><strong>Metis（仅动作）</strong></td>
+          <td>88.9</td>
+          <td>89.2</td>
+          <td><strong>0.17s</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>→ 相比自家带视频变体，<strong>约 8× 加速</strong>（1.38 / 0.17 ≈ 8.1），且精度几乎不降。</p>
+<hr>
+<h2 id="七结论局限与影响">七、结论、局限与影响
+</h2><p><strong>结论</strong>：Metis 是基于 MoT 的端到端 WAM，靠<strong>不对称注意力掩码</strong>实现独特的**&ldquo;联合训练、解耦推理&rdquo;**范式——训练时联合优化视频生成与动作预测以捕捉世界动态，推理时无需生成显式未来观测即可高效规划。通过解耦低维动作空间与高维视觉生成，保住了动作模型的分布完整性和稳定性，泛化性与效率双双提升。</p>
+<p><strong>局限</strong>（论文 Appendix G）：</p>
+<ol>
+<li>极端 corner case 的可靠性仍需验证（世界建模天生依赖数据）。</li>
+<li>严重依赖预训练 VGE；虽然推理时绕过视频生成，但<strong>训练时 VGE 的参与仍然算力密集</strong>。</li>
+<li>VAE 下采样率显著影响&quot;训练效率 vs 表示质量&quot;的平衡。</li>
+<li>仅单目输入 → 长时程规划可能有轻微偏移，多视角世界建模留作 future work。</li>
+</ol>
+<p><strong>广泛影响</strong>：正面看提升自动驾驶安全与决策效率；风险面是 OOD/corner case 下可能行为不可预测，并对职业司机就业和自动驾驶问责法律框架提出新挑战。</p>
+<hr>
+<h2 id="八一张表看懂-metis">八、一张表看懂 Metis
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>对比维度</th>
+          <th>VLA 增强派</th>
+          <th>视频生成派</th>
+          <th><strong>Metis</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>训练</td>
+          <td>视频 token 监督</td>
+          <td>紧耦合联合训练</td>
+          <td><strong>联合训练（VGE+AE）</strong></td>
+      </tr>
+      <tr>
+          <td>推理</td>
+          <td>先生成视频再动作</td>
+          <td>视频动作同时生成</td>
+          <td><strong>仅 AE 推理（跳过视频）</strong></td>
+      </tr>
+      <tr>
+          <td>延迟</td>
+          <td>❌ 高（自回归视频）</td>
+          <td>⚠️ 中</td>
+          <td>✅ 低（约 8× 加速）</td>
+      </tr>
+      <tr>
+          <td>泛化</td>
+          <td>⚠️ 受 VLM 先验限制</td>
+          <td>❌ 分布干扰</td>
+          <td>✅ 解耦保稳</td>
+      </tr>
+      <tr>
+          <td>参数</td>
+          <td>不等</td>
+          <td>不等</td>
+          <td><strong>~6B（5B VGE + 1B AE）</strong></td>
+      </tr>
+      <tr>
+          <td>基础</td>
+          <td>各类 VLM</td>
+          <td>各类视频模型</td>
+          <td><strong>Wan2.2-5B + Flow Matching</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>核心记忆点</strong>：一条掩码约束 <code>M[action, future_video] = -∞</code>，前向阻断噪声污染、反向仍让世界动态跨流灌入动作专家的 K/V——性能与效率，一把钥匙同开两扇门。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E5%8A%A8%E4%BD%9C%E6%A8%A1%E5%9E%8B/">世界动作模型</a>
+        
+            <a href="/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/">视频生成</a>
+        
+            <a href="/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/">扩散模型</a>
+        
+            <a href="/tags/flowmatching/">FlowMatching</a>
+        
+            <a href="/tags/mixture-of-transformers/">Mixture-of-Transformers</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+            <a href="/tags/%E5%9F%8E%E5%B8%82%E5%AF%BC%E8%88%AA/">城市导航</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/post/robotics/e2e/drive-va/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post DriveVA - 视频动作模型即零样本驾驶员" height="150" loading="lazy" src="/post/robotics/e2e/drive-va/cover_hu_c5f6ba3d44d07580.png" srcset="/post/robotics/e2e/drive-va/cover_hu_c5f6ba3d44d07580.png 1x, /post/robotics/e2e/drive-va/cover_hu_a4950476e8b5a77b.png 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #42443f80 0%, #f2f2ecC0 100%);">
+            <h2 class="article-title">DriveVA - 视频动作模型即零样本驾驶员</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/post/robotics/e2e/dfp/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post DFP - 扩散强迫规划与历史退火" height="150" loading="lazy" src="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png" srcset="/post/robotics/e2e/dfp/cover_hu_db473b69840fdd8c.png 1x, /post/robotics/e2e/dfp/cover_hu_288927617631db25.png 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #5071bd80 0%, #f4f6f8C0 100%);">
+            <h2 class="article-title">DFP - 扩散强迫规划与历史退火</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">EponaV2: Driving World Model with Comprehensive Future Reasoning</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/horizon-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HorizonDrive: Self-Corrective Autoregressive World Model for Long-horizon Driving Simulation</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

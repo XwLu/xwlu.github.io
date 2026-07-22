@@ -3,15 +3,21 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.org/</loc>
-    <lastmod>2026-07-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/post/robotics/e2e/anchor-vla/</loc>
-    <lastmod>2026-07-03T00:00:00+00:00</lastmod>
+    <lastmod>2026-07-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/</loc>
-    <lastmod>2026-07-03T00:00:00+00:00</lastmod>
+    <lastmod>2026-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/categories/climbing/</loc>
+    <lastmod>2026-07-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/</loc>
+    <lastmod>2026-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/climbing/sport-climbing/</loc>
+    <lastmod>2026-07-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/anchor-vla/</loc>
     <lastmod>2026-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/robotics/</loc>
@@ -47,6 +53,30 @@
     <loc>https://example.org/tags/%E8%BE%85%E5%8A%A9%E4%BB%BB%E5%8A%A1%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2026-06-30T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://example.org/tags/flowmatching/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/metis/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/mixture-of-transformers/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E4%B8%96%E7%95%8C%E5%8A%A8%E4%BD%9C%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E5%9F%8E%E5%B8%82%E5%AF%BC%E8%88%AA/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</loc>
+    <lastmod>2026-06-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://example.org/post/robotics/e2e/dfp/</loc>
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
@@ -72,9 +102,6 @@
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</loc>
-    <lastmod>2026-06-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E6%89%A9%E6%95%A3%E6%A8%A1%E5%9E%8B/</loc>
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E6%97%B6%E9%97%B4%E4%B8%80%E8%87%B4%E6%80%A7/</loc>
@@ -116,9 +143,6 @@
     <loc>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E7%A9%BA%E9%97%B4/</loc>
     <lastmod>2026-06-04T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.org/categories/climbing/</loc>
-    <lastmod>2026-05-17T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://example.org/post/climbing/crags/</loc>
     <lastmod>2026-05-17T00:00:00+00:00</lastmod>
   </url><url>
@@ -144,6 +168,9 @@
     <lastmod>2026-05-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/climbing/skill/</loc>
+    <lastmod>2026-05-07T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/climbing/sport-climbing/skill/</loc>
     <lastmod>2026-05-07T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/climbing/</loc>
@@ -186,9 +213,6 @@
     <lastmod>2026-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/onevl/</loc>
-    <lastmod>2026-04-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</loc>
     <lastmod>2026-04-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E9%9A%90%E5%BC%8F%E6%8E%A8%E7%90%86/</loc>
@@ -243,9 +267,6 @@
     <lastmod>2026-04-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/flow_matching/</loc>
-    <lastmod>2026-04-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</loc>
     <lastmod>2026-04-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E9%9B%B6%E6%A0%B7%E6%9C%AC%E8%BF%81%E7%A7%BB/</loc>
