@@ -258,7 +258,7 @@
             <guid>https://example.org/tags/discrete-diffusion/</guid>
             <description></description>
         </item><item>
-            <title>E2E-AD</title>
+            <title>E2e-Ad</title>
             <link>https://example.org/tags/e2e-ad/</link>
             <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e-ad/</guid>
@@ -418,6 +418,24 @@
             <link>https://example.org/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/</link>
             <pubDate>Fri, 12 Dec 2025 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/%E6%80%9D%E7%BB%B4%E9%93%BE/</guid>
+            <description></description>
+        </item><item>
+            <title>NVIDIA</title>
+            <link>https://example.org/tags/nvidia/</link>
+            <pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/nvidia/</guid>
+            <description></description>
+        </item><item>
+            <title>推理</title>
+            <link>https://example.org/tags/%E6%8E%A8%E7%90%86/</link>
+            <pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%8E%A8%E7%90%86/</guid>
+            <description></description>
+        </item><item>
+            <title>链式因果</title>
+            <link>https://example.org/tags/%E9%93%BE%E5%BC%8F%E5%9B%A0%E6%9E%9C/</link>
+            <pubDate>Mon, 01 Dec 2025 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E9%93%BE%E5%BC%8F%E5%9B%A0%E6%9E%9C/</guid>
             <description></description>
         </item><item>
             <title>轨迹预测</title>

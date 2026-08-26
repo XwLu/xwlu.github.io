@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="把驾驶推理约束成「可观察证据 → 关键因果因素 → 明确驾驶决策 → 连续轨迹」的可检查因果链，再用 GRPO 显式校验理由、决策与轨迹的一致性——NVIDIA 面向长尾场景的端到端推理型 VLA。">
+<title>Alpamayo-R1: Bridging Reasoning and Action Prediction for Generalizable Autonomous Driving in the Long Tail</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/alpamayo-r1/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="Alpamayo-R1: Bridging Reasoning and Action Prediction for Generalizable Autonomous Driving in the Long Tail">
+<meta property='og:description' content="把驾驶推理约束成「可观察证据 → 关键因果因素 → 明确驾驶决策 → 连续轨迹」的可检查因果链，再用 GRPO 显式校验理由、决策与轨迹的一致性——NVIDIA 面向长尾场景的端到端推理型 VLA。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/alpamayo-r1/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='强化学习' /><meta property='article:tag' content='VLA' /><meta property='article:tag' content='推理' /><meta property='article:tag' content='GRPO' /><meta property='article:tag' content='flow_matching' /><meta property='article:tag' content='链式因果' /><meta property='article:tag' content='NVIDIA' /><meta property='article:published_time' content='2025-12-01T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2025-12-01T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="Alpamayo-R1: Bridging Reasoning and Action Prediction for Generalizable Autonomous Driving in the Long Tail">
+<meta name="twitter:description" content="把驾驶推理约束成「可观察证据 → 关键因果因素 → 明确驾驶决策 → 连续轨迹」的可检查因果链，再用 GRPO 显式校验理由、决策与轨迹的一致性——NVIDIA 面向长尾场景的端到端推理型 VLA。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#1-一句话总结">1. 一句话总结</a></li>
+    <li><a href="#2-问题背景与论文动机">2. 问题背景与论文动机</a>
+      <ul>
+        <li><a href="#21-模块化-pnc-与端到端的差异">2.1 模块化 PNC 与端到端的差异</a></li>
+        <li><a href="#22-作者认为普通-cot-的问题">2.2 作者认为普通 CoT 的问题</a></li>
+        <li><a href="#23-核心贡献">2.3 核心贡献</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-相关工作ar1-的位置">3. 相关工作：AR1 的位置</a></li>
+    <li><a href="#4-任务定义与整体架构">4. 任务定义与整体架构</a>
+      <ul>
+        <li><a href="#41-输入与输出">4.1 输入与输出</a></li>
+        <li><a href="#42-模型信息流">4.2 模型信息流</a></li>
+        <li><a href="#43-cosmos-reason-骨干">4.3 Cosmos-Reason 骨干</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-视觉编码为什么-token-效率是车端问题">5. 视觉编码：为什么 token 效率是车端问题</a>
+      <ul>
+        <li><a href="#51-默认单图编码">5.1 默认单图编码</a></li>
+        <li><a href="#52-triplane-多相机编码">5.2 Triplane 多相机编码</a></li>
+        <li><a href="#53-flex-多相机视频编码">5.3 Flex 多相机视频编码</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-动作表示与-action-modality-injection">6. 动作表示与 Action Modality Injection</a>
+      <ul>
+        <li><a href="#61-为什么不直接预测--点">6.1 为什么不直接预测 $x,y$ 点</a></li>
+        <li><a href="#62-离散控制-token">6.2 离散控制 token</a></li>
+        <li><a href="#63-特殊-token-的实现边界">6.3 特殊 token 的实现边界</a></li>
+        <li><a href="#64-连续-flow-matching-动作专家">6.4 连续 flow-matching 动作专家</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-coc-数据集让推理具备因果约束">7. CoC 数据集：让推理具备因果约束</a>
+      <ul>
+        <li><a href="#71-coc-要解决的三类数据问题">7.1 CoC 要解决的三类数据问题</a></li>
+        <li><a href="#72-封闭的驾驶决策集">7.2 封闭的驾驶决策集</a></li>
+        <li><a href="#73-开放的关键因果因素">7.3 开放的关键因果因素</a></li>
+        <li><a href="#74-片段和关键帧选择">7.4 片段和关键帧选择</a></li>
+        <li><a href="#75-人工标注与质检">7.5 人工标注与质检</a></li>
+        <li><a href="#76-自动标注与评估">7.6 自动标注与评估</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-训练各阶段监督什么">8. 训练：各阶段监督什么</a>
+      <ul>
+        <li><a href="#81-预训练与领域适配">8.1 预训练与领域适配</a></li>
+        <li><a href="#82-action-modality-injection">8.2 Action Modality Injection</a></li>
+        <li><a href="#83-coc-sft有-coc-监督但没有独立-coc-loss">8.3 CoC SFT：有 CoC 监督，但没有独立 CoC loss</a></li>
+        <li><a href="#84-rl-后训练为何-sft-之后仍然需要它">8.4 RL 后训练：为何 SFT 之后仍然需要它</a></li>
+        <li><a href="#85-rl-阶段怎样得到多模态轨迹">8.5 RL 阶段怎样得到多模态轨迹</a></li>
+        <li><a href="#86-rl-数据选择">8.6 RL 数据选择</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-实验设置与结果">9. 实验设置与结果</a>
+      <ul>
+        <li><a href="#91-数据与评测协议">9.1 数据与评测协议</a></li>
+        <li><a href="#92-coc-对开环轨迹的作用">9.2 CoC 对开环轨迹的作用</a></li>
+        <li><a href="#93-闭环结果">9.3 闭环结果</a></li>
+        <li><a href="#94-rl-奖励消融">9.4 RL 奖励消融</a></li>
+        <li><a href="#95-公共基准">9.5 公共基准</a></li>
+        <li><a href="#96-骨干规模数据规模和预训练">9.6 骨干规模、数据规模和预训练</a></li>
+        <li><a href="#97-轨迹解码消融">9.7 轨迹解码消融</a></li>
+        <li><a href="#98-时延与实车">9.8 时延与实车</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-对这篇论文特色的最终判断">10. 对&quot;这篇论文特色&quot;的最终判断</a></li>
+    <li><a href="#11-数据量论文证据与工程规划">11. 数据量：论文证据与工程规划</a>
+      <ul>
+        <li><a href="#111-论文明确披露的量级">11.1 论文明确披露的量级</a></li>
+        <li><a href="#112-一段式端到端模型的数据量怎样确定">11.2 一段式端到端模型的数据量怎样确定</a></li>
+        <li><a href="#113-用学习曲线而不是主观感觉决定是否继续加数据">11.3 用学习曲线，而不是主观感觉，决定是否继续加数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-局限性与审慎结论">12. 局限性与审慎结论</a></li>
+    <li><a href="#13-后续可深入讨论的问题">13. 后续可深入讨论的问题</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/alpamayo-r1/">Alpamayo-R1: Bridging Reasoning and Action Prediction for Generalizable Autonomous Driving in the Long Tail</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2025-12-01T00:00:00Z'>Monday, December 1, 2025</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        8 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#1-一句话总结">1. 一句话总结</a></li>
+    <li><a href="#2-问题背景与论文动机">2. 问题背景与论文动机</a>
+      <ul>
+        <li><a href="#21-模块化-pnc-与端到端的差异">2.1 模块化 PNC 与端到端的差异</a></li>
+        <li><a href="#22-作者认为普通-cot-的问题">2.2 作者认为普通 CoT 的问题</a></li>
+        <li><a href="#23-核心贡献">2.3 核心贡献</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-相关工作ar1-的位置">3. 相关工作：AR1 的位置</a></li>
+    <li><a href="#4-任务定义与整体架构">4. 任务定义与整体架构</a>
+      <ul>
+        <li><a href="#41-输入与输出">4.1 输入与输出</a></li>
+        <li><a href="#42-模型信息流">4.2 模型信息流</a></li>
+        <li><a href="#43-cosmos-reason-骨干">4.3 Cosmos-Reason 骨干</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-视觉编码为什么-token-效率是车端问题">5. 视觉编码：为什么 token 效率是车端问题</a>
+      <ul>
+        <li><a href="#51-默认单图编码">5.1 默认单图编码</a></li>
+        <li><a href="#52-triplane-多相机编码">5.2 Triplane 多相机编码</a></li>
+        <li><a href="#53-flex-多相机视频编码">5.3 Flex 多相机视频编码</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-动作表示与-action-modality-injection">6. 动作表示与 Action Modality Injection</a>
+      <ul>
+        <li><a href="#61-为什么不直接预测--点">6.1 为什么不直接预测 $x,y$ 点</a></li>
+        <li><a href="#62-离散控制-token">6.2 离散控制 token</a></li>
+        <li><a href="#63-特殊-token-的实现边界">6.3 特殊 token 的实现边界</a></li>
+        <li><a href="#64-连续-flow-matching-动作专家">6.4 连续 flow-matching 动作专家</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-coc-数据集让推理具备因果约束">7. CoC 数据集：让推理具备因果约束</a>
+      <ul>
+        <li><a href="#71-coc-要解决的三类数据问题">7.1 CoC 要解决的三类数据问题</a></li>
+        <li><a href="#72-封闭的驾驶决策集">7.2 封闭的驾驶决策集</a></li>
+        <li><a href="#73-开放的关键因果因素">7.3 开放的关键因果因素</a></li>
+        <li><a href="#74-片段和关键帧选择">7.4 片段和关键帧选择</a></li>
+        <li><a href="#75-人工标注与质检">7.5 人工标注与质检</a></li>
+        <li><a href="#76-自动标注与评估">7.6 自动标注与评估</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-训练各阶段监督什么">8. 训练：各阶段监督什么</a>
+      <ul>
+        <li><a href="#81-预训练与领域适配">8.1 预训练与领域适配</a></li>
+        <li><a href="#82-action-modality-injection">8.2 Action Modality Injection</a></li>
+        <li><a href="#83-coc-sft有-coc-监督但没有独立-coc-loss">8.3 CoC SFT：有 CoC 监督，但没有独立 CoC loss</a></li>
+        <li><a href="#84-rl-后训练为何-sft-之后仍然需要它">8.4 RL 后训练：为何 SFT 之后仍然需要它</a></li>
+        <li><a href="#85-rl-阶段怎样得到多模态轨迹">8.5 RL 阶段怎样得到多模态轨迹</a></li>
+        <li><a href="#86-rl-数据选择">8.6 RL 数据选择</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-实验设置与结果">9. 实验设置与结果</a>
+      <ul>
+        <li><a href="#91-数据与评测协议">9.1 数据与评测协议</a></li>
+        <li><a href="#92-coc-对开环轨迹的作用">9.2 CoC 对开环轨迹的作用</a></li>
+        <li><a href="#93-闭环结果">9.3 闭环结果</a></li>
+        <li><a href="#94-rl-奖励消融">9.4 RL 奖励消融</a></li>
+        <li><a href="#95-公共基准">9.5 公共基准</a></li>
+        <li><a href="#96-骨干规模数据规模和预训练">9.6 骨干规模、数据规模和预训练</a></li>
+        <li><a href="#97-轨迹解码消融">9.7 轨迹解码消融</a></li>
+        <li><a href="#98-时延与实车">9.8 时延与实车</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-对这篇论文特色的最终判断">10. 对&quot;这篇论文特色&quot;的最终判断</a></li>
+    <li><a href="#11-数据量论文证据与工程规划">11. 数据量：论文证据与工程规划</a>
+      <ul>
+        <li><a href="#111-论文明确披露的量级">11.1 论文明确披露的量级</a></li>
+        <li><a href="#112-一段式端到端模型的数据量怎样确定">11.2 一段式端到端模型的数据量怎样确定</a></li>
+        <li><a href="#113-用学习曲线而不是主观感觉决定是否继续加数据">11.3 用学习曲线，而不是主观感觉，决定是否继续加数据</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-局限性与审慎结论">12. 局限性与审慎结论</a></li>
+    <li><a href="#13-后续可深入讨论的问题">13. 后续可深入讨论的问题</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="alpamayo-r1-论文阅读笔记">Alpamayo-R1 论文阅读笔记
+</h1>
+    <blockquote>
+        <p>论文：<em>Alpamayo-R1: Bridging Reasoning and Action Prediction for Generalizable Autonomous Driving in the Long Tail</em>（NVIDIA，2025）</p>
+<p>阅读目标：从规则式 PNC 的视角理解，AR1 如何在端到端驾驶模型中加入一个可学习、可检查的&quot;决策—理由&quot;层，并让它真正影响连续轨迹。</p>
+
+    </blockquote>
+<h2 id="1-一句话总结">1. 一句话总结
+</h2><p>AR1 不是简单给端到端规划模型附加一段自然语言解释，而是把驾驶推理约束成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>历史可观察证据 → 关键因果因素 → 明确驾驶决策 → 连续控制/轨迹
+</span></span></code></pre></div><p>并在强化学习（RL）阶段显式检查：模型说出的原因和决策，是否与它生成的轨迹一致、是否安全且舒适。</p>
+<p>从传统 PNC 的角度看，它相当于在视觉到轨迹的一段式网络内部重新引入一层&quot;软的、数据驱动的行为决策层&quot;。这层不是手写规则，但有封闭的决策语义和可追溯的原因。</p>
+<hr>
+<h2 id="2-问题背景与论文动机">2. 问题背景与论文动机
+</h2><h3 id="21-模块化-pnc-与端到端的差异">2.1 模块化 PNC 与端到端的差异
+</h3><p>传统 PNC 通常有清楚的链条：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>感知/地图 → 预测 → 行为决策 → 运动规划 → 控制
+</span></span></code></pre></div><p>优点是每层语义明确、方便调试；缺点是接口多、人工规则和代价函数很难覆盖所有组合场景，也不容易整体联合优化。</p>
+<p>端到端（E2E）方法则直接学习：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>相机、历史状态、路线 → 未来自车轨迹
+</span></span></code></pre></div><p>它能从大量数据中学到联合策略，但容易退化为&quot;看见相似画面就复现相似轨迹&quot;。在长尾和安全关键场景中，例如施工绕行、遮挡行人、复杂路权、对向侵线、非规则目标，这种模式匹配可能看漏真正决定行为的因素。</p>
+<h3 id="22-作者认为普通-cot-的问题">2.2 作者认为普通 CoT 的问题
+</h3><p>自由文本的 Chain of Thought（CoT，逐步推理）可能写出：</p>
+
+    <blockquote>
+        <p>前方情况复杂，请谨慎行驶。</p>
+
+    </blockquote>
+<p>这段话听起来合理，却没有说明：</p>
+<ul>
+<li>车辆究竟要减速、停车、跟车还是换道；</li>
+<li>哪个目标或规则真正触发了该动作；</li>
+<li>该理由是否在决策时已经可见；</li>
+<li>最后生成的轨迹是否真的执行了它所说的动作。</li>
+</ul>
+<p>AR1 因而要求推理变成简洁、可执行的因果链。例如：</p>
+
+    <blockquote>
+        <p>同车道前方静止车辆部分阻挡道路，左侧对向车辆正在接近；因此取消向左绕行并停车等待。</p>
+
+    </blockquote>
+<p>其中&quot;静止车&quot;和&quot;对向来车&quot;是可见原因，&ldquo;取消横向动作 + 停车&quot;是明确行为意图，且应在后续轨迹中体现。</p>
+<h3 id="23-核心贡献">2.3 核心贡献
+</h3><ol>
+<li><strong>Chain of Causation（CoC）数据集与标注协议</strong>：把因果因素、驾驶决策、自然语言理由绑定，避免空泛解释和未来信息泄漏。</li>
+<li><strong>模块化 VLA</strong>：Cosmos-Reason 负责多模态理解与推理；轻量化 flow-matching 动作专家负责实时输出连续、动力学可行的轨迹。</li>
+<li><strong>多阶段训练</strong>：先注入动作模态，再用 CoC 监督激发推理，最后用 RL 同时优化推理质量、推理—动作一致性和轨迹质量。</li>
+</ol>
+<p>重要判断：CoT、meta-action、GRPO 都不是本文首创。本文的主要价值在于把它们组织为一条适合自动驾驶的、可验证的&quot;证据—决策—动作&quot;闭环。</p>
+<hr>
+<h2 id="3-相关工作ar1-的位置">3. 相关工作：AR1 的位置
+</h2><p>论文涉及四类已有工作：</p>
+<ol>
+<li><strong>驾驶 VLM/VLA</strong>：用视觉语言模型理解场景，或直接预测路径、航点、控制。</li>
+<li><strong>推理型 VLA</strong>：将 CoT、慢思考、自反思、检索、记忆等加入驾驶策略。</li>
+<li><strong>后训练对齐</strong>：RLHF、RL with Verifiable Rewards（RLVR）、GRPO 等，用奖励替代只模仿标注答案。</li>
+<li><strong>驾驶视觉语言数据集</strong>：场景描述、问答、关键物体、驾驶解释、驾驶 CoT 数据。</li>
+</ol>
+<p>AR1 相对这些工作的差异不是&quot;也能输出文字解释&rdquo;，而是将推理限制为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>决策前可见的直接原因
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>封闭集合中的纵向/横向驾驶决策
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>与该决策相符的轨迹
+</span></span></code></pre></div><p>因此，CoC 不应被理解为 UI 层面的解释，而是规划策略的训练信号和 RL 奖励对象。</p>
+<hr>
+<h2 id="4-任务定义与整体架构">4. 任务定义与整体架构
+</h2><h3 id="41-输入与输出">4.1 输入与输出
+</h3><p>模型输入包括：</p>
+<ul>
+<li>多相机、多时刻图像；</li>
+<li>自车历史运动（egomotion）；</li>
+<li>可选的路线导航、用户指令等文本信息。</li>
+</ul>
+<p>默认设置下，模型使用决策时刻前 <strong>2 秒</strong>历史，预测未来 <strong>6.4 秒</strong>。未来轨迹以 10 Hz 采样，共 64 个点：</p>
+$$
+\tau=\{(x_i,y_i,\theta_i^{yaw})\}_{i=1}^{64}
+$$<p>其中位置和航向均在自车坐标系表示。</p>
+<p>为了降低直接预测位置点的噪声敏感性，AR1 将轨迹转成每时刻的控制量：</p>
+$$
+a=\{(a_i,\kappa_i)\}_{i=1}^{64}
+$$<ul>
+<li>$a_i$：加速度；</li>
+<li>$\kappa_i$：曲率。</li>
+</ul>
+<p>再借助单轨/独轮车（unicycle）运动学积分还原位置、速度和航向。训练标签中的控制量由专家轨迹经带 Tikhonov 正则的最小二乘求得，用于抑制高频噪声。</p>
+<h3 id="42-模型信息流">4.2 模型信息流
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>多相机历史图像、自车历史、路线/文本
+</span></span><span style="display:flex;"><span>                ↓
+</span></span><span style="display:flex;"><span>            视觉编码器
+</span></span><span style="display:flex;"><span>                ↓
+</span></span><span style="display:flex;"><span>        Cosmos-Reason VLM 骨干
+</span></span><span style="display:flex;"><span>                ↓
+</span></span><span style="display:flex;"><span>    CoC 推理文本 + 离散控制 token
+</span></span><span style="display:flex;"><span>                ↓
+</span></span><span style="display:flex;"><span>flow-matching 动作专家（连续控制 a、κ）
+</span></span><span style="display:flex;"><span>                ↓
+</span></span><span style="display:flex;"><span>       车辆运动学积分 → 连续轨迹
+</span></span></code></pre></div><p>论文的统一序列写成：</p>
+$$
+[o_{image},o_{egomotion},Reason,\tau]
+$$<p>前面的所有内容都作为后续内容的条件。其核心是先让模型形成可读的决策理由，再使轨迹受这个理由条件化。</p>
+<h3 id="43-cosmos-reason-骨干">4.3 Cosmos-Reason 骨干
+</h3><p>AR1 采用 Cosmos-Reason 作为 VLM 骨干。论文披露其已在约 370 万条 Physical AI 视觉问答数据上后训练，其中含约 2.47 万条驾驶视频问答；驾驶样本包括场景描述、驾驶难度、由 DeepSeek-R1 蒸馏的下一动作推理等。</p>
+<p>作者还补充了跨自动驾驶、机器人、医疗、智慧城市、制造、零售、物流等 Physical AI 数据，并为自动驾驶新增约 10 万条关键目标和下一动作推理样本。其意图是先获得物理常识和具身推理能力，再学习具体的驾驶控制接口。</p>
+<hr>
+<h2 id="5-视觉编码为什么-token-效率是车端问题">5. 视觉编码：为什么 token 效率是车端问题
+</h2><p>VLM 需要先将图片压缩成 token。若每个相机、每帧都独立切 patch，多相机、多历史帧会让 token 数和 Transformer 计算量迅速膨胀。</p>
+<h3 id="51-默认单图编码">5.1 默认单图编码
+</h3><p>论文默认方案用 VLM 自带视觉编码器：对 $448\times280$ 图像进行 patch 表征和 2 倍双线性下采样后，每图约 <strong>160 个 token</strong>。</p>
+<p>这个方案简单、稳定，但 token 数随相机数、分辨率和历史长度线性增长。</p>
+<h3 id="52-triplane-多相机编码">5.2 Triplane 多相机编码
+</h3><p>先将多相机图像融合到固定大小的三平面表征，再将三平面 patch 化。因为三平面尺寸固定，输出 token 数不再直接取决于相机数和分辨率。</p>
+<p>论文示例中，7 相机每个时刻只需 288 token，约相当于每图 41.1 token，较默认单图编码少约 3.9 倍。</p>
+<h3 id="53-flex-多相机视频编码">5.3 Flex 多相机视频编码
+</h3><p>Flex 联合压缩多相机、多时刻的图像 token，用注意力和固定数量 query 控制信息瓶颈。论文报告相对单图编码最高可达 <strong>20 倍 token 压缩</strong>，且驾驶指标仅小幅变化。</p>
+<p>四相机消融中：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>视觉编码</th>
+          <th style="text-align: right">额外参数</th>
+          <th style="text-align: right">每图 token</th>
+          <th style="text-align: right">相对 minADE6</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>单图 baseline</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">160（1.0×）</td>
+          <td style="text-align: right">0%</td>
+      </tr>
+      <tr>
+          <td>Triplane</td>
+          <td style="text-align: right">6.3M</td>
+          <td style="text-align: right">104（1.5×）/45（3.6×）</td>
+          <td style="text-align: right">-3% / +4%</td>
+      </tr>
+      <tr>
+          <td>Flex</td>
+          <td style="text-align: right">61.6M</td>
+          <td style="text-align: right">50、32、16、8（3.2× 至 20×）</td>
+          <td style="text-align: right">-3%、-3%、-2%、-2%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>工程结论：相机少、历史短时，单图编码可能最合适；相机多、历史短时 Triplane 更有优势；相机多、历史长时 Flex 更值得考虑。视觉 token 压缩不是免费收益，需要平衡参数、语义损失和时延。</p>
+<hr>
+<h2 id="6-动作表示与-action-modality-injection">6. 动作表示与 Action Modality Injection
+</h2><h3 id="61-为什么不直接预测--点">6.1 为什么不直接预测 $x,y$ 点
+</h3><p>直接预测位置航点容易受传感器和标注噪声影响，且下游控制器通常还要重新平滑。AR1 改为预测加速度和曲率，再利用车辆运动学保证轨迹连续性。</p>
+<p>这与 PNC 的直觉一致：高层输出&quot;如何加减速、如何转弯&quot;通常比死记每个位置点更有物理约束。</p>
+<h3 id="62-离散控制-token">6.2 离散控制 token
+</h3><p>每个 $a_i$ 和 $\kappa_i$ 在预定义范围内均匀量化为 bin，并表示成专用动作 token。64 个时间点、每点两个控制量，因此每条轨迹有：</p>
+$$
+64\times2=128
+$$<p>个离散动作 token。</p>
+<p>可以抽象成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>&lt;ACC_BIN_37&gt;, &lt;CURV_BIN_112&gt;, &lt;ACC_BIN_36&gt;, &lt;CURV_BIN_108&gt;, ...
+</span></span></code></pre></div><p>这些 token 在通用 VLM 预训练中没有形成&quot;加速度/曲率&quot;的可用语义。<strong>Action Modality Injection</strong> 的目的，就是让模型学习：</p>
+<ol>
+<li>每个离散 token 与哪个控制区间对应；</li>
+<li>128 个 token 的时序结构；</li>
+<li>视觉、自车历史、路线、推理与控制序列之间的条件关系；</li>
+<li>从场景到可执行控制的映射。</li>
+</ol>
+<h3 id="63-特殊-token-的实现边界">6.3 特殊 token 的实现边界
+</h3><p>论文只写明使用&quot;专用于动作表示的 special tokens&quot;，未公开：词表是否真正扩展、token 初始化、bin 数量、量化范围和 token 排列方式。</p>
+<p>一般工程上可能有两种实现：</p>
+<ol>
+<li><strong>扩展文本词表</strong>：新增 <code>&lt;ACC_BIN_x&gt;</code>、<code>&lt;CURV_BIN_y&gt;</code>，扩展输入 embedding 和 LM head，使用标准下一 token 交叉熵训练。这与论文&quot;离散轨迹 token 在 VLM 内学习&quot;的表述最接近。</li>
+<li><strong>独立动作接口</strong>：为动作 bin 建独立 embedding 表和动作分类 head，而非使用普通文本词表。此时还可使用 action slot 表示&quot;第几个时间点、加速度还是曲率&quot;。</li>
+</ol>
+<p>第二种是通用实现解释，不能断言 AR1 一定采用。若使用它，应区分：</p>
+<ul>
+<li><strong>action-slot embedding</strong>：表示&quot;当前要预测第 $i$ 帧的加速度/曲率&quot;；预测前就存在；</li>
+<li><strong>action-bin embedding</strong>：表示&quot;前面已经选出的某个离散控制值&quot;；自回归预测或 teacher forcing 时作为后续输入。</li>
+</ul>
+<p>在自回归结构中：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>slot(a1) → 预测 a1 bin → 输入 a1 的 bin embedding
+</span></span><span style="display:flex;"><span>slot(κ1) → 预测 κ1 bin → 输入 κ1 的 bin embedding
+</span></span><span style="display:flex;"><span>slot(a2) → 预测 a2 bin → ...
+</span></span></code></pre></div><p>在并行预测结构中，通常只需 slot embedding，不需要前序 bin embedding。论文没有公开 AR1 的具体动作 token 接口，不能将上述任一实现当成论文已证实的事实。</p>
+<h3 id="64-连续-flow-matching-动作专家">6.4 连续 flow-matching 动作专家
+</h3><p>离散 token 适合自回归 VLM 和 RL 策略概率计算，但直接自回归生成 128 个 token 太慢，量化也损失连续精度。AR1 因而另训练一个 action expert：</p>
+<ul>
+<li>输入：VLM 在 <code>[观察, Reason]</code> 上产生的 KV-cache、带噪连续控制序列和扩散时间；</li>
+<li>输出：控制向量场 $v_\Theta(a_t,o,Reason)$；</li>
+<li>目标：从高斯噪声逐步恢复真实连续控制序列。</li>
+</ul>
+<p>其条件 flow-matching 损失为：</p>
+$$
+\mathcal{L}_{cfm}(\Theta)=
+\mathbb{E}\left[\left\|v_\Theta(a_t,o,Reason)-u(a_t|a)\right\|\right]
+$$<p>其中使用高斯 optimal-transport 路径：</p>
+$$
+a_t=t a+(1-t)\epsilon,\quad \epsilon\sim\mathcal{N}(0,I),\quad u(a_t|a)=a-\epsilon
+$$<p>推理时从随机控制噪声出发，经 Euler 积分得到连续 $a,\kappa$ 序列。论文默认积分步长为 0.1；速度消融中采用 5 步（步长 0.2）。训练 action expert 时，对来自 VLM 的 KV-cache 做 stop-gradient，不让 expert 的梯度反传并改变 VLM。</p>
+<p>一个需要注意的表述边界：图 1 将其描述为将离散轨迹 token 转为连续轨迹；而第 5.1 节数学描述中，expert 条件于 <code>[观察, Reason]</code> 的 KV-cache 和带噪连续控制。可以将离散 token 理解为 VLM 训练/RL 的动作语言接口，将 action expert 理解为部署时的连续动作解码器；两者在具体实现中如何逐 token 耦合，论文没有完全公开。</p>
+<hr>
+<h2 id="7-coc-数据集让推理具备因果约束">7. CoC 数据集：让推理具备因果约束
+</h2><h3 id="71-coc-要解决的三类数据问题">7.1 CoC 要解决的三类数据问题
+</h3><ol>
+<li><strong>行为描述模糊</strong>：如&quot;谨慎行驶&quot;，不能对应具体轨迹。</li>
+<li><strong>理由浮浅</strong>：如&quot;天气晴朗&quot;&ldquo;道路很宽&rdquo;，不是当前动作的直接驱动因素。</li>
+<li><strong>因果混乱</strong>：标注者看到了未来视频，却把未来发生的事件当成当前决策原因。</li>
+</ol>
+<p>CoC 的设计原则为：</p>
+<ul>
+<li><strong>决策落地（decision grounding）</strong>：每条理由锚定明确决策；</li>
+<li><strong>因果局部性（causal locality）</strong>：证据只能来自关键时刻前可观察历史；</li>
+<li><strong>标注经济性（annotation economy）</strong>：只写真正影响决策的近因。</li>
+</ul>
+<h3 id="72-封闭的驾驶决策集">7.2 封闭的驾驶决策集
+</h3><p>每段样本至多标注一个纵向决策和一个横向决策（或 <code>None</code>），对应关键时刻后的第一个自车行为。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>决策类型</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>纵向</td>
+          <td>设定速度跟踪、前车跟随、道路事件调速、为换道/汇入找间隙、超车加速、让行、因静态约束停车</td>
+      </tr>
+      <tr>
+          <td>横向</td>
+          <td>车道保持与居中、汇入/分流、压线绕障、车道内偏移、完整换道、靠边、转弯、取消横向动作</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>重要细分包括：</p>
+<ul>
+<li>跟车不等于让行；</li>
+<li>车道变换不等于匝道汇入/分流；</li>
+<li>车道内偏移不等于越线绕障；</li>
+<li>取消横向动作是一个明确行为，而不是标注失败。</li>
+</ul>
+<h3 id="73-开放的关键因果因素">7.3 开放的关键因果因素
+</h3><p>因果因素不做完全封闭限制，但给出了结构化类别：</p>
+<ul>
+<li>关键目标：车辆、行人、骑行者、VRU 的相对位置、运动状态、切入风险；</li>
+<li>信号灯：红黄绿、箭头、可见性、遮挡；</li>
+<li>停止/让行控制：标志、停止线、路权；</li>
+<li>道路事件：弯道、坡度、减速带、收窄、环岛、匝道；</li>
+<li>车道信息：车道数、实虚线、肩道/非机动车道、可用宽度；</li>
+<li>路线意图：目标车道和转向；</li>
+<li>ODD 约束：天气、能见度、施工、校车、紧急车辆等。</li>
+</ul>
+<p>对预测目标行为或信号部分遮挡时，可标注低/高不确定性。这里的&quot;开放&quot;不意味着可随意添加背景描述；只保留直接影响当前决策的因素。</p>
+<h3 id="74-片段和关键帧选择">7.4 片段和关键帧选择
+</h3><p>原始片段为 20 秒。CoC 只标注明确有因果决策的时刻，而不是给每帧写解释。</p>
+<ul>
+<li><strong>反应式场景</strong>：前车减速/停车、红绿灯停车/起步、换道、让行 VRU、cut-in、减速带、绕障、施工、危险目标等。通常取动作变化前约 0.5 秒为关键帧。</li>
+<li><strong>前瞻式场景</strong>：入弯、换道准备、绕障准备、通过路口、看到潜在横穿 VRU 但当前不需要让行等。标注一个持续评估的关键帧范围。</li>
+</ul>
+<p>关键帧的作用是划出严格时间边界：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>关键帧前 2 秒：只能找因果证据
+</span></span><span style="display:flex;"><span>关键帧后 6 秒：用于确认专家实际做出的决策和轨迹
+</span></span></code></pre></div><p>&ldquo;未来&quot;可帮助标注者识别自车最终动作，但不能倒灌为理由。这是本文与很多自由 CoT 数据构造最关键的差别之一。</p>
+<h3 id="75-人工标注与质检">7.5 人工标注与质检
+</h3><p>人工标注分两阶段：</p>
+<ol>
+<li><strong>阶段 I（0–2 秒）</strong>：仅识别历史中可见的关键因素。</li>
+<li><strong>阶段 II（0–8 秒）</strong>：过滤违法或明显不安全的样本；选择关键帧后第一个纵向和横向决策；用阶段 I 因素、路线或规则信息组织 CoC 文本。</li>
+</ol>
+<p>标注工具提供自车速度、加速度、方向盘、转向灯、带车道拓扑的 BEV、障碍物框等辅助信息。每条样本先由另一名标注者质检；还会按标注者表现对 10%–20% 样本额外审计。论文称约 10% 总数据量为高质量人工/人工验证数据，用于更高质量 SFT、自动标签评估和模型评估。</p>
+<p>质量规则包括：</p>
+<ul>
+<li>每个决策至少有一个可见原因，否则标为 <code>UNOBSERVED</code> 并说明原因；</li>
+<li>原因和决策必须具有正确因果关系；</li>
+<li>优先写近因，例如&quot;前方静止前车&rdquo;，而非其背后更遥远的&quot;红灯&quot;；</li>
+<li>没有实质决策变化时标 <code>None</code>。</li>
+</ul>
+<h3 id="76-自动标注与评估">7.6 自动标注与评估
+</h3><p>自动标注先从自车运动中，以规则在 10 Hz 帧级别检测原子 meta-action：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>纵向原子动作</th>
+          <th>横向原子动作</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>轻/重加速、轻/重减速、保持、停车、倒车</td>
+          <td>左/右转向、急左/急右、直行、左/右倒车</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>高层&quot;左换道&quot;可以由&quot;左转向—反向回正—直行&quot;以及伴随的加减速组成。也就是说，<strong>high-level driving decision</strong> 用于语义决策，<strong>atomic meta-action</strong> 用于从低层轨迹解析动作，两者不可混同。</p>
+<p>之后教师 VLM（论文举例 GPT-5）在离线环境中读取 2 Hz 视频、轨迹、动态状态和 meta-action，生成关键因素、决策和 CoC 文本。仍然要求关键因素只基于 2 秒历史；未来 6 秒、轨迹和 meta-action 用于消解多模态并确认决策。</p>
+<p>评估上，作者用 GPT-5 将开放文本拆成真/假子问题：决策是否正确、因果因素是否存在、因果关系是否有效。其自动评估与人工评估的一致率为 <strong>92%</strong>；结构化 CoC 的因果关系分数比自由文本推理提高 <strong>132.8%</strong>。这表明该数据协议更可评估，但并不代表标签或&quot;因果&quot;已达到严格世界模型级别。</p>
+<hr>
+<h2 id="8-训练各阶段监督什么">8. 训练：各阶段监督什么
+</h2><h3 id="81-预训练与领域适配">8.1 预训练与领域适配
+</h3><p>Cosmos-Reason 的通用/Physical-AI 预训练使用视觉问答、场景描述、关键目标和下一动作推理等文本目标。论文未给出其完整损失公式；可视作 VLM 常见的条件下一 token 交叉熵训练。</p>
+<p>这个阶段提供&quot;红灯、路权、目标运动、物理常识&quot;等基础，但不能保证模型已经会预测车辆控制序列。</p>
+<h3 id="82-action-modality-injection">8.2 Action Modality Injection
+</h3><p>VLM 端以离散轨迹 token 为监督目标，使用交叉熵训练统一的自回归序列。每条轨迹有 128 个控制 token。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>观察/自车历史/可选文本 → 离散控制 token 序列
+</span></span></code></pre></div><p>同时，连续动作专家用前述 $\mathcal{L}_{cfm}$ 学习 flow matching。离散 token 适合语言模型和策略概率；连续 expert 适合实时、平滑、动力学可行的执行。</p>
+<h3 id="83-coc-sft有-coc-监督但没有独立-coc-loss">8.3 CoC SFT：有 CoC 监督，但没有独立 CoC loss
+</h3><p>CoC SFT 样本为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>观察 o + CoC 推理 Reason + 专家离散控制 a
+</span></span></code></pre></div><p>目标为联合负对数似然：</p>
+$$
+\mathcal{L}_{SFT}(\theta)=-
+\mathbb{E}_{(o,Reason,a)\sim\mathcal{D}_{CoC}}
+[\log\pi_\theta(Reason,a|o)]
+$$<p>实现上就是对两部分都做 token-level cross-entropy：</p>
+$$
+\mathcal{L}_{SFT}=
+\mathcal{L}_{Reason\text{-}CE}+
+\mathcal{L}_{Action\text{-}CE}
+$$<p>因此，<strong>有针对 CoC 推理内容的监督</strong>，但其形式是文本 token 的交叉熵，而不是单独的关键目标分类 loss、驾驶决策分类 loss、因果图 loss 或可微的推理—轨迹一致性 loss。</p>
+<p>CoC 的因果约束在 SFT 中主要由数据协议注入：标注只提供历史可见的近因，并要求明确决策。交叉熵只能让模型模仿答案，不能直接保证文本没有幻觉，也不能保证&quot;说停车&quot;时轨迹真停车。</p>
+<h3 id="84-rl-后训练为何-sft-之后仍然需要它">8.4 RL 后训练：为何 SFT 之后仍然需要它
+</h3><p>SFT 的主要局限：</p>
+<ul>
+<li>自动标签有噪声，模型可能记忆标注模式；</li>
+<li>token 交叉熵不直接检查视觉证据是否真实存在；</li>
+<li>文本推理和轨迹可能相互矛盾；</li>
+<li>teacher forcing 下的训练目标与真实生成时的错误不同。</li>
+</ul>
+<p>AR1 使用 GRPO（Group Relative Policy Optimization）。对同一输入采样一组 rollout $\{\tau_i\}_{i=1}^K$，按组内相对奖励计算优势：</p>
+$$
+A_i=r_i-\bar r
+$$<p>并用 KL 项约束策略不要偏离 SFT 参考模型太远。高于组均值的回答获得更大强化，低于组均值的回答被削弱。</p>
+<p>总奖励由三部分组成：</p>
+<ol>
+<li><strong>推理质量奖励 $r_{reason}$</strong>：大推理模型比较预测 CoC 和 GT CoC，按&quot;行为一致性 + 因果理由质量&quot;打 0–5 分。</li>
+<li><strong>CoC—动作一致性奖励 $r_{consistency}$</strong>：把预测轨迹转回纵横向 meta-action；再从文本解析出驾驶意图；两者在纵横向都匹配得 1，否则得 0。无法解析为封闭决策集中的有效意图时保守记为 0。</li>
+<li><strong>低层轨迹质量奖励 $r_{traj}$</strong>：综合专家轨迹 L2 误差、碰撞、jerk，约束模仿性、安全性和舒适性。</li>
+</ol>
+<p>关键实验结论是：<strong>只优化推理奖励会让文字更漂亮，却会使轨迹 ADE 与言行一致性变差。</strong> 因此推理奖励必须和一致性、安全奖励一起使用。</p>
+<h3 id="85-rl-阶段怎样得到多模态轨迹">8.5 RL 阶段怎样得到多模态轨迹
+</h3><p>根据论文对离散轨迹 token 和 GRPO 的描述，RL 中的策略优化对象是 VLM 的&quot;推理 token + 离散控制 token&quot;自回归分布。对于相同输入，通过随机解码重复采样 $K$ 条 rollout：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>相同观察
+</span></span><span style="display:flex;"><span>  ├─ Reason1 + 离散轨迹 token1
+</span></span><span style="display:flex;"><span>  ├─ Reason2 + 离散轨迹 token2
+</span></span><span style="display:flex;"><span>  └─ ReasonK + 离散轨迹 tokenK
+</span></span></code></pre></div><p>随机性主要来自 VLM token 采样（通常由 temperature，且可能包括 top-p/top-k 等控制），而不是将 flow-matching 的随机初始噪声当成 RL rollout 的主要多模态来源。离散轨迹 token 可反量化、经运动学还原后计算动作一致性、碰撞、jerk 等奖励。</p>
+<p>论文没有披露 RL rollout 的组大小 $K$、temperature、top-p/top-k，或 action expert 在 RL 中是否更新等具体实现。因此不能把论文评估中&quot;6 条生成结果&quot;直接等同于训练 GRPO 的组大小。</p>
+<h3 id="86-rl-数据选择">8.6 RL 数据选择
+</h3><p>RL 代价高，因为每个场景需多次 rollout、奖励模型打分和梯度更新。作者优先选择模型 logits 所隐含的偏好，与显式奖励转换出的偏好分布差异较大的样本；再混入类似比例的随机样本保留分布多样性。</p>
+<p>直觉上，这是在找&quot;模型自认为好，但奖励模型认为不好&quot;的场景，特别适合修正错误的内部偏好。</p>
+<hr>
+<h2 id="9-实验设置与结果">9. 实验设置与结果
+</h2><h3 id="91-数据与评测协议">9.1 数据与评测协议
+</h3><ul>
+<li>内部数据：约 <strong>8 万小时</strong>，覆盖 25 个国家、2500 多座城市；</li>
+<li>原始传感器：环视 7 相机、标定信息和自车运动；</li>
+<li>主实验输入：前广角（120°）和前长焦（30°）两路相机；</li>
+<li>CoC 数据：约 <strong>70 万</strong>视频片段；</li>
+<li>训练、评测在地理区域上隔离，避免相邻区域泄漏。</li>
+</ul>
+<p>开环预测使用 6.4 秒未来轨迹。<code>minADE6</code> 表示模型生成 6 条候选轨迹后，选择与 GT 最接近的一条，计算其平均位移误差；数值越低越好。</p>
+<p>闭环使用 AlpaSim：用时序 3D Gaussian Splatting 重建真实日志环境，自车偏离原日志后仍可合成新视角；预测轨迹由 MPC 跟踪，车辆使用动态扩展单轨模型，其他交通参与者回放日志轨迹。内部闭环评估含 75 个高交互、20 秒困难场景。</p>
+<p>核心闭环指标：</p>
+<ul>
+<li>全体/自车有责的近距离危险接触率；</li>
+<li>驶出可行驶区比例；</li>
+<li>发生危险或 off-road 前平均行驶距离（AlpaSim score）。</li>
+</ul>
+<h3 id="92-coc-对开环轨迹的作用">9.2 CoC 对开环轨迹的作用
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>设置</th>
+          <th style="text-align: right">纯轨迹</th>
+          <th style="text-align: right">Meta-action + 轨迹</th>
+          <th style="text-align: right">CoC + 轨迹（AR1）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>普通场景、无路线、0.5B、6.4 s minADE6</td>
+          <td style="text-align: right">0.971 m</td>
+          <td style="text-align: right">0.988 m</td>
+          <td style="text-align: right"><strong>0.955 m</strong></td>
+      </tr>
+      <tr>
+          <td>普通场景、有路线、0.5B、6.4 s minADE6</td>
+          <td style="text-align: right">0.834 m</td>
+          <td style="text-align: right">0.821 m</td>
+          <td style="text-align: right"><strong>0.794 m</strong></td>
+      </tr>
+      <tr>
+          <td>普通场景、无路线、3B、6.4 s minADE6</td>
+          <td style="text-align: right">0.976 m</td>
+          <td style="text-align: right">0.927 m</td>
+          <td style="text-align: right"><strong>0.908 m</strong></td>
+      </tr>
+      <tr>
+          <td>困难场景、有路线、0.5B、6.4 s minADE6</td>
+          <td style="text-align: right">0.994 m</td>
+          <td style="text-align: right">0.928 m</td>
+          <td style="text-align: right"><strong>0.868 m</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>困难场景中，相对纯轨迹模型从 0.994 m 到 0.868 m，提升约 <strong>12%</strong>。meta-action 已带来部分增益，但完整 CoC 更优，说明关键因果因素和决策理由提供了超出粗粒度动作描述的有效信息。</p>
+<h3 id="93-闭环结果">9.3 闭环结果
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型</th>
+          <th style="text-align: right">近距离危险率（全部）</th>
+          <th style="text-align: right">近距离危险率（自车有责）</th>
+          <th style="text-align: right">Off-road</th>
+          <th style="text-align: right">AlpaSim 分数（全部）</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>纯轨迹 baseline</td>
+          <td style="text-align: right">17% ± 3%</td>
+          <td style="text-align: right">6% ± 1%</td>
+          <td style="text-align: right">3% ± 2%</td>
+          <td style="text-align: right">0.38 ± 0.04</td>
+      </tr>
+      <tr>
+          <td>AR1</td>
+          <td style="text-align: right"><strong>11% ± 2%</strong></td>
+          <td style="text-align: right">5% ± 3%</td>
+          <td style="text-align: right">4% ± 3%</td>
+          <td style="text-align: right"><strong>0.50 ± 0.08</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>AR1 将全体近距离危险率降低约 <strong>35%</strong>（17% 到 11%），但不能只报最好看的结果：off-road 从 3% 到 4%，而&quot;自车有责&quot;近距风险从 6% 到 5% 的误差区间较大。结论应是 CoC 对整体闭环交互安全有积极证据，而非所有安全指标都大幅领先。</p>
+<h3 id="94-rl-奖励消融">9.4 RL 奖励消融
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>训练策略</th>
+          <th style="text-align: right">ADE</th>
+          <th style="text-align: right">推理评分</th>
+          <th style="text-align: right">推理—动作一致性</th>
+          <th style="text-align: right">近距离危险率</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SFT</td>
+          <td style="text-align: right">2.12 m</td>
+          <td style="text-align: right">3.1</td>
+          <td style="text-align: right">0.62</td>
+          <td style="text-align: right">6.9%</td>
+      </tr>
+      <tr>
+          <td>SFT + RL（仅推理）</td>
+          <td style="text-align: right">2.19 m</td>
+          <td style="text-align: right"><strong>4.5</strong></td>
+          <td style="text-align: right">0.53</td>
+          <td style="text-align: right">5.8%</td>
+      </tr>
+      <tr>
+          <td>SFT + RL（推理 + 一致性）</td>
+          <td style="text-align: right"><strong>1.92 m</strong></td>
+          <td style="text-align: right"><strong>4.5</strong></td>
+          <td style="text-align: right"><strong>0.85</strong></td>
+          <td style="text-align: right">6.2%</td>
+      </tr>
+      <tr>
+          <td>SFT + RL（推理 + 一致性 + 安全）</td>
+          <td style="text-align: right">1.94 m</td>
+          <td style="text-align: right">4.4</td>
+          <td style="text-align: right">0.83</td>
+          <td style="text-align: right"><strong>3.7%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>解释：</p>
+<ul>
+<li>仅奖励推理，使推理评分 3.1→4.5，但 ADE 变差、一致性 0.62→0.53；</li>
+<li>加入一致性后，ADE 相对 SFT 改善 9.4%，一致性提高约 37%；</li>
+<li>加入安全奖励后，近距离危险率最低。</li>
+</ul>
+<p>这是全文最重要的实验证据之一：<strong>&ldquo;语言解释更像人&quot;不是控制性能提升的充分条件。</strong></p>
+<h3 id="95-公共基准">9.5 公共基准
+</h3><p>公开的 AR1-10B 使用 Cosmos-Reason 主干和 2B 的扩散式轨迹解码器。PhysicalAI-AV 上的开环评测有 644 个样例；AlpaSim 公共集含 920 个困难场景。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模型</th>
+          <th style="text-align: right"><a class="link" href="mailto:minADE6@6.4s" >minADE6@6.4s</a></th>
+          <th style="text-align: right">近距离危险率（有责）</th>
+          <th style="text-align: right">Off-road</th>
+          <th style="text-align: right">AlpaSim 分数</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>AR1-0.5B</td>
+          <td style="text-align: right">0.913 m</td>
+          <td style="text-align: right">9% ± 1%</td>
+          <td style="text-align: right">19% ± 0%</td>
+          <td style="text-align: right">0.35 ± 0.01</td>
+      </tr>
+      <tr>
+          <td>AR1-10B</td>
+          <td style="text-align: right"><strong>0.849 m</strong></td>
+          <td style="text-align: right"><strong>4% ± 0%</strong></td>
+          <td style="text-align: right"><strong>16% ± 1%</strong></td>
+          <td style="text-align: right"><strong>0.72 ± 0.02</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>10B 相较 0.5B 的结果显示，规模带来的增益在闭环困难场景中尤其明显。</p>
+<h3 id="96-骨干规模数据规模和预训练">9.6 骨干规模、数据规模和预训练
+</h3><ul>
+<li>通用 VLM 从 0.5B 扩到 7B，开环 minADE6 约改善 <strong>11%</strong>；</li>
+<li>0.5B 固定训练步数时，训练片段从 10 万增加到 200 万，性能持续提升：10 万数据明显过拟合，50 万已明显改善，200 万取得最佳结果但边际收益变小；</li>
+<li>Cosmos-Reason-7B 在 LingoQA 零样本驾驶场景理解中得分 <strong>66.2%</strong>，高于论文列出的 GPT-4V（59.6%）、Qwen2.5-VL-7B（62.2%）等基线。</li>
+</ul>
+<p>结论：模型参数规模、数据多样性和 Physical-AI 定向预训练是互补的，不应只靠其中一个维度。</p>
+<h3 id="97-轨迹解码消融">9.7 轨迹解码消融
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>解码策略</th>
+          <th style="text-align: right"><a class="link" href="mailto:minADE6@6.4s" >minADE6@6.4s</a></th>
+          <th style="text-align: right">有责 AlpaSim 分数</th>
+          <th style="text-align: right">加速度舒适比例</th>
+          <th style="text-align: right">相对解码速度</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>自回归离散轨迹</td>
+          <td style="text-align: right">0.6811</td>
+          <td style="text-align: right">0.59 ± 0.17</td>
+          <td style="text-align: right">44.05%</td>
+          <td style="text-align: right">1.00×</td>
+      </tr>
+      <tr>
+          <td>Flow matching</td>
+          <td style="text-align: right"><strong>0.6440</strong></td>
+          <td style="text-align: right"><strong>1.27 ± 0.34</strong></td>
+          <td style="text-align: right"><strong>97.38%</strong></td>
+          <td style="text-align: right"><strong>1.16×</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>flow matching 同时改善轨迹精度、闭环、舒适性和解码速度，说明连续动作专家不是单纯为了&quot;更快&rdquo;。</p>
+<h3 id="98-时延与实车">9.8 时延与实车
+</h3><p>在 NVIDIA RTX 6000 Pro Blackwell 上：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>配置</th>
+          <th style="text-align: right">视觉编码</th>
+          <th style="text-align: right">Prefill</th>
+          <th style="text-align: right">推理解码</th>
+          <th style="text-align: right">轨迹解码</th>
+          <th style="text-align: right">总时延</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>纯轨迹 + flow matching</td>
+          <td style="text-align: right">3.43 ms</td>
+          <td style="text-align: right">16.54 ms</td>
+          <td style="text-align: right">-</td>
+          <td style="text-align: right">8.75 ms（5 步）</td>
+          <td style="text-align: right">29 ms</td>
+      </tr>
+      <tr>
+          <td>AR1 + flow matching</td>
+          <td style="text-align: right">3.43 ms</td>
+          <td style="text-align: right">16.54 ms</td>
+          <td style="text-align: right">70 ms（40 token）</td>
+          <td style="text-align: right">8.75 ms（5 步）</td>
+          <td style="text-align: right"><strong>99 ms</strong></td>
+      </tr>
+      <tr>
+          <td>AR1 + 自回归轨迹</td>
+          <td style="text-align: right">3.43 ms</td>
+          <td style="text-align: right">16.54 ms</td>
+          <td style="text-align: right">70 ms</td>
+          <td style="text-align: right">222 ms（127 token）</td>
+          <td style="text-align: right">312 ms</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>AR1 在实车城市道路上完成了无人工干预的演示，并展示了红灯减速、等待、绿灯后恢复的 CoC 推理。但论文没有给出大规模实车统计指标，因此实车结果应理解为部署可行性展示，而不是充分的安全性证明。</p>
+<hr>
+<h2 id="10-对这篇论文特色的最终判断">10. 对&quot;这篇论文特色&quot;的最终判断
+</h2><p>AR1 的创新类型是<strong>数据协议、训练目标和系统集成上的领域创新</strong>，而不是提出了新的通用 Transformer 或新的 RL 算法。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>部分</th>
+          <th>是否为本文原创重点</th>
+          <th>本文价值</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>CoT</td>
+          <td>否</td>
+          <td>将其改造成由可见证据支撑、锚定明确驾驶决策的 CoC</td>
+      </tr>
+      <tr>
+          <td>Meta-action</td>
+          <td>否</td>
+          <td>用作高层决策与低层轨迹之间的可解析接口，并用于一致性奖励</td>
+      </tr>
+      <tr>
+          <td>GRPO</td>
+          <td>否</td>
+          <td>用三类驾驶奖励约束推理、动作和安全</td>
+      </tr>
+      <tr>
+          <td>CoC 标注协议</td>
+          <td>是，且最有特色</td>
+          <td>解决模糊理由、背景废话和未来信息泄漏</td>
+      </tr>
+      <tr>
+          <td>推理—动作一致性奖励</td>
+          <td>有较强实用创新</td>
+          <td>防止&quot;文字正确、轨迹错误&quot;</td>
+      </tr>
+      <tr>
+          <td>离散动作接口 + 连续 flow expert</td>
+          <td>工程组合创新</td>
+          <td>兼顾 VLM/RL 可训练性和车端实时连续执行</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>可以把普通 reasoning VLA 与 AR1 的差异概括为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>普通方案：观察 → 解释文本 → 轨迹
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>AR1：观察历史 → 关键因果因素 → 封闭驾驶决策
+</span></span><span style="display:flex;"><span>                     ↓
+</span></span><span style="display:flex;"><span>                CoC 推理文本 → 连续轨迹
+</span></span><span style="display:flex;"><span>                     ↑               ↓
+</span></span><span style="display:flex;"><span>                 RL 检查理由是否与动作一致
+</span></span></code></pre></div><hr>
+<h2 id="11-数据量论文证据与工程规划">11. 数据量：论文证据与工程规划
+</h2><h3 id="111-论文明确披露的量级">11.1 论文明确披露的量级
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>数据规模/来源</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Cosmos-Reason 预训练/领域适配</td>
+          <td>约 370 万 Physical-AI VQA；约 2.47 万驾驶 VQA；新增约 10 万驾驶样本</td>
+      </tr>
+      <tr>
+          <td>Action Modality Injection</td>
+          <td>使用整体驾驶数据；消融覆盖 10 万至 200 万视频片段</td>
+      </tr>
+      <tr>
+          <td>CoC SFT</td>
+          <td>约 70 万 CoC 视频片段</td>
+      </tr>
+      <tr>
+          <td>RL 后训练</td>
+          <td>未公开确切场景数与 rollout 数；优先高分歧样本并混入随机样本</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="112-一段式端到端模型的数据量怎样确定">11.2 一段式端到端模型的数据量怎样确定
+</h3><p>不能只问&quot;多少小时&quot;，而应问：<strong>每个关键决策场景有多少真正独立、分布多样的样本。</strong></p>
+<p>若模型使用 2 秒历史、6 秒未来，并每 0.5 秒滑窗，1 小时日志可以切出理论上的 7200 个窗口；但相邻窗口高度重叠，不能把它们当成 7200 个独立决策样本。</p>
+<p>更有价值的统计单位是独立事件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>红灯停车、起步、换道找间隙、施工绕行、VRU 让行、cut-in、对向侵线、遮挡目标、路权冲突……
+</span></span></code></pre></div><p>实践中的粗略起点（不是本文给出的硬指标）：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>目标</th>
+          <th>原始日志/有效样本的粗略量级</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>验证模型能否正常训练</td>
+          <td>100–500 小时，约 10 万有效片段</td>
+      </tr>
+      <tr>
+          <td>单区域 baseline</td>
+          <td>1000–5000 小时，百万级有效片段</td>
+      </tr>
+      <tr>
+          <td>多城市、多天气、复杂交互</td>
+          <td>5000–20000 小时，数百万至千万级片段</td>
+      </tr>
+      <tr>
+          <td>大规模长尾泛化</td>
+          <td>数万小时以上，关键在长尾事件覆盖而非总时长</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>阶段侧重点可概括为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Action Injection：规模优先（大量普通驾驶轨迹）
+</span></span><span style="display:flex;"><span>CoC SFT：质量与场景覆盖优先（结构化因果标注）
+</span></span><span style="display:flex;"><span>RL：高信息增益优先（模型最容易言行不一或不安全的样本）
+</span></span></code></pre></div><p>对于已有强驾驶/Physical-AI 骨干的 VLA，合理的工程起步量级可为：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th style="text-align: right">常见起步范围</th>
+          <th>核心要求</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Action Injection</td>
+          <td style="text-align: right">50 万–200 万片段</td>
+          <td>普通驾驶广覆盖，包含一定长尾</td>
+      </tr>
+      <tr>
+          <td>CoC SFT</td>
+          <td style="text-align: right">10 万–70 万片段</td>
+          <td>决策分布均衡，因果与时间边界可靠</td>
+      </tr>
+      <tr>
+          <td>RL</td>
+          <td style="text-align: right">1 万–10 万场景</td>
+          <td>每场景 4–16 条 rollout 的成本需单独估算</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>这些是由本文数据和一般 VLA 工程经验归纳的规划建议，不是论文公开的准确训练配置。</p>
+<h3 id="113-用学习曲线而不是主观感觉决定是否继续加数据">11.3 用学习曲线，而不是主观感觉，决定是否继续加数据
+</h3><p>固定模型、训练预算和严格隔离的评测集，依次使用 1%、3%、10%、30%、100% 数据训练。观察：</p>
+<ul>
+<li>总体与长尾的开环 minADE；</li>
+<li>闭环近距风险、off-road、任务成功率；</li>
+<li>jerk、舒适性；</li>
+<li>每类关键事件的成功率。</li>
+</ul>
+<p>判读方式：</p>
+<ul>
+<li>总体和长尾都在改善：继续增加数据；</li>
+<li>总体改善而长尾不改善：缺少特定长尾组合，不是总量不够；</li>
+<li>指标都平台：检查模型容量、视野、标签和损失；</li>
+<li>训练集好、验证集不变：数据重复或过拟合；</li>
+<li>开环变好、闭环不变：分布、交互建模或控制执行存在问题。</li>
+</ul>
+<p>可用幂律形式拟合误差—数据关系：</p>
+$$
+E(N)=E_\infty+cN^{-\alpha}
+$$<p>当新增一倍数据带来的收益小于采集、清洗和训练成本时，应转向数据质量、困难场景定向补齐或模型结构改进。</p>
+<hr>
+<h2 id="12-局限性与审慎结论">12. 局限性与审慎结论
+</h2><ol>
+<li><strong>CoC 的&quot;因果&quot;是标注协议层面的因果约束</strong>。它确保理由来自历史可见证据并指向明确行为，但不等于模型已经获得了可验证的世界因果模型或反事实能力。</li>
+<li><strong>推理质量奖励依赖大模型裁判</strong>。尽管作者用人工验证了 92% 的一致性，LLM judge 仍可能有偏差、幻觉和偏好迁移问题。</li>
+<li><strong>一致性奖励较粗糙</strong>。其依据是文本解析出的封闭决策与轨迹解析出的 meta-action 是否匹配；&ldquo;匹配&quot;不保证文本就是模型内部真实的决策原因。</li>
+<li><strong>闭环交互仍有限制</strong>。内部闭环只评测 75 个困难场景，且其他交通参与者主要回放日志轨迹；它没有完全覆盖多智能体对自车动作的实时反应。</li>
+<li><strong>主实验只使用两路前视相机</strong>。虽然系统支持多相机，主结果不能直接等同于完整环视传感器的收益。</li>
+<li><strong>实车证据是展示而非全面统计</strong>。论文证明 99 ms 可实时部署，但没有给出足以支持 L4 安全结论的大规模道路统计。</li>
+<li><strong>关键实现细节未公开</strong>。包括动作 token 词表/量化、RL 采样超参数、GRPO 组大小、RL 是否更新 action expert 等。</li>
+</ol>
+<p>因此最合适的结论不是&quot;AR1 已经解决端到端驾驶的因果推理&rdquo;，而是：</p>
+
+    <blockquote>
+        <p>AR1 提供了一种有工程可操作性的路径：用受时间边界约束的 CoC 数据，将可读推理变成端到端规划的监督和奖励信号；再用一致性与安全奖励防止它沦为与控制无关的语言装饰。</p>
+
+    </blockquote>
+<hr>
+<h2 id="13-后续可深入讨论的问题">13. 后续可深入讨论的问题
+</h2><ol>
+<li>怎样把 CoC 的封闭决策集与现有 PNC 的 behavior planner / motion primitive 体系对齐？</li>
+<li>如何构造比文本一致性奖励更强的可验证奖励，例如基于地图规则、可达性、责任判定和反事实仿真？</li>
+<li>动作 token 应采用扩展词表、独立 action head，还是完全连续的 diffusion/flow policy？三者怎样兼顾 RL 与时延？</li>
+<li>是否应只在高风险、歧义、长尾场景按需生成推理，以节省约 70 ms 的 reasoning decoding 时间？</li>
+<li>若使用 world model 做前向预测，如何避免&quot;文字理由看似因果、但预测世界本身错误&quot;的问题？</li>
+</ol>
+<blockquote class="alert alert-info">
+        <div class="alert-header">
+            <span class="alert-icon"></span>
+            <span class="alert-title">相关笔记</span>
+        </div>
+        <div class="alert-body">
+            <ul>
+<li>同样采用 GRPO + RL 后训练强化的规划方法：[[Plan-R1_阅读笔记]]</li>
+<li>VLM 作为驾驶奖励/评判模型：[[DriveReward 论文阅读笔记]]</li>
+<li>推理型 VLA 的视觉思维链与可验证性讨论：[[X-Mind 论文阅读笔记]]、[[X-Cache 论文阅读笔记]]</li>
+<li>锚点桥接离散决策与连续轨迹的 VLA：[[AnchorVLA - 锚点桥接离散决策与连续轨迹]]</li>
+</ul>
+        </div>
+    </blockquote>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/">强化学习</a>
+        
+            <a href="/tags/vla/">VLA</a>
+        
+            <a href="/tags/%E6%8E%A8%E7%90%86/">推理</a>
+        
+            <a href="/tags/grpo/">GRPO</a>
+        
+            <a href="/tags/flow_matching/">Flow_matching</a>
+        
+            <a href="/tags/%E9%93%BE%E5%BC%8F%E5%9B%A0%E6%9E%9C/">链式因果</a>
+        
+            <a href="/tags/nvidia/">NVIDIA</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/plan-r1/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/res-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">ResAD: Normalized Residual Trajectory Modeling for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/world4-drive/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">World4Drive - 无需感知标注的端到端自动驾驶世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/hi-p-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
