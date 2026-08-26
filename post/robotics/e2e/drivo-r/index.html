@@ -225,13 +225,6 @@
       <ul>
         <li><a href="#41-register-是什么">4.1 Register 是什么？</a></li>
         <li><a href="#42-register-如何读取图像信息">4.2 Register 如何读取图像信息？</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#43-register-与平均池化的区别">4.3 Register 与平均池化的区别</a></li>
         <li><a href="#44-camera-aware-registers">4.4 Camera-aware Registers</a></li>
         <li><a href="#45-register-与-vit-原始-register-的区别">4.5 Register 与 ViT 原始 Register 的区别</a></li>
@@ -255,19 +248,9 @@
         <li><a href="#62-trajectory-queries">6.2 Trajectory Queries</a></li>
         <li><a href="#63-轨迹表示">6.3 轨迹表示</a></li>
         <li><a href="#64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#65-更长轨迹目标">6.5 更长轨迹目标</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
     <li><a href="#7-评分器">7. 评分器</a>
       <ul>
         <li><a href="#71-为什么需要独立评分器">7.1 为什么需要独立评分器？</a></li>
@@ -279,20 +262,10 @@
       <ul>
         <li><a href="#81-六个子分数">8.1 六个子分数</a></li>
         <li><a href="#82-为什么使用-bce">8.2 为什么使用 BCE？</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#83-为什么分别预测子分数">8.3 为什么分别预测子分数？</a></li>
         <li><a href="#84-评分损失">8.4 评分损失</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
     <li><a href="#9-推理时的行为控制">9. 推理时的行为控制</a>
       <ul>
         <li><a href="#安全型">安全型</a></li>
@@ -416,7 +389,7 @@
 
 
                     <time class="article-time--reading">
-                        10 minutes read
+                        9 minutes read
                     </time>
                 
             </div>
@@ -456,13 +429,6 @@
       <ul>
         <li><a href="#41-register-是什么">4.1 Register 是什么？</a></li>
         <li><a href="#42-register-如何读取图像信息">4.2 Register 如何读取图像信息？</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#43-register-与平均池化的区别">4.3 Register 与平均池化的区别</a></li>
         <li><a href="#44-camera-aware-registers">4.4 Camera-aware Registers</a></li>
         <li><a href="#45-register-与-vit-原始-register-的区别">4.5 Register 与 ViT 原始 Register 的区别</a></li>
@@ -486,19 +452,9 @@
         <li><a href="#62-trajectory-queries">6.2 Trajectory Queries</a></li>
         <li><a href="#63-轨迹表示">6.3 轨迹表示</a></li>
         <li><a href="#64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#65-更长轨迹目标">6.5 更长轨迹目标</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
     <li><a href="#7-评分器">7. 评分器</a>
       <ul>
         <li><a href="#71-为什么需要独立评分器">7.1 为什么需要独立评分器？</a></li>
@@ -510,20 +466,10 @@
       <ul>
         <li><a href="#81-六个子分数">8.1 六个子分数</a></li>
         <li><a href="#82-为什么使用-bce">8.2 为什么使用 BCE？</a></li>
-      </ul>
-    </li>
-  </ul>
-
-  <ul>
-    <li>
-      <ul>
         <li><a href="#83-为什么分别预测子分数">8.3 为什么分别预测子分数？</a></li>
         <li><a href="#84-评分损失">8.4 评分损失</a></li>
       </ul>
     </li>
-  </ul>
-
-  <ul>
     <li><a href="#9-推理时的行为控制">9. 推理时的行为控制</a>
       <ul>
         <li><a href="#安全型">安全型</a></li>
@@ -637,12 +583,7 @@
 </ul>
 <p>这些模块需要大量标注，也可能因为模块之间的信息传递而损失信息。</p>
 <p>端到端规划希望直接学习：</p>
-<p>[
-\text{传感器输入}+\text{自车状态}
-\rightarrow
-\text{驾驶轨迹}
-]</p>
-<h3 id="32-为什么要生成多条轨迹">3.2 为什么要生成多条轨迹？
+$$ \text{传感器输入}+\text{自车状态} \rightarrow \text{驾驶轨迹} $$<h3 id="32-为什么要生成多条轨迹">3.2 为什么要生成多条轨迹？
 </h3><p>一个场景可能有多种合理驾驶行为。</p>
 <p>例如前方有一辆慢车：</p>
 <ul>
@@ -658,15 +599,9 @@
 <h3 id="33-vit-带来的计算瓶颈">3.3 ViT 带来的计算瓶颈
 </h3><p>Vision Transformer（ViT）会把图像切成很多 patch，每个 patch 转成一个 token。</p>
 <p>如果一张图像有约 4000 个视觉 tokens，4 个摄像头总共就是约：</p>
-<p>[
-4\times4000=16000
-]</p>
-<p>个 tokens。</p>
+$$ 4\times4000=16000 $$<p>个 tokens。</p>
 <p>Transformer 注意力的计算量大致随 token 数量平方增长：</p>
-<p>[
-O(N^2)
-]</p>
-<p>这些 tokens 如果被后面的轨迹生成器和评分器反复读取，计算量会很大。</p>
+$$ O(N^2) $$<p>这些 tokens 如果被后面的轨迹生成器和评分器反复读取，计算量会很大。</p>
 <p>常见做法是平均池化，但平均池化存在两个问题：</p>
 <ol>
 <li>所有区域基本被同等对待；</li>
@@ -684,15 +619,9 @@ O(N^2)
 </h2><h3 id="41-register-是什么">4.1 Register 是什么？
 </h3><p>Register 是加入 ViT 的额外可学习向量。</p>
 <p>假设原始输入是：</p>
-<p>[
-[x_1,x_2,\ldots,x_M]
-]</p>
-<p>其中 (x_i) 是 patch tokens。</p>
-<p>增加 (R) 个 registers 后，输入变成：</p>
-<p>[
-[r_1,r_2,\ldots,r_R,x_1,x_2,\ldots,x_M]
-]</p>
-<p>register：</p>
+$$ [x_1,x_2,\ldots,x_M] $$<p>其中 $x_i$ 是 patch tokens。</p>
+<p>增加 $R$ 个 registers 后，输入变成：</p>
+$$ [r_1,r_2,\ldots,r_R,x_1,x_2,\ldots,x_M] $$<p>register：</p>
 <ul>
 <li>没有固定图像位置；</li>
 <li>不对应某个固定物体；</li>
@@ -701,25 +630,12 @@ O(N^2)
 <li>最终可以作为全局场景摘要。</li>
 </ul>
 <p>经过多层 Transformer 后，模型只取：</p>
-<p>[
-[r_1^{(L)},\ldots,r_R^{(L)}]
-]</p>
-<p>而不是继续使用全部 patch tokens。</p>
+$$ [r_1^{(L)},\ldots,r_R^{(L)}] $$<p>而不是继续使用全部 patch tokens。</p>
 <h3 id="42-register-如何读取图像信息">4.2 Register 如何读取图像信息？
 </h3><p>在 self-attention 中，一个 register 会根据 query-key 相似度决定关注哪些 patch。</p>
-<p>对于第 (j) 个 register：</p>
-<h1 id="alpha_jk">[
-\alpha_{jk}
-</h1><p>\operatorname{softmax}
-\left(
-\frac{q_j^\top k_k}{\sqrt d}
-\right)
-]</p>
-<p>然后聚合各个 token 的 value：</p>
-<p>[
-r&rsquo;<em>j=\sum_k\alpha</em>{jk}v_k
-]</p>
-<p>直观地说：</p>
+<p>对于第 $j$ 个 register：</p>
+$$ \alpha_{jk} = \operatorname{softmax} \left( \frac{q_j^\top k_k}{\sqrt d} \right) $$<p>然后聚合各个 token 的 value：</p>
+$$ r'_j=\sum_k\alpha_{jk}v_k $$<p>直观地说：</p>
 
     <blockquote>
         <p>每个 register 都像一个记录员，会自己决定当前场景中哪些区域值得记录。</p>
@@ -736,15 +652,9 @@ r&rsquo;<em>j=\sum_k\alpha</em>{jk}v_k
 <p>这些语义不是人工指定的，而是由轨迹损失和评分损失间接学出来的。</p>
 <h3 id="43-register-与平均池化的区别">4.3 Register 与平均池化的区别
 </h3><p>平均池化近似于：</p>
-<p>[
-s=\frac{1}{M}\sum_{i=1}^{M}x_i
-]</p>
-<p>所有 token 被近似等权处理。</p>
+$$ s=\frac{1}{M}\sum_{i=1}^{M}x_i $$<p>所有 token 被近似等权处理。</p>
 <p>Register 压缩更像：</p>
-<p>[
-s_j=\sum_{i=1}^{M}\alpha_{ji}x_i
-]</p>
-<p>其中权重 (\alpha_{ji}) 由网络根据场景动态决定。</p>
+$$ s_j=\sum_{i=1}^{M}\alpha_{ji}x_i $$<p>其中权重 $\alpha_{ji}$ 由网络根据场景动态决定。</p>
 <p>因此：</p>
 <ul>
 <li>平均池化是固定、均匀的压缩；</li>
@@ -760,10 +670,7 @@ s_j=\sum_{i=1}^{M}\alpha_{ji}x_i
 <li>back。</li>
 </ul>
 <p>每个摄像头使用 16 个专属 registers：</p>
-<p>[
-4\times16=64
-]</p>
-<p>个 scene tokens。</p>
+$$ 4\times16=64 $$<p>个 scene tokens。</p>
 <p>数据流是：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Front 图像       → ViT → 16 个 front registers
 </span></span><span style="display:flex;"><span>Front-left 图像  → ViT → 16 个 front-left registers
@@ -820,34 +727,13 @@ s_j=\sum_{i=1}^{M}\alpha_{ji}x_i
 <p>因此需要让 ViT 适应驾驶任务。</p>
 <h3 id="52-lora-的基本形式">5.2 LoRA 的基本形式
 </h3><p>原始线性层为：</p>
-<p>[
-y=W_0x
-]</p>
-<p>完整微调会直接修改 (W_0)。</p>
+$$ y=W_0x $$<p>完整微调会直接修改 $W_0$。</p>
 <p>LoRA 则冻结原始权重，只增加低秩更新：</p>
-<p>[
-W&rsquo;=W_0+\Delta W
-]</p>
-<p>[
-\Delta W=BA
-]</p>
-<p>其中：</p>
-<p>[
-A\in\mathbb{R}^{r\times d_{\text{in}}}
-]</p>
-<p>[
-B\in\mathbb{R}^{d_{\text{out}}\times r}
-]</p>
-<p>(r) 是低秩维度。</p>
+$$ W'=W_0+\Delta W $$$$ \Delta W=BA $$<p>其中：</p>
+$$ A\in\mathbb{R}^{r\times d_{\text{in}}} $$$$ B\in\mathbb{R}^{d_{\text{out}}\times r} $$<p>$r$ 是低秩维度。</p>
 <p>DrivoR 使用的 LoRA rank 是：</p>
-<p>[
-r=32
-]</p>
-<p>前向计算可以写成：</p>
-<p>[
-y=W_0x+\frac{\alpha}{r}BAx
-]</p>
-<p>原始 DINOv2 权重 (W_0) 不更新，只训练 (A) 和 (B)。</p>
+$$ r=32 $$<p>前向计算可以写成：</p>
+$$ y=W_0x+\frac{\alpha}{r}BAx $$<p>原始 DINOv2 权重 $W_0$ 不更新，只训练 $A$ 和 $B$。</p>
 <h3 id="53-为什么-lora-能帮助-registers">5.3 为什么 LoRA 能帮助 registers？
 </h3><p>Register 是否有效，不只取决于 register 自身，还取决于 ViT 是否愿意把重要信息写进去。</p>
 <p>LoRA 可以调整 ViT 的注意力和特征变换路径：</p>
@@ -864,9 +750,9 @@ y=W_0x+\frac{\alpha}{r}BAx
 </span></span></code></pre></div><h3 id="54-lora-通常作用于哪些层">5.4 LoRA 通常作用于哪些层？
 </h3><p>标准 ViT-LoRA 实现常见的目标模块包括：</p>
 <ul>
-<li>Attention 的 (Q) 投影；</li>
-<li>Attention 的 (K) 投影；</li>
-<li>Attention 的 (V) 投影；</li>
+<li>Attention 的 $Q$ 投影；</li>
+<li>Attention 的 $K$ 投影；</li>
+<li>Attention 的 $V$ 投影；</li>
 <li>Attention 输出投影；</li>
 <li>FFN 的第一层；</li>
 <li>FFN 的第二层。</li>
@@ -910,10 +796,7 @@ y=W_0x+\frac{\alpha}{r}BAx
 </h3><p>可以，但不一定都适合。</p>
 <h4 id="卷积层">卷积层
 </h4><p>卷积核也可以做低秩更新：</p>
-<p>[
-W&rsquo;=W_0+BA
-]</p>
-<p>或者使用两个小卷积组成低秩分支。</p>
+$$ W'=W_0+BA $$<p>或者使用两个小卷积组成低秩分支。</p>
 <h4 id="patch-embedding">Patch Embedding
 </h4><p>ViT 的 patch embedding 本质上通常是线性投影，也可以加入 LoRA。</p>
 <h4 id="embedding-表">Embedding 表
@@ -946,10 +829,7 @@ W&rsquo;=W_0+BA
 </ul>
 <h3 id="62-trajectory-queries">6.2 Trajectory Queries
 </h3><p>模型维护一组可学习的 trajectory queries：</p>
-<p>[
-Q_{\text{traj}}
-]</p>
-<p>每一个 query 最终对应一条候选轨迹。</p>
+$$ Q_{\text{traj}} $$<p>每一个 query 最终对应一条候选轨迹。</p>
 <p>这些 queries：</p>
 <ul>
 <li>随机初始化；</li>
@@ -974,54 +854,32 @@ Q_{\text{traj}}
 </ul>
 <p>之后 trajectory decoder 读取 scene tokens，输出候选轨迹。</p>
 <h3 id="63-轨迹表示">6.3 轨迹表示
-</h3><p>第 (i) 条候选轨迹记为：</p>
-<p>[
-\tau_i\in\mathbb{R}^{n_p\times3}
-]</p>
-<p>每个时间点的 pose 为：</p>
-<p>[
-(x,y,\theta)
-]</p>
-<p>其中：</p>
+</h3><p>第 $i$ 条候选轨迹记为：</p>
+$$ \tau_i\in\mathbb{R}^{n_p\times3} $$<p>每个时间点的 pose 为：</p>
+$$ (x,y,\theta) $$<p>其中：</p>
 <ul>
-<li>(x)：纵向位移；</li>
-<li>(y)：横向位移；</li>
-<li>(\theta)：航向角。</li>
+<li>$x$：纵向位移；</li>
+<li>$y$：横向位移；</li>
+<li>$\theta$：航向角。</li>
 </ul>
 <p>所有坐标都在当前时刻的自车坐标系中表达。</p>
 <p>轨迹从当前时刻之后开始，一直预测到：</p>
-<p>[
-t+T
-]</p>
-<p>相邻 pose 的时间间隔均匀。</p>
+$$ t+T $$<p>相邻 pose 的时间间隔均匀。</p>
 <h3 id="64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失
-</h3><p>给定人工参考轨迹 (\hat{\tau})，只监督预测结果中距离它最近的一条：</p>
-<h1 id="l_texttraj">[
-L_{\text{traj}}
-</h1><p>\min_i|\tau_i-\hat{\tau}|_1
-]</p>
-<p>这叫 Winner-Takes-All（WTA），也可以理解成 Minimum-over-N。</p>
+</h3><p>给定人工参考轨迹 $\hat{\tau}$，只监督预测结果中距离它最近的一条：</p>
+$$ L_{\text{traj}} = \min_i|\tau_i-\hat{\tau}|_1 $$<p>这叫 Winner-Takes-All（WTA），也可以理解成 Minimum-over-N。</p>
 <p>它允许不同 query 产生不同合理轨迹，而不是要求所有 query 都回归同一条轨迹。</p>
 <h3 id="65-更长轨迹目标">6.5 更长轨迹目标
-</h3><p>论文还尝试加入一条更远的目标轨迹 (\hat{\tau}&rsquo;)。</p>
+</h3><p>论文还尝试加入一条更远的目标轨迹 $\hat{\tau}'$。</p>
 <p>构造过程：</p>
 <ol>
-<li>原始参考轨迹时长为 (T)；</li>
-<li>另一条参考轨迹时长为 (T'&gt;T)；</li>
-<li>用 cubic spline 将它重新采样到 (T)；</li>
+<li>原始参考轨迹时长为 $T$；</li>
+<li>另一条参考轨迹时长为 $T\'>T$；</li>
+<li>用 cubic spline 将它重新采样到 $T$；</li>
 <li>得到一条更激进、更强调前进的轨迹。</li>
 </ol>
 <p>损失为：</p>
-<h1 id="l_texttraj-1">[
-L_{\text{traj}}
-</h1><p>\min_i
-\left(
-|\tau_i-\hat{\tau}|_1
-+
-|\tau_i-\hat{\tau}&rsquo;|_1
-\right)
-]</p>
-<p>实验显示：</p>
+$$ L_{\text{traj}} = \min_i \left( |\tau_i-\hat{\tau}|_1 + |\tau_i-\hat{\tau}'|_1 \right) $$<p>实验显示：</p>
 <ul>
 <li>NAVSIM-v1 更奖励进度，因此该目标有帮助；</li>
 <li>NAVSIM-v2 有自车状态扰动，更需要保守和可恢复的驾驶，因此该目标反而降低表现。</li>
@@ -1051,9 +909,9 @@ L_{\text{traj}}
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Trajectory Decoder：生成轨迹
 </span></span><span style="display:flex;"><span>Scoring Decoder：评价轨迹
 </span></span></code></pre></div><h3 id="72-评分器如何输入轨迹">7.2 评分器如何输入轨迹？
-</h3><p>对于每条生成的轨迹 (\tau_i)：</p>
+</h3><p>对于每条生成的轨迹 $\tau_i$：</p>
 <ol>
-<li>用 MLP 将轨迹映射成 (D_{\text{score}}) 维 query；</li>
+<li>用 MLP 将轨迹映射成 $D_{\text{score}}$ 维 query；</li>
 <li>所有轨迹对应的 score queries 输入 scoring decoder；</li>
 <li>scoring decoder 通过 cross-attention 读取 scene tokens；</li>
 <li>输出各个子分数。</li>
@@ -1095,7 +953,7 @@ L_{\text{traj}}
 <p>每个子分数有独立的 MLP 输出头。</p>
 <h3 id="82-为什么使用-bce">8.2 为什么使用 BCE？
 </h3><p>论文没有证明 BCE 必然优于 MSE 或 L1，因此这里更准确地说是一个与评分形式匹配的工程选择。</p>
-<p>这些子分数通常被归一化到 ([0,1])：</p>
+<p>这些子分数通常被归一化到 $[0,1]$：</p>
 <ul>
 <li>0：表现差或违反要求；</li>
 <li>1：表现好；</li>
@@ -1105,17 +963,9 @@ L_{\text{traj}}
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>安全 → 1
 </span></span><span style="display:flex;"><span>碰撞 → 0
 </span></span></code></pre></div><p>BCE 正适合这种目标：</p>
-<h1 id="operatornamebcepy">[
-\operatorname{BCE}(p,y)
-</h1><p>-y\log p-(1-y)\log(1-p)
-]</p>
-<p>对于 TTC、EP、Comfort 等连续指标，BCE 也可以把 ([0,1]) 的连续值作为 soft label 使用。</p>
+$$ \operatorname{BCE}(p,y) = -y\log p-(1-y)\log(1-p) $$<p>对于 TTC、EP、Comfort 等连续指标，BCE 也可以把 $[0,1]$ 的连续值作为 soft label 使用。</p>
 <p>例如目标分数为 0.8：</p>
-<h1 id="operatornamebcep08">[
-\operatorname{BCE}(p,0.8)
-</h1><p>-0.8\log p-0.2\log(1-p)
-]</p>
-<p>所以这里的 BCE 不一定意味着所有任务都是严格分类，而是把每个子分数视作一个 0 到 1 的质量概率。</p>
+$$ \operatorname{BCE}(p,0.8) = -0.8\log p-0.2\log(1-p) $$<p>所以这里的 BCE 不一定意味着所有任务都是严格分类，而是把每个子分数视作一个 0 到 1 的质量概率。</p>
 <h3 id="83-为什么分别预测子分数">8.3 为什么分别预测子分数？
 </h3><p>PDMS 不是简单平均，而是：</p>
 <ul>
@@ -1137,34 +987,19 @@ L_{\text{traj}}
 <li>生成安全型、舒适型或积极型驾驶策略。</li>
 </ul>
 <h3 id="84-评分损失">8.4 评分损失
-</h3><p>对于第 (c) 个子分数和第 (i) 条候选轨迹：</p>
-<h1 id="l_textscore">[
-L_{\text{score}}
-</h1><p>\sum_c\lambda_c\sum_i
-\operatorname{BCE}
-\left(
-G_{\theta_c}(\tau_i),
-G_c(\tau_i)
-\right)
-]</p>
-<p>其中：</p>
+</h3><p>对于第 $c$ 个子分数和第 $i$ 条候选轨迹：</p>
+$$ L_{\text{score}} = \sum_c\lambda_c\sum_i \operatorname{BCE} \left( G_{\theta_c}(\tau_i), G_c(\tau_i) \right) $$<p>其中：</p>
 <ul>
-<li>(G_c(\tau_i))：oracle scorer 给出的真实子分数；</li>
-<li>(G_{\theta_c}(\tau_i))：模型预测的子分数；</li>
-<li>(\lambda_c)：子分数损失权重。</li>
+<li>$G_c(\tau_i)$：oracle scorer 给出的真实子分数；</li>
+<li>$G_{\theta_c}(\tau_i)$：模型预测的子分数；</li>
+<li>$\lambda_c$：子分数损失权重。</li>
 </ul>
-<p>训练时论文将所有 (\lambda_c) 设置为 1。</p>
+<p>训练时论文将所有 $\lambda_c$ 设置为 1。</p>
 <hr>
 <h2 id="9-推理时的行为控制">9. 推理时的行为控制
 </h2><p>推理时，模型可以把子分数组合成总分：</p>
-<p>[
-S(\tau_i)=\sum_c w_c,G_{\theta_c}(\tau_i)
-]</p>
-<p>然后选择：</p>
-<p>[
-\tau^*=\arg\max_i S(\tau_i)
-]</p>
-<p>改变权重 (w_c)，就可以改变驾驶行为。</p>
+$$ S(\tau_i)=\sum_c w_c\,G_{\theta_c}(\tau_i) $$<p>然后选择：</p>
+$$ \tau^*=\arg\max_i S(\tau_i) $$<p>改变权重 $w_c$，就可以改变驾驶行为。</p>
 <h3 id="安全型">安全型
 </h3><p>提高 NC、DAC、TTC 权重，结果通常是：</p>
 <ul>
@@ -1192,19 +1027,13 @@ S(\tau_i)=\sum_c w_c,G_{\theta_c}(\tau_i)
 <hr>
 <h2 id="10-总训练损失">10. 总训练损失
 </h2><p>最终损失是：</p>
-<p>[
-L=L_{\text{traj}}+\lambda_sL_{\text{score}}
-]</p>
-<p>训练时：</p>
-<p>[
-\lambda_s=1
-]</p>
-<p>因此轨迹生成损失和评分损失等权。</p>
+$$ L=L_{\text{traj}}+\lambda_sL_{\text{score}} $$<p>训练时：</p>
+$$ \lambda_s=1 $$<p>因此轨迹生成损失和评分损失等权。</p>
 <hr>
 <h2 id="11-pdms-和-epdms-指标">11. PDMS 和 EPDMS 指标
 </h2><h3 id="111-两类指标">11.1 两类指标
 </h3><p>子指标分成两组。</p>
-<h4 id="惩罚类-g_p">惩罚类 (G_p)
+<h4 id="惩罚类">惩罚类 $G_p$
 </h4><p>用于衡量是否违反驾驶规则，例如：</p>
 <ul>
 <li>无责碰撞；</li>
@@ -1214,12 +1043,8 @@ L=L_{\text{traj}}+\lambda_sL_{\text{score}}
 <li>其他硬约束。</li>
 </ul>
 <p>它们采用乘法：</p>
-<p>[
-\prod_{c\in G_p}
-G_c(\tau_i)^{\kappa_c^p}
-]</p>
-<p>只要某个硬约束分数为 0，总分就可能为 0。</p>
-<h4 id="行为类-g_b">行为类 (G_b)
+$$ \prod_{c\in G_p} G_c(\tau_i)^{\kappa_c^p} $$<p>只要某个硬约束分数为 0，总分就可能为 0。</p>
+<h4 id="行为类">行为类 $G_b$
 </h4><p>用于衡量驾驶质量，例如：</p>
 <ul>
 <li>TTC；</li>
@@ -1228,16 +1053,8 @@ G_c(\tau_i)^{\kappa_c^p}
 <li>车道保持。</li>
 </ul>
 <p>它们采用加权平均：</p>
-<p>[
-\frac{1}{Z}
-\sum_{c\in G_b}
-\kappa_c^bG_c(\tau_i)
-]</p>
-<p>其中：</p>
-<p>[
-Z=\sum_{c\in G_b}\kappa_c^b
-]</p>
-<p>这样可以在进度和舒适之间进行折中。</p>
+$$ \frac{1}{Z} \sum_{c\in G_b} \kappa_c^bG_c(\tau_i) $$<p>其中：</p>
+$$ Z=\sum_{c\in G_b}\kappa_c^b $$<p>这样可以在进度和舒适之间进行折中。</p>
 <h3 id="112-pdms-权重">11.2 PDMS 权重
 </h3><p>PDMS 中的典型权重为：</p>
 <ul>
@@ -1323,13 +1140,13 @@ Z=\sum_{c\in G_b}\kappa_c^b
 </ul>
 <p>初始化：</p>
 <ul>
-<li>camera registers：(\mathcal{N}(0,10^{-6}))；</li>
-<li>初始 trajectory tokens：(\mathcal{N}(0,10^{-6}))。</li>
+<li>camera registers：$\mathcal{N}(0,10^{-6})$；</li>
+<li>初始 trajectory tokens：$\mathcal{N}(0,10^{-6})$。</li>
 </ul>
 <p>训练：</p>
 <ul>
 <li>AdamW；</li>
-<li>学习率 (2\times10^{-4})；</li>
+<li>学习率 $2\times10^{-4}$；</li>
 <li>cosine annealing；</li>
 <li>4 张 NVIDIA A100；</li>
 <li>模型约 4000 万参数。</li>
@@ -1590,7 +1407,7 @@ Z=\sum_{c\in G_b}\kappa_c^b
 <li>decoder 压缩：64 个 scene tokens，PDMS 89.3；</li>
 <li>register 压缩：64 个 scene tokens，PDMS 90.0。</li>
 </ul>
-<p>Register 压缩只使用约原始 token 数量的 (1/250)，却接近不压缩性能。</p>
+<p>Register 压缩只使用约原始 token 数量的 $1/250$，却接近不压缩性能。</p>
 <p>论文还指出，register 压缩只增加约 0.6M 的训练参数。</p>
 <h3 id="153-register-的注意力分工">15.3 Register 的注意力分工
 </h3><p>前视摄像头的 registers：</p>
@@ -1771,12 +1588,12 @@ Z=\sum_{c\in G_b}\kappa_c^b
   </thead>
   <tbody>
       <tr>
-          <td>仅 (t+T)</td>
+          <td>仅 $t+T$</td>
           <td style="text-align: right">90.0</td>
           <td style="text-align: right">39.4</td>
       </tr>
       <tr>
-          <td>同时加入 (t+T&rsquo;)</td>
+          <td>同时加入 $t+T'$</td>
           <td style="text-align: right">90.6</td>
           <td style="text-align: right">37.8</td>
       </tr>
@@ -1925,7 +1742,7 @@ Z=\sum_{c\in G_b}\kappa_c^b
 <li><strong>多候选轨迹比单轨迹更适合驾驶多模态</strong>：64 条候选轨迹已经基本达到性能平台。</li>
 <li><strong>生成器与评分器应该解耦</strong>：生成轨迹和判断轨迹的视觉关注区域不同，独立分支更合理。</li>
 <li><strong>分别预测子分数比直接预测总分更有解释性和可控性</strong>：推理时可以重新设置安全、舒适、进度等权重。</li>
-<li><strong>BCE 是匹配 ([0,1]) 子分数的工程选择</strong>：论文没有证明 BCE 绝对优于 MSE；真正重要的是分解预测子分数并重新组合。</li>
+<li><strong>BCE 是匹配 $[0,1]$ 子分数的工程选择</strong>：论文没有证明 BCE 绝对优于 MSE；真正重要的是分解预测子分数并重新组合。</li>
 <li><strong>简单的纯 Transformer 也可以取得很强结果</strong>：DrivoR 不使用 BEV、LiDAR 或大型轨迹字典，也能在多个 benchmark 上达到很高性能。</li>
 </ol>
 <hr>
@@ -1934,7 +1751,7 @@ Z=\sum_{c\in G_b}\kappa_c^b
 <li>Register 是否可以直接对应可解释的驾驶语义？</li>
 <li>如何让 registers 融合历史帧？</li>
 <li>是否应该让不同摄像头使用不同数量的 registers？</li>
-<li>LoRA 的最佳 target modules 是只改 (Q,V)，还是同时改 FFN？</li>
+<li>LoRA 的最佳 target modules 是只改 $Q,V$，还是同时改 FFN？</li>
 <li>BCE、MSE、排序损失对轨迹选择的影响有何区别？</li>
 <li>如何避免评分器在复杂场景中关注错误摄像头？</li>
 <li>如何把 learned scorer 与传统 PNC cost function 更紧密地结合？</li>
