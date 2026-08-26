@@ -1,0 +1,2156 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="DrivoR 是一个学习版的“候选轨迹 + cost function”规划器：用可学习的 Camera Registers 把约 16000 个 ViT 视觉 token 主动压缩成 64 个 scene token，再用解耦的轨迹生成/评分双 decoder 选出最终轨迹，在不依赖 BEV/LiDAR 的情况下于 NAVSIM 上接近人类驾驶员水平，且推理比 ViT-L 方案快 3 倍">
+<title>DrivoR: Driving on Registers</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/drivo-r/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="DrivoR: Driving on Registers">
+<meta property='og:description' content="DrivoR 是一个学习版的“候选轨迹 + cost function”规划器：用可学习的 Camera Registers 把约 16000 个 ViT 视觉 token 主动压缩成 64 个 scene token，再用解耦的轨迹生成/评分双 decoder 选出最终轨迹，在不依赖 BEV/LiDAR 的情况下于 NAVSIM 上接近人类驾驶员水平，且推理比 ViT-L 方案快 3 倍">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/drivo-r/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='轨迹规划' /><meta property='article:tag' content='视觉Transformer' /><meta property='article:tag' content='LoRA' /><meta property='article:tag' content='视觉token压缩' /><meta property='article:tag' content='NAVSIM' /><meta property='article:published_time' content='2026-02-03T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-02-03T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="DrivoR: Driving on Registers">
+<meta name="twitter:description" content="DrivoR 是一个学习版的“候选轨迹 + cost function”规划器：用可学习的 Camera Registers 把约 16000 个 ViT 视觉 token 主动压缩成 64 个 scene token，再用解耦的轨迹生成/评分双 decoder 选出最终轨迹，在不依赖 BEV/LiDAR 的情况下于 NAVSIM 上接近人类驾驶员水平，且推理比 ViT-L 方案快 3 倍">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#1-基本信息">1. 基本信息</a></li>
+    <li><a href="#2-一句话理解">2. 一句话理解</a></li>
+    <li><a href="#3-研究背景">3. 研究背景</a>
+      <ul>
+        <li><a href="#31-传统自动驾驶规划">3.1 传统自动驾驶规划</a></li>
+        <li><a href="#32-为什么要生成多条轨迹">3.2 为什么要生成多条轨迹？</a></li>
+        <li><a href="#33-vit-带来的计算瓶颈">3.3 ViT 带来的计算瓶颈</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-register-机制">4. Register 机制</a>
+      <ul>
+        <li><a href="#41-register-是什么">4.1 Register 是什么？</a></li>
+        <li><a href="#42-register-如何读取图像信息">4.2 Register 如何读取图像信息？</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#43-register-与平均池化的区别">4.3 Register 与平均池化的区别</a></li>
+        <li><a href="#44-camera-aware-registers">4.4 Camera-aware Registers</a></li>
+        <li><a href="#45-register-与-vit-原始-register-的区别">4.5 Register 与 ViT 原始 Register 的区别</a></li>
+        <li><a href="#46-register-压缩节省的是哪部分计算">4.6 Register 压缩节省的是哪部分计算？</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-lora-在-drivor-中的作用">5. LoRA 在 DrivoR 中的作用</a>
+      <ul>
+        <li><a href="#51-为什么要微调-dinov2">5.1 为什么要微调 DINOv2？</a></li>
+        <li><a href="#52-lora-的基本形式">5.2 LoRA 的基本形式</a></li>
+        <li><a href="#53-为什么-lora-能帮助-registers">5.3 为什么 LoRA 能帮助 registers？</a></li>
+        <li><a href="#54-lora-通常作用于哪些层">5.4 LoRA 通常作用于哪些层？</a></li>
+        <li><a href="#55-lora-与-registers-的参数分工">5.5 LoRA 与 registers 的参数分工</a></li>
+        <li><a href="#56-为什么不用完整微调">5.6 为什么不用完整微调？</a></li>
+        <li><a href="#57-lora-可以用于其他层吗">5.7 LoRA 可以用于其他层吗？</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-轨迹生成器">6. 轨迹生成器</a>
+      <ul>
+        <li><a href="#61-transformer-decoder-结构">6.1 Transformer Decoder 结构</a></li>
+        <li><a href="#62-trajectory-queries">6.2 Trajectory Queries</a></li>
+        <li><a href="#63-轨迹表示">6.3 轨迹表示</a></li>
+        <li><a href="#64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#65-更长轨迹目标">6.5 更长轨迹目标</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#7-评分器">7. 评分器</a>
+      <ul>
+        <li><a href="#71-为什么需要独立评分器">7.1 为什么需要独立评分器？</a></li>
+        <li><a href="#72-评分器如何输入轨迹">7.2 评分器如何输入轨迹？</a></li>
+        <li><a href="#73-轨迹重新嵌入与-stop-gradient">7.3 轨迹重新嵌入与 stop-gradient</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-子分数与-bce-损失">8. 子分数与 BCE 损失</a>
+      <ul>
+        <li><a href="#81-六个子分数">8.1 六个子分数</a></li>
+        <li><a href="#82-为什么使用-bce">8.2 为什么使用 BCE？</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#83-为什么分别预测子分数">8.3 为什么分别预测子分数？</a></li>
+        <li><a href="#84-评分损失">8.4 评分损失</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#9-推理时的行为控制">9. 推理时的行为控制</a>
+      <ul>
+        <li><a href="#安全型">安全型</a></li>
+        <li><a href="#舒适型">舒适型</a></li>
+        <li><a href="#积极型">积极型</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-总训练损失">10. 总训练损失</a></li>
+    <li><a href="#11-pdms-和-epdms-指标">11. PDMS 和 EPDMS 指标</a>
+      <ul>
+        <li><a href="#111-两类指标">11.1 两类指标</a></li>
+        <li><a href="#112-pdms-权重">11.2 PDMS 权重</a></li>
+        <li><a href="#113-epdms-权重">11.3 EPDMS 权重</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-实验设置">12. 实验设置</a>
+      <ul>
+        <li><a href="#121-模型配置">12.1 模型配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-benchmark-与主要结果">13. Benchmark 与主要结果</a>
+      <ul>
+        <li><a href="#131-navsim-v1">13.1 NAVSIM-v1</a></li>
+        <li><a href="#132-navsim-v2">13.2 NAVSIM-v2</a></li>
+        <li><a href="#133-hugsim-闭环仿真">13.3 HUGSIM 闭环仿真</a></li>
+      </ul>
+    </li>
+    <li><a href="#14-效率分析">14. 效率分析</a></li>
+    <li><a href="#15-消融实验">15. 消融实验</a>
+      <ul>
+        <li><a href="#151-预训练的重要性">15.1 预训练的重要性</a></li>
+        <li><a href="#152-压缩方法比较">15.2 压缩方法比较</a></li>
+        <li><a href="#153-register-的注意力分工">15.3 Register 的注意力分工</a></li>
+        <li><a href="#154-register-数量">15.4 Register 数量</a></li>
+        <li><a href="#155-微调策略">15.5 微调策略</a></li>
+        <li><a href="#156-候选轨迹数量">15.6 候选轨迹数量</a></li>
+        <li><a href="#157-生成和评分是否应该分开">15.7 生成和评分是否应该分开？</a></li>
+        <li><a href="#158-单-token-和多-token-表示轨迹">15.8 单 token 和多 token 表示轨迹</a></li>
+        <li><a href="#159-更长目标轨迹">15.9 更长目标轨迹</a></li>
+        <li><a href="#1510-训练-epoch">15.10 训练 epoch</a></li>
+      </ul>
+    </li>
+    <li><a href="#16-行为调节实验">16. 行为调节实验</a></li>
+    <li><a href="#17-局限性与失败案例">17. 局限性与失败案例</a>
+      <ul>
+        <li><a href="#171-没有使用历史帧">17.1 没有使用历史帧</a></li>
+        <li><a href="#172-评分器可能关注错误摄像头">17.2 评分器可能关注错误摄像头</a></li>
+        <li><a href="#173-行为权重与泛化之间的权衡">17.3 行为权重与泛化之间的权衡</a></li>
+      </ul>
+    </li>
+    <li><a href="#18-与-pnc-的对应关系">18. 与 PNC 的对应关系</a></li>
+    <li><a href="#19-最终核心结论">19. 最终核心结论</a></li>
+    <li><a href="#20-仍待讨论的问题">20. 仍待讨论的问题</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/drivo-r/">DrivoR: Driving on Registers</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-02-03T00:00:00Z'>Tuesday, February 3, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        10 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#1-基本信息">1. 基本信息</a></li>
+    <li><a href="#2-一句话理解">2. 一句话理解</a></li>
+    <li><a href="#3-研究背景">3. 研究背景</a>
+      <ul>
+        <li><a href="#31-传统自动驾驶规划">3.1 传统自动驾驶规划</a></li>
+        <li><a href="#32-为什么要生成多条轨迹">3.2 为什么要生成多条轨迹？</a></li>
+        <li><a href="#33-vit-带来的计算瓶颈">3.3 ViT 带来的计算瓶颈</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-register-机制">4. Register 机制</a>
+      <ul>
+        <li><a href="#41-register-是什么">4.1 Register 是什么？</a></li>
+        <li><a href="#42-register-如何读取图像信息">4.2 Register 如何读取图像信息？</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#43-register-与平均池化的区别">4.3 Register 与平均池化的区别</a></li>
+        <li><a href="#44-camera-aware-registers">4.4 Camera-aware Registers</a></li>
+        <li><a href="#45-register-与-vit-原始-register-的区别">4.5 Register 与 ViT 原始 Register 的区别</a></li>
+        <li><a href="#46-register-压缩节省的是哪部分计算">4.6 Register 压缩节省的是哪部分计算？</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-lora-在-drivor-中的作用">5. LoRA 在 DrivoR 中的作用</a>
+      <ul>
+        <li><a href="#51-为什么要微调-dinov2">5.1 为什么要微调 DINOv2？</a></li>
+        <li><a href="#52-lora-的基本形式">5.2 LoRA 的基本形式</a></li>
+        <li><a href="#53-为什么-lora-能帮助-registers">5.3 为什么 LoRA 能帮助 registers？</a></li>
+        <li><a href="#54-lora-通常作用于哪些层">5.4 LoRA 通常作用于哪些层？</a></li>
+        <li><a href="#55-lora-与-registers-的参数分工">5.5 LoRA 与 registers 的参数分工</a></li>
+        <li><a href="#56-为什么不用完整微调">5.6 为什么不用完整微调？</a></li>
+        <li><a href="#57-lora-可以用于其他层吗">5.7 LoRA 可以用于其他层吗？</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-轨迹生成器">6. 轨迹生成器</a>
+      <ul>
+        <li><a href="#61-transformer-decoder-结构">6.1 Transformer Decoder 结构</a></li>
+        <li><a href="#62-trajectory-queries">6.2 Trajectory Queries</a></li>
+        <li><a href="#63-轨迹表示">6.3 轨迹表示</a></li>
+        <li><a href="#64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#65-更长轨迹目标">6.5 更长轨迹目标</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#7-评分器">7. 评分器</a>
+      <ul>
+        <li><a href="#71-为什么需要独立评分器">7.1 为什么需要独立评分器？</a></li>
+        <li><a href="#72-评分器如何输入轨迹">7.2 评分器如何输入轨迹？</a></li>
+        <li><a href="#73-轨迹重新嵌入与-stop-gradient">7.3 轨迹重新嵌入与 stop-gradient</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-子分数与-bce-损失">8. 子分数与 BCE 损失</a>
+      <ul>
+        <li><a href="#81-六个子分数">8.1 六个子分数</a></li>
+        <li><a href="#82-为什么使用-bce">8.2 为什么使用 BCE？</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#83-为什么分别预测子分数">8.3 为什么分别预测子分数？</a></li>
+        <li><a href="#84-评分损失">8.4 评分损失</a></li>
+      </ul>
+    </li>
+  </ul>
+
+  <ul>
+    <li><a href="#9-推理时的行为控制">9. 推理时的行为控制</a>
+      <ul>
+        <li><a href="#安全型">安全型</a></li>
+        <li><a href="#舒适型">舒适型</a></li>
+        <li><a href="#积极型">积极型</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-总训练损失">10. 总训练损失</a></li>
+    <li><a href="#11-pdms-和-epdms-指标">11. PDMS 和 EPDMS 指标</a>
+      <ul>
+        <li><a href="#111-两类指标">11.1 两类指标</a></li>
+        <li><a href="#112-pdms-权重">11.2 PDMS 权重</a></li>
+        <li><a href="#113-epdms-权重">11.3 EPDMS 权重</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-实验设置">12. 实验设置</a>
+      <ul>
+        <li><a href="#121-模型配置">12.1 模型配置</a></li>
+      </ul>
+    </li>
+    <li><a href="#13-benchmark-与主要结果">13. Benchmark 与主要结果</a>
+      <ul>
+        <li><a href="#131-navsim-v1">13.1 NAVSIM-v1</a></li>
+        <li><a href="#132-navsim-v2">13.2 NAVSIM-v2</a></li>
+        <li><a href="#133-hugsim-闭环仿真">13.3 HUGSIM 闭环仿真</a></li>
+      </ul>
+    </li>
+    <li><a href="#14-效率分析">14. 效率分析</a></li>
+    <li><a href="#15-消融实验">15. 消融实验</a>
+      <ul>
+        <li><a href="#151-预训练的重要性">15.1 预训练的重要性</a></li>
+        <li><a href="#152-压缩方法比较">15.2 压缩方法比较</a></li>
+        <li><a href="#153-register-的注意力分工">15.3 Register 的注意力分工</a></li>
+        <li><a href="#154-register-数量">15.4 Register 数量</a></li>
+        <li><a href="#155-微调策略">15.5 微调策略</a></li>
+        <li><a href="#156-候选轨迹数量">15.6 候选轨迹数量</a></li>
+        <li><a href="#157-生成和评分是否应该分开">15.7 生成和评分是否应该分开？</a></li>
+        <li><a href="#158-单-token-和多-token-表示轨迹">15.8 单 token 和多 token 表示轨迹</a></li>
+        <li><a href="#159-更长目标轨迹">15.9 更长目标轨迹</a></li>
+        <li><a href="#1510-训练-epoch">15.10 训练 epoch</a></li>
+      </ul>
+    </li>
+    <li><a href="#16-行为调节实验">16. 行为调节实验</a></li>
+    <li><a href="#17-局限性与失败案例">17. 局限性与失败案例</a>
+      <ul>
+        <li><a href="#171-没有使用历史帧">17.1 没有使用历史帧</a></li>
+        <li><a href="#172-评分器可能关注错误摄像头">17.2 评分器可能关注错误摄像头</a></li>
+        <li><a href="#173-行为权重与泛化之间的权衡">17.3 行为权重与泛化之间的权衡</a></li>
+      </ul>
+    </li>
+    <li><a href="#18-与-pnc-的对应关系">18. 与 PNC 的对应关系</a></li>
+    <li><a href="#19-最终核心结论">19. 最终核心结论</a></li>
+    <li><a href="#20-仍待讨论的问题">20. 仍待讨论的问题</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="drivordriving-on-registers">DrivoR：Driving on Registers
+</h1>
+    <blockquote>
+        <p><strong>一句话理解</strong>：DrivoR 是一个学习版的&quot;候选轨迹 + cost function&quot;规划器——用一组可学习的 <strong>Camera Registers</strong> 把约 16000 个 ViT 视觉 token 主动压缩成 64 个 scene token，再用 <strong>Trajectory Decoder</strong> 生成多条候选轨迹、<strong>Scoring Decoder</strong> 分项打分并选出最终轨迹。它证明：一个不依赖 BEV / LiDAR / 大型轨迹字典的纯 Transformer，借助 DINOv2 + LoRA 微调与 register 压缩，就能在 NAVSIM 上接近人类驾驶员水平，同时推理速度比 ViT-L 方案快 3 倍。</p>
+
+    </blockquote>
+<p><strong>核心贡献</strong>：提出了基于 <strong>register token</strong> 的学习型视觉压缩机制（camera-aware registers），在保留摄像头视角信息的前提下，将下游 Transformer 的 token 数量压缩约 250 倍而几乎不掉点；配合 LoRA 适配预训练 DINOv2、解耦的生成-评分双 decoder 与 Winner-Takes-All 多候选轨迹监督，用一个仅约 4000 万参数的轻量模型在 NAVSIM-v1/v2 与 HUGSIM 闭环仿真上均取得强结果。</p>
+<h2 id="1-基本信息">1. 基本信息
+</h2><ul>
+<li><strong>论文题目</strong>：Driving on Registers</li>
+<li><strong>作者</strong>：Ellington Kirby、Alexandre Boulch、Yihong Xu、Yuan Yin、Gilles Puy、Éloi Zablocki、Andrei Bursuc、Spyros Gidaris、Renaud Marlet、Florent Bartoccioni、Anh-Quan Cao、Nermin Samet、Tuan-Hung VU、Matthieu Cord</li>
+<li><strong>机构</strong>：Valeo.ai 等</li>
+<li><strong>版本</strong>：arXiv:2601.05083v2，2026 年 2 月 3 日</li>
+<li><strong>任务</strong>：基于多摄像头图像和自车状态，直接生成并选择未来驾驶轨迹。</li>
+</ul>
+<h2 id="2-一句话理解">2. 一句话理解
+</h2><p>DrivoR 可以看作一个学习版的“候选轨迹 + cost function”规划器：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>多摄像头图像
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>预训练 ViT 提取视觉特征
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>Camera Registers 压缩成少量 Scene Tokens
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>Trajectory Decoder 生成多条候选轨迹
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>Scoring Decoder 分别评价安全、舒适、进度等
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>按照综合分数选择最终轨迹
+</span></span></code></pre></div><p>它的核心思想是：</p>
+
+    <blockquote>
+        <p>不把所有图像 patch 都交给下游规划模块，而是让一组可学习的 register tokens 主动从图像中提取规划相关信息。</p>
+
+    </blockquote>
+<hr>
+<h2 id="3-研究背景">3. 研究背景
+</h2><h3 id="31-传统自动驾驶规划">3.1 传统自动驾驶规划
+</h3><p>传统自动驾驶系统通常包含：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>感知 → 跟踪 → 预测 → 规划 → 控制
+</span></span></code></pre></div><p>中间会显式产生很多结构化结果：</p>
+<ul>
+<li>车辆和行人的 3D 检测框；</li>
+<li>车道线；</li>
+<li>可行驶区域；</li>
+<li>交通灯状态；</li>
+<li>其他交通参与者的预测轨迹；</li>
+<li>地图元素。</li>
+</ul>
+<p>这些模块需要大量标注，也可能因为模块之间的信息传递而损失信息。</p>
+<p>端到端规划希望直接学习：</p>
+<p>[
+\text{传感器输入}+\text{自车状态}
+\rightarrow
+\text{驾驶轨迹}
+]</p>
+<h3 id="32-为什么要生成多条轨迹">3.2 为什么要生成多条轨迹？
+</h3><p>一个场景可能有多种合理驾驶行为。</p>
+<p>例如前方有一辆慢车：</p>
+<ul>
+<li>可以减速跟车；</li>
+<li>可以向左变道；</li>
+<li>可以向右变道；</li>
+<li>也可以暂时保持速度。</li>
+</ul>
+<p>如果模型只能输出一条轨迹，就容易把多种可能性平均成一条不自然的轨迹。</p>
+<p>因此 DrivoR 输出多条候选轨迹，再让评分器选择其中一条。这和 PNC 中的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>候选轨迹生成 + 代价函数评价
+</span></span></code></pre></div><p>非常相似。</p>
+<h3 id="33-vit-带来的计算瓶颈">3.3 ViT 带来的计算瓶颈
+</h3><p>Vision Transformer（ViT）会把图像切成很多 patch，每个 patch 转成一个 token。</p>
+<p>如果一张图像有约 4000 个视觉 tokens，4 个摄像头总共就是约：</p>
+<p>[
+4\times4000=16000
+]</p>
+<p>个 tokens。</p>
+<p>Transformer 注意力的计算量大致随 token 数量平方增长：</p>
+<p>[
+O(N^2)
+]</p>
+<p>这些 tokens 如果被后面的轨迹生成器和评分器反复读取，计算量会很大。</p>
+<p>常见做法是平均池化，但平均池化存在两个问题：</p>
+<ol>
+<li>所有区域基本被同等对待；</li>
+<li>不能根据当前场景动态决定哪些信息重要。</li>
+</ol>
+<p>可是驾驶时：</p>
+<ul>
+<li>前方摄像头通常比后方摄像头重要；</li>
+<li>红绿灯、前车和道路边缘的重要性不同；</li>
+<li>不同场景需要关注不同区域。</li>
+</ul>
+<p>DrivoR 因此采用学习型的 token 压缩。</p>
+<hr>
+<h2 id="4-register-机制">4. Register 机制
+</h2><h3 id="41-register-是什么">4.1 Register 是什么？
+</h3><p>Register 是加入 ViT 的额外可学习向量。</p>
+<p>假设原始输入是：</p>
+<p>[
+[x_1,x_2,\ldots,x_M]
+]</p>
+<p>其中 (x_i) 是 patch tokens。</p>
+<p>增加 (R) 个 registers 后，输入变成：</p>
+<p>[
+[r_1,r_2,\ldots,r_R,x_1,x_2,\ldots,x_M]
+]</p>
+<p>register：</p>
+<ul>
+<li>没有固定图像位置；</li>
+<li>不对应某个固定物体；</li>
+<li>一开始只是随机初始化的向量；</li>
+<li>会和所有 patch tokens 一起经过 Transformer；</li>
+<li>最终可以作为全局场景摘要。</li>
+</ul>
+<p>经过多层 Transformer 后，模型只取：</p>
+<p>[
+[r_1^{(L)},\ldots,r_R^{(L)}]
+]</p>
+<p>而不是继续使用全部 patch tokens。</p>
+<h3 id="42-register-如何读取图像信息">4.2 Register 如何读取图像信息？
+</h3><p>在 self-attention 中，一个 register 会根据 query-key 相似度决定关注哪些 patch。</p>
+<p>对于第 (j) 个 register：</p>
+<h1 id="alpha_jk">[
+\alpha_{jk}
+</h1><p>\operatorname{softmax}
+\left(
+\frac{q_j^\top k_k}{\sqrt d}
+\right)
+]</p>
+<p>然后聚合各个 token 的 value：</p>
+<p>[
+r&rsquo;<em>j=\sum_k\alpha</em>{jk}v_k
+]</p>
+<p>直观地说：</p>
+
+    <blockquote>
+        <p>每个 register 都像一个记录员，会自己决定当前场景中哪些区域值得记录。</p>
+
+    </blockquote>
+<p>经过多层注意力后，不同 registers 可能逐渐分工：</p>
+<ul>
+<li>一个关注前车；</li>
+<li>一个关注红绿灯；</li>
+<li>一个关注道路左边缘；</li>
+<li>一个关注右侧道路边缘；</li>
+<li>一个关注行人或非机动车。</li>
+</ul>
+<p>这些语义不是人工指定的，而是由轨迹损失和评分损失间接学出来的。</p>
+<h3 id="43-register-与平均池化的区别">4.3 Register 与平均池化的区别
+</h3><p>平均池化近似于：</p>
+<p>[
+s=\frac{1}{M}\sum_{i=1}^{M}x_i
+]</p>
+<p>所有 token 被近似等权处理。</p>
+<p>Register 压缩更像：</p>
+<p>[
+s_j=\sum_{i=1}^{M}\alpha_{ji}x_i
+]</p>
+<p>其中权重 (\alpha_{ji}) 由网络根据场景动态决定。</p>
+<p>因此：</p>
+<ul>
+<li>平均池化是固定、均匀的压缩；</li>
+<li>register 是学习的、内容相关的压缩；</li>
+<li>多个 registers 可以形成多个不同侧重点的场景摘要。</li>
+</ul>
+<h3 id="44-camera-aware-registers">4.4 Camera-aware Registers
+</h3><p>DrivoR 使用 4 个摄像头：</p>
+<ul>
+<li>front；</li>
+<li>front-left；</li>
+<li>front-right；</li>
+<li>back。</li>
+</ul>
+<p>每个摄像头使用 16 个专属 registers：</p>
+<p>[
+4\times16=64
+]</p>
+<p>个 scene tokens。</p>
+<p>数据流是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Front 图像       → ViT → 16 个 front registers
+</span></span><span style="display:flex;"><span>Front-left 图像  → ViT → 16 个 front-left registers
+</span></span><span style="display:flex;"><span>Front-right 图像 → ViT → 16 个 front-right registers
+</span></span><span style="display:flex;"><span>Back 图像        → ViT → 16 个 back registers
+</span></span></code></pre></div><p>最后将四组 registers 拼接成 scene tokens。</p>
+<p>专属 registers 的作用是保留摄像头来源：</p>
+<ul>
+<li>前视 token 表示前方信息；</li>
+<li>左前 token 表示左侧信息；</li>
+<li>右前 token 表示右侧信息；</li>
+<li>后视 token 表示后方信息。</li>
+</ul>
+<p>这比把所有摄像头信息混成一组平均特征更适合驾驶任务。</p>
+<h3 id="45-register-与-vit-原始-register-的区别">4.5 Register 与 ViT 原始 Register 的区别
+</h3><p>原始 ViT 中的 register 最初用于解决一种注意力问题。</p>
+<p>有些 ViT 会让少数 patch token 变成“注意力垃圾桶”或“草稿空间”：</p>
+<ul>
+<li>它们吸收大量注意力；</li>
+<li>特征范数异常；</li>
+<li>但不一定对应真实图像区域；</li>
+<li>可能导致特征图出现伪影。</li>
+</ul>
+<p>Register 给模型提供了专门的内部工作空间。</p>
+<p>DrivoR 进一步利用这些 token 的全局汇总能力，将它们作为场景压缩后的输出。</p>
+<h3 id="46-register-压缩节省的是哪部分计算">4.6 Register 压缩节省的是哪部分计算？
+</h3><p>需要注意：</p>
+
+    <blockquote>
+        <p>Register 并不是让 ViT 从始至终只处理 64 个 tokens。</p>
+
+    </blockquote>
+<p>ViT 内部仍然需要处理 patch tokens。它主要压缩的是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>ViT 输出之后
+</span></span><span style="display:flex;"><span>→ trajectory decoder 和 scoring decoder
+</span></span></code></pre></div><p>原本下游可能处理约 16000 个 tokens，现在只处理 64 个 scene tokens。</p>
+<p>因此它主要降低：</p>
+<ul>
+<li>下游 Transformer 的计算量；</li>
+<li>下游显存占用；</li>
+<li>轨迹生成和评分的计算成本。</li>
+</ul>
+<hr>
+<h2 id="5-lora-在-drivor-中的作用">5. LoRA 在 DrivoR 中的作用
+</h2><h3 id="51-为什么要微调-dinov2">5.1 为什么要微调 DINOv2？
+</h3><p>DrivoR 使用预训练 DINOv2 ViT-S。</p>
+<p>DINOv2 已经学到了通用视觉能力，但它原本不是为端到端驾驶设计的，也不知道：</p>
+<ul>
+<li>哪些区域对轨迹规划重要；</li>
+<li>哪些信息应该写入 registers；</li>
+<li>如何区分安全相关和进度相关的视觉信息；</li>
+<li>多摄像头信息如何服务规划。</li>
+</ul>
+<p>因此需要让 ViT 适应驾驶任务。</p>
+<h3 id="52-lora-的基本形式">5.2 LoRA 的基本形式
+</h3><p>原始线性层为：</p>
+<p>[
+y=W_0x
+]</p>
+<p>完整微调会直接修改 (W_0)。</p>
+<p>LoRA 则冻结原始权重，只增加低秩更新：</p>
+<p>[
+W&rsquo;=W_0+\Delta W
+]</p>
+<p>[
+\Delta W=BA
+]</p>
+<p>其中：</p>
+<p>[
+A\in\mathbb{R}^{r\times d_{\text{in}}}
+]</p>
+<p>[
+B\in\mathbb{R}^{d_{\text{out}}\times r}
+]</p>
+<p>(r) 是低秩维度。</p>
+<p>DrivoR 使用的 LoRA rank 是：</p>
+<p>[
+r=32
+]</p>
+<p>前向计算可以写成：</p>
+<p>[
+y=W_0x+\frac{\alpha}{r}BAx
+]</p>
+<p>原始 DINOv2 权重 (W_0) 不更新，只训练 (A) 和 (B)。</p>
+<h3 id="53-为什么-lora-能帮助-registers">5.3 为什么 LoRA 能帮助 registers？
+</h3><p>Register 是否有效，不只取决于 register 自身，还取决于 ViT 是否愿意把重要信息写进去。</p>
+<p>LoRA 可以调整 ViT 的注意力和特征变换路径：</p>
+<ul>
+<li>修改 Query：改变 register 想寻找什么；</li>
+<li>修改 Key：改变 patch 如何被识别；</li>
+<li>修改 Value：改变 patch 提供给 register 的内容；</li>
+<li>修改 FFN：改变 token 特征如何被进一步变换。</li>
+</ul>
+<p>因此 LoRA 可以让 ViT 学会：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>把通用视觉特征
+</span></span><span style="display:flex;"><span>重新组织成
+</span></span><span style="display:flex;"><span>适合轨迹生成和评分的场景摘要
+</span></span></code></pre></div><h3 id="54-lora-通常作用于哪些层">5.4 LoRA 通常作用于哪些层？
+</h3><p>标准 ViT-LoRA 实现常见的目标模块包括：</p>
+<ul>
+<li>Attention 的 (Q) 投影；</li>
+<li>Attention 的 (K) 投影；</li>
+<li>Attention 的 (V) 投影；</li>
+<li>Attention 输出投影；</li>
+<li>FFN 的第一层；</li>
+<li>FFN 的第二层。</li>
+</ul>
+<p>但需要区分：</p>
+
+    <blockquote>
+        <p>DrivoR 正文只明确说明使用 DINOv2 ViT-S、LoRA rank=32，并参考已有工作实现；正文没有逐层公开 LoRA 的确切 target modules、缩放系数或 dropout 设置。</p>
+
+    </blockquote>
+<p>因此，具体 target layer 应以作者代码为准。上面列出的是标准 ViT-LoRA 的常见实现，而不是论文正文已经明确公布的全部细节。</p>
+<h3 id="55-lora-与-registers-的参数分工">5.5 LoRA 与 registers 的参数分工
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>DINOv2 原始权重：通用视觉能力，冻结
+</span></span><span style="display:flex;"><span>LoRA 参数：把视觉能力适配到驾驶任务
+</span></span><span style="display:flex;"><span>Camera registers：保存每个摄像头的压缩信息
+</span></span><span style="display:flex;"><span>Trajectory decoder：生成候选轨迹
+</span></span><span style="display:flex;"><span>Scoring decoder：评估候选轨迹
+</span></span></code></pre></div><p>Register 是新增的 token 向量；LoRA 是原有权重矩阵的低秩增量，两者不是同一种参数。</p>
+<h3 id="56-为什么不用完整微调">5.6 为什么不用完整微调？
+</h3><p>论文消融表明，在 register 压缩设置下：</p>
+<ul>
+<li>只训练 registers、冻结视觉骨干：约 84.4 PDMS；</li>
+<li>使用 LoRA：约 90.0 PDMS；</li>
+<li>完整微调：约 88.4 PDMS。</li>
+</ul>
+<p>只训练 registers 的问题是：</p>
+
+    <blockquote>
+        <p>registers 虽然可以学习，但原来的 ViT 信息路由没有改变，未必能有效把驾驶相关信息写入 registers。</p>
+
+    </blockquote>
+<p>完整微调的问题是：</p>
+<ul>
+<li>参数量和优化器状态更大；</li>
+<li>可能破坏 DINOv2 的通用视觉能力；</li>
+<li>更容易过拟合；</li>
+<li>对学习率和训练策略更敏感。</li>
+</ul>
+<p>LoRA 在保留预训练能力的同时，提供了足够的任务适应能力。</p>
+<h3 id="57-lora-可以用于其他层吗">5.7 LoRA 可以用于其他层吗？
+</h3><p>可以，但不一定都适合。</p>
+<h4 id="卷积层">卷积层
+</h4><p>卷积核也可以做低秩更新：</p>
+<p>[
+W&rsquo;=W_0+BA
+]</p>
+<p>或者使用两个小卷积组成低秩分支。</p>
+<h4 id="patch-embedding">Patch Embedding
+</h4><p>ViT 的 patch embedding 本质上通常是线性投影，也可以加入 LoRA。</p>
+<h4 id="embedding-表">Embedding 表
+</h4><p>可以修改 token embedding，但是否有收益取决于任务。</p>
+<h4 id="layernorm">LayerNorm
+</h4><p>LayerNorm 参数通常只有缩放和偏移向量，参数量很小，通常直接训练，而不是做低秩分解。</p>
+<h4 id="激活函数">激活函数
+</h4><p>理论上可以修改，但这不再是标准 LoRA，而且容易破坏预训练模型行为。</p>
+<p>LoRA 最适合修改：</p>
+
+    <blockquote>
+        <p>参数量大、结构重要、且本身是线性变换的模块。</p>
+
+    </blockquote>
+<hr>
+<h2 id="6-轨迹生成器">6. 轨迹生成器
+</h2><h3 id="61-transformer-decoder-结构">6.1 Transformer Decoder 结构
+</h3><p>Trajectory decoder 使用标准 Transformer decoder，每层包括：</p>
+<ol>
+<li>self-attention；</li>
+<li>对 scene tokens 的 cross-attention；</li>
+<li>FFN；</li>
+<li>残差连接。</li>
+</ol>
+<p>默认设置：</p>
+<ul>
+<li>4 层 Transformer；</li>
+<li>内部维度 256；</li>
+<li>FFN 扩展因子 4。</li>
+</ul>
+<h3 id="62-trajectory-queries">6.2 Trajectory Queries
+</h3><p>模型维护一组可学习的 trajectory queries：</p>
+<p>[
+Q_{\text{traj}}
+]</p>
+<p>每一个 query 最终对应一条候选轨迹。</p>
+<p>这些 queries：</p>
+<ul>
+<li>随机初始化；</li>
+<li>在训练中更新；</li>
+<li>可以逐渐学习不同的驾驶模式。</li>
+</ul>
+<p>例如：</p>
+<ul>
+<li>直行；</li>
+<li>左转；</li>
+<li>右转；</li>
+<li>跟车；</li>
+<li>减速；</li>
+<li>变道。</li>
+</ul>
+<p>自车状态会编码后加到 trajectory queries 上，包括：</p>
+<ul>
+<li>位姿；</li>
+<li>速度；</li>
+<li>加速度；</li>
+<li>驾驶指令。</li>
+</ul>
+<p>之后 trajectory decoder 读取 scene tokens，输出候选轨迹。</p>
+<h3 id="63-轨迹表示">6.3 轨迹表示
+</h3><p>第 (i) 条候选轨迹记为：</p>
+<p>[
+\tau_i\in\mathbb{R}^{n_p\times3}
+]</p>
+<p>每个时间点的 pose 为：</p>
+<p>[
+(x,y,\theta)
+]</p>
+<p>其中：</p>
+<ul>
+<li>(x)：纵向位移；</li>
+<li>(y)：横向位移；</li>
+<li>(\theta)：航向角。</li>
+</ul>
+<p>所有坐标都在当前时刻的自车坐标系中表达。</p>
+<p>轨迹从当前时刻之后开始，一直预测到：</p>
+<p>[
+t+T
+]</p>
+<p>相邻 pose 的时间间隔均匀。</p>
+<h3 id="64-winner-takes-all-轨迹损失">6.4 Winner-Takes-All 轨迹损失
+</h3><p>给定人工参考轨迹 (\hat{\tau})，只监督预测结果中距离它最近的一条：</p>
+<h1 id="l_texttraj">[
+L_{\text{traj}}
+</h1><p>\min_i|\tau_i-\hat{\tau}|_1
+]</p>
+<p>这叫 Winner-Takes-All（WTA），也可以理解成 Minimum-over-N。</p>
+<p>它允许不同 query 产生不同合理轨迹，而不是要求所有 query 都回归同一条轨迹。</p>
+<h3 id="65-更长轨迹目标">6.5 更长轨迹目标
+</h3><p>论文还尝试加入一条更远的目标轨迹 (\hat{\tau}&rsquo;)。</p>
+<p>构造过程：</p>
+<ol>
+<li>原始参考轨迹时长为 (T)；</li>
+<li>另一条参考轨迹时长为 (T'&gt;T)；</li>
+<li>用 cubic spline 将它重新采样到 (T)；</li>
+<li>得到一条更激进、更强调前进的轨迹。</li>
+</ol>
+<p>损失为：</p>
+<h1 id="l_texttraj-1">[
+L_{\text{traj}}
+</h1><p>\min_i
+\left(
+|\tau_i-\hat{\tau}|_1
++
+|\tau_i-\hat{\tau}&rsquo;|_1
+\right)
+]</p>
+<p>实验显示：</p>
+<ul>
+<li>NAVSIM-v1 更奖励进度，因此该目标有帮助；</li>
+<li>NAVSIM-v2 有自车状态扰动，更需要保守和可恢复的驾驶，因此该目标反而降低表现。</li>
+</ul>
+<hr>
+<h2 id="7-评分器">7. 评分器
+</h2><h3 id="71-为什么需要独立评分器">7.1 为什么需要独立评分器？
+</h3><p>生成器负责回答：</p>
+
+    <blockquote>
+        <p>“有哪些可能的驾驶方案？”</p>
+
+    </blockquote>
+<p>评分器负责回答：</p>
+
+    <blockquote>
+        <p>“这些方案分别有多安全、多舒适、多高效？”</p>
+
+    </blockquote>
+<p>这两个问题关注的视觉信息不完全相同。</p>
+<p>例如：</p>
+<ul>
+<li>生成左转轨迹时，主要需要观察前方道路；</li>
+<li>判断左转轨迹是否会撞到侧方车辆时，可能需要重点看左侧或后方摄像头。</li>
+</ul>
+<p>因此 DrivoR 使用两个独立 decoder：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>Trajectory Decoder：生成轨迹
+</span></span><span style="display:flex;"><span>Scoring Decoder：评价轨迹
+</span></span></code></pre></div><h3 id="72-评分器如何输入轨迹">7.2 评分器如何输入轨迹？
+</h3><p>对于每条生成的轨迹 (\tau_i)：</p>
+<ol>
+<li>用 MLP 将轨迹映射成 (D_{\text{score}}) 维 query；</li>
+<li>所有轨迹对应的 score queries 输入 scoring decoder；</li>
+<li>scoring decoder 通过 cross-attention 读取 scene tokens；</li>
+<li>输出各个子分数。</li>
+</ol>
+<h3 id="73-轨迹重新嵌入与-stop-gradient">7.3 轨迹重新嵌入与 stop-gradient
+</h3><p>DrivoR 不直接复用 trajectory decoder 的隐藏 token，而是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>解码轨迹
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>MLP 重新嵌入
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>stop-gradient
+</span></span><span style="display:flex;"><span>  ↓
+</span></span><span style="display:flex;"><span>评分 decoder
+</span></span></code></pre></div><p>原因是 trajectory decoder 的隐藏 token 中包含生成轨迹时使用的额外隐式信息。</p>
+<p>如果评分器直接读取这些 token，它可能依赖生成器内部状态，而不是仅仅判断“这条轨迹本身好不好”。</p>
+<p>重新嵌入后，评分器主要看到：</p>
+<ul>
+<li>已经解码出来的轨迹；</li>
+<li>scene tokens。</li>
+</ul>
+<p>同时：</p>
+<ul>
+<li>评分损失可以回传到 perception encoder 和 registers；</li>
+<li>评分损失不能反向影响 trajectory decoder。</li>
+</ul>
+<p>这样可以避免两个分支互相干扰。</p>
+<hr>
+<h2 id="8-子分数与-bce-损失">8. 子分数与 BCE 损失
+</h2><h3 id="81-六个子分数">8.1 六个子分数
+</h3><p>DrivoR 预测 PDMS 中的六类子分数：</p>
+<ul>
+<li><strong>NC</strong>：No-fault Collision，无责碰撞；</li>
+<li><strong>DAC</strong>：Drivable Area Compliance，可行驶区域遵守；</li>
+<li><strong>DDC</strong>：Driving Direction Compliance，行驶方向遵守；</li>
+<li><strong>TTC</strong>：Time to Collision，碰撞时间风险；</li>
+<li><strong>EP</strong>：Ego Progress，自车前进进度；</li>
+<li><strong>Comfort</strong>：自车舒适性。</li>
+</ul>
+<p>每个子分数有独立的 MLP 输出头。</p>
+<h3 id="82-为什么使用-bce">8.2 为什么使用 BCE？
+</h3><p>论文没有证明 BCE 必然优于 MSE 或 L1，因此这里更准确地说是一个与评分形式匹配的工程选择。</p>
+<p>这些子分数通常被归一化到 ([0,1])：</p>
+<ul>
+<li>0：表现差或违反要求；</li>
+<li>1：表现好；</li>
+<li>中间值：部分满足。</li>
+</ul>
+<p>对于碰撞、道路合规等指标，它们接近二分类：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>安全 → 1
+</span></span><span style="display:flex;"><span>碰撞 → 0
+</span></span></code></pre></div><p>BCE 正适合这种目标：</p>
+<h1 id="operatornamebcepy">[
+\operatorname{BCE}(p,y)
+</h1><p>-y\log p-(1-y)\log(1-p)
+]</p>
+<p>对于 TTC、EP、Comfort 等连续指标，BCE 也可以把 ([0,1]) 的连续值作为 soft label 使用。</p>
+<p>例如目标分数为 0.8：</p>
+<h1 id="operatornamebcep08">[
+\operatorname{BCE}(p,0.8)
+</h1><p>-0.8\log p-0.2\log(1-p)
+]</p>
+<p>所以这里的 BCE 不一定意味着所有任务都是严格分类，而是把每个子分数视作一个 0 到 1 的质量概率。</p>
+<h3 id="83-为什么分别预测子分数">8.3 为什么分别预测子分数？
+</h3><p>PDMS 不是简单平均，而是：</p>
+<ul>
+<li>安全和合规项采用乘法；</li>
+<li>舒适和进度项采用加权平均。</li>
+</ul>
+<p>如果直接回归最终 PDMS：</p>
+<ul>
+<li>不同子项会混在一起；</li>
+<li>乘法结构更难学习；</li>
+<li>难以知道一条轨迹为什么得分低；</li>
+<li>推理时无法灵活修改驾驶偏好。</li>
+</ul>
+<p>分别预测子分数后，可以：</p>
+<ul>
+<li>保留可解释性；</li>
+<li>分别学习不同质量因素；</li>
+<li>在推理时重新设置权重；</li>
+<li>生成安全型、舒适型或积极型驾驶策略。</li>
+</ul>
+<h3 id="84-评分损失">8.4 评分损失
+</h3><p>对于第 (c) 个子分数和第 (i) 条候选轨迹：</p>
+<h1 id="l_textscore">[
+L_{\text{score}}
+</h1><p>\sum_c\lambda_c\sum_i
+\operatorname{BCE}
+\left(
+G_{\theta_c}(\tau_i),
+G_c(\tau_i)
+\right)
+]</p>
+<p>其中：</p>
+<ul>
+<li>(G_c(\tau_i))：oracle scorer 给出的真实子分数；</li>
+<li>(G_{\theta_c}(\tau_i))：模型预测的子分数；</li>
+<li>(\lambda_c)：子分数损失权重。</li>
+</ul>
+<p>训练时论文将所有 (\lambda_c) 设置为 1。</p>
+<hr>
+<h2 id="9-推理时的行为控制">9. 推理时的行为控制
+</h2><p>推理时，模型可以把子分数组合成总分：</p>
+<p>[
+S(\tau_i)=\sum_c w_c,G_{\theta_c}(\tau_i)
+]</p>
+<p>然后选择：</p>
+<p>[
+\tau^*=\arg\max_i S(\tau_i)
+]</p>
+<p>改变权重 (w_c)，就可以改变驾驶行为。</p>
+<h3 id="安全型">安全型
+</h3><p>提高 NC、DAC、TTC 权重，结果通常是：</p>
+<ul>
+<li>更早减速；</li>
+<li>更少激进变道；</li>
+<li>轨迹更短；</li>
+<li>碰撞风险更低。</li>
+</ul>
+<h3 id="舒适型">舒适型
+</h3><p>提高 Comfort 权重：</p>
+<ul>
+<li>减少急加速；</li>
+<li>减少急减速；</li>
+<li>减少急转向；</li>
+<li>轨迹更加平滑。</li>
+</ul>
+<h3 id="积极型">积极型
+</h3><p>提高 EP 权重：</p>
+<ul>
+<li>更重视向目标前进；</li>
+<li>速度可能更高；</li>
+<li>轨迹可能更激进。</li>
+</ul>
+<p>这和 PNC 中调节不同 cost term 的权重很像，但 learned score 并不等同于人工设计的 cost function。</p>
+<hr>
+<h2 id="10-总训练损失">10. 总训练损失
+</h2><p>最终损失是：</p>
+<p>[
+L=L_{\text{traj}}+\lambda_sL_{\text{score}}
+]</p>
+<p>训练时：</p>
+<p>[
+\lambda_s=1
+]</p>
+<p>因此轨迹生成损失和评分损失等权。</p>
+<hr>
+<h2 id="11-pdms-和-epdms-指标">11. PDMS 和 EPDMS 指标
+</h2><h3 id="111-两类指标">11.1 两类指标
+</h3><p>子指标分成两组。</p>
+<h4 id="惩罚类-g_p">惩罚类 (G_p)
+</h4><p>用于衡量是否违反驾驶规则，例如：</p>
+<ul>
+<li>无责碰撞；</li>
+<li>可行驶区域；</li>
+<li>行驶方向；</li>
+<li>交通线；</li>
+<li>其他硬约束。</li>
+</ul>
+<p>它们采用乘法：</p>
+<p>[
+\prod_{c\in G_p}
+G_c(\tau_i)^{\kappa_c^p}
+]</p>
+<p>只要某个硬约束分数为 0，总分就可能为 0。</p>
+<h4 id="行为类-g_b">行为类 (G_b)
+</h4><p>用于衡量驾驶质量，例如：</p>
+<ul>
+<li>TTC；</li>
+<li>自车进度；</li>
+<li>舒适性；</li>
+<li>车道保持。</li>
+</ul>
+<p>它们采用加权平均：</p>
+<p>[
+\frac{1}{Z}
+\sum_{c\in G_b}
+\kappa_c^bG_c(\tau_i)
+]</p>
+<p>其中：</p>
+<p>[
+Z=\sum_{c\in G_b}\kappa_c^b
+]</p>
+<p>这样可以在进度和舒适之间进行折中。</p>
+<h3 id="112-pdms-权重">11.2 PDMS 权重
+</h3><p>PDMS 中的典型权重为：</p>
+<ul>
+<li>NC：1；</li>
+<li>DAC：1；</li>
+<li>DDC：0；</li>
+<li>TTC：5；</li>
+<li>EP：5；</li>
+<li>Comfort：2。</li>
+</ul>
+<p>补充材料还列出：</p>
+<ul>
+<li>TLC：Traffic-line Compliance；</li>
+<li>LK：Lane Keeping；</li>
+<li>HC：History Comfort；</li>
+<li>EC：Extended Comfort。</li>
+</ul>
+<h3 id="113-epdms-权重">11.3 EPDMS 权重
+</h3><p>NAVSIM-v2 使用扩展指标 EPDMS。论文补充材料中给出的推理权重为：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>子分数</th>
+          <th style="text-align: right">PDMS</th>
+          <th style="text-align: right">EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>NC</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">10</td>
+      </tr>
+      <tr>
+          <td>DAC</td>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">13</td>
+      </tr>
+      <tr>
+          <td>DDC</td>
+          <td style="text-align: right">0</td>
+          <td style="text-align: right">6</td>
+      </tr>
+      <tr>
+          <td>TTC</td>
+          <td style="text-align: right">5</td>
+          <td style="text-align: right">14</td>
+      </tr>
+      <tr>
+          <td>EP</td>
+          <td style="text-align: right">5</td>
+          <td style="text-align: right">15</td>
+      </tr>
+      <tr>
+          <td>Comfort</td>
+          <td style="text-align: right">2</td>
+          <td style="text-align: right">2</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>NAVSIM-v2 对安全、道路合规和进度的重视程度更高。</p>
+<hr>
+<h2 id="12-实验设置">12. 实验设置
+</h2><h3 id="121-模型配置">12.1 模型配置
+</h3><p>输入：</p>
+<ul>
+<li>4 个摄像头；</li>
+<li>front、front-left、front-right、back。</li>
+</ul>
+<p>视觉编码器：</p>
+<ul>
+<li>DINOv2 ViT-S；</li>
+<li>LoRA rank=32；</li>
+<li>每个摄像头默认 16 个 registers；</li>
+<li>总共 64 个 scene tokens。</li>
+</ul>
+<p>解码器：</p>
+<ul>
+<li>trajectory decoder：4 层；</li>
+<li>scoring decoder：4 层；</li>
+<li>内部维度：256；</li>
+<li>FFN 扩展因子：4。</li>
+</ul>
+<p>初始化：</p>
+<ul>
+<li>camera registers：(\mathcal{N}(0,10^{-6}))；</li>
+<li>初始 trajectory tokens：(\mathcal{N}(0,10^{-6}))。</li>
+</ul>
+<p>训练：</p>
+<ul>
+<li>AdamW；</li>
+<li>学习率 (2\times10^{-4})；</li>
+<li>cosine annealing；</li>
+<li>4 张 NVIDIA A100；</li>
+<li>模型约 4000 万参数。</li>
+</ul>
+<p>默认消融设置：</p>
+<ul>
+<li>使用 navtrain；</li>
+<li>训练 10 个 epoch；</li>
+<li>在 navval 上比较。</li>
+</ul>
+<p>最终训练设置：</p>
+<ul>
+<li>NAVSIM-v1：navtrain+navval，25 个 epoch；</li>
+<li>NAVSIM-v2：navtrain，10 个 epoch。</li>
+</ul>
+<hr>
+<h2 id="13-benchmark-与主要结果">13. Benchmark 与主要结果
+</h2><h3 id="131-navsim-v1">13.1 NAVSIM-v1
+</h3><p>NAVSIM-v1 基于 nuPlan，并作为 OpenScene 的子集构建。</p>
+<p>相比只比较预测轨迹与人工轨迹相似度的传统指标，PDMS 更接近闭环驾驶评价，考虑：</p>
+<ul>
+<li>碰撞；</li>
+<li>驶出可行驶区域；</li>
+<li>行驶方向；</li>
+<li>近碰撞；</li>
+<li>舒适性；</li>
+<li>前进进度。</li>
+</ul>
+<p>主要 PDMS 结果：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Human driver</td>
+          <td style="text-align: right">94.8</td>
+      </tr>
+      <tr>
+          <td>RAP-DINO</td>
+          <td style="text-align: right">93.8</td>
+      </tr>
+      <tr>
+          <td>DrivoR(train)</td>
+          <td style="text-align: right">93.1</td>
+      </tr>
+      <tr>
+          <td>DrivoR(trainval)</td>
+          <td style="text-align: right">93.7</td>
+      </tr>
+      <tr>
+          <td>DrivoR +65k SimScale</td>
+          <td style="text-align: right">94.0</td>
+      </tr>
+      <tr>
+          <td>DrivoR +134k SimScale</td>
+          <td style="text-align: right">94.6</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>结论：</p>
+<ul>
+<li>DrivoR 在纯摄像头设置下取得很强结果；</li>
+<li>加入额外合成数据后接近人类驾驶员；</li>
+<li>不依赖 LiDAR、BEV 或大型轨迹字典。</li>
+</ul>
+<h3 id="132-navsim-v2">13.2 NAVSIM-v2
+</h3><p>NAVSIM-v2 在第二阶段使用 Gaussian Splatting 产生新场景变化，并扰动自车状态：</p>
+<ul>
+<li>平移；</li>
+<li>旋转；</li>
+<li>其他状态变化。</li>
+</ul>
+<p>这会迫使模型泛化到训练分布之外。</p>
+<p>EPDMS 结果：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>GTRS-D</td>
+          <td style="text-align: right">45.0</td>
+      </tr>
+      <tr>
+          <td>GTRS-A</td>
+          <td style="text-align: right">45.4</td>
+      </tr>
+      <tr>
+          <td>ZTRS</td>
+          <td style="text-align: right">48.1</td>
+      </tr>
+      <tr>
+          <td>DrivoR</td>
+          <td style="text-align: right">48.3</td>
+      </tr>
+      <tr>
+          <td>DrivoR +65k SimScale</td>
+          <td style="text-align: right">52.3</td>
+      </tr>
+      <tr>
+          <td>DrivoR +134k SimScale</td>
+          <td style="text-align: right">54.6</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>DrivoR 使用 134k 额外 SimScale 数据时达到 54.6，超过使用更多额外数据的对比方法。</p>
+<p>论文指出，NAVSIM-v2 官方评估曾存在与人类驾驶错误过滤有关的 bug。补充材料同时报告了修复前和修复后的结果；修复后，DrivoR 在轻量模型中表现尤其突出。</p>
+<h3 id="133-hugsim-闭环仿真">13.3 HUGSIM 闭环仿真
+</h3><p>HUGSIM 将以下数据集中的场景重建成照片级 3D 环境：</p>
+<ul>
+<li>KITTI-360；</li>
+<li>nuScenes；</li>
+<li>PandaSet；</li>
+<li>Waymo。</li>
+</ul>
+<p>模型在环境中真正控制自车运动，摄像头视角会随自车位置改变。</p>
+<p>DrivoR 只在 NAVSIM-v1 上训练，不做 HUGSIM 微调，采用零样本评估：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">Road Completion</th>
+          <th style="text-align: right">HD-Score</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>VAD</td>
+          <td style="text-align: right">31.4</td>
+          <td style="text-align: right">13.4</td>
+      </tr>
+      <tr>
+          <td>LTF</td>
+          <td style="text-align: right">38.9</td>
+          <td style="text-align: right">23.7</td>
+      </tr>
+      <tr>
+          <td>UniAD</td>
+          <td style="text-align: right">45.9</td>
+          <td style="text-align: right">32.7</td>
+      </tr>
+      <tr>
+          <td>DrivoR</td>
+          <td style="text-align: right">49.8</td>
+          <td style="text-align: right">35.7</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>DrivoR 在表中基线中取得最高平均 RC 和 HD-Score。</p>
+<p>作者还修正了 HUGSIM 评估代码中的问题：</p>
+<ul>
+<li>舒适性指标中的加速度范围不一致；</li>
+<li>规划轨迹传给控制器时航向角计算错误。</li>
+</ul>
+<hr>
+<h2 id="14-效率分析">14. 效率分析
+</h2><p>单张 A100、单样本前向推理结果：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">参数量</th>
+          <th style="text-align: right">GFLOPs</th>
+          <th style="text-align: right">峰值显存</th>
+          <th style="text-align: right">前向时间</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RAP-DINO ViT-H</td>
+          <td style="text-align: right">888M</td>
+          <td style="text-align: right">4760</td>
+          <td style="text-align: right">4.2GB</td>
+          <td style="text-align: right">690ms</td>
+      </tr>
+      <tr>
+          <td>GTRS-D ViT-L</td>
+          <td style="text-align: right">321M</td>
+          <td style="text-align: right">1730</td>
+          <td style="text-align: right">1.6GB</td>
+          <td style="text-align: right">400ms</td>
+      </tr>
+      <tr>
+          <td>ZTRS</td>
+          <td style="text-align: right">81M</td>
+          <td style="text-align: right">840</td>
+          <td style="text-align: right">1.0GB</td>
+          <td style="text-align: right">193ms</td>
+      </tr>
+      <tr>
+          <td>DrivoR</td>
+          <td style="text-align: right">41M</td>
+          <td style="text-align: right">351</td>
+          <td style="text-align: right">0.5GB</td>
+          <td style="text-align: right">110ms</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>相对于 ViT-L 版本的 GTRS：</p>
+<ul>
+<li>推理速度超过 3 倍；</li>
+<li>GFLOPs 约降低 3 倍；</li>
+<li>峰值显存约降低 3 倍；</li>
+<li>性能反而更高。</li>
+</ul>
+<p>论文提醒，FVCore 当前没有统计 Scaled Dot Product Attention，因此 GFLOPs 不是完整的绝对计算量，但相对比较仍然有参考价值。</p>
+<hr>
+<h2 id="15-消融实验">15. 消融实验
+</h2><h3 id="151-预训练的重要性">15.1 预训练的重要性
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>初始化方式</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>随机初始化</td>
+          <td style="text-align: right">70.1</td>
+      </tr>
+      <tr>
+          <td>ImageNet-21k</td>
+          <td style="text-align: right">87.5</td>
+      </tr>
+      <tr>
+          <td>DINOv2</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>DINOv2 相比随机初始化提升接近 20 分。</p>
+<p>结论：</p>
+
+    <blockquote>
+        <p>高质量预训练视觉表示对端到端规划非常重要。</p>
+
+    </blockquote>
+<h3 id="152-压缩方法比较">15.2 压缩方法比较
+</h3><p>比较：</p>
+<ul>
+<li>不压缩；</li>
+<li>平均池化；</li>
+<li>Transformer decoder 压缩；</li>
+<li>register 压缩。</li>
+</ul>
+<p>核心结果：</p>
+<ul>
+<li>不压缩：约 16000 个 scene tokens，PDMS 90.2；</li>
+<li>pooling：64 个 scene tokens，PDMS 89.7；</li>
+<li>decoder 压缩：64 个 scene tokens，PDMS 89.3；</li>
+<li>register 压缩：64 个 scene tokens，PDMS 90.0。</li>
+</ul>
+<p>Register 压缩只使用约原始 token 数量的 (1/250)，却接近不压缩性能。</p>
+<p>论文还指出，register 压缩只增加约 0.6M 的训练参数。</p>
+<h3 id="153-register-的注意力分工">15.3 Register 的注意力分工
+</h3><p>前视摄像头的 registers：</p>
+<ul>
+<li>相互相似度较低；</li>
+<li>关注不同区域；</li>
+<li>表现出明显的功能分工。</li>
+</ul>
+<p>可视化中能看到它们关注：</p>
+<ul>
+<li>红绿灯；</li>
+<li>前车；</li>
+<li>人行道；</li>
+<li>道路边缘。</li>
+</ul>
+<p>后视摄像头的 registers：</p>
+<ul>
+<li>相互相似度较高；</li>
+<li>大多数 token 表示逐渐塌缩；</li>
+<li>通常只有少数 token 保持独立。</li>
+</ul>
+<p>这与驾驶直觉一致：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>前方视野需要精细理解
+</span></span><span style="display:flex;"><span>后方视野通常只需要粗略监控
+</span></span></code></pre></div><p>平均池化无法自然产生这种“不同摄像头使用不同压缩强度”的效果。</p>
+<h3 id="154-register-数量">15.4 Register 数量
+</h3><p>不同 register 数量的结果：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: right">每摄像头 registers</th>
+          <th style="text-align: right">总 scene tokens</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">5</td>
+          <td style="text-align: right">20</td>
+          <td style="text-align: right">约 89.7/88.1</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">8</td>
+          <td style="text-align: right">32</td>
+          <td style="text-align: right">89.7</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">16</td>
+          <td style="text-align: right">64</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">32</td>
+          <td style="text-align: right">128</td>
+          <td style="text-align: right">89.8</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>性能在 16 到 32 个之间达到平台，因此默认选择每个摄像头 16 个 registers。</p>
+<p>DINOv2 原有 registers 与新增 registers 一起使用并没有带来收益。论文推测，原有 registers 已经针对通用视觉任务形成专门化表示，不一定适合驾驶规划。</p>
+<h3 id="155-微调策略">15.5 微调策略
+</h3><p>register 压缩设置下：</p>
+<ul>
+<li>只训练 registers、冻结 ViT：表现明显较差；</li>
+<li>LoRA：达到约 90.0 PDMS；</li>
+<li>完整微调：约 88.4 PDMS。</li>
+</ul>
+<p>LoRA 在性能和稳定性之间取得了更好的平衡。</p>
+<h3 id="156-候选轨迹数量">15.6 候选轨迹数量
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: right">候选轨迹数</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">1</td>
+          <td style="text-align: right">80.1</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">8</td>
+          <td style="text-align: right">87.6</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">16</td>
+          <td style="text-align: right">88.1</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">32</td>
+          <td style="text-align: right">89.5</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">64</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">128</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>从 1 条增加到 64 条时性能持续提升，64 条以后基本饱和。</p>
+<p>这验证了多模态候选轨迹的重要性。</p>
+<h3 id="157-生成和评分是否应该分开">15.7 生成和评分是否应该分开？
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>设置</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>一个分支同时生成和评分</td>
+          <td style="text-align: right">84.7</td>
+      </tr>
+      <tr>
+          <td>两个 decoder，但不做解耦</td>
+          <td style="text-align: right">86.8</td>
+      </tr>
+      <tr>
+          <td>两个 decoder + 重新嵌入 + stop-gradient + 6 个子分数</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+      <tr>
+          <td>两个 decoder + 解耦，但只预测 1 个总分</td>
+          <td style="text-align: right">88.2</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>注意力可视化显示：</p>
+<ul>
+<li>轨迹生成主要依赖前视图；</li>
+<li>评分器会根据轨迹形状和风险转向左侧或后方摄像头。</li>
+</ul>
+<p>因此生成和评分需要共享场景信息，但不应完全共享内部表示。</p>
+<h3 id="158-单-token-和多-token-表示轨迹">15.8 单 token 和多 token 表示轨迹
+</h3><p>补充实验比较：</p>
+<ul>
+<li>每个 pose 使用一个 token；</li>
+<li>整条轨迹使用一个 token，再一次性解码。</li>
+</ul>
+<p>结果：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>轨迹表示</th>
+          <th style="text-align: right">PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Multi-token</td>
+          <td style="text-align: right">83.9</td>
+      </tr>
+      <tr>
+          <td>Single-token</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>单 token 方案生成的轨迹更加平滑、噪声更少。</p>
+<p>直观上：</p>
+<ul>
+<li>多 token 方案还需要额外学习时间连续性；</li>
+<li>单 token 方案更容易直接表达整条轨迹的整体形状。</li>
+</ul>
+<h3 id="159-更长目标轨迹">15.9 更长目标轨迹
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>训练目标</th>
+          <th style="text-align: right">NAVSIM-v1 PDMS</th>
+          <th style="text-align: right">NAVSIM-v2 EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>仅 (t+T)</td>
+          <td style="text-align: right">90.0</td>
+          <td style="text-align: right">39.4</td>
+      </tr>
+      <tr>
+          <td>同时加入 (t+T&rsquo;)</td>
+          <td style="text-align: right">90.6</td>
+          <td style="text-align: right">37.8</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>更长目标：</p>
+<ul>
+<li>对奖励进度的 NAVSIM-v1 有帮助；</li>
+<li>对需要谨慎处理状态扰动的 NAVSIM-v2 有害。</li>
+</ul>
+<h3 id="1510-训练-epoch">15.10 训练 epoch
+</h3><p>NAVSIM-v1：</p>
+<ul>
+<li>训练时间增加时 PDMS 持续提高；</li>
+<li>大约 25 个 epoch 达到平台。</li>
+</ul>
+<p>NAVSIM-v2：</p>
+<ul>
+<li>EPDMS 随训练 epoch 增加而下降；</li>
+<li>使用 competition split 也会降低表现。</li>
+</ul>
+<p>最终选择：</p>
+<ul>
+<li>NAVSIM-v1：25 epoch；</li>
+<li>NAVSIM-v2：10 epoch。</li>
+</ul>
+<p>这说明不同 benchmark 的最优训练策略不同。</p>
+<hr>
+<h2 id="16-行为调节实验">16. 行为调节实验
+</h2><p>论文构造了一个 Safety-Oriented Agent。</p>
+<p>相比默认 agent，它使用更偏向安全的子分数权重。</p>
+<p>结果表现为：</p>
+<ul>
+<li>碰撞和安全指标更好；</li>
+<li>舒适性更好；</li>
+<li>轨迹更短；</li>
+<li>行驶速度更低；</li>
+<li>前进进度下降；</li>
+<li>在 NAVSIM-v2 的 OOD 场景中更适合。</li>
+</ul>
+<p>这证明评分器不仅能给轨迹排序，还可以在推理阶段改变驾驶风格。</p>
+<hr>
+<h2 id="17-局限性与失败案例">17. 局限性与失败案例
+</h2><h3 id="171-没有使用历史帧">17.1 没有使用历史帧
+</h3><p>DrivoR 只看当前时刻的图像，没有历史帧。</p>
+<p>在某些场景中：</p>
+<ul>
+<li>前视图缺少明显目标；</li>
+<li>单帧无法判断自车已经处于什么位置；</li>
+<li>模型可能过度依赖右侧摄像头；</li>
+<li>轨迹可能过早切弯；</li>
+<li>甚至可能出现错误方向行驶。</li>
+</ul>
+<p>加入历史帧可能帮助模型理解：</p>
+<ul>
+<li>自车之前的运动；</li>
+<li>场景变化；</li>
+<li>当前轨迹意图；</li>
+<li>交通参与者运动趋势。</li>
+</ul>
+<h3 id="172-评分器可能关注错误摄像头">17.2 评分器可能关注错误摄像头
+</h3><p>在一个穿越红绿灯路口的案例中，评分器主要关注后视摄像头，而不是可见的红绿灯。</p>
+<p>作者推测：</p>
+
+    <blockquote>
+        <p>如果把 Traffic Light Compliance 加入评分组件，可能会迫使评分器更关注红绿灯。</p>
+
+    </blockquote>
+<p>虽然当时没有显式使用该评分项，但模型的交通线相关分数仍然很高。</p>
+<h3 id="173-行为权重与泛化之间的权衡">17.3 行为权重与泛化之间的权衡
+</h3><p>更积极的模型：</p>
+<ul>
+<li>进度更高；</li>
+<li>轨迹更激进；</li>
+<li>可能在分布内场景表现好。</li>
+</ul>
+<p>更保守的模型：</p>
+<ul>
+<li>进度降低；</li>
+<li>安全性和舒适性提高；</li>
+<li>在 OOD 场景中更稳健。</li>
+</ul>
+<p>这说明“最佳驾驶策略”依赖评价环境和场景分布。</p>
+<hr>
+<h2 id="18-与-pnc-的对应关系">18. 与 PNC 的对应关系
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>DrivoR 部件</th>
+          <th>PNC 中的近似对应</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Trajectory queries</td>
+          <td>不同驾驶意图或候选轨迹生成器</td>
+      </tr>
+      <tr>
+          <td>Trajectory decoder</td>
+          <td>候选轨迹规划器</td>
+      </tr>
+      <tr>
+          <td>Scoring decoder</td>
+          <td>学习得到的 cost/reward 评估器</td>
+      </tr>
+      <tr>
+          <td>NC/DAC/TTC</td>
+          <td>碰撞和约束代价</td>
+      </tr>
+      <tr>
+          <td>EP</td>
+          <td>进度奖励</td>
+      </tr>
+      <tr>
+          <td>Comfort</td>
+          <td>舒适性代价</td>
+      </tr>
+      <tr>
+          <td>Score weights</td>
+          <td>PNC 中各 cost term 的权重</td>
+      </tr>
+      <tr>
+          <td>Camera registers</td>
+          <td>隐式学习的场景状态摘要</td>
+      </tr>
+      <tr>
+          <td>LoRA</td>
+          <td>对预训练感知特征的任务适配</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>需要注意：</p>
+<ul>
+<li>learned score 不等同于人工 cost function；</li>
+<li>registers 不等同于显式障碍物或车道线；</li>
+<li>DrivoR 没有显式输出完整 BEV 或结构化环境模型；</li>
+<li>它学习的是对规划有用的隐式中间表示。</li>
+</ul>
+<hr>
+<h2 id="19-最终核心结论">19. 最终核心结论
+</h2><ol>
+<li><strong>Register 是学习型视觉压缩器</strong>：它们没有固定位置，通过 self-attention 主动从 patch tokens 中提取重要信息。</li>
+<li><strong>Camera-aware registers 保留视角信息</strong>：每个摄像头拥有专属 registers，因此前视、侧视和后视信息不会被简单混合。</li>
+<li><strong>Register 压缩显著降低下游计算</strong>：约 16000 个视觉 tokens 被压缩成 64 个 scene tokens，下游 decoder 计算量大幅下降。</li>
+<li><strong>LoRA 负责适配，不负责压缩</strong>：registers 负责保存摘要，LoRA 负责让预训练 ViT 学会如何提取和组织驾驶相关信息。</li>
+<li><strong>多候选轨迹比单轨迹更适合驾驶多模态</strong>：64 条候选轨迹已经基本达到性能平台。</li>
+<li><strong>生成器与评分器应该解耦</strong>：生成轨迹和判断轨迹的视觉关注区域不同，独立分支更合理。</li>
+<li><strong>分别预测子分数比直接预测总分更有解释性和可控性</strong>：推理时可以重新设置安全、舒适、进度等权重。</li>
+<li><strong>BCE 是匹配 ([0,1]) 子分数的工程选择</strong>：论文没有证明 BCE 绝对优于 MSE；真正重要的是分解预测子分数并重新组合。</li>
+<li><strong>简单的纯 Transformer 也可以取得很强结果</strong>：DrivoR 不使用 BEV、LiDAR 或大型轨迹字典，也能在多个 benchmark 上达到很高性能。</li>
+</ol>
+<hr>
+<h2 id="20-仍待讨论的问题">20. 仍待讨论的问题
+</h2><ul>
+<li>Register 是否可以直接对应可解释的驾驶语义？</li>
+<li>如何让 registers 融合历史帧？</li>
+<li>是否应该让不同摄像头使用不同数量的 registers？</li>
+<li>LoRA 的最佳 target modules 是只改 (Q,V)，还是同时改 FFN？</li>
+<li>BCE、MSE、排序损失对轨迹选择的影响有何区别？</li>
+<li>如何避免评分器在复杂场景中关注错误摄像头？</li>
+<li>如何把 learned scorer 与传统 PNC cost function 更紧密地结合？</li>
+<li>如何将地图、LiDAR 或车辆历史状态加入 register 压缩框架？</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E8%BD%A8%E8%BF%B9%E8%A7%84%E5%88%92/">轨迹规划</a>
+        
+            <a href="/tags/%E8%A7%86%E8%A7%89transformer/">视觉Transformer</a>
+        
+            <a href="/tags/lora/">LoRA</a>
+        
+            <a href="/tags/%E8%A7%86%E8%A7%89token%E5%8E%8B%E7%BC%A9/">视觉token压缩</a>
+        
+            <a href="/tags/navsim/">NAVSIM</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/diffusion-drive-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DiffusionDriveV2: Truncated Diffusion Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/plan-r1/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Plan-R1: Safe and Feasible Trajectory Planning as Language Modeling</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/hi-p-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">HiP-AD: Hierarchical and Multi-granularity Planning with Deformable Attention</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-ad/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
