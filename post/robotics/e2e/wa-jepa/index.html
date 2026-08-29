@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="把 V-JEPA 2 的随机遮挡补全改造成严格的历史推演未来，再用条件 Flow Matching 在一个联合 predictor 中耦合未来场景 latent 与自车轨迹，在 NAVSIM-v2 取得 91.7 EPDMS，并在零样本 HUGSIM 闭环仿真中大幅领先。">
+<title>WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/wa-jepa/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving">
+<meta property='og:description' content="把 V-JEPA 2 的随机遮挡补全改造成严格的历史推演未来，再用条件 Flow Matching 在一个联合 predictor 中耦合未来场景 latent 与自车轨迹，在 NAVSIM-v2 取得 91.7 EPDMS，并在零样本 HUGSIM 闭环仿真中大幅领先。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/wa-jepa/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='论文阅读' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='JEPA' /><meta property='article:tag' content='FlowMatching' /><meta property='article:tag' content='世界动作模型' /><meta property='article:tag' content='NAVSIM' /><meta property='article:tag' content='HUGSIM' /><meta property='article:published_time' content='2026-08-21T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-21T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving">
+<meta name="twitter:description" content="把 V-JEPA 2 的随机遮挡补全改造成严格的历史推演未来，再用条件 Flow Matching 在一个联合 predictor 中耦合未来场景 latent 与自车轨迹，在 NAVSIM-v2 取得 91.7 EPDMS，并在零样本 HUGSIM 闭环仿真中大幅领先。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#1-一句话结论">1. 一句话结论</a></li>
+    <li><a href="#2-背景与问题">2. 背景与问题</a>
+      <ul>
+        <li><a href="#21-从模块化-pnc-到端到端规划">2.1 从模块化 PNC 到端到端规划</a></li>
+        <li><a href="#22-两条已有路线">2.2 两条已有路线</a></li>
+        <li><a href="#23-v-jepa-的机会与缺口">2.3 V-JEPA 的机会与缺口</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-预备知识v-jepa-2-的师生特征预测">3. 预备知识：V-JEPA 2 的师生特征预测</a>
+      <ul>
+        <li><a href="#31-表示塌缩是否被理论保证避免">3.1 表示塌缩是否被理论保证避免？</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-问题定义与符号">4. 问题定义与符号</a></li>
+    <li><a href="#5-方法总览两阶段训练">5. 方法总览：两阶段训练</a></li>
+    <li><a href="#6-stage-1混合未来遮挡预训练">6. Stage 1：混合未来遮挡预训练</a>
+      <ul>
+        <li><a href="#61-历史上下文-token">6.1 历史上下文 token</a></li>
+        <li><a href="#62-z_cond未来条件-token-如何生成">6.2 <code>Z_cond</code>：未来条件 token 如何生成</a></li>
+        <li><a href="#63-ema-目标未来-token">6.3 EMA 目标未来 token</a></li>
+        <li><a href="#64-条件-flow-matching-与-x-prediction">6.4 条件 Flow Matching 与 x-prediction</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-stage-2联合世界-动作建模">7. Stage 2：联合世界-动作建模</a>
+      <ul>
+        <li><a href="#71-为什么只使用-full-mask">7.1 为什么只使用 Full-mask</a></li>
+        <li><a href="#72-动作-token-的构造">7.2 动作 token 的构造</a></li>
+        <li><a href="#73-联合预测器与梯度方向">7.3 联合预测器与梯度方向</a></li>
+        <li><a href="#74-stage-2-损失">7.4 Stage 2 损失</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-推理从噪声联合生成未来场景与轨迹">8. 推理：从噪声联合生成未来场景与轨迹</a>
+      <ul>
+        <li><a href="#81-终点预测到底是什么">8.1 &ldquo;终点预测&quot;到底是什么</a></li>
+        <li><a href="#82-从-x-prediction-推导-flow-velocity">8.2 从 x-prediction 推导 flow velocity</a></li>
+        <li><a href="#83-为何选-x-prediction-而非直接预测-velocity">8.3 为何选 x-prediction 而非直接预测 velocity</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-实验设置">9. 实验设置</a>
+      <ul>
+        <li><a href="#91-训练与推理超参数">9.1 训练与推理超参数</a></li>
+        <li><a href="#92-navsim-指标">9.2 NAVSIM 指标</a></li>
+        <li><a href="#93-hugsim-闭环设置">9.3 HUGSIM 闭环设置</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-结果">10. 结果</a>
+      <ul>
+        <li><a href="#101-navsim-v2">10.1 NAVSIM-v2</a></li>
+        <li><a href="#102-navsim-v1">10.2 NAVSIM-v1</a></li>
+        <li><a href="#103-hugsim-零样本闭环">10.3 HUGSIM 零样本闭环</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-消融与表征分析">11. 消融与表征分析</a>
+      <ul>
+        <li><a href="#111-视觉编码器初始化">11.1 视觉编码器初始化</a></li>
+        <li><a href="#112-stage-1-掩码策略">11.2 Stage 1 掩码策略</a></li>
+        <li><a href="#113-stage-2-的场景-动作耦合与未来预测">11.3 Stage 2 的场景-动作耦合与未来预测</a></li>
+        <li><a href="#114-为什么-flow-matching-优于直接回归">11.4 为什么 Flow Matching 优于直接回归</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-与-pnc-的对应关系">12. 与 PNC 的对应关系</a></li>
+    <li><a href="#13-核心贡献适用条件与局限性">13. 核心贡献、适用条件与局限性</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#适用条件">适用条件</a></li>
+        <li><a href="#局限性和待讨论问题">局限性和待讨论问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#14-最终记忆点">14. 最终记忆点</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/wa-jepa/">WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-21T00:00:00Z'>Friday, August 21, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        6 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#1-一句话结论">1. 一句话结论</a></li>
+    <li><a href="#2-背景与问题">2. 背景与问题</a>
+      <ul>
+        <li><a href="#21-从模块化-pnc-到端到端规划">2.1 从模块化 PNC 到端到端规划</a></li>
+        <li><a href="#22-两条已有路线">2.2 两条已有路线</a></li>
+        <li><a href="#23-v-jepa-的机会与缺口">2.3 V-JEPA 的机会与缺口</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-预备知识v-jepa-2-的师生特征预测">3. 预备知识：V-JEPA 2 的师生特征预测</a>
+      <ul>
+        <li><a href="#31-表示塌缩是否被理论保证避免">3.1 表示塌缩是否被理论保证避免？</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-问题定义与符号">4. 问题定义与符号</a></li>
+    <li><a href="#5-方法总览两阶段训练">5. 方法总览：两阶段训练</a></li>
+    <li><a href="#6-stage-1混合未来遮挡预训练">6. Stage 1：混合未来遮挡预训练</a>
+      <ul>
+        <li><a href="#61-历史上下文-token">6.1 历史上下文 token</a></li>
+        <li><a href="#62-z_cond未来条件-token-如何生成">6.2 <code>Z_cond</code>：未来条件 token 如何生成</a></li>
+        <li><a href="#63-ema-目标未来-token">6.3 EMA 目标未来 token</a></li>
+        <li><a href="#64-条件-flow-matching-与-x-prediction">6.4 条件 Flow Matching 与 x-prediction</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-stage-2联合世界-动作建模">7. Stage 2：联合世界-动作建模</a>
+      <ul>
+        <li><a href="#71-为什么只使用-full-mask">7.1 为什么只使用 Full-mask</a></li>
+        <li><a href="#72-动作-token-的构造">7.2 动作 token 的构造</a></li>
+        <li><a href="#73-联合预测器与梯度方向">7.3 联合预测器与梯度方向</a></li>
+        <li><a href="#74-stage-2-损失">7.4 Stage 2 损失</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-推理从噪声联合生成未来场景与轨迹">8. 推理：从噪声联合生成未来场景与轨迹</a>
+      <ul>
+        <li><a href="#81-终点预测到底是什么">8.1 &ldquo;终点预测&quot;到底是什么</a></li>
+        <li><a href="#82-从-x-prediction-推导-flow-velocity">8.2 从 x-prediction 推导 flow velocity</a></li>
+        <li><a href="#83-为何选-x-prediction-而非直接预测-velocity">8.3 为何选 x-prediction 而非直接预测 velocity</a></li>
+      </ul>
+    </li>
+    <li><a href="#9-实验设置">9. 实验设置</a>
+      <ul>
+        <li><a href="#91-训练与推理超参数">9.1 训练与推理超参数</a></li>
+        <li><a href="#92-navsim-指标">9.2 NAVSIM 指标</a></li>
+        <li><a href="#93-hugsim-闭环设置">9.3 HUGSIM 闭环设置</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-结果">10. 结果</a>
+      <ul>
+        <li><a href="#101-navsim-v2">10.1 NAVSIM-v2</a></li>
+        <li><a href="#102-navsim-v1">10.2 NAVSIM-v1</a></li>
+        <li><a href="#103-hugsim-零样本闭环">10.3 HUGSIM 零样本闭环</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-消融与表征分析">11. 消融与表征分析</a>
+      <ul>
+        <li><a href="#111-视觉编码器初始化">11.1 视觉编码器初始化</a></li>
+        <li><a href="#112-stage-1-掩码策略">11.2 Stage 1 掩码策略</a></li>
+        <li><a href="#113-stage-2-的场景-动作耦合与未来预测">11.3 Stage 2 的场景-动作耦合与未来预测</a></li>
+        <li><a href="#114-为什么-flow-matching-优于直接回归">11.4 为什么 Flow Matching 优于直接回归</a></li>
+      </ul>
+    </li>
+    <li><a href="#12-与-pnc-的对应关系">12. 与 PNC 的对应关系</a></li>
+    <li><a href="#13-核心贡献适用条件与局限性">13. 核心贡献、适用条件与局限性</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#适用条件">适用条件</a></li>
+        <li><a href="#局限性和待讨论问题">局限性和待讨论问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#14-最终记忆点">14. 最终记忆点</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="wa-jepa将视频-jepa-改造成自动驾驶世界-动作模型">WA-JEPA：将视频 JEPA 改造成自动驾驶世界-动作模型
+</h1>
+    <blockquote>
+        <p><strong>论文</strong>：WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving
+<strong>时间</strong>：2026年8月21日（arXiv:2608.20974v1）
+<strong>链接</strong>：https://arxiv.org/abs/2608.20974
+<strong>阅读目标</strong>：从具有规则式 PNC 经验的工程视角，理解它如何把&quot;预测未来场景&quot;与&quot;输出自车轨迹&quot;放到同一个生成过程里。</p>
+
+    </blockquote>
+<blockquote class="alert alert-tip">
+        <div class="alert-header">
+            <span class="alert-icon">💡</span>
+            <span class="alert-title">相关笔记</span>
+        </div>
+        <div class="alert-body">
+            <p>同属&quot;世界模型融合&quot;方向的自动驾驶论文另见 Metis：不对称注意力解锁联合训练与解耦推理、DriveVA - 视频动作模型即零样本驾驶员、EponaV2: Driving World Model with Comprehensive Future Reasoning、World4Drive - 无需感知标注的端到端自动驾驶世界模型。</p>
+        </div>
+    </blockquote>
+<h2 id="1-一句话结论">1. 一句话结论
+</h2><p>WA-JEPA 以 V-JEPA 2 的视频表征为视觉骨干，将原有的&quot;随机遮挡特征补全&quot;改成&quot;由过去预测未来&quot;，并用条件 Flow Matching 同时生成未来场景 latent 和自车未来轨迹。它试图同时获得两类模型的优点：V-JEPA 的高层时空语义，以及世界模型的未来推演能力。</p>
+<p>作者报告的主要结果是：在 NAVSIM-v2 的 navtest 上得到 <strong>91.7 EPDMS</strong>，在未使用 HUGSIM 数据训练或微调的条件下，在 436 个 HUGSIM 闭环场景上得到 <strong>0.4462 HD-Score</strong>。</p>
+<h2 id="2-背景与问题">2. 背景与问题
+</h2><h3 id="21-从模块化-pnc-到端到端规划">2.1 从模块化 PNC 到端到端规划
+</h3><p>传统自动驾驶通常将感知、预测、规划和控制拆开。规则式 PNC 的优点是中间变量明确，例如障碍物轨迹、可行驶区域、候选轨迹和代价项都可单独审查；缺点是模块接口误差会叠加，且每个任务需要专门规则或监督。</p>
+<p>端到端（End-to-End，E2E）驾驶直接学习：</p>
+$$ \text{多传感器观测} \longrightarrow \text{自车未来动作或轨迹}。 $$<p>许多 E2E 方法仍依赖检测、分割、占用等中间监督。另一类方法只用图像和少量轨迹标签学习这个映射，但存在 <strong>监督不足（supervision deficit）</strong>：输入视频包含道路、交通灯、其他交通参与者、遮挡、时序运动等大量信息，输出却只是几步自车轨迹，模型缺少足够约束来学会&quot;为什么要这样开&quot;。</p>
+<h3 id="22-两条已有路线">2.2 两条已有路线
+</h3><ul>
+<li><strong>视觉-语言-动作（Vision-Language-Action，VLA）</strong>：借助视觉语言模型的语言理解和推理能力做决策。其问题是很多方法仍是&quot;密集视觉输入到稀疏动作输出&quot;的直接映射。</li>
+<li><strong>世界-动作模型（World-Action Model，WAM）</strong>：同时预测未来世界和自车动作，用未来帧预测提供更稠密的自监督。许多视频生成式 WAM 使用 VAE（Variational Autoencoder，变分自编码器）压缩后的 latent；该空间首先为重建像素服务，可能缺少规划真正关心的高层时空语义。</li>
+</ul>
+<h3 id="23-v-jepa-的机会与缺口">2.3 V-JEPA 的机会与缺口
+</h3><p>V-JEPA（Video Joint Embedding Predictive Architecture）不重建像素，而是预测被遮挡视频区域的<strong>特征表示</strong>。它学习到的表示通常更关注物体、布局和运动关系，因而比像素重建 latent 更有语义。</p>
+<p>但原始 V-JEPA 不能直接作为可部署规划器，原因有三点：</p>
+<ol>
+<li>它随机遮挡时空 patch，目标本质是&quot;根据周围内容补全缺失区域&quot;，不是严格的&quot;只看过去预测未来&quot;。</li>
+<li>它直接回归一个确定的特征。完全未观测的未来通常有多种合理可能，直接回归容易输出平均、平滑的未来。</li>
+<li>它只建模视觉特征，没有将未来世界状态与自车轨迹放进一个可直接规划的预测过程；已有 V-JEPA 规划方式可能还需要目标图像和 MPC 多轮优化。</li>
+</ol>
+<p>WA-JEPA 的命题是：保留 V-JEPA 2 的时空表示能力，再补上因果未来生成和动作建模。</p>
+<h2 id="3-预备知识v-jepa-2-的师生特征预测">3. 预备知识：V-JEPA 2 的师生特征预测
+</h2><p>原始 V-JEPA 使用：</p>
+<ul>
+<li>在线编码器 $E_\theta$：接受带遮挡的观测；</li>
+<li>目标编码器 $E_{\bar\theta}$：接受目标观测，提供训练目标；</li>
+<li>预测器 $P_\psi$：从在线编码器的上下文特征预测目标特征。</li>
+</ul>
+<p>其训练形式为：</p>
+$$ \min_{\theta,\psi} \left| P_\psi(E_\theta(\alpha))- \operatorname{sg}(E_{\bar\theta}(\beta)) \right|_1, \tag{1} $$<p>其中 $\alpha$ 是带遮挡的输入，$\beta$ 是目标输入；$\operatorname{sg}(\cdot)$ 表示 stop-gradient（停止梯度），即反向传播时目标编码器输出被当作常量。</p>
+<p>目标编码器不是被梯度直接更新，而是在线编码器的指数移动平均（EMA）：</p>
+$$ \bar\theta \leftarrow \mu\bar\theta+(1-\mu)\theta. \tag{2} $$<p>$\mu$ 是 EMA 动量。可把目标编码器视为更新较慢的老师，在线编码器是快速学习的学生。</p>
+<h3 id="31-表示塌缩是否被理论保证避免">3.1 表示塌缩是否被理论保证避免？
+</h3><p>**没有严格保证。**若两个编码器和预测器都输出同一个常量，预测与目标相同，MSE 或 L1 损失也可能很低甚至为零。</p>
+<p>本文实际依赖以下机制降低塌缩风险：目标端 stop-gradient 使学生不能在当前反传中同时改写目标；EMA 使目标网络不会立即追随在线网络变化；更重要的是，Stage 1 从已具备时空语义的 V-JEPA 2 权重初始化，而不是随机初始化。于是训练早期的目标特征随样本、时间、相机和空间位置变化，固定输出无法拟合。</p>
+<p>但论文没有报告显式的方差约束、协方差去相关损失或对比负样本来从目标函数上排除常量解；若在线网络长期塌缩，EMA 教师最终也可能随之塌缩。因此这里应理解为有效的训练稳定化策略，而非数学上的防塌缩证明。</p>
+<h2 id="4-问题定义与符号">4. 问题定义与符号
+</h2><p>给定历史多视角图像、当前自车状态和历史动作，模型预测未来 $K$ 个时刻的自车位姿：</p>
+$$ f_\theta(X_{1:H},s,Y_{1:H}) \mapsto \hat Y_{H+1:H+K}= \{(\hat x_k,\hat y_k,\hat\phi_k)\}_{k=1}^{K}. \tag{3} $$<ul>
+<li>$H$：历史帧数；$K$：未来预测帧数或动作步数；</li>
+<li>$X_t=\{X_t^c\}_{c=1}^{C}$：第 $t$ 帧的 $C$ 个同步相机图像；</li>
+<li>$s$：紧凑自车状态；</li>
+<li>$Y$：自车历史或未来动作；$(x,y,\phi)$ 分别为位置和航向角。</li>
+</ul>
+<p>论文实现中输入左、前、右、后四个相机的 4 帧历史图像，图像分辨率为 256×512，预测 8 个未来动作，频率为 2 Hz。视觉 token 的精确 hidden dimension、每帧 patch 数和具体位置编码形式，正文未说明。</p>
+<p>为便于理解，可用符号形状表示：</p>
+<ul>
+<li>$Z_{\text{ctx}}\in\mathbb{R}^{B\times N_{\text{ctx}}\times D}$：历史场景 token；</li>
+<li>$Z_{\text{cond}},Z_t,Z^*_{\text{future}}\in\mathbb{R}^{B\times N_{\text{future}}\times D}$：未来条件、带噪未来、干净未来目标 token；</li>
+<li>$Y\in\mathbb{R}^{B\times K\times3}$：未来轨迹；</li>
+<li>$B$、$D$、$N$ 分别是 batch 大小、特征维度和 token 数。</li>
+</ul>
+<p>这些是由公式推导出的抽象形状，不是论文披露的具体数值。附录说明标准设定中 8 个未来帧以 tubelet size 2 表示为 $F=4$ 个未来 token 时间步，并从四相机场景 token 网格选取动态位置。</p>
+<h2 id="5-方法总览两阶段训练">5. 方法总览：两阶段训练
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>数据与监督</th>
+          <th>核心目标</th>
+          <th>未来图像是否输入学生预测器</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Stage 1</td>
+          <td>nuPlan 多视角视频，无动作监督</td>
+          <td>将 V-JEPA 2 适配为未来 latent 预测器</td>
+          <td>Patch-mask 时部分可见；Full-mask 时完全不可见</td>
+      </tr>
+      <tr>
+          <td>Stage 2</td>
+          <td>NAVSIM <code>navtrain</code>，未来场景 + 动作监督</td>
+          <td>联合生成未来场景 latent 与未来自车轨迹</td>
+          <td>否；只使用 Full-mask</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>这相当于先训练&quot;通过历史推演未来世界&quot;的能力，再让轨迹监督把世界表示拉向对规划有用的方向。</p>
+<h2 id="6-stage-1混合未来遮挡预训练">6. Stage 1：混合未来遮挡预训练
+</h2><h3 id="61-历史上下文-token">6.1 历史上下文 token
+</h3><p>论文采用预训练 V-JEPA 2 ViT-L 作为视觉骨干。各相机流被视作独立视频、通过共享在线编码器处理。历史帧始终可见：</p>
+$$ Z_{\text{ctx}}=E_\theta(X_{1:H}). \tag{5} $$<p>它承载&quot;从当前已观测场景出发，未来可能如何演化&quot;的条件信息。</p>
+<h3 id="62-z_cond未来条件-token-如何生成">6.2 <code>Z_cond</code>：未来条件 token 如何生成
+</h3><p>未来图像使用遮挡模式 $M^{(m)}$，其中 $m\in\{\text{full},\text{patch}\}$。仅未遮挡的未来 patch 被在线编码器读取，随后得到：</p>
+$$ Z_{\text{cond}}^{(m)}= \Phi^{(m)} \left( Z_{\text{mask}}, E_\theta(X_{H+1:H+K},M^{(m)}) \right). \tag{6} $$<ul>
+<li>$Z_{\text{mask}}$：可学习的 mask token；</li>
+<li>$E_\theta(\cdot)$：对可见未来 patch 产生 token；</li>
+<li>$\Phi^{(m)}$：mask-aware fill-and-scatter 操作。它先建立完整未来 token 槽位，再把可见 patch 的 token 放回原来的时间、相机和空间位置，其他位置保持 mask token。</li>
+</ul>
+<p>以一帧未来图像被分成四个 patch 为例，若第 1、3 个 patch 可见：</p>
+$$ Z_{\text{cond}}=[v_1,m_2,v_3,m_4], $$<p>其中 $v_1,v_3$ 是视觉编码器输出，$m_2,m_4$ 是可学习 mask token。它不是未来真值，而是预测器的条件输入。</p>
+<p>两种掩码的作用不同：</p>
+<ul>
+<li><strong>Patch-mask</strong>：保留部分未来 patch，任务是利用局部未来信息补全其他未来 token，降低学习难度，并保持 V-JEPA 原有的局部特征补全能力。</li>
+<li><strong>Full-mask</strong>：所有未来 patch 都不可见，因此 $Z_{\text{cond}}^{(\text{full})}$ 完全由 mask token 构成。模型只能由历史推断未来，学习严格的过去到未来动力学。</li>
+</ul>
+<h3 id="63-ema-目标未来-token">6.3 EMA 目标未来 token
+</h3><p>目标编码器读取完整未来图像：</p>
+$$ Z^*_{\text{future}}=E_{\bar\theta}(X_{H+1:H+K}). \tag{7} $$<p>它只作为训练标签，不进入学生预测器输入。星号表示干净的目标 latent，并非像素级未来视频。</p>
+<h3 id="64-条件-flow-matching-与-x-prediction">6.4 条件 Flow Matching 与 x-prediction
+</h3><p>对未来 scene token 采样高斯噪声 $\epsilon_{\text{future}}\sim\mathcal{N}(0,I)$，并沿噪声与真实未来之间构造线性路径：</p>
+$$ Z_t=(1-t)\epsilon_{\text{future}}+tZ^*_{\text{future}}. \tag{8} $$<ul>
+<li>$t$ 是 flow time（生成路径的连续时间），不是物理时间；</li>
+<li>$t=0$ 对应纯噪声，$t=1$ 对应干净未来 latent；</li>
+<li>正文说会采样连续 flow time，但未给出其精确采样分布。</li>
+</ul>
+<p>预测器接收历史场景、未来条件、当前带噪未来和 flow time，并预测干净终点：</p>
+$$ \hat Z_{\text{future}} =P_\psi^{\text{future}} (Z_{\text{ctx}},Z_{\text{cond}},Z_t,t). \tag{9} $$<p>这被称为 clean-latent 或 <strong>x-prediction</strong>：网络预测的是 $t=1$ 的完整干净未来状态，而不是直接预测 flow 速度。预测器采用 MMDiT（Multimodal Diffusion Transformer）风格，主要通过 context scene token 与 future scene token 的联合 self-attention 交互；具体 block 内部结构正文未说明。</p>
+<p>Stage 1 损失为未来 token 的均方误差：</p>
+$$ \mathcal{L}_{\text{Stage 1}} =\mathcal{L}_{\text{future}} =\frac{1}{N} \left| \hat Z_{\text{future}}- \operatorname{sg}(Z^*_{\text{future}}) \right|_2^2, \tag{10} $$<p>其中 $N$ 是参与损失计算的未来 scene token 数。该目标要求模型在已知当前带噪状态和历史条件时，还原正确的干净未来 token。</p>
+<h2 id="7-stage-2联合世界-动作建模">7. Stage 2：联合世界-动作建模
+</h2><p>Stage 2 从 Stage 1 权重初始化，增加动作流，并保持场景预测监督。关键不是&quot;先生成未来视频，再根据视频输出轨迹&quot;，而是在同一个生成过程里同时维护场景 latent 与轨迹这两个状态。</p>
+<h3 id="71-为什么只使用-full-mask">7.1 为什么只使用 Full-mask
+</h3><p>Stage 2 使用：</p>
+$$ Z_{\text{cond}}=Z_{\text{cond}}^{(\text{full})}. $$<p>因此它完全是可学习 mask token，<strong>不含任何真实未来图像的样本相关信息</strong>。真实未来图像只通过 EMA target encoder 构建 $Z^*_{\text{future}}$ 作为训练标签。</p>
+<p>这样做是因为部署时不可能拿到未来图像。若动作分支在训练中读取了部分真实未来 patch，会造成 future leakage（未来信息泄漏）。</p>
+<p>从信息内容看，Full-mask 下的 $Z_{\text{cond}}$ 不提供未来观测。它可能仍保留未来 token 的固定槽位模板，并保持与 Stage 1 相同的 predictor 接口；&ldquo;作为查询或位置先验&quot;的解释是合理推断，但论文没有对其单独消融，也未公开内部融合方式。因此不能断言它在 Stage 2 必不可少。若模型已有明确的时间、相机、空间位置编码，理论上可以去掉它；是否影响性能需要实验验证。</p>
+<h3 id="72-动作-token-的构造">7.2 动作 token 的构造
+</h3><p>先将未来真值动作归一化：</p>
+$$ \bar Y_{H+1:H+K}=\operatorname{Norm}(Y_{H+1:H+K}), $$<p>并以与场景 token 相同的 flow time 加噪：</p>
+$$ \tilde Y_t=(1-t)\epsilon_y+t\bar Y_{H+1:H+K}, \qquad \epsilon_y\sim\mathcal{N}(0,I). \tag{11} $$<p>$\tilde Y_t$ 不是已知未来轨迹，而是当前需要被逐步去噪的&quot;轨迹草稿&rdquo;。它与历史动作和自车状态分别编码后拼接：</p>
+$$ T_{\text{act}}=\operatorname{Concat}[T_n,T_h,T_s], \tag{12} $$$$ T_n=F_n(\tilde Y_t),\qquad T_h=F_h(Y_{1:H}),\qquad T_s=F_s(s). $$<p>论文说明 $F_n$ 是线性投影，$F_h,F_s$ 是 MLP。动作 token 同时包含：当前的带噪未来动作状态、历史运动信息和自车当前运动状态。</p>
+<h3 id="73-联合预测器与梯度方向">7.3 联合预测器与梯度方向
+</h3><p>同一个 Joint Future-Action Flow Predictor 有场景输出流和动作输出流：</p>
+$$ \hat Z_{\text{future}} =P_\psi^{\text{future}} (Z_{\text{ctx}},Z_{\text{cond}},Z_t, \operatorname{sg}(T_{\text{act}}),t), \tag{13a} $$$$ \hat{\bar Y}_{H+1:H+K} =P_\psi^{\text{act}} (Z_{\text{ctx}},Z_{\text{cond}},Z_t, T_{\text{act}},t). \tag{13b} $$<p>两条输出流来自同一联合 predictor，而不是彼此独立的两个网络。前向计算时场景分支能读取动作 token，动作分支也能读取场景信息，因此二者可相互约束。例如，路口、前车减速和行人等场景变化会影响轨迹；轨迹的候选趋势也可帮助模型关注规划相关的场景区域。</p>
+<p>但场景分支读取的是 $\operatorname{sg}(T_{\text{act}})$：<strong>scene loss 不会通过该接口更新动作 token 编码支路</strong>。论文附录说明，这个不对称设计避免未来场景预测损失主导或破坏动作流；反过来，动作输出流仍可关注可微的历史和未来场景 token，所以动作监督可以通过共享交互模块塑造规划相关的场景表示。</p>
+<p>可将梯度关系概括为：</p>
+<ul>
+<li>future scene loss 更新场景相关支路和共享 predictor，但在 action-token 接口处停止；</li>
+<li>action loss 可经联合交互模块影响场景表示和动作支路。</li>
+</ul>
+<p>论文没有给出 Joint Predictor 的精确代码、attention 拓扑、$Z_{\text{cond}}$ 与 $Z_t$ 的具体融合方式，或使用 AdaLN（Adaptive Layer Normalization）等时间条件机制的证据。将它们实现成相加、独立 stream、cross-attention 或 AdaLN 调制都属于可能的工程设计，不能写成作者已公开的事实。</p>
+<h3 id="74-stage-2-损失">7.4 Stage 2 损失
+</h3><p>动作输出也是对整段干净未来轨迹的预测，使用 MSE：</p>
+$$ \mathcal{L}_{\text{act}} =\frac{1}{K}\sum_{k=1}^{K} \left| \hat{\bar y}_k-\bar y_k \right|_2^2, \tag{14} $$<p>其中 $\bar y_k=\operatorname{Norm}(x_k,y_k,\phi_k)$，$\hat{\bar y}_k$ 是对应预测。总损失为：</p>
+$$ \mathcal{L}_{\text{Stage 2}} =\lambda_{\text{future}}\mathcal{L}_{\text{future}} +\lambda_{\text{act}}\mathcal{L}_{\text{act}}. \tag{15} $$<p>$\lambda_{\text{future}}$ 与 $\lambda_{\text{act}}$ 控制维持世界建模能力和拟合动作的相对强度；论文正文未给出数值。</p>
+<h2 id="8-推理从噪声联合生成未来场景与轨迹">8. 推理：从噪声联合生成未来场景与轨迹
+</h2><p>部署输入只有历史多视角观测、历史动作和自车状态；没有未来图像，也没有真值未来动作。未来场景 token 和归一化未来动作都由高斯噪声初始化。每个采样步骤，联合 predictor 预测二者的干净终点，再将终点换算为线性 flow 上的速度并迭代积分。论文使用 12 个采样步骤。</p>
+<h3 id="81-终点预测到底是什么">8.1 &ldquo;终点预测&quot;到底是什么
+</h3><p>这里的终点不是指&quot;只预测最后一个轨迹点&rdquo;。对任一 flow 状态 $x_t$，网络预测的是 $t=1$ 时的<strong>完整干净状态</strong>：</p>
+<ul>
+<li>对场景分支，终点是完整 $Z^*_{\text{future}}$ token 序列；</li>
+<li>对动作分支，终点是完整 $K$ 步归一化轨迹 $\bar Y_{H+1:H+K}$。</li>
+</ul>
+<p>这里的 flow velocity 是 token/轨迹向量在生成路径上的变化率，不是车辆真实物理速度。</p>
+<h3 id="82-从-x-prediction-推导-flow-velocity">8.2 从 x-prediction 推导 flow velocity
+</h3><p>对一般状态 $x$，论文的线性插值路径为：</p>
+$$ x_t=(1-t)x_0+tx_1, $$<p>其中 $x_0$ 是高斯噪声，$x_1$ 是干净目标。对 $t$ 求导：</p>
+$$ v_t=\frac{dx_t}{dt}=x_1-x_0. $$<p>推理时已知当前 $x_t$，网络给出 $\hat x_1$，但无法直接知道 $x_0$。由路径反解：</p>
+$$ x_0=\frac{x_t-tx_1}{1-t}. $$<p>代入得到：</p>
+$$ \boxed{ \hat v_t=\frac{\hat x_1-x_t}{1-t} }. $$<p>所以：</p>
+$$ \hat v_t^z=\frac{\hat Z_{\text{future}}-Z_t}{1-t}, \qquad \hat v_t^y=\frac{\hat{\bar Y}_{\text{future}}-\tilde Y_t}{1-t}. $$<p>这直接由论文公式 (8) 推导。论文只说会将终点预测转换成线性 flow 速度并积分，<strong>没有披露具体 ODE solver、最终时间点的数值处理、步长调度或其他采样器细节</strong>。</p>
+<h3 id="83-为何选-x-prediction-而非直接预测-velocity">8.3 为何选 x-prediction 而非直接预测 velocity
+</h3><p>作者采用 x-prediction 的直接事实是：训练目标就是干净未来 latent/轨迹，损失是对该干净终点的 MSE。它带来三个自然好处：</p>
+<ol>
+<li>监督目标就是规划所关心的完整未来场景和完整轨迹，语义直观。</li>
+<li>场景 token 与轨迹的物理含义不同，但都可统一为&quot;当前带噪状态 $\rightarrow$ 干净终点状态&quot;。</li>
+<li>velocity target $x_1-x_0$ 随每次随机噪声 $x_0$ 改变；x-prediction 的标签 $x_1$ 对同一数据样本固定。</li>
+</ol>
+<p>代价是公式含 $1/(1-t)$：当 $t$ 接近 1，终点预测误差会被放大到速度误差中。工程上通常避免在恰好 $t=1$ 再计算该式，最后一步可直接采用终点估计；但本文的精确处理正文未说明。</p>
+<p>论文只比较了 Flow Matching 与直接回归，并未比较 x-prediction 和 v-prediction。因此不能从该论文得出&quot;x-prediction 一定优于 v-prediction&quot;的结论。</p>
+<h2 id="9-实验设置">9. 实验设置
+</h2><h3 id="91-训练与推理超参数">9.1 训练与推理超参数
+</h3><ul>
+<li>Stage 1 在 nuPlan 多视角视频上预训练；Stage 2 在官方 NAVSIM <code>navtrain</code> 上训练；在 <code>navtest</code> 上评估。</li>
+<li>使用 V-JEPA 2 ViT-L；Stage 1 和 Stage 2 分别使用 64、32 张 NVIDIA A800 GPU，单卡 batch size 为 4。</li>
+<li>优化器为 AdamW，使用 bfloat16 和 DeepSpeed ZeRO-2；encoder、scene projector、joint predictor 的学习率分别为 $1\times10^{-5}$、$1\times10^{-4}$、$1.5\times10^{-4}$，weight decay 为 0.04。</li>
+<li>推理使用 12 个采样步骤。随机模型预测以 10 个固定随机种子评估并报告均值；确定性 baseline 评估一次。</li>
+</ul>
+<h3 id="92-navsim-指标">9.2 NAVSIM 指标
+</h3><p>NAVSIM-v1 的 PDMS（Predictive Driver Model Score）包括：</p>
+<ul>
+<li>NC：无自车责任碰撞；</li>
+<li>DAC：车身不离开可行驶区域；</li>
+<li>TTC：预计碰撞时间满足安全阈值；</li>
+<li>Comf.：加速度、jerk、横向加速度、yaw rate 等舒适性符合数据集人类驾驶范围；</li>
+<li>EP：沿路线中心线的前进距离比例。</li>
+</ul>
+$$ \operatorname{PDMS}=NC\cdot DAC\cdot \frac{5\,TTC+2\,Comf.+5\,EP}{12}. \tag{17} $$<p>NC 或 DAC 为零会令整体分数为零，反映安全约束具有乘法门控作用。</p>
+<p>NAVSIM-v2 的 EPDMS（Extended PDMS）额外考虑：</p>
+<ul>
+<li>DDC：行驶方向合规；</li>
+<li>TLC：红灯停车线合规；</li>
+<li>LK：车道保持；</li>
+<li>HC：历史运动和新规划在连接处的舒适性；</li>
+<li>EC：伪仿真两个阶段运动学曲线的一致性。</li>
+</ul>
+<p>EPDMS 对若干子指标使用 human-reference penalty filter：若人类参考在同一场景同一指标上也为零，不对模型施加该项惩罚。这不删除场景，只抑制特定惩罚。<code>EPDMS*</code> 使用修复前聚合实现，<code>EPDMS</code> 使用修复后的官方评估；二者只能在各自协议内比较。</p>
+<h3 id="93-hugsim-闭环设置">9.3 HUGSIM 闭环设置
+</h3><p>HUGSIM 使用 436 个场景，来自 nuScenes（88）、KITTI-360（113）、Waymo（108）和 PandaSet（127）。论文用固定的 HUGSIM commit、共同控制器、命令和评估代码重算方法分数。WA-JEPA 的两个训练阶段均不使用这些 HUGSIM 源数据集或渲染观测，因此属于零样本、源数据集不重叠的闭环评估。</p>
+<h2 id="10-结果">10. 结果
+</h2><h3 id="101-navsim-v2">10.1 NAVSIM-v2
+</h3><p>WA-JEPA 在 navtest 上的修正后 EPDMS 为 <strong>91.7</strong>，高于：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>类别</th>
+          <th style="text-align: right">EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>SparseDriveV2</td>
+          <td>端到端</td>
+          <td style="text-align: right">90.1</td>
+      </tr>
+      <tr>
+          <td>CoWorld-VLA</td>
+          <td>世界/动作</td>
+          <td style="text-align: right">90.0</td>
+      </tr>
+      <tr>
+          <td>Discrete-WAM</td>
+          <td>世界/动作</td>
+          <td style="text-align: right">90.4</td>
+      </tr>
+      <tr>
+          <td>WA-JEPA</td>
+          <td>本文</td>
+          <td style="text-align: right"><strong>91.7</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>其子项为：NC 99.4、DAC 98.2、DDC 99.7、TLC 99.9、EP 87.8、TTC 98.9、LK 98.3、HC 98.3、EC 88.1，修复前 EPDMS* 为 88.0。</p>
+<h3 id="102-navsim-v1">10.2 NAVSIM-v1
+</h3><p>WA-JEPA 的 PDMS 为 <strong>91.8</strong>；对比 Drive-JEPA 89.0、WAM-Flow 90.3、WAM-Diff 91.0、DriveWorld-VLA 91.3。其 NC 99.5、DAC 98.3、TTC 97.7、Comfort 100、EP 85.0。</p>
+<h3 id="103-hugsim-零样本闭环">10.3 HUGSIM 零样本闭环
+</h3><p>WA-JEPA 的 HD-Score 为 <strong>0.4462</strong>，高于 LTF 0.2310、DrivoR 0.3252、UniAD 0.3124、VAD 0.1393。其 NC 0.6856、DAC 0.9635、TTC 0.6120、Comfort 0.6620、PDMS 0.5717、RC 0.5689。</p>
+<p>按难度的 HD-Score 为：Easy 0.7977、Medium 0.5563、Hard 0.3060、Extreme 0.1362。按数据源划分，WA-JEPA 在 nuScenes、KITTI-360、Waymo、PandaSet 上均为表中最高，分别为 0.4725、0.2963、0.5542、0.4702。</p>
+<p>主实验 10 个种子的 EPDMS 均值为 91.7014，标准差 0.0531，95% t 置信区间为 [91.6634, 91.7393]。</p>
+<h2 id="11-消融与表征分析">11. 消融与表征分析
+</h2><h3 id="111-视觉编码器初始化">11.1 视觉编码器初始化
+</h3><p>在不使用本文 Stage 1、直接训练 Stage 2 的对比中：MAE 为 83.8 EPDMS，SigLIP2 为 83.1，DINOv3 为 83.8，原始 V-JEPA 2 为 89.5。这说明视频级 V-JEPA 2 预训练相较图像级自监督或视觉语言初始化更适合作为该世界-动作模型的起点。</p>
+<h3 id="112-stage-1-掩码策略">11.2 Stage 1 掩码策略
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Stage 1 设置</th>
+          <th style="text-align: right">EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>不做 Stage 1</td>
+          <td style="text-align: right">89.5</td>
+      </tr>
+      <tr>
+          <td>仅 Patch-mask</td>
+          <td style="text-align: right">91.0</td>
+      </tr>
+      <tr>
+          <td>仅 Full-mask</td>
+          <td style="text-align: right">91.3</td>
+      </tr>
+      <tr>
+          <td>Patch-mask + Full-mask</td>
+          <td style="text-align: right"><strong>91.7</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>结论是：Patch-mask 的局部补全训练和 Full-mask 的严格因果预测信号互补。仅凭该消融不能判断二者的最优混合比例，因为论文未报告比例。</p>
+<h3 id="113-stage-2-的场景-动作耦合与未来预测">11.3 Stage 2 的场景-动作耦合与未来预测
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>设置</th>
+          <th style="text-align: right">EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>仅动作预测基线</td>
+          <td style="text-align: right">89.9</td>
+      </tr>
+      <tr>
+          <td>增加独立 Flow 未来预测器</td>
+          <td style="text-align: right">90.8</td>
+      </tr>
+      <tr>
+          <td>联合场景-动作、无显式未来 latent 监督</td>
+          <td style="text-align: right">91.1</td>
+      </tr>
+      <tr>
+          <td>联合建模 + 直接回归未来 latent</td>
+          <td style="text-align: right">90.7</td>
+      </tr>
+      <tr>
+          <td>联合建模 + Flow Matching</td>
+          <td style="text-align: right"><strong>91.7</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>未来场景预测和动作-场景联合建模是互补的；对未来 latent 使用直接回归反而降低性能。</p>
+<h3 id="114-为什么-flow-matching-优于直接回归">11.4 为什么 Flow Matching 优于直接回归
+</h3><p>作者在目标表示空间中衡量未来 token 的时序变化，只统计真值中变化最大的动态位置，避免静态路面主导结果。</p>
+<ul>
+<li><strong>Directional similarity collapse gap</strong>：预测序列各未来时刻之间的余弦相似度，相对目标序列增加了多少；越低说明预测没有把不同未来时刻压成相似状态。Flow Matching 约从直接回归的 0.30 降至 0.10。</li>
+<li><strong>Change-magnitude collapse</strong>：预测的相邻时刻特征变化幅度与目标变化幅度的比值；1 最好，低于 1 表示未来变化被低估。Flow Matching 约从 0.45 提升至 0.80。</li>
+</ul>
+<p>PCA 图也显示，Flow Matching 的远期 token 保留更清晰的空间结构；直接回归随时间步增加更平滑。这支持&quot;直接回归趋向条件均值、弱化未来动态&quot;的解释，但不表示 Flow Matching 已完整覆盖多模态未来的不确定性。</p>
+<h2 id="12-与-pnc-的对应关系">12. 与 PNC 的对应关系
+</h2><p>可以把 WA-JEPA 的两个生成变量理解为：</p>
+<ul>
+<li>未来场景 token：不是可直接使用的检测框、占用栅格或预测轨迹，而是包含道路结构、其他参与者变化等信息的高维隐变量；</li>
+<li>未来动作 token：不是控制器直接输出的转角/加速度，而是 8 个未来时刻的自车 $(x,y,\phi)$ 轨迹。</li>
+</ul>
+<p>它与&quot;预测模块先输出显式对象轨迹，规划模块再选轨迹&quot;的模块化流程不同。它在 latent 空间里让&quot;世界如何变化&quot;和&quot;自车将如何开&quot;共同迭代生成，因此动作监督能影响场景表征。类比到 PNC，这近似于把交互预测与轨迹生成耦合优化；但 latent 没有显式安全约束、交通规则约束或可解释的代价项，不能把它等同于可审计的传统规划器。</p>
+<h2 id="13-核心贡献适用条件与局限性">13. 核心贡献、适用条件与局限性
+</h2><h3 id="核心贡献">核心贡献
+</h3><ol>
+<li>将 V-JEPA 的随机遮挡补全改造为混合未来遮挡，使预训练目标包含严格的历史到未来推演。</li>
+<li>以条件 Flow Matching 在语义 latent 中生成未来，而不是对完全未知未来做单一确定性回归。</li>
+<li>在一个联合 predictor 中耦合未来场景 token 和自车轨迹，并通过不对称 stop-gradient 保持场景预测与动作学习的梯度分工。</li>
+</ol>
+<h3 id="适用条件">适用条件
+</h3><ul>
+<li>有大规模、同步多相机的连续驾驶视频；Stage 1 不需要动作监督，但 Stage 2 仍需要未来自车轨迹和自车状态。</li>
+<li>可接受 ViT-L、视频 token 以及多步生成采样带来的训练与推理开销。</li>
+<li>目标是端到端轨迹规划，且希望通过稠密未来场景监督缓解仅用轨迹标签的监督不足。</li>
+</ul>
+<h3 id="局限性和待讨论问题">局限性和待讨论问题
+</h3><ol>
+<li>Joint Future-Action Flow Predictor 的精确实现、token 融合方式、位置编码、时间条件注入方式、损失权重和采样器细节均未在正文公开；论文仓库在本次阅读时仅有 README，因此无法据论文精确复现。</li>
+<li>EMA + stop-gradient 降低表征塌缩风险，但正文未提供理论保证或显式 anti-collapse 正则。</li>
+<li>Stage 2 Full-mask 下 $Z_{\text{cond}}$ 不含真实未来信息；论文没有&quot;移除它&quot;或&quot;替换为独立 query&quot;的消融，无法确定它在 Stage 2 的实际必要性。</li>
+<li>论文验证了 Flow Matching 相对直接回归的优势，但没有比较 x-prediction 与 velocity-prediction，也没有说明后者是否更差。</li>
+<li>HUGSIM 是闭环仿真而非真实道路闭环部署；HD-Score 虽显著领先，但 Extreme 难度仍只有 0.1362，复杂长尾交互仍是主要挑战。</li>
+<li>模型输出 latent 场景与轨迹，不直接给出传统 PNC 所需的可解释障碍物、碰撞责任或硬安全约束；安全审计和约束兜底仍需额外系统设计。</li>
+</ol>
+<h2 id="14-最终记忆点">14. 最终记忆点
+</h2><p>WA-JEPA 的核心不是&quot;给 V-JEPA 多接一个轨迹头&quot;，而是三处同时改变：</p>
+$$ \text{随机补全} \rightarrow \text{过去预测未来}, \qquad \text{确定性特征回归} \rightarrow \text{Flow Matching 生成}, \qquad \text{只建模视觉} \rightarrow \text{联合建模世界与动作}. $$<p>从规划角度看，它让模型在输出轨迹时，不只学习&quot;这张图通常对应什么轨迹&quot;，还必须学习&quot;历史场景接下来会如何变化，并且这条轨迹如何与该未来相容&quot;。</p>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/">论文阅读</a>
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/jepa/">JEPA</a>
+        
+            <a href="/tags/flowmatching/">FlowMatching</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E5%8A%A8%E4%BD%9C%E6%A8%A1%E5%9E%8B/">世界动作模型</a>
+        
+            <a href="/tags/navsim/">NAVSIM</a>
+        
+            <a href="/tags/hugsim/">HUGSIM</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/metis/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">Metis：不对称注意力解锁联合训练与解耦推理</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/onevl/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">OneVL - 双模态隐式推理框架</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="has-image">
+    <a href="/post/robotics/e2e/drive-va/">
+        
+        <div class="article-image">
+            <img alt="Featured image of post DriveVA - 视频动作模型即零样本驾驶员" height="150" loading="lazy" src="/post/robotics/e2e/drive-va/cover_hu_c5f6ba3d44d07580.png" srcset="/post/robotics/e2e/drive-va/cover_hu_c5f6ba3d44d07580.png 1x, /post/robotics/e2e/drive-va/cover_hu_a4950476e8b5a77b.png 2x" width="250">
+
+        </div>
+        
+
+        <div class="article-details"style="background: linear-gradient(0deg, #42443f80 0%, #f2f2ecC0 100%);">
+            <h2 class="article-title">DriveVA - 视频动作模型即零样本驾驶员</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/law/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LAW - Enhancing End-to-End Autonomous Driving with Latent World Model</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-mind/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Mind 论文笔记与批判性评估</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
