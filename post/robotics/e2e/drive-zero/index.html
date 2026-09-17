@@ -335,7 +335,7 @@
 
 
                     <time class="article-time--reading">
-                        3 minutes read
+                        11 minutes read
                     </time>
                 
             </div>
@@ -758,7 +758,7 @@ $$\sum_{c\in\mathcal C}r_{t,c}=r_t$$<p>GAE（Generalized Advantage Estimation，
 <li>用短时奖励和末端 critic value 评价候选。</li>
 </ol>
 <p>候选 $i$ 的分数为：</p>
-$$S(i)=\sum_{\ell=0}^{L-1}\gamma^\ell\prod_{u<\ell}(1-d_u)r_\ell+\gamma^L\prod_{u<L}(1-d_u)V(O_L)$$<p>其中：</p>
+$$S(i)=\sum_{\ell=0}^{L-1}\gamma^\ell\prod_{u\lt\ell}(1-d_u)r_\ell+\gamma^L\prod_{u\lt L}(1-d_u)V(O_L)$$<p>其中：</p>
 <ul>
 <li>$L$：短时 rollout 步数；</li>
 <li>$r_\ell$：与 PPO 训练一致的奖励；</li>
