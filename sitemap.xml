@@ -3,10 +3,37 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>https://example.org/</loc>
-    <lastmod>2026-09-05T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/categories/</loc>
-    <lastmod>2026-09-05T00:00:00+00:00</lastmod>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/worldmodel/h-jepa/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/hierarchicalplanning/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/jepa/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/latentplanning/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/categories/robotics/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/visualplanning/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/worldmodel/</loc>
+    <lastmod>2026-10-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/drive-zero/</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
@@ -18,15 +45,6 @@
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/nuplan/</loc>
-    <lastmod>2026-09-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/post/</loc>
-    <lastmod>2026-09-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/categories/robotics/</loc>
-    <lastmod>2026-09-05T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/</loc>
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/</loc>
@@ -51,9 +69,6 @@
     <lastmod>2026-09-05T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/flowmatching/</loc>
-    <lastmod>2026-08-21T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/jepa/</loc>
     <lastmod>2026-08-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/wa-jepa/</loc>
@@ -110,9 +125,6 @@
     <loc>https://example.org/post/robotics/worldmodel/dreamer-v3/</loc>
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://example.org/tags/latentplanning/</loc>
-    <lastmod>2026-06-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://example.org/tags/minecraft/</loc>
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
@@ -123,9 +135,6 @@
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/rssm/</loc>
-    <lastmod>2026-06-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/worldmodel/</loc>
     <lastmod>2026-06-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/tags/%E5%8E%86%E5%8F%B2%E5%BC%95%E5%AF%BC/</loc>

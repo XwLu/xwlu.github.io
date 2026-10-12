@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="分层潜在世界模型在不同时间尺度上学习环境潜在动力学，规划时借助可微 rollout 自顶向下逐层细化：最高层优化宏动作、其预测状态作为下层子目标，最低层输出可执行动作；Visual AntMaze 中三层结构成功率 73.3% 显著优于平坦基线 18%。">
+<title>H-JEPA - 分层世界模型与自顶向下的视觉规划</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/worldmodel/h-jepa/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="H-JEPA - 分层世界模型与自顶向下的视觉规划">
+<meta property='og:description' content="分层潜在世界模型在不同时间尺度上学习环境潜在动力学，规划时借助可微 rollout 自顶向下逐层细化：最高层优化宏动作、其预测状态作为下层子目标，最低层输出可执行动作；Visual AntMaze 中三层结构成功率 73.3% 显著优于平坦基线 18%。">
+<meta property='og:url' content='https://example.org/post/robotics/worldmodel/h-jepa/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='WorldModel' /><meta property='article:tag' content='JEPA' /><meta property='article:tag' content='HierarchicalPlanning' /><meta property='article:tag' content='LatentPlanning' /><meta property='article:tag' content='VisualPlanning' /><meta property='article:published_time' content='2026-10-05T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-10-05T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="H-JEPA - 分层世界模型与自顶向下的视觉规划">
+<meta name="twitter:description" content="分层潜在世界模型在不同时间尺度上学习环境潜在动力学，规划时借助可微 rollout 自顶向下逐层细化：最高层优化宏动作、其预测状态作为下层子目标，最低层输出可执行动作；Visual AntMaze 中三层结构成功率 73.3% 显著优于平坦基线 18%。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#1-一句话理解-h-jepa">1. 一句话理解 H-JEPA</a></li>
+    <li><a href="#2-背景知识什么是-jepa什么是世界模型">2. 背景知识：什么是 JEPA，什么是世界模型？</a>
+      <ul>
+        <li><a href="#21-什么是世界模型">2.1 什么是世界模型？</a></li>
+        <li><a href="#22-为什么不直接预测未来图像">2.2 为什么不直接预测未来图像？</a></li>
+        <li><a href="#23-jepa-的基本思想">2.3 JEPA 的基本思想</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-为什么需要分层世界模型">3. 为什么需要分层世界模型？</a>
+      <ul>
+        <li><a href="#31-单层模型面临的时间尺度问题">3.1 单层模型面临的时间尺度问题</a></li>
+        <li><a href="#32-各层拥有自己的潜在空间">3.2 各层拥有自己的潜在空间</a></li>
+        <li><a href="#33-各层的时间尺度不同">3.3 各层的时间尺度不同</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-世界模型训练模型如何学会预测未来">4. 世界模型训练：模型如何学会预测未来？</a>
+      <ul>
+        <li><a href="#41-训练数据是什么">4.1 训练数据是什么？</a></li>
+        <li><a href="#42-状态如何逐层编码">4.2 状态如何逐层编码？</a></li>
+        <li><a href="#43-动作如何逐层编码">4.3 动作如何逐层编码？</a></li>
+        <li><a href="#44-各层分别预测未来潜在状态">4.4 各层分别预测未来潜在状态</a></li>
+        <li><a href="#45-预测损失与-sigreg">4.5 预测损失与 SIGReg</a></li>
+        <li><a href="#46-训练过程的伪代码">4.6 训练过程的伪代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-动作规划如何从目标观测得到动作序列">5. 动作规划：如何从目标观测得到动作序列？</a>
+      <ul>
+        <li><a href="#51-当前观测与目标观测如何编码">5.1 当前观测与目标观测如何编码？</a></li>
+        <li><a href="#52-最高层优化宏动作序列">5.2 最高层优化宏动作序列</a></li>
+        <li><a href="#53-动作序列如何初始化">5.3 动作序列如何初始化？</a></li>
+        <li><a href="#54-为什么可以用梯度优化动作">5.4 为什么可以用梯度优化动作？</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-分层规划的关键上层如何把计划交给下层">6. 分层规划的关键：上层如何把计划交给下层？</a>
+      <ul>
+        <li><a href="#61-宏动作不等于子目标">6.1 宏动作不等于子目标</a></li>
+        <li><a href="#62-次高层如何细化">6.2 次高层如何细化？</a></li>
+        <li><a href="#63-宏动作一致性约束">6.3 宏动作一致性约束</a></li>
+        <li><a href="#64-最低层如何输出可执行动作">6.4 最低层如何输出可执行动作？</a></li>
+        <li><a href="#65-为什么最后一个子目标可以直接使用真实目标">6.5 为什么最后一个子目标可以直接使用真实目标？</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-动作规划伪代码完整的数据传递">7. 动作规划伪代码：完整的数据传递</a>
+      <ul>
+        <li><a href="#71-开环规划与闭环执行">7.1 开环规划与闭环执行</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-训练与规划最核心的区别">8. 训练与规划：最核心的区别</a></li>
+    <li><a href="#9-实验结果与论文结论">9. 实验结果与论文结论</a>
+      <ul>
+        <li><a href="#91-visual-antmaze">9.1 Visual AntMaze</a></li>
+        <li><a href="#92-push-t-的表现提醒">9.2 Push-T 的表现提醒</a></li>
+        <li><a href="#93-droid-评估应如何理解">9.3 DROID 评估应如何理解？</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-与端到端自动驾驶的联系">10. 与端到端自动驾驶的联系</a>
+      <ul>
+        <li><a href="#101-与-bev--trajectory-head-的区别">10.1 与 BEV + Trajectory Head 的区别</a></li>
+        <li><a href="#102-与-score-map-的区别">10.2 与 Score Map 的区别</a></li>
+        <li><a href="#103-对自动驾驶系统的启发">10.3 对自动驾驶系统的启发</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-论文阅读时需要谨慎区分的事项">11. 论文阅读时需要谨慎区分的事项</a></li>
+    <li><a href="#12-最终总结">12. 最终总结</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/worldmodel/h-jepa/">H-JEPA - 分层世界模型与自顶向下的视觉规划</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-10-05T00:00:00Z'>Monday, October 5, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        5 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#1-一句话理解-h-jepa">1. 一句话理解 H-JEPA</a></li>
+    <li><a href="#2-背景知识什么是-jepa什么是世界模型">2. 背景知识：什么是 JEPA，什么是世界模型？</a>
+      <ul>
+        <li><a href="#21-什么是世界模型">2.1 什么是世界模型？</a></li>
+        <li><a href="#22-为什么不直接预测未来图像">2.2 为什么不直接预测未来图像？</a></li>
+        <li><a href="#23-jepa-的基本思想">2.3 JEPA 的基本思想</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-为什么需要分层世界模型">3. 为什么需要分层世界模型？</a>
+      <ul>
+        <li><a href="#31-单层模型面临的时间尺度问题">3.1 单层模型面临的时间尺度问题</a></li>
+        <li><a href="#32-各层拥有自己的潜在空间">3.2 各层拥有自己的潜在空间</a></li>
+        <li><a href="#33-各层的时间尺度不同">3.3 各层的时间尺度不同</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-世界模型训练模型如何学会预测未来">4. 世界模型训练：模型如何学会预测未来？</a>
+      <ul>
+        <li><a href="#41-训练数据是什么">4.1 训练数据是什么？</a></li>
+        <li><a href="#42-状态如何逐层编码">4.2 状态如何逐层编码？</a></li>
+        <li><a href="#43-动作如何逐层编码">4.3 动作如何逐层编码？</a></li>
+        <li><a href="#44-各层分别预测未来潜在状态">4.4 各层分别预测未来潜在状态</a></li>
+        <li><a href="#45-预测损失与-sigreg">4.5 预测损失与 SIGReg</a></li>
+        <li><a href="#46-训练过程的伪代码">4.6 训练过程的伪代码</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-动作规划如何从目标观测得到动作序列">5. 动作规划：如何从目标观测得到动作序列？</a>
+      <ul>
+        <li><a href="#51-当前观测与目标观测如何编码">5.1 当前观测与目标观测如何编码？</a></li>
+        <li><a href="#52-最高层优化宏动作序列">5.2 最高层优化宏动作序列</a></li>
+        <li><a href="#53-动作序列如何初始化">5.3 动作序列如何初始化？</a></li>
+        <li><a href="#54-为什么可以用梯度优化动作">5.4 为什么可以用梯度优化动作？</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-分层规划的关键上层如何把计划交给下层">6. 分层规划的关键：上层如何把计划交给下层？</a>
+      <ul>
+        <li><a href="#61-宏动作不等于子目标">6.1 宏动作不等于子目标</a></li>
+        <li><a href="#62-次高层如何细化">6.2 次高层如何细化？</a></li>
+        <li><a href="#63-宏动作一致性约束">6.3 宏动作一致性约束</a></li>
+        <li><a href="#64-最低层如何输出可执行动作">6.4 最低层如何输出可执行动作？</a></li>
+        <li><a href="#65-为什么最后一个子目标可以直接使用真实目标">6.5 为什么最后一个子目标可以直接使用真实目标？</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-动作规划伪代码完整的数据传递">7. 动作规划伪代码：完整的数据传递</a>
+      <ul>
+        <li><a href="#71-开环规划与闭环执行">7.1 开环规划与闭环执行</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-训练与规划最核心的区别">8. 训练与规划：最核心的区别</a></li>
+    <li><a href="#9-实验结果与论文结论">9. 实验结果与论文结论</a>
+      <ul>
+        <li><a href="#91-visual-antmaze">9.1 Visual AntMaze</a></li>
+        <li><a href="#92-push-t-的表现提醒">9.2 Push-T 的表现提醒</a></li>
+        <li><a href="#93-droid-评估应如何理解">9.3 DROID 评估应如何理解？</a></li>
+      </ul>
+    </li>
+    <li><a href="#10-与端到端自动驾驶的联系">10. 与端到端自动驾驶的联系</a>
+      <ul>
+        <li><a href="#101-与-bev--trajectory-head-的区别">10.1 与 BEV + Trajectory Head 的区别</a></li>
+        <li><a href="#102-与-score-map-的区别">10.2 与 Score Map 的区别</a></li>
+        <li><a href="#103-对自动驾驶系统的启发">10.3 对自动驾驶系统的启发</a></li>
+      </ul>
+    </li>
+    <li><a href="#11-论文阅读时需要谨慎区分的事项">11. 论文阅读时需要谨慎区分的事项</a></li>
+    <li><a href="#12-最终总结">12. 最终总结</a></li>
+    <li><a href="#相关阅读">相关阅读</a></li>
+    <li><a href="#参考链接">参考链接</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p><strong>论文标题：</strong> H-JEPA: End-to-End Learning of Hierarchical World Models for Visual Planning
+<strong>论文链接：</strong> <a class="link" href="https://arxiv.org/abs/2610.06805"  target="_blank" rel="noopener"
+    >https://arxiv.org/abs/2610.06805</a>
+<strong>开源代码：</strong> <a class="link" href="https://github.com/kevinghst/H-JEPA"  target="_blank" rel="noopener"
+    >https://github.com/kevinghst/H-JEPA</a>
+<strong>主题：</strong> Joint Embedding Predictive Architecture（JEPA）、分层世界模型、潜在空间预测、基于梯度的动作规划
+<strong>核心问题：</strong> 如何让一个世界模型同时理解短期与长期的环境变化，并利用学到的模型，从当前观测出发规划出能够抵达目标的动作序列？</p>
+
+    </blockquote>
+<hr>
+<h2 id="1-一句话理解-h-jepa">1. 一句话理解 H-JEPA
+</h2><p>H-JEPA 是一种<strong>分层潜在世界模型</strong>。它不试图逐像素生成未来画面，而是学习环境在不同时间尺度下的潜在状态如何随动作变化；规划时先由高层决定长期目标，再由低层逐步细化成环境可以执行的动作。</p>
+<p>可以把它理解成一个具有多层时间尺度的规划系统：</p>
+<ul>
+<li><strong>高层：</strong> 决定较长时间之后应该到达什么状态。</li>
+<li><strong>中层：</strong> 将长期目标细化成一系列较短期的子目标。</li>
+<li><strong>底层：</strong> 优化细粒度的原始动作，并交给环境执行。</li>
+</ul>
+<p>它的关键并不只是把一个模型堆成多层，而是让每一层都拥有自己的潜在空间、动作表示和世界模型，并让这些层级协同完成规划。</p>
+<h2 id="2-背景知识什么是-jepa什么是世界模型">2. 背景知识：什么是 JEPA，什么是世界模型？
+</h2><h3 id="21-什么是世界模型">2.1 什么是世界模型？
+</h3><p>世界模型（World Model）可以理解为一个学习环境动力学的模型。</p>
+<p>假设自动驾驶车辆当前处于状态 $s_t$，执行动作 $a_t$ 后，环境转移到新状态：</p>
+$$s_{t+1}=f(s_t,a_t)$$<p>这里的 $f$ 是真实环境的状态转移规律。现实中我们通常无法直接得到这个函数，因此让神经网络学习一个近似模型：</p>
+$$\hat s_{t+1}=F_\theta(s_t,a_t)$$<p>训练完成后，我们就能在不实际执行每一个候选动作的情况下，利用模型预测不同动作可能带来的结果。</p>
+<p>例如，车辆接近路口时，可以让世界模型分别预测：</p>
+<ul>
+<li>继续直行，未来会到达什么状态；</li>
+<li>向左转，未来会到达什么状态；</li>
+<li>减速后再转弯，未来会到达什么状态。</li>
+</ul>
+<p>规划器再根据预测结果选择合适的动作。</p>
+<p><strong>世界模型的价值在于：把一部分试错和规划过程搬到模型内部完成。</strong></p>
+<h3 id="22-为什么不直接预测未来图像">2.2 为什么不直接预测未来图像？
+</h3><p>一种直接的做法是预测未来图像：</p>
+$$\hat o_{t+1}=F_\theta(o_t,a_t)$$<p>但这意味着模型需要预测大量像素，包括天空纹理、路面细节、阴影和光照变化等。</p>
+<p>对于规划而言，这些细节并不都重要。</p>
+<p>例如，车辆需要判断未来是否能顺利通过路口。预测车辆与道路的相对关系、障碍物位置以及场景的关键结构，可能比准确生成每个像素更有价值。</p>
+<p>因此，JEPA 采用另一种思路：<strong>预测未来的潜在表示，而不是直接重建未来观测。</strong></p>
+<h3 id="23-jepa-的基本思想">2.3 JEPA 的基本思想
+</h3><p>JEPA，即 Joint Embedding Predictive Architecture，核心思想是把观测编码到潜在空间中，在这个空间里进行预测。</p>
+<p>定义：</p>
+<ul>
+<li>$o_t$：时刻 $t$ 的观测；</li>
+<li>$E_\theta$：状态编码器；</li>
+<li>$z_t$：观测对应的潜在表示；</li>
+<li>$F_\phi$：潜在状态预测器。</li>
+</ul>
+<p>编码过程：</p>
+$$z_t=E_\theta(o_t)$$<p>预测过程：</p>
+$$\hat z_{t+1}=F_\phi(z_t,a_t)$$<p>训练时，将预测出的潜在状态与真实未来观测编码得到的目标潜在状态比较：</p>
+$$z_{t+1}=E_\theta(o_{t+1})$$<p>概念上的预测损失可以写成：</p>
+<p>$$ \mathcal L_{\mathrm{pred}} = \left|\hat z_{t+1}-z_{t+1}\right|^2 $$</p>
+<p>上式是帮助理解的简化形式，不代表论文采用的全部损失细节。</p>
+<p>这种训练方式有两个重要特点：</p>
+<ol>
+<li>不需要逐像素生成未来图像。</li>
+<li>学到的潜在表示必须包含预测未来状态所需要的信息。</li>
+</ol>
+<p>但只靠潜在预测损失还不够。模型可能把所有输入都映射成几乎相同的向量，导致预测损失很小，却失去区分不同状态的能力。这就是潜在表示坍塌（representation collapse）的问题。</p>
+<p>H-JEPA 采用 SIGReg 等表示正则化机制，帮助潜在空间保持有用的统计结构。</p>
+<h2 id="3-为什么需要分层世界模型">3. 为什么需要分层世界模型？
+</h2><h3 id="31-单层模型面临的时间尺度问题">3.1 单层模型面临的时间尺度问题
+</h3><p>假设一个规划任务需要考虑未来 20 个环境步。</p>
+<p>如果模型每次只预测一步，就需要反复进行长距离 rollout：</p>
+$$z_1\rightarrow z_2\rightarrow \cdots \rightarrow z_{20}$$<p>随着预测不断向未来延伸，误差可能逐渐积累。规划器也必须处理较长的动作序列，优化难度随之增加。</p>
+<p>另一种方法是直接预测 20 步之后的状态，但这又要求模型同时掌握短期运动细节和长期行为结构。</p>
+<p>H-JEPA 的解决思路是：<strong>把不同时间尺度的预测任务分配给不同层级。</strong></p>
+<h3 id="32-各层拥有自己的潜在空间">3.2 各层拥有自己的潜在空间
+</h3><p>H-JEPA 为不同层级分别设置状态编码器、动作编码器和预测器。</p>
+<p>以三层模型为例：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>模块</th>
+          <th>主要作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$E_1$</td>
+          <td>将观测编码成最低层潜在状态</td>
+      </tr>
+      <tr>
+          <td>$E_2$</td>
+          <td>将低层状态序列进一步编码成更高层状态</td>
+      </tr>
+      <tr>
+          <td>$E_3$</td>
+          <td>将中层状态序列编码成最高层状态</td>
+      </tr>
+      <tr>
+          <td>$B_2,B_3$</td>
+          <td>将较低层的动作块编码成更高层的宏动作</td>
+      </tr>
+      <tr>
+          <td>$F_1,F_2,F_3$</td>
+          <td>分别预测各层自己的未来潜在状态</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>这里的符号是统一后的记号，用来说明架构关系。</p>
+<p>重要的是：<strong>不同层的潜在状态不必处于同一个空间，也不能默认直接相减。</strong></p>
+<p>例如，$z^{(1)}$ 与 $z^{(3)}$ 的语义抽象程度、时间尺度和向量分布都可能不同。因此，比较低层预测结果与高层目标时，需要通过相应编码器或投影路径将其映射到一致的潜在空间。</p>
+<h3 id="33-各层的时间尺度不同">3.3 各层的时间尺度不同
+</h3><p>可以把层级想象成不同倍率的时间观察窗口：</p>
+<ul>
+<li>低层关注较短时间跨度内的状态变化；</li>
+<li>中层关注一段动作执行后的结果；</li>
+<li>高层关注更长时间跨度内的状态变化。</li>
+</ul>
+<p>论文中的模拟实验采用三层时间尺度，覆盖约 5、10、20 个环境步的跨度。具体实现还涉及层级的步长、时间窗口和状态对齐，不能把所有配置都简单理解成每层固定只预测一个时间点。</p>
+<p>这种设计类似于视频中的不同帧率：低层保留较细的变化，高层以更稀疏的时间采样描述长期趋势。</p>
+<p>需要注意的是，高层状态并不只是低层状态的简单平均值。它由可学习的编码器生成，模型需要从低层序列中学习对较长时间尺度预测有用的信息。</p>
+<h2 id="4-世界模型训练模型如何学会预测未来">4. 世界模型训练：模型如何学会预测未来？
+</h2><h3 id="41-训练数据是什么">4.1 训练数据是什么？
+</h3><p>训练数据主要由真实交互轨迹构成，包括：</p>
+$$(o_0,a_0,o_1,a_1,\ldots,o_T)$$<p>其中：</p>
+<ul>
+<li>$o_t$ 是环境观测；</li>
+<li>$a_t$ 是真实执行的动作；</li>
+<li>$o_{t+1}$ 是执行动作后的观测。</li>
+</ul>
+<p>训练时，模型可以利用完整的观测序列生成各层的目标潜在表示，并利用真实动作构造相应层级的动作表示。</p>
+<h3 id="42-状态如何逐层编码">4.2 状态如何逐层编码？
+</h3><p>最低层首先处理原始观测：</p>
+$$z_t^{(1)}=E_1(o_t)$$<p>更高层则进一步处理较低层的潜在状态序列：</p>
+$$z_t^{(2)}=E_2(z_{\mathrm{window}}^{(1)})$$$$z_t^{(3)}=E_3(z_{\mathrm{window}}^{(2)})$$<p>这里的 <code>window</code> 表示相应层级所使用的时间窗口。以上公式是结构示意；真实实现会按照层级的时间采样与窗口配置进行对齐。</p>
+<p>这种逐层编码使高层能够学习更长时间尺度的状态表示。</p>
+<h3 id="43-动作如何逐层编码">4.3 动作如何逐层编码？
+</h3><p>最低层使用环境定义的原始动作空间。</p>
+<p>例如，在模拟机器人任务中，原始动作可能是关节控制量或环境规定的控制向量。</p>
+<p>高层的宏动作则不是直接从环境读取的控制指令，而是由动作编码器从低层动作块中学习得到：</p>
+$$A_t^{(2)}=B_2(a_{t:t+K-1}^{(1)})$$<p>其中 $K$ 表示这一宏动作所覆盖的低层动作块长度，具体取决于时间尺度配置。</p>
+<p>继续向上，可以将中层动作块编码成更高层的宏动作：</p>
+$$A_t^{(3)}=B_3(A_{\mathrm{window}}^{(2)})$$<p>这样，每一层都拥有与自身时间尺度匹配的动作表示。</p>
+<h3 id="44-各层分别预测未来潜在状态">4.4 各层分别预测未来潜在状态
+</h3><p>对于第 $l$ 层，可以抽象地写成：</p>
+<p>$$ \hat z_{t+1}^{(l)} = F_l(z_t^{(l)},A_t^{(l)}) $$</p>
+<p>其中：</p>
+<ul>
+<li>$z_t^{(l)}$ 是当前层级状态；</li>
+<li>$A_t^{(l)}$ 是该层级的动作或宏动作；</li>
+<li>$F_l$ 是该层级的世界模型；</li>
+<li>$\hat z_{t+1}^{(l)}$ 是预测结果。</li>
+</ul>
+<p>训练时，预测结果与真实未来观测对应的目标潜在状态进行比较。</p>
+<h3 id="45-预测损失与-sigreg">4.5 预测损失与 SIGReg
+</h3><p>H-JEPA 的训练目标包含潜在预测损失和表示正则化。</p>
+<p>概念上：</p>
+<p>$$ \mathcal L = \sum_l \mathcal L_{\mathrm{pred}}^{(l)} + \lambda_{\mathrm{reg}} \sum_l \mathcal L_{\mathrm{SIGReg}}^{(l)} $$</p>
+<p>第一部分要求模型能够预测未来潜在状态；第二部分帮助防止潜在表示坍塌，并维持有用的表示统计结构。</p>
+<p>SIGReg 可以理解为一种约束潜在表示分布的正则化机制。它不是直接要求模型预测某个物体或动作，而是让表示空间保持适合学习和预测的结构。</p>
+<p>这与直接重建图像的训练目标不同：模型主要通过潜在预测任务学习环境动力学，而不是被要求还原所有像素细节。</p>
+<h3 id="46-训练过程的伪代码">4.6 训练过程的伪代码
+</h3><p>以下伪代码只表达数据流，不是源码的逐行复刻。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">train_step</span>(obs, actions):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1. 编码各层的状态序列</span>
+</span></span><span style="display:flex;"><span>    z1 <span style="color:#f92672">=</span> E1(obs)
+</span></span><span style="display:flex;"><span>    z2 <span style="color:#f92672">=</span> E2(temporal_window(z1))
+</span></span><span style="display:flex;"><span>    z3 <span style="color:#f92672">=</span> E3(temporal_window(z2))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2. 将低层动作块编码成高层宏动作</span>
+</span></span><span style="display:flex;"><span>    a2 <span style="color:#f92672">=</span> B2(action_blocks(actions))
+</span></span><span style="display:flex;"><span>    a3 <span style="color:#f92672">=</span> B3(temporal_window(a2))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 3. 各层预测自己的未来潜在状态</span>
+</span></span><span style="display:flex;"><span>    pred1 <span style="color:#f92672">=</span> F1(z1, actions)
+</span></span><span style="display:flex;"><span>    pred2 <span style="color:#f92672">=</span> F2(z2, a2)
+</span></span><span style="display:flex;"><span>    pred3 <span style="color:#f92672">=</span> F3(z3, a3)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 4. 与真实未来观测的潜在目标对齐</span>
+</span></span><span style="display:flex;"><span>    loss_pred <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        latent_prediction_loss(pred1, z1)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">+</span> latent_prediction_loss(pred2, z2)
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">+</span> latent_prediction_loss(pred3, z3)
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 5. 防止表示坍塌</span>
+</span></span><span style="display:flex;"><span>    loss_reg <span style="color:#f92672">=</span> (
+</span></span><span style="display:flex;"><span>        SIGReg(z1) <span style="color:#f92672">+</span> SIGReg(z2) <span style="color:#f92672">+</span> SIGReg(z3)
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    loss <span style="color:#f92672">=</span> loss_pred <span style="color:#f92672">+</span> lambda_reg <span style="color:#f92672">*</span> loss_reg
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    optimizer<span style="color:#f92672">.</span>zero_grad()
+</span></span><span style="display:flex;"><span>    loss<span style="color:#f92672">.</span>backward()
+</span></span><span style="display:flex;"><span>    optimizer<span style="color:#f92672">.</span>step()
+</span></span></code></pre></div><p>真实实现还需要处理预测时间与目标时间的错位、不同层级的采样步长、损失计算范围等问题。代码中的 <code>temporal_window</code>、<code>action_blocks</code> 和 <code>latent_prediction_loss</code> 是示意函数。</p>
+<p>训练完成后，模型获得了三类能力：</p>
+<ol>
+<li>将观测转换成各层潜在状态。</li>
+<li>将动作块转换成高层宏动作。</li>
+<li>根据当前潜在状态和相应动作预测未来潜在状态。</li>
+</ol>
+<p>这些能力构成后续梯度规划的基础。</p>
+<h2 id="5-动作规划如何从目标观测得到动作序列">5. 动作规划：如何从目标观测得到动作序列？
+</h2><p>训练阶段学习模型；规划阶段则使用模型寻找动作。</p>
+<p>规划时通常固定已训练好的编码器、动作编码器和世界模型参数，优化的是候选动作序列本身。</p>
+<h3 id="51-当前观测与目标观测如何编码">5.1 当前观测与目标观测如何编码？
+</h3><p>假设已知：</p>
+<ul>
+<li>当前观测 $o_0$；</li>
+<li>目标观测 $o_g$。</li>
+</ul>
+<p>首先，将两者分别编码到各层潜在空间。</p>
+<p>当前状态：</p>
+$$z_0^{(1)}=E_1(o_0)$$$$z_0^{(2)}=E_2(z_{\mathrm{window}}^{(1)})$$$$z_0^{(3)}=E_3(z_{\mathrm{window}}^{(2)})$$<p>目标状态也采用相应的编码路径，得到：</p>
+$$g^{(1)},g^{(2)},g^{(3)}$$<p>其中，目标观测可能只提供目标视觉状态；编码器负责把它转换成规划器能够使用的潜在目标。</p>
+<p>在具体实验中，初始观测、历史状态和时间窗口的处理需要符合模型定义。上述写法是对分层编码流程的简化表达。</p>
+<h3 id="52-最高层优化宏动作序列">5.2 最高层优化宏动作序列
+</h3><p>最高层先初始化一个待优化的宏动作序列：</p>
+<p>$$ A^{(3)} = (A_0^{(3)},A_1^{(3)},\ldots,A_{H-1}^{(3)}) $$</p>
+<p>其中 $H$ 是规划时域内宏动作的数量。</p>
+<p>将当前最高层状态和候选宏动作序列输入世界模型，进行可微 rollout：</p>
+<p>$$ \hat z_{t+1}^{(3)} = F_3(\hat z_t^{(3)},A_t^{(3)}) $$</p>
+<p>重复执行，得到整段预测状态序列。</p>
+<p>最基本的终点代价可以抽象为：</p>
+<p>$$ \mathcal L_{\mathrm{goal}} = \left| \hat z_H^{(3)}-g^{(3)} \right|^2 $$</p>
+<p>规划器通过梯度下降更新宏动作：</p>
+<p>$$ A^{(3)} \leftarrow A^{(3)} - \eta \nabla_{A^{(3)}}\mathcal L $$</p>
+<p>这里的 $\eta$ 表示优化步长。实际实现采用具体的梯度优化器，并可能包含额外的规划代价。</p>
+<p>关键是：<strong>梯度不是用来更新世界模型参数，而是用来更新候选动作变量。</strong></p>
+<h3 id="53-动作序列如何初始化">5.3 动作序列如何初始化？
+</h3><p>根据对开源实现的代码分析，规划器的动作初始化不是完全无约束的随机采样。</p>
+<p>实现中会维护最近约 4,000 个训练中出现过的宏动作样本，并根据这些样本拟合高斯分布，再从该分布采样初始化候选动作。</p>
+<p>其目的在于使初始动作尽量接近训练数据中出现过的动作分布，而不是在整个实数空间中任意抽取向量。</p>
+<p>优化时还会对动作施加范围约束：每次更新后，将动作裁剪到对应训练动作分布的第 2 至第 98 百分位范围内，降低优化器跑到明显超出训练分布区域的风险。</p>
+<p>实现分析还指出，规划使用 AdamW，最多进行约 90 轮更新，并在最优代价长期没有改善时提前停止；最终保留代价最低的候选方案。</p>
+<p>需要区分：</p>
+<ul>
+<li><strong>规划时域 $H$：</strong> 一条候选序列包含多少个宏动作。</li>
+<li><strong>候选数量 $N$：</strong> 同时考虑多少条候选序列。</li>
+<li><strong>优化迭代次数 $I$：</strong> 每条候选序列或优化变量进行多少轮更新。</li>
+</ul>
+<p>三者不是同一个参数。不能根据&quot;最多优化 90 轮&quot;就推断规划器只生成一条序列，也不能仅凭架构图推断固定的候选数量。具体预算需要以相应实验配置为准。</p>
+<h3 id="54-为什么可以用梯度优化动作">5.4 为什么可以用梯度优化动作？
+</h3><p>这是 H-JEPA 规划机制中最重要的技术点之一。</p>
+<p>因为世界模型是可微的，所以预测状态误差能够沿计算图反向传播到动作输入。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>候选动作序列 A
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>可微世界模型 F
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>预测未来状态 z_hat
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>与目标潜在状态 g 计算代价
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>      Loss
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>反向传播到 A
+</span></span><span style="display:flex;"><span>       │
+</span></span><span style="display:flex;"><span>       ▼
+</span></span><span style="display:flex;"><span>更新动作序列
+</span></span></code></pre></div><p>换句话说，规划器可以回答这样一个问题：</p>
+
+    <blockquote>
+        <p>如果我把这个动作向量稍微调整一下，未来预测状态会更接近目标，还是更远离目标？</p>
+
+    </blockquote>
+<p>梯度提供了调整方向，优化器据此迭代更新动作。</p>
+<p>这不同于传统的离散搜索：它不是简单地枚举直行、左转、右转等动作，而是在模型允许的连续动作表示空间中寻找较优解。</p>
+<p>当然，梯度规划只能在已学习模型所描述的动力学范围内工作。预测模型的偏差、动作分布外输入以及潜在空间中的局部优化问题，都可能影响规划质量。</p>
+<h2 id="6-分层规划的关键上层如何把计划交给下层">6. 分层规划的关键：上层如何把计划交给下层？
+</h2><p>这是 H-JEPA 架构中最值得深入理解的部分。</p>
+<h3 id="61-宏动作不等于子目标">6.1 宏动作不等于子目标
+</h3><p>最高层优化得到的是一串宏动作：</p>
+<p>$$ A^{(3)} = (A_0^{(3)},A_1^{(3)},\ldots) $$</p>
+<p>这些宏动作经过最高层世界模型 rollout 后，会产生一串预测的高层潜在状态：</p>
+<p>$$ \hat Z^{(3)} = (\hat z_1^{(3)},\hat z_2^{(3)},\ldots) $$</p>
+<p>规划器从这些预测状态中选择适当的状态，作为传递给下一层的子目标。</p>
+<p>因此，要区分三个概念：</p>
+<ul>
+<li><strong>宏动作：</strong> 高层优化的动作表示。</li>
+<li><strong>预测状态：</strong> 执行这些宏动作后，世界模型预测会到达的状态。</li>
+<li><strong>子目标：</strong> 从预测状态中选出的、用于指导下一层规划的目标。</li>
+</ul>
+<p>高层不是把宏动作简单切片成多个低层动作，而是先通过世界模型预测状态，再让下一层围绕这些状态目标重新规划。</p>
+<h3 id="62-次高层如何细化">6.2 次高层如何细化？
+</h3><p>假设次高层当前状态是 $z_0^{(2)}$，上层传下来的子目标为：</p>
+<p>$$ G^{(2)} = (g_1^{(2)},g_2^{(2)},\ldots) $$</p>
+<p>次高层初始化自己的动作序列：</p>
+<p>$$ A^{(2)} = (A_0^{(2)},A_1^{(2)},\ldots) $$</p>
+<p>然后利用自己的世界模型进行 rollout，预测下一段时间的潜在状态。</p>
+<p>它的优化目标不再只是直接抵达整个任务的最终目标，而是让预测状态按照时间对齐，接近上层给出的子目标。</p>
+<p>这里有一个重要细节：不同层级的潜在空间可能不同。低层预测状态不能不经处理就与高层子目标相减。实现会利用相应的高层编码路径，将低层预测的状态序列映射到高层空间，再计算子目标代价。</p>
+<p>概念上可以写成：</p>
+<p>$$ \mathcal L_{\mathrm{subgoal}} = \sum_j \left| E_{\mathrm{upper}} \left(\hat z_{t_j}^{(\mathrm{lower})}\right) - g_j^{(\mathrm{upper})} \right|^2 $$</p>
+<p>其中 $E_{\mathrm{upper}}$ 表示相应的上层编码路径，$t_j$ 表示与子目标对齐的时间位置。</p>
+<p>该公式用于表达核心机制，真实实现还涉及窗口、步长和时间索引的对齐。</p>
+<h3 id="63-宏动作一致性约束">6.3 宏动作一致性约束
+</h3><p>除了要求低层预测状态接近上层子目标，分层规划还可以通过宏动作一致性代价，使一段低层动作经动作编码器聚合后的表示接近上层选择的宏动作。</p>
+<p>这有助于让低层细化出来的动作与上层的行为意图保持一致。</p>
+<p>但需要注意：根据此前对开源实现的分析，配置项 <code>action_cost_weight</code> 的默认值是 <code>0.0</code>。因此，该约束默认关闭，不能把它理解成所有规划运行时必然生效的组成部分。</p>
+<h3 id="64-最低层如何输出可执行动作">6.4 最低层如何输出可执行动作？
+</h3><p>最低层使用原始动作空间，而不是继续输出抽象宏动作。</p>
+<p>在模拟机器人环境中，原始动作可以是环境定义的控制向量。最低层规划器优化这些动作，使其预测的未来状态能够抵达中层传下来的子目标。</p>
+<p>最终，最低层产生的动作序列可以交给环境执行。</p>
+<p>这里的&quot;可执行&quot;是相对于论文使用的实验环境而言：如果把这套架构迁移到真实车辆，最低层动作的定义、控制接口、动力学约束和安全机制都需要与实际系统相匹配。</p>
+<h3 id="65-为什么最后一个子目标可以直接使用真实目标">6.5 为什么最后一个子目标可以直接使用真实目标？
+</h3><p>如果最高层预测的终点状态存在误差，而所有更低层都严格追随这个错误终点，误差就可能沿层级传递。</p>
+<p>开源实现还包含一种处理方式：在适用的规划路径中，可以将最后一个子目标替换为真实目标的潜在表示，而不是完全依赖最高层的最终预测状态。</p>
+<p>其直觉是：前面的子目标帮助分解规划过程，但最终目标本身已知，没有必要再额外引入一层预测误差。</p>
+<p>具体是否使用以及怎样对齐，仍需以对应实现和配置为准。</p>
+<h2 id="7-动作规划伪代码完整的数据传递">7. 动作规划伪代码：完整的数据传递
+</h2><p>下面将上面的机制串起来。为便于阅读，代码中的若干函数是概念性辅助函数，并非保证与仓库函数名一致。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">plan</span>(obs_now, obs_goal):
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 1. 当前观测和目标观测分别编码到各层潜在空间</span>
+</span></span><span style="display:flex;"><span>    z_now <span style="color:#f92672">=</span> encode_all_levels(obs_now)
+</span></span><span style="display:flex;"><span>    z_goal <span style="color:#f92672">=</span> encode_all_levels(obs_goal)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 2. 最高层初始化宏动作序列</span>
+</span></span><span style="display:flex;"><span>    A3 <span style="color:#f92672">=</span> initialize_actions_from_training_prior(level<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 3. 优化最高层动作，让预测终点接近目标</span>
+</span></span><span style="display:flex;"><span>    A3 <span style="color:#f92672">=</span> gradient_optimize(
+</span></span><span style="display:flex;"><span>        A3,
+</span></span><span style="display:flex;"><span>        objective<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> A:
+</span></span><span style="display:flex;"><span>            goal_cost(
+</span></span><span style="display:flex;"><span>                rollout(F3, z_now[<span style="color:#ae81ff">3</span>], A)[<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>],
+</span></span><span style="display:flex;"><span>                z_goal[<span style="color:#ae81ff">3</span>]
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 4. 最高层宏动作 -&gt; 最高层预测状态 -&gt; 中层子目标</span>
+</span></span><span style="display:flex;"><span>    Z3_pred <span style="color:#f92672">=</span> rollout(F3, z_now[<span style="color:#ae81ff">3</span>], A3)
+</span></span><span style="display:flex;"><span>    G2 <span style="color:#f92672">=</span> extract_subgoals(Z3_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 5. 中层优化自己的宏动作序列</span>
+</span></span><span style="display:flex;"><span>    A2 <span style="color:#f92672">=</span> initialize_actions_from_training_prior(level<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    A2 <span style="color:#f92672">=</span> gradient_optimize(
+</span></span><span style="display:flex;"><span>        A2,
+</span></span><span style="display:flex;"><span>        objective<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> A:
+</span></span><span style="display:flex;"><span>            subgoal_cost(
+</span></span><span style="display:flex;"><span>                project_to_level3(
+</span></span><span style="display:flex;"><span>                    rollout(F2, z_now[<span style="color:#ae81ff">2</span>], A)
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>                G2
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 6. 中层预测状态 -&gt; 低层子目标</span>
+</span></span><span style="display:flex;"><span>    Z2_pred <span style="color:#f92672">=</span> rollout(F2, z_now[<span style="color:#ae81ff">2</span>], A2)
+</span></span><span style="display:flex;"><span>    G1 <span style="color:#f92672">=</span> extract_subgoals(Z2_pred)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 7. 最低层优化原始动作</span>
+</span></span><span style="display:flex;"><span>    A1 <span style="color:#f92672">=</span> initialize_primitive_actions()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    A1 <span style="color:#f92672">=</span> gradient_optimize(
+</span></span><span style="display:flex;"><span>        A1,
+</span></span><span style="display:flex;"><span>        objective<span style="color:#f92672">=</span><span style="color:#66d9ef">lambda</span> A:
+</span></span><span style="display:flex;"><span>            subgoal_cost(
+</span></span><span style="display:flex;"><span>                project_to_level2(
+</span></span><span style="display:flex;"><span>                    rollout(F1, z_now[<span style="color:#ae81ff">1</span>], A)
+</span></span><span style="display:flex;"><span>                ),
+</span></span><span style="display:flex;"><span>                G1
+</span></span><span style="display:flex;"><span>            )
+</span></span><span style="display:flex;"><span>    )
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 8. 执行最低层动作的一小段</span>
+</span></span><span style="display:flex;"><span>    execute(A1[:action_chunk])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># 9. 获取新观测后重新规划</span>
+</span></span></code></pre></div><p>需要注意，示例中的 <code>project_to_level3</code>、<code>extract_subgoals</code> 和 <code>subgoal_cost</code> 仅用于展示数据流。真实代码会根据各层的预测时域、窗口和目标对齐规则实现相应操作。</p>
+<h3 id="71-开环规划与闭环执行">7.1 开环规划与闭环执行
+</h3><p>规划器通常不会把整条长序列一次性执行到底，而是只执行最低层动作的一小段，然后重新获取观测并规划。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>获取当前观测
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>最高层规划长期目标
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>中层细化子目标
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>最低层生成原始动作
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>执行一小段动作
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>获取新观测
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>重新规划
+</span></span></code></pre></div><p>这种闭环方式可以降低长期预测误差的影响。</p>
+<p>例如，模拟环境中出现了未预料到的状态变化，下一次规划可以基于新的真实观测重新调整，而不必继续执行最初计划中的全部动作。</p>
+<h2 id="8-训练与规划最核心的区别">8. 训练与规划：最核心的区别
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>维度</th>
+          <th>世界模型训练</th>
+          <th>动作规划</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>输入</td>
+          <td>真实观测序列与真实动作</td>
+          <td>当前观测、目标观测</td>
+      </tr>
+      <tr>
+          <td>模型参数</td>
+          <td>通过反向传播更新</td>
+          <td>通常固定</td>
+      </tr>
+      <tr>
+          <td>被优化的变量</td>
+          <td>编码器、动作编码器、预测器等参数</td>
+          <td>候选动作序列</td>
+      </tr>
+      <tr>
+          <td>监督或目标</td>
+          <td>真实未来观测对应的潜在状态、表示正则化</td>
+          <td>目标潜在状态与中间子目标</td>
+      </tr>
+      <tr>
+          <td>核心能力</td>
+          <td>学会环境动力学</td>
+          <td>利用动力学寻找动作</td>
+      </tr>
+      <tr>
+          <td>输出</td>
+          <td>训练后的分层世界模型</td>
+          <td>最低层可执行动作</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>可以把二者理解为：</p>
+<ul>
+<li>训练阶段回答：<strong>给定状态和动作，未来会怎样？</strong></li>
+<li>规划阶段回答：<strong>为了到达目标，我应该采取什么动作？</strong></li>
+</ul>
+<p>同样使用梯度反传，但被求导的变量不同。这是理解基于可微世界模型进行规划的关键。</p>
+<h2 id="9-实验结果与论文结论">9. 实验结果与论文结论
+</h2><h3 id="91-visual-antmaze">9.1 Visual AntMaze
+</h3><p>此前阅读中讨论的结果显示，在 Visual AntMaze 的相应实验预算下，三层 H-JEPA 的成功率为 73.3%，而平坦的 LeWM 基线为 18%。</p>
+<p>这一结果说明，在该任务和实验设置下，分层潜在世界模型能够明显改善长期视觉规划的表现。</p>
+<p>不过，不能将这个结果直接推广成&quot;分层架构在所有任务中都更好&quot;。不同任务的状态结构、动作空间、目标难度和模型预算都会影响结果。</p>
+<h3 id="92-push-t-的表现提醒">9.2 Push-T 的表现提醒
+</h3><p>论文讨论中的 Push-T 结果是一个重要提醒：分层规划并非在所有任务中都必然占优。</p>
+<p>这说明分层结构的价值与任务特点有关。对于某些任务，长期抽象和子目标分解能够显著降低规划难度；对于另一些任务，细粒度的接触动力学、精确动作控制或其他任务特性可能使收益减小。</p>
+<h3 id="93-droid-评估应如何理解">9.3 DROID 评估应如何理解？
+</h3><p>论文还涉及 DROID 相关的离线规划评估。需要将这类结果与真实机器人闭环部署区分开来。</p>
+<p>离线规划评估可以检验模型在已有数据和指定目标下的预测或规划能力，但它本身不能证明系统已经在真实机器人上实现了可靠的闭环自主控制。</p>
+<p>因此，阅读论文时要区分：</p>
+<ol>
+<li>离线数据上的预测或规划表现；</li>
+<li>模拟环境中的任务成功率；</li>
+<li>真实物理机器人上的闭环部署表现。</li>
+</ol>
+<p>它们验证的是不同层面的能力。</p>
+<h2 id="10-与端到端自动驾驶的联系">10. 与端到端自动驾驶的联系
+</h2><p>从自动驾驶算法工程的角度，H-JEPA 值得关注的地方是：它把世界模型学习和动作规划联系起来，并通过时间尺度分解处理长时域规划问题。</p>
+<h3 id="101-与-bev--trajectory-head-的区别">10.1 与 BEV + Trajectory Head 的区别
+</h3><p>一种常见的端到端自动驾驶架构是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>多相机图像
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>图像特征提取
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>BEV 特征
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>目标点 / Score Map
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>轨迹头
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>预测轨迹
+</span></span></code></pre></div><p>这种架构通常直接从当前场景特征预测目标点、轨迹或其他规划输出。</p>
+<p>H-JEPA 的核心思路则是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>当前观测 + 目标观测
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>多层潜在状态
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>最高层优化宏动作
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>世界模型预测未来潜在状态
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>中层优化子目标
+</span></span><span style="display:flex;"><span>    ↓
+</span></span><span style="display:flex;"><span>最低层优化原始动作
+</span></span></code></pre></div><p>二者并非简单的同类替代关系：</p>
+<ul>
+<li>直接轨迹预测模型学习从输入到轨迹的映射；</li>
+<li>H-JEPA 学习可用于 rollout 的环境潜在动力学，再利用该模型进行规划。</li>
+</ul>
+<p>当然，二者也可以在更大的系统中组合。例如，视觉编码器、BEV 表示或其他感知模块可以为世界模型提供输入；但具体如何组合，需要另外设计和验证。</p>
+<h3 id="102-与-score-map-的区别">10.2 与 Score Map 的区别
+</h3><p>如果一个自动驾驶模型通过 Score Map 为 BEV 网格打分，再选择高分网格作为目标点，随后由轨迹头生成单模态轨迹，那么它通常是在学习目标点或轨迹的直接预测机制。</p>
+<p>H-JEPA 则不是简单地对 BEV 网格做一次分类并回归轨迹。它通过可微世界模型，直接在动作变量上进行优化。</p>
+<p>二者的主要区别是：</p>
+<ul>
+<li>Score Map 路线：根据当前场景预测哪些目标点更合适，再生成轨迹。</li>
+<li>H-JEPA 路线：在学到的动力学模型中优化动作，使预测的未来状态接近目标。</li>
+</ul>
+<p>这并不意味着 H-JEPA 必然优于直接预测架构。它的优势更依赖于世界模型的准确性、规划目标的设计，以及任务是否确实受益于分层时间尺度。</p>
+<h3 id="103-对自动驾驶系统的启发">10.3 对自动驾驶系统的启发
+</h3><p>H-JEPA 的分层思想可以启发以下研究方向：</p>
+<ol>
+<li><strong>长时域规划：</strong> 将较长期的目标和短期动作分开建模，减少单个规划器必须直接处理的时间跨度。</li>
+<li><strong>潜在动力学建模：</strong> 预测与规划相关的潜在状态，而不必重建所有图像细节。</li>
+<li><strong>可微规划：</strong> 在固定的可微模型中优化动作，而不是只依赖一次前向推理输出轨迹。</li>
+<li><strong>闭环重规划：</strong> 只执行计划的一小段，根据新观测继续调整。</li>
+<li><strong>多层动作表示：</strong> 将长期行为表示与底层控制动作区分开来。</li>
+</ol>
+<p>但要把这些思想迁移到自动驾驶，还需要面对真实车辆动力学、交通参与者交互、碰撞安全约束、模型预测误差以及在线计算预算等问题。</p>
+<h2 id="11-论文阅读时需要谨慎区分的事项">11. 论文阅读时需要谨慎区分的事项
+</h2><p>为了避免将概念示意与实际实现混淆，需要记住以下几点：</p>
+<ul>
+<li><strong>各层潜在空间并不相同。</strong> 跨层比较状态时，需要经过适当的编码或投影。</li>
+<li><strong>宏动作不是原始动作的简单切片。</strong> 它由动作编码器从动作块中学习得到。</li>
+<li><strong>宏动作不直接交给环境执行。</strong> 最终由最低层产生原始动作。</li>
+<li><strong>梯度规划优化的是动作变量。</strong> 世界模型参数在规划时通常固定。</li>
+<li><strong>子目标来自上层预测状态。</strong> 它们与上层宏动作相关，但并不是同一个对象。</li>
+<li><strong>规划目标不一定只有最终状态距离。</strong> 实际实现可以包含子目标、动作一致性等其他代价；部分代价项可能默认关闭。</li>
+<li><strong>初始化并非完全无约束随机。</strong> 开源实现分析显示，其宏动作初始化利用训练动作分布，并对更新后的动作施加分位数范围约束。</li>
+<li><strong>优化迭代数不等于候选序列数。</strong> 规划时域、候选数量和优化迭代预算是不同概念。</li>
+<li><strong>实验结果不能无限外推。</strong> 模拟成功率、离线规划表现与真实机器人部署是不同的证据。</li>
+</ul>
+<h2 id="12-最终总结">12. 最终总结
+</h2><p>H-JEPA 的核心贡献可以从三个层面理解。</p>
+<p><strong>第一，表示层面：</strong> 它不直接生成未来像素，而是在潜在空间中学习环境状态的变化，并利用正则化维持有用的表示结构。</p>
+<p><strong>第二，模型层面：</strong> 它为不同时间尺度建立分层世界模型，通过状态编码器、动作编码器和预测器，让不同层级学习各自的潜在状态与动作表示。</p>
+<p><strong>第三，规划层面：</strong> 它从最高层开始优化宏动作序列，将预测的未来状态转化为下层子目标，再逐层优化更细粒度的动作，最终由最低层输出环境可执行的原始动作，并通过闭环重规划适应新观测。</p>
+<p>整个架构最值得记住的一条数据流是：</p>
+<p>$$ \boxed{ \text{观测} \rightarrow \text{多层潜在状态} \rightarrow \text{高层宏动作规划} \rightarrow \text{预测状态子目标} \rightarrow \text{低层动作优化} \rightarrow \text{执行与重规划} } $$</p>
+<p><strong>一句话概括：H-JEPA 先学习不同时间尺度下的环境动力学，再借助可微世界模型从长时域目标出发，逐层求解能够抵达目标的动作。</strong></p>
+<hr>
+<h2 id="相关阅读">相关阅读
+</h2><ul>
+<li><a class="link" href="../le-world-model/" >LeWorldModel</a> - 同为 JEPA 架构的潜在世界模型，单时间尺度规划，H-JEPA 将其扩展为分层多时间尺度</li>
+<li><a class="link" href="../fast-wam/" >Fast-WAM</a> - 世界动作模型，探讨视频生成在训练与推理中的角色差异</li>
+<li><a class="link" href="../dreamer-v3/" >DreamerV3</a> - 通用世界模型，用 RSSM 架构和想象训练征服 Minecraft</li>
+</ul>
+<hr>
+<h2 id="参考链接">参考链接
+</h2><ul>
+<li>论文：<a class="link" href="https://arxiv.org/abs/2610.06805"  target="_blank" rel="noopener"
+    >https://arxiv.org/abs/2610.06805</a></li>
+<li>官方项目主页：<a class="link" href="https://h-jepa.com/"  target="_blank" rel="noopener"
+    >https://h-jepa.com/</a></li>
+<li>开源仓库：<a class="link" href="https://github.com/kevinghst/H-JEPA"  target="_blank" rel="noopener"
+    >https://github.com/kevinghst/H-JEPA</a></li>
+<li>架构说明：<a class="link" href="https://github.com/kevinghst/H-JEPA/blob/main/h_jepa/ARCHITECTURE.md"  target="_blank" rel="noopener"
+    >https://github.com/kevinghst/H-JEPA/blob/main/h_jepa/ARCHITECTURE.md</a></li>
+</ul>
+
+    <blockquote>
+        <p>阅读说明：本文综合了论文阅读与后续技术讨论。公式和伪代码以解释架构与数据流为目的，进行了适度简化；涉及初始化策略、优化器设置、代价项默认值等实现细节时，应以对应版本的源码和实验配置为准。</p>
+
+    </blockquote>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/worldmodel/">WorldModel</a>
+        
+            <a href="/tags/jepa/">JEPA</a>
+        
+            <a href="/tags/hierarchicalplanning/">HierarchicalPlanning</a>
+        
+            <a href="/tags/latentplanning/">LatentPlanning</a>
+        
+            <a href="/tags/visualplanning/">VisualPlanning</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/le-world-model/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeWorldModel - 稳定的端到端联合嵌入预测架构世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/dreamer-v3/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DreamerV3 - 固定超参数打穿150&#43;任务的通用世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/wa-jepa/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/clear/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-cache/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Cache</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

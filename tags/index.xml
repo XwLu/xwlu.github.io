@@ -5,7 +5,37 @@
         <description>Recent content in Tags on 朝花夕拾</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>en-us</language>
-        <lastBuildDate>Sat, 05 Sep 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Mon, 05 Oct 2026 00:00:00 +0000</lastBuildDate><atom:link href="https://example.org/tags/index.xml" rel="self" type="application/rss+xml" /><item>
+            <title>HierarchicalPlanning</title>
+            <link>https://example.org/tags/hierarchicalplanning/</link>
+            <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/hierarchicalplanning/</guid>
+            <description></description>
+        </item><item>
+            <title>JEPA</title>
+            <link>https://example.org/tags/jepa/</link>
+            <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/jepa/</guid>
+            <description></description>
+        </item><item>
+            <title>LatentPlanning</title>
+            <link>https://example.org/tags/latentplanning/</link>
+            <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/latentplanning/</guid>
+            <description></description>
+        </item><item>
+            <title>VisualPlanning</title>
+            <link>https://example.org/tags/visualplanning/</link>
+            <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/visualplanning/</guid>
+            <description></description>
+        </item><item>
+            <title>WorldModel</title>
+            <link>https://example.org/tags/worldmodel/</link>
+            <pubDate>Mon, 05 Oct 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/worldmodel/</guid>
+            <description></description>
+        </item><item>
             <title>HUGSIM</title>
             <link>https://example.org/tags/hugsim/</link>
             <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
@@ -70,12 +100,6 @@
             <link>https://example.org/tags/flowmatching/</link>
             <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/flowmatching/</guid>
-            <description></description>
-        </item><item>
-            <title>JEPA</title>
-            <link>https://example.org/tags/jepa/</link>
-            <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/jepa/</guid>
             <description></description>
         </item><item>
             <title>世界动作模型</title>
@@ -150,12 +174,6 @@
             <guid>https://example.org/tags/%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90/</guid>
             <description></description>
         </item><item>
-            <title>LatentPlanning</title>
-            <link>https://example.org/tags/latentplanning/</link>
-            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/latentplanning/</guid>
-            <description></description>
-        </item><item>
             <title>Minecraft</title>
             <link>https://example.org/tags/minecraft/</link>
             <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
@@ -178,12 +196,6 @@
             <link>https://example.org/tags/rssm/</link>
             <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/rssm/</guid>
-            <description></description>
-        </item><item>
-            <title>WorldModel</title>
-            <link>https://example.org/tags/worldmodel/</link>
-            <pubDate>Tue, 09 Jun 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/worldmodel/</guid>
             <description></description>
         </item><item>
             <title>历史引导</title>
@@ -294,7 +306,7 @@
             <guid>https://example.org/tags/discrete-diffusion/</guid>
             <description></description>
         </item><item>
-            <title>E2E-AD</title>
+            <title>E2e-Ad</title>
             <link>https://example.org/tags/e2e-ad/</link>
             <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e-ad/</guid>
