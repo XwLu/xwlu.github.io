@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="MomWorld 将门控潜在状态递推、固定轨迹库评分和条件流匹配细化组合成一个规划系统；实验报告了收益，但尚未证明其定制动量单元优于同等条件下的 LSTM、GRU 或 Transformer。">
+<title>MomWorld 论文阅读笔记</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/mom-world/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="MomWorld 论文阅读笔记">
+<meta property='og:description' content="MomWorld 将门控潜在状态递推、固定轨迹库评分和条件流匹配细化组合成一个规划系统；实验报告了收益，但尚未证明其定制动量单元优于同等条件下的 LSTM、GRU 或 Transformer。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/mom-world/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='动量' /><meta property='article:tag' content='流匹配' /><meta property='article:tag' content='潜在递推' /><meta property='article:tag' content='NAVSIM' /><meta property='article:published_time' content='2026-09-27T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-27T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="MomWorld 论文阅读笔记">
+<meta name="twitter:description" content="MomWorld 将门控潜在状态递推、固定轨迹库评分和条件流匹配细化组合成一个规划系统；实验报告了收益，但尚未证明其定制动量单元优于同等条件下的 LSTM、GRU 或 Transformer。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#0-论文信息与阅读约定">0. 论文信息与阅读约定</a>
+      <ul>
+        <li><a href="#01-基本信息">0.1 基本信息</a></li>
+        <li><a href="#02-背景概念">0.2 背景概念</a></li>
+        <li><a href="#03-符号时间轴与张量形状">0.3 符号、时间轴与张量形状</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-introduction问题动机与贡献">1. Introduction：问题、动机与贡献</a>
+      <ul>
+        <li><a href="#11-长时域规划的问题">1.1 长时域规划的问题</a></li>
+        <li><a href="#12-从-momad-到-momworld">1.2 从 MomAD 到 MomWorld</a></li>
+        <li><a href="#13-作者主张的四项贡献">1.3 作者主张的四项贡献</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work与已有方法的关系">2. Related Work：与已有方法的关系</a>
+      <ul>
+        <li><a href="#21-端到端自动驾驶">2.1 端到端自动驾驶</a></li>
+        <li><a href="#22-潜在世界模型">2.2 潜在世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-method结构监督与推理流程">3. Method：结构、监督与推理流程</a>
+      <ul>
+        <li><a href="#31-总体数据流">3.1 总体数据流</a></li>
+        <li><a href="#32-molwmmomentum-aware-latent-world-modeling">3.2 MoLWM：Momentum-Aware Latent World Modeling</a></li>
+        <li><a href="#33-fwmfuture-world-memory">3.3 FWM：Future World Memory</a></li>
+        <li><a href="#34-候选规划未来条件评分">3.4 候选规划：未来条件评分</a></li>
+        <li><a href="#35-moflowmomentum-conditioned-flow-matching">3.5 MoFlow：Momentum-Conditioned Flow Matching</a></li>
+        <li><a href="#36-完整训练目标">3.6 完整训练目标</a></li>
+        <li><a href="#37-一次推理的完整过程">3.7 一次推理的完整过程</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-experiments设置结果与证据边界">4. Experiments：设置、结果与证据边界</a>
+      <ul>
+        <li><a href="#41-实验设置">4.1 实验设置</a></li>
+        <li><a href="#42-主要结果定性总结">4.2 主要结果（定性总结）</a></li>
+        <li><a href="#43-消融实验定性总结">4.3 消融实验（定性总结）</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-论文方法的结构性解读">5. 论文方法的结构性解读</a>
+      <ul>
+        <li><a href="#51-动量门控与-lstmgru-的关系">5.1 &ldquo;动量门控&quot;与 LSTM/GRU 的关系</a></li>
+        <li><a href="#52-动量推进状态本质是残差更新">5.2 &ldquo;动量推进状态&quot;本质是残差更新</a></li>
+        <li><a href="#53-保存全部历史再用-transformer-是否更好">5.3 保存全部历史再用 Transformer 是否更好</a></li>
+        <li><a href="#54-缝合怪判断的技术化表述">5.4 &ldquo;缝合怪&quot;判断的技术化表述</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-讨论后的关键批判harf行为模式与近端修正">6. 讨论后的关键批判：HARF、行为模式与近端修正</a>
+      <ul>
+        <li><a href="#61-固定时域系数的确会限制近端修正">6.1 固定时域系数的确会限制近端修正</a></li>
+        <li><a href="#62-模型是否会学会补偿-005">6.2 模型是否会学会补偿 0.05？</a></li>
+        <li><a href="#63-u-turn急刹和切入的适用边界">6.3 U-turn、急刹和切入的适用边界</a></li>
+        <li><a href="#64-更合理的改进方向">6.4 更合理的改进方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-最终评价">7. 最终评价</a>
+      <ul>
+        <li><a href="#71-可以认可的部分">7.1 可以认可的部分</a></li>
+        <li><a href="#72-不能由论文证明的部分">7.2 不能由论文证明的部分</a></li>
+        <li><a href="#73-对论文创新性的最终判断">7.3 对论文创新性的最终判断</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-一句话带走">8. 一句话带走</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/mom-world/">MomWorld 论文阅读笔记</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-09-27T00:00:00Z'>Sunday, September 27, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        6 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#0-论文信息与阅读约定">0. 论文信息与阅读约定</a>
+      <ul>
+        <li><a href="#01-基本信息">0.1 基本信息</a></li>
+        <li><a href="#02-背景概念">0.2 背景概念</a></li>
+        <li><a href="#03-符号时间轴与张量形状">0.3 符号、时间轴与张量形状</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-introduction问题动机与贡献">1. Introduction：问题、动机与贡献</a>
+      <ul>
+        <li><a href="#11-长时域规划的问题">1.1 长时域规划的问题</a></li>
+        <li><a href="#12-从-momad-到-momworld">1.2 从 MomAD 到 MomWorld</a></li>
+        <li><a href="#13-作者主张的四项贡献">1.3 作者主张的四项贡献</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work与已有方法的关系">2. Related Work：与已有方法的关系</a>
+      <ul>
+        <li><a href="#21-端到端自动驾驶">2.1 端到端自动驾驶</a></li>
+        <li><a href="#22-潜在世界模型">2.2 潜在世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-method结构监督与推理流程">3. Method：结构、监督与推理流程</a>
+      <ul>
+        <li><a href="#31-总体数据流">3.1 总体数据流</a></li>
+        <li><a href="#32-molwmmomentum-aware-latent-world-modeling">3.2 MoLWM：Momentum-Aware Latent World Modeling</a></li>
+        <li><a href="#33-fwmfuture-world-memory">3.3 FWM：Future World Memory</a></li>
+        <li><a href="#34-候选规划未来条件评分">3.4 候选规划：未来条件评分</a></li>
+        <li><a href="#35-moflowmomentum-conditioned-flow-matching">3.5 MoFlow：Momentum-Conditioned Flow Matching</a></li>
+        <li><a href="#36-完整训练目标">3.6 完整训练目标</a></li>
+        <li><a href="#37-一次推理的完整过程">3.7 一次推理的完整过程</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-experiments设置结果与证据边界">4. Experiments：设置、结果与证据边界</a>
+      <ul>
+        <li><a href="#41-实验设置">4.1 实验设置</a></li>
+        <li><a href="#42-主要结果定性总结">4.2 主要结果（定性总结）</a></li>
+        <li><a href="#43-消融实验定性总结">4.3 消融实验（定性总结）</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-论文方法的结构性解读">5. 论文方法的结构性解读</a>
+      <ul>
+        <li><a href="#51-动量门控与-lstmgru-的关系">5.1 &ldquo;动量门控&quot;与 LSTM/GRU 的关系</a></li>
+        <li><a href="#52-动量推进状态本质是残差更新">5.2 &ldquo;动量推进状态&quot;本质是残差更新</a></li>
+        <li><a href="#53-保存全部历史再用-transformer-是否更好">5.3 保存全部历史再用 Transformer 是否更好</a></li>
+        <li><a href="#54-缝合怪判断的技术化表述">5.4 &ldquo;缝合怪&quot;判断的技术化表述</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-讨论后的关键批判harf行为模式与近端修正">6. 讨论后的关键批判：HARF、行为模式与近端修正</a>
+      <ul>
+        <li><a href="#61-固定时域系数的确会限制近端修正">6.1 固定时域系数的确会限制近端修正</a></li>
+        <li><a href="#62-模型是否会学会补偿-005">6.2 模型是否会学会补偿 0.05？</a></li>
+        <li><a href="#63-u-turn急刹和切入的适用边界">6.3 U-turn、急刹和切入的适用边界</a></li>
+        <li><a href="#64-更合理的改进方向">6.4 更合理的改进方向</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-最终评价">7. 最终评价</a>
+      <ul>
+        <li><a href="#71-可以认可的部分">7.1 可以认可的部分</a></li>
+        <li><a href="#72-不能由论文证明的部分">7.2 不能由论文证明的部分</a></li>
+        <li><a href="#73-对论文创新性的最终判断">7.3 对论文创新性的最终判断</a></li>
+      </ul>
+    </li>
+    <li><a href="#8-一句话带走">8. 一句话带走</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="momworld-论文阅读笔记">MomWorld 论文阅读笔记
+</h1>
+    <blockquote>
+        <p>核心评价：MomWorld 将门控潜在状态递推、固定轨迹库评分和条件流匹配细化组合成一个规划系统。实验报告了收益，但尚未证明其定制动量单元优于同等条件下的 LSTM、GRU 或 Transformer。固定的近端小修正预算尤其依赖基础轨迹已经正确这一前提。</p>
+
+    </blockquote>
+<h2 id="0-论文信息与阅读约定">0. 论文信息与阅读约定
+</h2><h3 id="01-基本信息">0.1 基本信息
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>标题</td>
+          <td>MomWorld: Momentum-Aware Latent World Model for Long-Horizon Autonomous Driving</td>
+      </tr>
+      <tr>
+          <td>中文理解</td>
+          <td>面向长时域自动驾驶的动量感知潜在世界模型</td>
+      </tr>
+      <tr>
+          <td>作者</td>
+          <td>Ziying Song、Shengkai Zhang、Lei Yang、Haozhuang Chi、Yuchen Liu、Jiangtao Su、Lin Liu、Ziyang Liu、Chen Lv</td>
+      </tr>
+      <tr>
+          <td>机构</td>
+          <td>南洋理工大学、北京交通大学、中北大学、大连理工大学、清华大学</td>
+      </tr>
+      <tr>
+          <td>阅读版本</td>
+          <td>arXiv:2609.33737v2，2026-09-30，23 页，文件标注 Under Review</td>
+      </tr>
+      <tr>
+          <td>论文页面</td>
+          <td><a class="link" href="https://arxiv.org/abs/2609.33737"  target="_blank" rel="noopener"
+    >https://arxiv.org/abs/2609.33737</a></td>
+      </tr>
+      <tr>
+          <td>作者给出的代码地址</td>
+          <td><a class="link" href="https://github.com/modaxiansheng/MomWorld"  target="_blank" rel="noopener"
+    >https://github.com/modaxiansheng/MomWorld</a></td>
+      </tr>
+      <tr>
+          <td>笔记范围</td>
+          <td>本地 PDF 和本次讨论；未独立核验代码、复现实验或其他论文的完整实现</td>
+      </tr>
+  </tbody>
+</table></div>
+<h3 id="02-背景概念">0.2 背景概念
+</h3><p><strong>本文的动量（momentum）</strong>：学习出来的场景变化特征，不是物理动量 $mv$，也不是优化器的 momentum。</p>
+<h3 id="03-符号时间轴与张量形状">0.3 符号、时间轴与张量形状
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>符号</th>
+          <th>含义或形状</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$t$</td>
+          <td>当前真实观测／规划时刻</td>
+      </tr>
+      <tr>
+          <td>$k=1,\ldots,H$</td>
+          <td>一次规划内的未来推演步骤</td>
+      </tr>
+      <tr>
+          <td>$\Delta t$</td>
+          <td>物理推演时间间隔，NAVSIM 配置为 0.1 秒</td>
+      </tr>
+      <tr>
+          <td>$r_k^{\mathrm{time}}$</td>
+          <td>第 $k$ 个未来时刻的时间嵌入</td>
+      </tr>
+      <tr>
+          <td>$Q_t$</td>
+          <td>当前场景的一组 Queries；具体数量和完整编码过程未展开</td>
+      </tr>
+      <tr>
+          <td>$z_k,p_k\in\mathbb R^D$</td>
+          <td>场景状态与场景动量；NAVSIM 中 $D=256$</td>
+      </tr>
+      <tr>
+          <td>$\rho_k,g_k,u_k\in\mathbb R^D$</td>
+          <td>逐特征维度的保留门、重置门、新动量提案</td>
+      </tr>
+      <tr>
+          <td>$m_k\in\mathbb R^D$</td>
+          <td>一个未来时刻的记忆 token</td>
+      </tr>
+      <tr>
+          <td>$M_t$</td>
+          <td>$H$ 个未来记忆 token；按公式忽略 batch 时为 $H\times D$</td>
+      </tr>
+      <tr>
+          <td>$N$</td>
+          <td>候选轨迹数量；NAVSIM 中为 16,384</td>
+      </tr>
+      <tr>
+          <td>$\tau^i,\tau^0,\tau^\star$</td>
+          <td>第 $i$ 条候选、选中的基础轨迹、专家轨迹</td>
+      </tr>
+      <tr>
+          <td>$\hat\tau,\tilde\tau$</td>
+          <td>流积分解码提案、HARF 融合后的最终轨迹</td>
+      </tr>
+      <tr>
+          <td>$\tau$</td>
+          <td>按位置和航向表示时为 $H\times3$，每点 $(x,y,\psi)$</td>
+      </tr>
+      <tr>
+          <td>$X=\phi(\tau)$</td>
+          <td>编码后的轨迹，为 $H\times4$</td>
+      </tr>
+      <tr>
+          <td>$\epsilon\in[0,1]$</td>
+          <td>流运输进度，不是驾驶中的物理未来时间</td>
+      </tr>
+      <tr>
+          <td>$j=0,\ldots,J-1$</td>
+          <td>数值积分步骤；默认 $J=4$</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>以上由公式得到的形状是数学阅读约定，不代表代码中所有中间张量的布局。时间嵌入宽度、Scene Query 数量、MoFlow 内部网络层数等，论文未完整说明。</p>
+<h2 id="1-introduction问题动机与贡献">1. Introduction：问题、动机与贡献
+</h2><h3 id="11-长时域规划的问题">1.1 长时域规划的问题
+</h3><p>作者指出三个困难：</p>
+<ol>
+<li><strong>动态信息衰减</strong>：反复预测未来状态，可能逐渐丢掉有用的运动趋势。</li>
+<li><strong>旧趋势失效</strong>：车辆切入、急刹等交互变化，使原先趋势不再适用。</li>
+<li><strong>远期不确定性扰动近期规划</strong>：不可靠的远期想象可能影响本来准确的近端决策。</li>
+</ol>
+<p>例子：两辆前车现在都在 20 米处，一辆始终匀速，另一辆刚刚持续减速。相似的当前位置可能对应不同的未来风险。PNC 通常通过位置、速度、加速度和模式估计区分它们；本文在潜在特征中尝试区分&quot;当前配置&quot;和&quot;变化趋势&quot;。</p>
+<h3 id="12-从-momad-到-momworld">1.2 从 MomAD 到 MomWorld
+</h3><p>MomAD 使用感知与轨迹动量，把历史信息连接到当前自车规划。MomWorld 的目标是将动量提升为场景级潜在变量，并与未来状态一起传播。</p>
+<p>这不是为每辆车维护一个物理速度，而是维护两组场景级向量 $z,p$。是否充分保留对象关系和多种意图，需要实际验证。</p>
+<h3 id="13-作者主张的四项贡献">1.3 作者主张的四项贡献
+</h3><ol>
+<li>MomWorld 框架：连接历史观测与未来潜在场景推演。</li>
+<li>MoLWM：通过保留、更新、重置构造未来世界记忆。</li>
+<li>MoFlow：把未来信息转化为有界、随时域加权的轨迹修正。</li>
+<li>nuScenes、NAVSIM 和 Bench2Drive 上的综合评估。</li>
+</ol>
+<p>作者强调 MomWorld 在六秒 nuScenes 上降低了平均预测碰撞率，并改善了长时域规划一致性。这个指标是开环预测指标，不是实际道路事故率。</p>
+<h2 id="2-related-work与已有方法的关系">2. Related Work：与已有方法的关系
+</h2><h3 id="21-端到端自动驾驶">2.1 端到端自动驾驶
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>路线</th>
+          <th>论文中的代表方法</th>
+          <th>关注点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>联合感知、预测与规划</td>
+          <td>UniAD、VAD</td>
+          <td>共享表示和规划目标</td>
+      </tr>
+      <tr>
+          <td>高效结构</td>
+          <td>SparseDrive、PARA-Drive</td>
+          <td>稀疏或并行计算</td>
+      </tr>
+      <tr>
+          <td>历史利用</td>
+          <td>历史预测与规划方法、MomAD</td>
+          <td>时间连续性、历史 Query 复用</td>
+      </tr>
+      <tr>
+          <td>生成和筛选轨迹</td>
+          <td>DiffusionDrive、DIVER、GuideFlow、GTRS</td>
+          <td>截断扩散、强化学习、约束流匹配、多目标评分</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>端到端系统仍可包含检测、地图、轨迹候选和评分等模块；&ldquo;端到端&quot;不等于内部没有结构。</p>
+<h3 id="22-潜在世界模型">2.2 潜在世界模型
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>本文相关工作中的概括</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DriveWorld</td>
+          <td>利用动态记忆学习时空特征</td>
+      </tr>
+      <tr>
+          <td>LAW</td>
+          <td>预测自车轨迹条件下的未来特征，用于规划监督</td>
+      </tr>
+      <tr>
+          <td>World4Drive</td>
+          <td>结合物理潜在表示、空间语义与多模态意图</td>
+      </tr>
+      <tr>
+          <td>Epona</td>
+          <td>自回归扩散联合建模未来视频和轨迹</td>
+      </tr>
+      <tr>
+          <td>Driver-WM</td>
+          <td>驾驶员动态的交通条件推演</td>
+      </tr>
+      <tr>
+          <td>PV-WM</td>
+          <td>行人与车辆的异构联合推演</td>
+      </tr>
+      <tr>
+          <td>DriveLaW、DriveFuture</td>
+          <td>用视频或未来潜在表示条件化规划</td>
+      </tr>
+      <tr>
+          <td>Latent-WAM</td>
+          <td>自回归预测紧凑世界状态</td>
+      </tr>
+      <tr>
+          <td>GraphWorld</td>
+          <td>推演自车中心关系状态，再调制预测和规划 Queries</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>作者将自己的区别概括为&quot;联合传播配置与动量，并进行有界、随时域变化的流修正&rdquo;。该概括不等于已经通过实验排除了其他结构实现同样功能的可能性。</p>
+<h2 id="3-method结构监督与推理流程">3. Method：结构、监督与推理流程
+</h2><h3 id="31-总体数据流">3.1 总体数据流
+</h3><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>历史与当前传感器观测
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>   场景 Queries ──&gt; 检测与地图监督
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>  当前表示与历史差分融合
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span> 初始场景状态 z0 与动量 p0
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span> 门控更新动量并残差推进场景
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>    未来世界记忆 Mt ←──────────────┐
+</span></span><span style="display:flex;"><span>        │                         │
+</span></span><span style="display:flex;"><span>   候选轨迹读取当前与未来信息        │
+</span></span><span style="display:flex;"><span>        ↓                         │
+</span></span><span style="display:flex;"><span>  多头评分并选择基础轨迹            │
+</span></span><span style="display:flex;"><span>        ↓                         │
+</span></span><span style="display:flex;"><span>   条件流匹配细化 ←── p0, Mt ──────┘
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span> 逐分量截断与时域加权融合
+</span></span><span style="display:flex;"><span>        ↓
+</span></span><span style="display:flex;"><span>      最终轨迹
+</span></span></code></pre></div><h3 id="32-molwmmomentum-aware-latent-world-modeling">3.2 MoLWM：Momentum-Aware Latent World Modeling
+</h3><p>MoLWM 中文理解为&quot;动量感知潜在世界建模&quot;，包含初始化、场景自适应动量更新和潜在世界递推。</p>
+<h4 id="321-历史条件初始化">3.2.1 历史条件初始化
+</h4>$$ (z_0,p_0)=f_{\mathrm{temp}}\left( [\mathrm{Pool}(Q_t),\mathrm{Pool}(Q_t)-\mathrm{Pool}(Q_{t-1})] \right). $$<ul>
+<li>$\mathrm{Pool}$：汇聚一组场景 Queries，具体算子未展开。</li>
+<li>$f_{\mathrm{temp}}$：时间融合网络。</li>
+<li>第一项提供当前场景摘要，第二项提供历史到当前的特征变化。</li>
+</ul>
+<p>特征差分不等于真实速度；场景级汇聚也可能压缩对象级关系。公式显式使用当前与前一时刻的 Queries，但底层 $Q_t$ 是否已包含更长历史，不能仅从此式判断。</p>
+<p><strong>历史有效性处理（附录 6.5）：</strong></p>
+$$ Q_{t-1}^{\mathrm{in}}=v_tQ_{t-1}+(1-v_t)Q_t,\qquad v_t\in\{0,1\}. $$<p>场景边界、前驱缺失、预期帧间隔被破坏时，$v_t=0$，使初始化差分为零。潜在状态、动量和未来世界记忆不跨场景复用。</p>
+<h4 id="322-smdscene-adaptive-momentum-dynamics">3.2.2 SMD：Scene-Adaptive Momentum Dynamics
+</h4><p>SMD 中文理解为&quot;场景自适应动量动态&quot;。令：</p>
+$$ a_k=[z_{k-1},p_{k-1},r_k^{\mathrm{time}}]. $$<p>三个预测头产生：</p>
+$$ \rho_k=\sigma(f_\rho(a_k)),\qquad g_k=\sigma(f_g(a_k)),\qquad u_k=\tanh(f_u(a_k)). $$<p>其中 $\sigma$ 是 sigmoid，输出 0～1；tanh 输出 −1～1。$\rho_k,g_k$ 都是逐维门，不是场景级单一开关。</p>
+$$ p_k=\mathrm{LN}\left( \rho_k\odot(1-g_k)\odot p_{k-1} +(1-\rho_k)\odot u_k \right). $$<ul>
+<li>$\odot$：逐元素乘法。</li>
+<li>$\mathrm{LN}$：Layer Normalization，层归一化。</li>
+<li>保留（Maintain）：$\rho_k$ 延续旧动态。</li>
+<li>更新（Update）：$(1-\rho_k)u_k$ 写入新提案。</li>
+<li>重置（Reset）：$(1-g_k)$ 额外压低继承分支。</li>
+</ul>
+<p>例如，某维 $\rho=0.9$，$g=0$ 时旧分支权重为 0.9；$g=0.8$ 时变为 0.18。这是归一化之前的权重，不能直接解释为最终动量幅值同比下降。</p>
+<p>**公式结论：**增大 $g_k$ 不会直接提高新提案权重；新提案仍由 $1-\rho_k$ 控制。新提案网络还读取旧 $p$，所以压低旧分支不意味着彻底移除旧信息。详细比较见第 7 章。</p>
+<h4 id="323-lwrlatent-world-rollout">3.2.3 LWR：Latent World Rollout
+</h4><p>LWR 中文理解为&quot;潜在世界递推&quot;。每步先更新 $p_k$，再推进 $z_k$：</p>
+$$ z_k=z_{k-1}+\Delta t\,\pi_p(p_k),\qquad k=1,\ldots,H. $$<p>$\pi_p$ 是学习出来的动量到场景增量映射。物理未来偏移为 $k\Delta t$。</p>
+<p>输出：</p>
+$$ \{(z_k,p_k)\}_{k=1}^{H}. $$<p>该式类似&quot;位置加速度乘步长&quot;，但不提供真实动力学约束。固定 $\Delta t$ 可吸收到 $\pi_p$ 中，成为 $z_k=z_{k-1}+F(p_k)$，本质是残差递推。</p>
+<p>**推理信息边界：**未来每一步只读取预测状态和时间嵌入，没有真实未来观测。重置门只能根据已有信息修正预测趋势，不能发现毫无观测先兆的真实事件。下一次实际规划收到新观测后，才重新初始化并预测。</p>
+<h4 id="324-训练时的未来目标">3.2.4 训练时的未来目标
+</h4>$$ Q_t^\star=\mathrm{sg}(Q_t),\qquad Q_{t+k}^\star=\mathrm{sg}(\mathrm{ImageEncoder}(O_{t+k})). $$<p>$O_{t+k}$ 为真实未来观测；$\mathrm{sg}$ 是停止梯度。目标由共享编码器产生并 detach，不是论文另外声明的冻结教师或 EMA 教师。</p>
+<p>预测的 $(z_k,p_k)$ 经 $f_Q$ 投影到 Scene Query 空间，与目标对齐。未来自车、参与者状态和存在性也提供辅助监督。所有真实未来观测与标注仅用于训练。</p>
+<h3 id="33-fwmfuture-world-memory">3.3 FWM：Future World Memory
+</h3><p>FWM 中文理解为&quot;未来世界记忆&quot;。每个未来步骤生成：</p>
+$$ m_k=\mathrm{LN}\left(z_k+\mathrm{MLP}([p_k,r_k^{\mathrm{time}}])\right). $$<p>$\mathrm{MLP}$ 是多层感知机；残差路径提供场景配置，学习分支注入动态与时间位置。</p>
+<p>随后：</p>
+$$ M_t=\mathrm{SelfAttn}([m_1,\ldots,m_H]). $$<p>Self-Attention（自注意力）让不同未来时刻之间读取上下文。因此 MomWorld 的前端并非全程只有循环单元，也包含未来 token 的 Transformer 式聚合。</p>
+<p>FWM 是本次规划预测出来的一段未来，不是保存所有真实历史的缓存。每次规划重新构造 FWM，不直接将上次预测的未来记忆延续过来。</p>
+<h3 id="34-候选规划未来条件评分">3.4 候选规划：未来条件评分
+</h3><p>附录 Algorithm 2 的完整流程：</p>
+<ol>
+<li>将候选轨迹 $\tau^i$ 展平并编码：$e_i=f_\tau(\mathrm{vec}(\tau^i))$。</li>
+<li>候选编码器处理这些 token，得到 $E_\tau$。</li>
+<li>拼接当前场景与未来记忆：$C_t=[Q_t;M_t]$。</li>
+<li>TrajDecoder 以候选为 Query、$C_t$ 为 Key/Value 做交叉注意力。</li>
+<li>加入自车状态条件：$h_{t,i}=H_{t,i}^\tau+W_ss_t$。</li>
+<li>多个评分头分别产生模仿分布和规则子指标预测。</li>
+<li>聚合分数，取 $i^\star=\arg\max_iS_i$，基础轨迹 $\tau^0=\tau^{i^\star}$。</li>
+</ol>
+<p>$s_t$ 为自车状态向量，具体分量未完整展开；$W_s$ 为投影。$H^\tau$ 是候选解码特征，不是未来推演步数 $H$。</p>
+<p>对一个注意力头 $a$：</p>
+$$ A_t^{(a)}=\mathrm{softmax}\left( \frac{(E_\tau W_Q^{(a)})(C_tW_K^{(a)})^\top}{\sqrt{d_a}} \right),\qquad Z_t^{(a)}=A_t^{(a)}(C_tW_V^{(a)}). $$<p>$W_Q,W_K,W_V$ 为可学习投影，$d_a$ 为该头维度。不同候选 Query 产生不同注意力权重，因此读取到的兼容性信息不同。</p>
+<h4 id="341-navsim-评分公式">3.4.1 NAVSIM 评分公式
+</h4><p>模仿 logits 经 softmax 得到 $\pi_i^{\mathrm{imi}}$；其余 logits 经 sigmoid 得到 $p_i^r$。评分项为：模仿、无责任碰撞 NC、可行驶区域合规 DAC、碰撞时间 TTC、进度 EP、方向合规 DDC、车道保持 LK、交通灯合规 TLC。</p>
+$$ \begin{aligned} S_i={}&0.03\log\pi_i^{\mathrm{imi}} +0.10\log p_i^{\mathrm{TLC}} +0.10\log p_i^{\mathrm{NC}} \\ &+0.90\log p_i^{\mathrm{DAC}} +0.20\log p_i^{\mathrm{DDC}} \\ &+6.0\log\left(7.0p_i^{\mathrm{TTC}}+7.0p_i^{\mathrm{EP}}+3.0p_i^{\mathrm{LK}}\right). \end{aligned} $$<p>评分头接受候选级模仿目标和 PDM 子指标监督，梯度经过候选解码器传入 $M_t$。这里的评分权重与评估器的 PDMS／EPDMS 公式不是同一个公式。</p>
+<h4 id="342-三个关键实现边界">3.4.2 三个关键实现边界
+</h4><ul>
+<li>每条完整候选对应一个 Query token，全局读取未来记忆；没有显式逐 waypoint 与未来 token 一一匹配。</li>
+<li>所有候选共享同一个未来世界记忆；没有为每条候选自车动作运行独立世界推演。</li>
+<li>每次规划只评分一次；选中后 MoFlow 使用同一 $M_t$，不重建记忆，不重新排名候选。</li>
+</ul>
+<p>NAVSIM 实例基于 <strong>GTRS-Dense</strong>，不是论文另行声明的简化 Hydra-MDP 实现。其固定词表、多目标评分思路与 Hydra-MDP 一类方法相近。</p>
+<h3 id="35-moflowmomentum-conditioned-flow-matching">3.5 MoFlow：Momentum-Conditioned Flow Matching
+</h3><p>MoFlow 中文理解为&quot;动量条件流匹配&quot;，包含 MGRF 和 HARF。</p>
+<h4 id="351-轨迹编码">3.5.1 轨迹编码
+</h4>$$ \phi(x,y,\psi)=\left(x/s_{\mathrm{pos}},y/s_{\mathrm{pos}},\sin\psi,\cos\psi\right),\qquad s_{\mathrm{pos}}=50. $$<p>位置缩放控制数值尺度；sin/cos 避免 179° 与 −179° 在原始角度上看起来相差 358°。编码后的方向向量在运输中不一定保持单位长度，所以最终需要归一化。</p>
+$$ X_0=\phi(\tau^0),\qquad X_1=\phi(\tau^\star). $$<h4 id="352-mgrfmomentum-guided-residual-flow">3.5.2 MGRF：Momentum-Guided Residual Flow
+</h4><p>MGRF 中文理解为&quot;动量引导残差流&quot;。训练时采样 $\epsilon\sim U(0,1)$：</p>
+$$ X_\epsilon=(1-\epsilon)X_0+\epsilon X_1. $$<p>网络学习整条编码轨迹的向量场：</p>
+$$ L_{\mathrm{FM}}=\mathbb E_\epsilon\left[ \left\|v_\theta(X_\epsilon,\epsilon\mid p_0,M_t)-(X_1-X_0)\right\|_2^2 \right]. $$<p>$v_\theta$ 以当前运输状态、运输进度、历史条件动量和未来记忆为输入，预测沿运输过程的修正方向。该向量场的具体内部网络没有完整展开。</p>
+<p>**与截断扩散的关系：**本文与 DiffusionDrive 在&quot;从有结构的起点出发，少步细化&quot;上有直觉相似性；但本文是选中基础轨迹到专家轨迹的流匹配，没有给出噪声初始化和去噪链，不能视作同一数学算法。</p>
+<h4 id="353-推理积分与解码">3.5.3 推理积分与解码
+</h4><p>为避免 $X_0$ 与积分编号混淆，记初始积分状态 $X^{(0)}=X_0$：</p>
+$$ X^{(j+1)}=X^{(j)}+\frac1J v_\theta\left(X^{(j)},\frac{j+1/2}{J}\mid p_0,M_t\right),\qquad j=0,\ldots,J-1. $$<p>默认 $J=4$。这是显式 Euler，向量场的流时间条件取区间中点；不是完整的二阶 midpoint／Runge–Kutta 方法。</p>
+$$ \hat\tau=\phi^{-1}\left(N_\psi(X^{(J)})\right). $$<p>$N_\psi$ 在全部 Euler 更新后，将每点航向的 sin/cos 对归一化一次。位置恢复尺度，航向可通过 atan2 恢复。近零方向向量的具体数值处理，论文未说明。</p>
+<p><strong>四次积分更新都在修改整条轨迹，不对应四个物理驾驶时刻。</strong></p>
+<h4 id="354-harfhorizon-aware-residual-fusion">3.5.4 HARF：Horizon-Aware Residual Fusion
+</h4><p>HARF 中文理解为&quot;时域感知残差融合&quot;。先计算原始残差，并对航向差做环绕处理：</p>
+$$ d_k=\hat\tau_k-\tau_k^0,\qquad \Delta\tau_k=\mathrm{clip}_{[-\delta,\delta]}(d_k). $$<p>逐分量 clip 不等于限制整条轨迹曲率，也不等于欧氏距离球约束。</p>
+<p>然后融合：</p>
+$$ \gamma_k=0.05+0.95\frac{k-1}{H-1},\qquad \tilde\tau_k=\tau_k^0+\sigma(b)\gamma_k\Delta\tau_k. $$<ul>
+<li>$\gamma_k$：固定线性时域权重，首点 0.05，末点 1.0。</li>
+<li>$b$：可学习的全局标量；$\sigma(b)$ 不是逐场景不确定性。</li>
+<li>$\delta$：每个残差分量的截断阈值。</li>
+</ul>
+<p>NAVSIM 配置为 $\delta=2.0$，$b$ 初始化为 −4，所以初始全局增益约为 0.018。航向和位置具有不同物理单位；论文按分量给出同一数值阈值，未给出独立的角度阈值配置。</p>
+<p>**公式结论：**每个分量的最终修正幅度满足：</p>
+$$ |\tilde\tau_{k,c}-\tau_{k,c}^0| \leq\sigma(b)\gamma_k\delta. $$<p>$c$ 表示轨迹的某个分量。这是围绕基础轨迹的修正预算，不是自车绝对位移、绝对航向或转弯幅度的上限。</p>
+<h3 id="36-完整训练目标">3.6 完整训练目标
+</h3><h4 id="361-未来场景对齐">3.6.1 未来场景对齐
+</h4>$$ L_{\mathrm{future}}=\frac1H\sum_{k=1}^H d_Q\left(f_Q([z_k,p_k]),Q_{t+k}^\star\right). $$<p>$f_Q$ 把预测状态投影到 Query 空间；$d_Q$ 是对齐／匹配损失。论文未完整展开匹配算子及其细节，不能自行指定为某种固定 MSE 或匈牙利匹配。</p>
+<h4 id="362-动量监督">3.6.2 动量监督
+</h4>$$ L_p=\frac1H\sum_{k=1}^H \left\|f_\Delta(p_k)- \left[\mathrm{Pool}(Q_{t+k}^\star)-\mathrm{Pool}(Q_{t+k-1}^\star)\right] \right\|_1. $$<p>$f_\Delta$ 将动量投影到汇聚特征空间。此损失要求动量解释相邻未来特征的变化，但不保证潜在分解唯一，不使 $p$ 等价于真实物理速度。</p>
+<h4 id="363-辅助未来状态监督">3.6.3 辅助未来状态监督
+</h4>$$ L_{\mathrm{aux}}=\frac1H\sum_{k=1}^H (\ell_{\mathrm{ego}}^k+\ell_{\mathrm{agent}}^k+\ell_{\mathrm{pres}}^k). $$<p>分别监督未来自车状态、轨迹关联的参与者状态和存在性。具体字段、回归与分类细节未完整展开。</p>
+$$ L_{\mathrm{world}}=L_{\mathrm{future}}+0.5L_p+0.2L_{\mathrm{aux}}. $$<h4 id="364-最终轨迹监督与总损失">3.6.4 最终轨迹监督与总损失
+</h4>$$ L_\tau=\frac1H\sum_{k=1}^H|\tilde\tau_k-\tau_k^\star|_1,\qquad L_{\mathrm{MoFlow}}=L_{\mathrm{FM}}+L_\tau. $$$$ L=L_{\mathrm{percep}}+L_{\mathrm{plan}}+L_{\mathrm{world}}+L_{\mathrm{MoFlow}}. $$<p>感知和候选规划保留底层规划器的目标。作者声明联合优化；argmax 选中候选后的离散选择及相关梯度实现，论文未完整展开，不能假定选择操作本身可微。</p>
+<h3 id="37-一次推理的完整过程">3.7 一次推理的完整过程
+</h3><ol>
+<li>编码当前和历史传感器数据，得到 Scene Queries。</li>
+<li>检查历史有效性，初始化 $z_0,p_0$。</li>
+<li>递推 $H$ 次，得到未来 $(z_k,p_k)$。</li>
+<li>转换并聚合未来记忆 $M_t$。</li>
+<li>一次性评价全部候选，选择基础轨迹 $\tau^0$。</li>
+<li>以 $p_0,M_t$ 为条件，进行四次整条轨迹的流更新。</li>
+<li>归一化航向并解码，得到 $\hat\tau$。</li>
+<li>环绕航向差、逐分量截断、按时域和全局门融合，输出 $\tilde\tau$。</li>
+</ol>
+<p>真实未来观测、专家未来轨迹和参与者未来标注均不参与推理。</p>
+<h2 id="4-experiments设置结果与证据边界">4. Experiments：设置、结果与证据边界
+</h2><h3 id="41-实验设置">4.1 实验设置
+</h3><h4 id="411-数据集与协议">4.1.1 数据集与协议
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>基准</th>
+          <th>协议与输入</th>
+          <th>规划设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>nuScenes</td>
+          <td>官方训练／验证划分；相机-only 开环规划</td>
+          <td>独立训练 3 秒模型（6 个 waypoint）和 6 秒模型（12 个 waypoint），均为 2 Hz</td>
+      </tr>
+      <tr>
+          <td>NAVSIM v1</td>
+          <td>NavTrain 训练，官方 navtest 的 12,146 个索引场景，非反应式伪仿真</td>
+          <td>论文实例为 40 步、0.1 秒间隔，即 4 秒规划网格</td>
+      </tr>
+      <tr>
+          <td>NAVSIM v2 navtest</td>
+          <td>一阶段 v2 scorer 的诊断分析</td>
+          <td>论文明确说明不是官方 v2 leaderboard 协议</td>
+      </tr>
+      <tr>
+          <td>NAVSIM v2 navhard</td>
+          <td>两阶段伪仿真，含初始真实场景和合成后续场景</td>
+          <td>使用校正后的人类参考过滤</td>
+      </tr>
+      <tr>
+          <td>Bench2Drive</td>
+          <td>CARLA 闭环评估</td>
+          <td>220 条短路线、44 类交互场景</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>6 秒 nuScenes 模型不是从 3 秒 checkpoint 外推得到的。NAVSIM 实例同时使用相机与 LiDAR，因此整篇论文不能概括为纯视觉方案。</p>
+<h3 id="42-主要结果定性总结">4.2 主要结果（定性总结）
+</h3><h4 id="421-nuscenes-长时域规划">4.2.1 nuScenes 长时域规划
+</h4><p>MomWorld 在作者报告的各个 nuScenes 预测时域上都取得最低的 L2 位移误差，说明其长时域位置预测更接近专家轨迹。优势随着规划时域增长仍然存在，但不能据此说明每个单独时刻、每个场景类型都占优。</p>
+<h4 id="422-预测安全与时间一致性">4.2.2 预测安全与时间一致性
+</h4><p>MomWorld 的平均预测碰撞率低于对比方法，长时域碰撞趋势也更好。TPC 同样最低，说明连续规划输出之间更一致。TPC 衡量的是跨帧输出差异，不等同于单条轨迹的曲率、加速度或 jerk 平滑性，也不等同于闭环真实安全性。</p>
+<h4 id="423-navsim">4.2.3 NAVSIM
+</h4><p>MomWorld 在 NAVSIM v1 的世界模型方法组中取得最好的 PDMS；在 v2 navtest 的诊断协议和 v2 navhard 的两阶段协议中也取得较高的综合分数。它体现出安全、道路合规、进度和舒适性之间较好的平衡，但不是所有子指标、所有方法类别都最好。</p>
+<h3 id="43-消融实验定性总结">4.3 消融实验（定性总结）
+</h3><h4 id="431-组件累积">4.3.1 组件累积
+</h4><p>作者的累积实验显示，加入 FWM、LWR、SMD、MGRF 和 HARF 后，轨迹误差、跨帧不一致性、预测碰撞和 NAVSIM 综合指标逐步改善。该实验说明各模块在当前整体配方中具有互补性，但不证明这些模块优于参数量匹配的 LSTM、GRU 或 Transformer。</p>
+<h4 id="432-molwm-设计">4.3.2 MoLWM 设计
+</h4><p>去掉历史变化、时域嵌入、可学习保留、动量提案、重置门、FWM 动量注入或未来时间聚合，结果均退化。去掉新动量提案和重置门的退化尤其明显，支持&quot;需要引入新趋势，也需要压制过时趋势&quot;的设计直觉。</p>
+<p>这些消融只证明组件对作者当前结构有帮助，不能证明换成完整 LSTM／GRU 或历史 Transformer 会更差。论文也没有提供同等条件下的替代循环单元对照。</p>
+<h4 id="433-moflow-设计">4.3.3 MoFlow 设计
+</h4><p>无条件细化不如使用 $p_0$ 和 $M_t$ 的条件细化；同时使用历史条件动量和未来世界记忆优于只使用其中一个。直接用流输出替换基础轨迹最差，说明基础轨迹作为稳定锚点是有价值的。</p>
+<p>残差截断、时域权重和可学习全局门都对结果有帮助。少量 Euler 更新已经能够取得较好效果，继续增加步数没有带来相称收益；论文报告的完整 MoFlow 只增加少量推理开销，但具体耗时数值在此处删除。</p>
+<h2 id="5-论文方法的结构性解读">5. 论文方法的结构性解读
+</h2><h3 id="51-动量门控与-lstmgru-的关系">5.1 &ldquo;动量门控&quot;与 LSTM/GRU 的关系
+</h3><p>论文动量更新：</p>
+$$ p_k=\mathrm{LN}\left(\rho_k(1-g_k)p_{k-1}+(1-\rho_k)u_k\right). $$<p>去掉逐元素符号后，它与 LSTM 的记忆更新：</p>
+$$ c_k=f_kc_{k-1}+i_ku_k $$<p>以及 GRU 的混合更新：</p>
+$$ h_k=\rho_kh_{k-1}+(1-\rho_k)u_k $$<p>具有明显结构相似性。更准确地说，MoLWM 是一个定制门控循环单元，不是全新的循环建模范式。</p>
+<p>它的区别在于：</p>
+<ul>
+<li>有效旧分支为 $\rho_k(1-g_k)$，新提案分支权重为 $1-\rho_k$。</li>
+<li>$g_k$ 单独压低旧分支，但不直接提高新提案权重。</li>
+<li>$u_k$ 的生成仍读取旧 $z_{k-1},p_{k-1}$，所以 reset 不等于彻底清空旧信息。</li>
+<li>更新后使用 LayerNorm；整体缩放可能被归一化部分抵消，逐维方向和信息比例仍会改变。</li>
+<li>$p_k$ 还有未来特征差分监督，因此作者对它施加了&quot;表示变化趋势&quot;的角色约束。</li>
+</ul>
+<p>从设计直觉看：</p>
+<ul>
+<li>标准 LSTM 的遗忘门和输入门通常更独立，调节自由度更高。</li>
+<li>GRU 更轻量，适合维护一个动态摘要。</li>
+<li>本文门控的优势是把&quot;持续趋势、场景新动态、旧趋势失效&quot;写进结构，形成明确归纳偏置。</li>
+</ul>
+<p>但论文没有报告参数量匹配的 LSTM、GRU 或历史 Transformer 对照。因此只能说本文门控在自身结构中有用，不能说它比成熟门控单元更优。</p>
+<h3 id="52-动量推进状态本质是残差更新">5.2 &ldquo;动量推进状态&quot;本质是残差更新
+</h3>$$ z_k=z_{k-1}+\Delta t\pi_p(p_k) $$<p>固定 $\Delta t$ 可以吸收到 $\pi_p$，写为 $z_k=z_{k-1}+F(p_k)$。从神经网络结构看，它确实是残差块或 Euler 形式的 latent state update。</p>
+<p>该写法的价值在于表达&quot;状态由动态增量推进&rdquo;；它不自动提供真实物理速度、质量、动量守恒、曲率或加速度约束。$p$ 是学习特征，不应直接当作物理速度。</p>
+<h3 id="53-保存全部历史再用-transformer-是否更好">5.3 保存全部历史再用 Transformer 是否更好
+</h3><p>循环摘要为：</p>
+$$ h_t=F(h_{t-1},Q_t), $$<p>历史被压入固定容量，早期细节可能不可恢复。若保存多帧 token：</p>
+$$ Q_{t-L+1},\ldots,Q_t, $$<p>当前任务可用注意力重新读取遮挡前信息、较早的运动模式和对象关系。从信息可访问性看，历史 Transformer 通常比单一固定向量更有优势。</p>
+<p>但保存信息不等于模型正确使用信息：</p>
+<ol>
+<li>过时趋势、感知噪声和错误匹配也被保留，需要读时抑制。</li>
+<li>多帧 token 必须带时间、自车位姿和对象关联对齐，否则差分会混入自车运动和匹配误差。</li>
+<li>若每帧有 $N$ 个 token、保留 $L$ 帧，完整自注意力的 token 数为 $LN$，注意力关系约为 $O((LN)^2)$，需要窗口、稀疏或记忆压缩。</li>
+<li>循环摘要在&quot;真正只需要少数动态状态&quot;的场景可能更高效。</li>
+</ol>
+<p>更合理的替代基线是：历史 Transformer 读取多帧场景，初始化 $z_0,p_0$ 或直接用未来时间 Queries 预测 $z_{1:H}$，同时保留未来场景、动态和辅助状态监督。这样才能公平检验门控摘要是否胜过可查询历史。</p>
+<h3 id="54-缝合怪判断的技术化表述">5.4 &ldquo;缝合怪&quot;判断的技术化表述
+</h3><p>从模块来源和功能看，MomWorld 可以拆成：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>MomWorld 部件</th>
+          <th>主要技术角色</th>
+          <th>与已有范式的关系</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>MoLWM 的 Maintain/Update/Reset</td>
+          <td>动态 latent 的门控递推</td>
+          <td>类 LSTM/GRU 单元</td>
+      </tr>
+      <tr>
+          <td>$z_k=z_{k-1}+F(p_k)$</td>
+          <td>场景状态增量</td>
+          <td>残差／Euler 更新</td>
+      </tr>
+      <tr>
+          <td>FWM 与候选 cross-attention</td>
+          <td>未来 token 作为评分上下文</td>
+          <td>latent memory 与 Transformer 聚合</td>
+      </tr>
+      <tr>
+          <td>固定轨迹词表与多头子指标</td>
+          <td>候选轨迹选择</td>
+          <td>轨迹库打分／规划器式筛选</td>
+      </tr>
+      <tr>
+          <td>MGRF</td>
+          <td>基础轨迹到专家轨迹的条件运输</td>
+          <td>少步 flow matching，和截断生成思路相似</td>
+      </tr>
+      <tr>
+          <td>HARF</td>
+          <td>在基础轨迹附近做安全幅度修正</td>
+          <td>trust region／时域增益调度</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>因此论文的统一点是&quot;用历史动量特征连接未来场景与轨迹细化&rdquo;，而不是每个子模块本身都具有强新颖性。</p>
+<h2 id="6-讨论后的关键批判harf行为模式与近端修正">6. 讨论后的关键批判：HARF、行为模式与近端修正
+</h2><h3 id="61-固定时域系数的确会限制近端修正">6.1 固定时域系数的确会限制近端修正
+</h3><p>令原始 MoFlow 残差为：</p>
+$$ d_k=\hat\tau_k-\tau_k^0. $$<p>最终输出：</p>
+$$ \tilde\tau_k-\tau_k^0 =\sigma(b)\gamma_k\mathrm{clip}(d_k,-\delta,\delta). $$<p>因此：</p>
+$$ |\tilde\tau_{k,c}-\tau_{k,c}^0| \leq \sigma(b)\gamma_k\delta. $$<p>第一点 $\gamma_1=0.05$。若 $\sigma(b)\approx1,\delta=2$，该分量最大最终修正也只有 0.1 个轨迹单位；实际初始 $b=-4$ 时，训练起点的增益更小。位置和航向的具体单位／坐标含义需要结合底层轨迹接口，不能把 ±2.0 直接解读成统一的米或弧度限制。</p>
+<h3 id="62-模型是否会学会补偿-005">6.2 模型是否会学会补偿 0.05？
+</h3><p>如果没有截断，为了得到目标修正 $r_k^\star$，模型可能输出：</p>
+$$ d_k\approx\frac{r_k^\star}{\sigma(b)\gamma_k}. $$<p>因此近端小系数确实会诱导内部残差变大。但截断让补偿有上限：即使 $d_k$ 无限增大，最终修正也不超过 $\sigma(b)\gamma_k\delta$。</p>
+<p>训练中还同时存在：</p>
+<ul>
+<li>$L_{\mathrm{FM}}$：直接要求流向量场学习 $X_1-X_0$，倾向于保留真实基础到专家残差。</li>
+<li>$L_\tau$：要求经过 HARF 的最终轨迹接近专家，倾向于补偿 $\gamma_k$。</li>
+</ul>
+<p>未截断区间内：</p>
+$$ \frac{\partial\tilde\tau_k}{\partial d_k}=\sigma(b)\gamma_k. $$<p>所以近端 $L_\tau$ 传回流模型的梯度也被缩小，模型不一定能充分学到补偿。论文未报告 $\|d_k\|$ 与 $\|\tilde\tau_k-\tau_k^0\|$ 的分时域统计，不能确认补偿是否发生。</p>
+<h3 id="63-u-turn急刹和切入的适用边界">6.3 U-turn、急刹和切入的适用边界
+</h3><p>HARF 隐含前提是：<strong>候选评分已经选择了正确的行为模式，MoFlow 只做局部细化。</strong></p>
+<p>需要区分两种情况：</p>
+<ol>
+<li>基础候选 $\tau^0$ 已经是 U-turn，只是转弯半径、航向或位置有小误差。此时近端小修正有助于稳定。</li>
+<li>基础候选是直行或普通左转，而真实行为需要立刻 U-turn。此时任务不是局部修正，而是改变行为模式／轨迹拓扑；固定的近端小预算可能无法及时纠错。</li>
+</ol>
+<p>因此 U-turn 是否可行主要取决于：</p>
+<ul>
+<li>固定候选词表是否含 U-turn；</li>
+<li>评分器是否选中它；</li>
+<li>LWR/FWM 是否正确提供掉头相关上下文；</li>
+<li>选中的候选是否已经在近端开始转向。</li>
+</ul>
+<h3 id="64-更合理的改进方向">6.4 更合理的改进方向
+</h3><p>这不是论文已实现的方案，而是基于其结构的设计建议：</p>
+<ol>
+<li><strong>场景自适应增益</strong>：让 $\gamma_k$ 依赖 $z_k,p_k,M_t,\tau^0$ 和场景事件，而不是固定单调曲线。</li>
+<li><strong>行为与细化分层</strong>：行为层负责直行、变道、转弯、掉头；MoFlow 只负责同一行为模式内的精修。</li>
+<li><strong>模式变化时重新选候选</strong>：若预测发生急刹、切入或掉头意图，触发重评分或扩大候选集合，而不是依靠残差硬掰。</li>
+<li><strong>显式动力学约束</strong>：对最终轨迹的曲率、加速度、jerk 和碰撞约束进行检查；逐分量 clip 不能替代这些约束。</li>
+<li><strong>记录内部与最终修正</strong>：同时报告 $\|\hat\tau_k-\tau_k^0\|$ 和 $\|\tilde\tau_k-\tau_k^0\|$，检验模型是否被迫补偿外部增益。</li>
+<li><strong>增加公平基线</strong>：相同输入、世界模型监督、候选评分和 MoFlow 下，替换 MoLWM 为参数量匹配的 LSTM、GRU、历史 Transformer，并报告按场景类型的结果。</li>
+</ol>
+<h2 id="7-最终评价">7. 最终评价
+</h2><h3 id="71-可以认可的部分">7.1 可以认可的部分
+</h3><ul>
+<li>将&quot;配置&quot;和&quot;变化趋势&quot;分成 $z,p$ 两个潜在角色，提供了清晰的时间建模归纳偏置。</li>
+<li>用未来观测的 detached Query、特征差分、未来对象状态和存在性共同监督 rollout，比只让模型自由预测 latent 更有约束。</li>
+<li>FWM 将未来推演接入候选轨迹选择；MoFlow 用基础轨迹作为锚点，减少了直接替换带来的不稳定。</li>
+<li>在作者报告的 nuScenes、NAVSIM 和部分鲁棒性协议上取得较好结果，流修正只带来有限的额外推理开销。</li>
+</ul>
+<h3 id="72-不能由论文证明的部分">7.2 不能由论文证明的部分
+</h3><ul>
+<li>定制 Maintain/Update/Reset 优于 LSTM、GRU 或 Transformer。</li>
+<li>$p$ 具有可解释、可迁移的物理动量含义。</li>
+<li>共享未来记忆等价于动作条件的因果世界模型。</li>
+<li>固定 $\gamma_k=0.05\rightarrow1.0$ 在急刹、切入、U-turn 等近端大变化场景中普遍合适。</li>
+<li>预测碰撞率与闭环真实安全性之间的直接对应关系。</li>
+</ul>
+<h3 id="73-对论文创新性的最终判断">7.3 对论文创新性的最终判断
+</h3><p>把论文拆开看，它由类 LSTM 的 latent 动态递推、残差状态更新、未来 token 聚合、固定轨迹库评分和少步条件流细化组成。主要新意在于将这些部件用&quot;动量&quot;概念串起来，并通过未来监督和 HARF 形成一套工程配方。</p>
+<p>因此更准确的评价是：</p>
+
+    <blockquote>
+        <p>MomWorld 是一个在长时域开环与伪仿真指标上有效的集成式规划系统；它的实验收益值得记录，但目前证据不足以支持&quot;动量门控世界模型&quot;本身是必要或关键突破。若关注真正的世界模型能力，动作条件、多模态未来、对象级交互和反事实 rollout 仍是它没有充分解决的问题。</p>
+
+    </blockquote>
+<h2 id="8-一句话带走">8. 一句话带走
+</h2><p>MomWorld 的核心是：<strong>用一个类似门控 RNN 的潜在动量递推未来场景，用未来记忆选择固定候选轨迹，再从候选轨迹出发做少步、有界、近端保守的流匹配修正；它是有一定实验收益的工程组合，但其核心门控世界模型的独立创新性和对行为突变的普适性仍未被充分证明。</strong></p>
+<h2 id="相关笔记">相关笔记
+</h2><ul>
+<li><a class="link" href="../mom-ad/" >MomAD: Momentum-Aware Planning in End-to-End Autonomous Driving</a> —— 同系列的上一代工作，MomWorld 将其感知/轨迹动量提升为场景级潜在变量</li>
+<li><a class="link" href="../epona/" >Epona: Autoregressive Diffusion World Model for End-to-End Autonomous Driving</a> —— Related Work 中对比的自回归扩散驾驶世界模型</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E5%8A%A8%E9%87%8F/">动量</a>
+        
+            <a href="/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/">流匹配</a>
+        
+            <a href="/tags/%E6%BD%9C%E5%9C%A8%E9%80%92%E6%8E%A8/">潜在递推</a>
+        
+            <a href="/tags/navsim/">NAVSIM</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/wa-jepa/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">EponaV2: Driving World Model with Comprehensive Future Reasoning</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/drive-zero/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DriveZero: End-to-End Driving Beyond Human Demonstrations</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/anchor-vla/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-mind/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Mind 论文笔记与批判性评估</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

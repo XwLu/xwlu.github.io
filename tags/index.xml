@@ -36,16 +36,52 @@
             <guid>https://example.org/tags/worldmodel/</guid>
             <description></description>
         </item><item>
+            <title>NAVSIM</title>
+            <link>https://example.org/tags/navsim/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/navsim/</guid>
+            <description></description>
+        </item><item>
+            <title>世界模型</title>
+            <link>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</guid>
+            <description></description>
+        </item><item>
+            <title>动量</title>
+            <link>https://example.org/tags/%E5%8A%A8%E9%87%8F/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E5%8A%A8%E9%87%8F/</guid>
+            <description></description>
+        </item><item>
+            <title>流匹配</title>
+            <link>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</guid>
+            <description></description>
+        </item><item>
+            <title>潜在递推</title>
+            <link>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E9%80%92%E6%8E%A8/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E6%BD%9C%E5%9C%A8%E9%80%92%E6%8E%A8/</guid>
+            <description></description>
+        </item><item>
+            <title>端到端</title>
+            <link>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</guid>
+            <description></description>
+        </item><item>
+            <title>自动驾驶</title>
+            <link>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</link>
+            <pubDate>Sun, 27 Sep 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</guid>
+            <description></description>
+        </item><item>
             <title>HUGSIM</title>
             <link>https://example.org/tags/hugsim/</link>
             <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/hugsim/</guid>
-            <description></description>
-        </item><item>
-            <title>NAVSIM</title>
-            <link>https://example.org/tags/navsim/</link>
-            <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/navsim/</guid>
             <description></description>
         </item><item>
             <title>NuPlan</title>
@@ -72,18 +108,6 @@
             <guid>https://example.org/tags/%E7%89%B9%E5%BE%81%E8%92%B8%E9%A6%8F/</guid>
             <description></description>
         </item><item>
-            <title>端到端</title>
-            <link>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</link>
-            <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/</guid>
-            <description></description>
-        </item><item>
-            <title>自动驾驶</title>
-            <link>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</link>
-            <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/</guid>
-            <description></description>
-        </item><item>
             <title>视觉基础模型</title>
             <link>https://example.org/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/</link>
             <pubDate>Sat, 05 Sep 2026 00:00:00 +0000</pubDate>
@@ -108,12 +132,6 @@
             <guid>https://example.org/tags/%E4%B8%96%E7%95%8C%E5%8A%A8%E4%BD%9C%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item><item>
-            <title>世界模型</title>
-            <link>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</link>
-            <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/</guid>
-            <description></description>
-        </item><item>
             <title>论文阅读</title>
             <link>https://example.org/tags/%E8%AE%BA%E6%96%87%E9%98%85%E8%AF%BB/</link>
             <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
@@ -124,12 +142,6 @@
             <link>https://example.org/tags/vla/</link>
             <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/vla/</guid>
-            <description></description>
-        </item><item>
-            <title>流匹配</title>
-            <link>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</link>
-            <pubDate>Fri, 03 Jul 2026 00:00:00 +0000</pubDate>
-            <guid>https://example.org/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/</guid>
             <description></description>
         </item><item>
             <title>小鹏</title>
@@ -306,7 +318,7 @@
             <guid>https://example.org/tags/discrete-diffusion/</guid>
             <description></description>
         </item><item>
-            <title>E2e-Ad</title>
+            <title>E2E-AD</title>
             <link>https://example.org/tags/e2e-ad/</link>
             <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e-ad/</guid>
