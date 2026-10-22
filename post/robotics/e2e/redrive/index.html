@@ -587,55 +587,55 @@
   </thead>
   <tbody>
       <tr>
-          <td>(E_\theta)</td>
-          <td>在线视频编码器，参数为 (\theta)</td>
+          <td>\(E_\theta\)</td>
+          <td>在线视频编码器，参数为 \(\theta\)</td>
       </tr>
       <tr>
-          <td>(E_{\mathrm{tgt}})</td>
+          <td>\(E_{\mathrm{tgt}}\)</td>
           <td>目标编码器，提供监督特征</td>
       </tr>
       <tr>
-          <td>(M_\omega)</td>
-          <td>第一阶段的遮挡预测器；这里用 (\omega) 表示其参数，便于与未来预测器区分</td>
+          <td>\(M_\omega\)</td>
+          <td>第一阶段的遮挡预测器；这里用 \(\omega\) 表示其参数，便于与未来预测器区分</td>
       </tr>
       <tr>
-          <td>(P_\phi)</td>
-          <td>第二、三阶段的未来预测器，参数为 (\phi)</td>
+          <td>\(P_\phi\)</td>
+          <td>第二、三阶段的未来预测器，参数为 \(\phi\)</td>
       </tr>
       <tr>
-          <td>(G_\psi)</td>
-          <td>轨迹生成器 Action DiT，参数为 (\psi)</td>
+          <td>\(G_\psi\)</td>
+          <td>轨迹生成器 Action DiT，参数为 \(\psi\)</td>
       </tr>
       <tr>
-          <td>(X_{1:T})</td>
-          <td>历史视频，包含 (T) 帧</td>
+          <td>\(X_{1:T}\)</td>
+          <td>历史视频，包含 \(T\) 帧</td>
       </tr>
       <tr>
-          <td>(X_{T+1:2T})</td>
-          <td>与历史不重叠的后续视频，包含 (T) 帧</td>
+          <td>\(X_{T+1:2T}\)</td>
+          <td>与历史不重叠的后续视频，包含 \(T\) 帧</td>
       </tr>
       <tr>
-          <td>(Z_h)</td>
+          <td>\(Z_h\)</td>
           <td>历史视觉表征</td>
       </tr>
       <tr>
-          <td>(Z_f^{\mathrm{tgt}})</td>
+          <td>\(Z_f^{\mathrm{tgt}}\)</td>
           <td>真实未来视频对应的目标表征</td>
       </tr>
       <tr>
-          <td>(\hat Z_f)</td>
+          <td>\(\hat Z_f\)</td>
           <td>预测未来表征；&ldquo;帽子&quot;表示模型预测值</td>
       </tr>
       <tr>
-          <td>(\tau)、(\hat\tau)</td>
+          <td>\(\tau\)、\(\hat\tau\)</td>
           <td>专家轨迹、生成轨迹</td>
       </tr>
       <tr>
-          <td>(A)、(\hat A)</td>
+          <td>\(A\)、\(\hat A\)</td>
           <td>专家轨迹、生成轨迹编码成的动作 token</td>
       </tr>
       <tr>
-          <td>(c)</td>
+          <td>\(c\)</td>
           <td>自车状态条件</td>
       </tr>
   </tbody>
@@ -643,9 +643,9 @@
 <p><strong>Token</strong> 是模型内部使用的特征向量单元；<strong>Transformer</strong> 通过注意力机制处理这些向量间的关系。交叉注意力（cross-attention）让一组特征有选择地读取另一组特征中的信息。</p>
 <p>概念上的张量可以写为：</p>
 <ul>
-<li>视频：(X\in\mathbb R^{B\times T\times H\times W\times3})，其中 (B) 是批大小，(H,W) 是图像高、宽。这只是说明维度的记法，不代表代码实际排列顺序。</li>
-<li>编码器 token 特征：(Z_h\in\mathbb R^{B\times N_h\times d_E})，其中 (N_h) 为历史 token 数，编码器隐藏维度 (d_E=1024)。具体输出重排、筛选方式原文未展开。</li>
-<li>轨迹：(\tau\in\mathbb R^{B\times8\times d_\tau})，8 表示未来 4 秒内、2 Hz 采样的 8 个轨迹点。每点的具体参数维度 (d_\tau) 原文未明确，不能擅自认定为仅 ((x,y)) 或 ((x,y,\mathrm{yaw}))。</li>
+<li>视频：\(X\in\mathbb R^{B\times T\times H\times W\times3}\)，其中 \(B\) 是批大小，\(H,W\) 是图像高、宽。这只是说明维度的记法，不代表代码实际排列顺序。</li>
+<li>编码器 token 特征：\(Z_h\in\mathbb R^{B\times N_h\times d_E}\)，其中 \(N_h\) 为历史 token 数，编码器隐藏维度 \(d_E=1024\)。具体输出重排、筛选方式原文未展开。</li>
+<li>轨迹：\(\tau\in\mathbb R^{B\times8\times d_\tau}\)，8 表示未来 4 秒内、2 Hz 采样的 8 个轨迹点。每点的具体参数维度 \(d_\tau\) 原文未明确，不能擅自认定为仅 \((x,y)\) 或 \((x,y,\mathrm{yaw})\)。</li>
 </ul>
 <p>未来预测器隐藏维度为 768，Action DiT 隐藏维度为 512，均不能直接当作轨迹参数维度。动作 token 数量、状态向量维度及具体特征归一化方式，原文未展开。</p>
 <h3 id="32-第一阶段driving-domain-pretraining">3.2 第一阶段：Driving-Domain Pretraining
@@ -658,15 +658,15 @@
 <p>这一阶段是<strong>时空遮挡补全</strong>。遮挡位置的上下文可能来自视频中的不同空间和时间位置，不能把它直接等同于后续阶段的因果未来预测。</p>
 <h4 id="322-损失函数">3.2.2 损失函数
 </h4>$$ L_{\mathrm{ssl}}=\frac{1}{|\mathcal M|}\sum_{i\in\mathcal M}\left\|\hat z_i-z_i^{\mathrm{tgt}}\right\|_1 $$<ul>
-<li>(\mathcal M)：被遮挡的位置集合。</li>
-<li>(\hat z_i)：遮挡预测器输出的位置 (i) 的预测特征。</li>
-<li>(z_i^{\mathrm{tgt}})：完整视频经过目标编码器得到的对应特征。</li>
-<li>(L_1)：对应数值的绝对差；原文说明还在特征维度上取平均。</li>
+<li>\(\mathcal M\)：被遮挡的位置集合。</li>
+<li>\(\hat z_i\)：遮挡预测器输出的位置 \(i\) 的预测特征。</li>
+<li>\(z_i^{\mathrm{tgt}}\)：完整视频经过目标编码器得到的对应特征。</li>
+<li>\(L_1\)：对应数值的绝对差；原文说明还在特征维度上取平均。</li>
 </ul>
 <p>该损失更新在线编码器和遮挡预测器。目标特征停止梯度，不通过反向传播更新目标编码器。</p>
 <h4 id="323-ema-与模块保留">3.2.3 EMA 与模块保留
 </h4><p>EMA（Exponential Moving Average，指数滑动平均）更新为：</p>
-$$ \theta_{\mathrm{tgt}}\leftarrow m\theta_{\mathrm{tgt}}+(1-m)\theta $$<p>其中 (m) 是衰减系数，第一阶段为 0.99925。目标编码器缓慢跟随在线编码器，提供变化相对平缓的监督目标。</p>
+$$ \theta_{\mathrm{tgt}}\leftarrow m\theta_{\mathrm{tgt}}+(1-m)\theta $$<p>其中 \(m\) 是衰减系数，第一阶段为 0.99925。目标编码器缓慢跟随在线编码器，提供变化相对平缓的监督目标。</p>
 <p>EMA 不等于完全冻结，也不能单独据此证明模型不会发生表征退化。论文沿用完整的 V-JEPA2 训练方案。</p>
 <p>第一阶段结束后，<strong>只保留视频编码器</strong>，遮挡预测器和该阶段的目标编码器均丢弃。第二阶段重新初始化未来预测器和 Action DiT，并维护新的 EMA 目标分支。</p>
 <h3 id="33-第二阶段joint-training">3.3 第二阶段：Joint Training
@@ -681,38 +681,38 @@ $$ \theta_{\mathrm{tgt}}\leftarrow m\theta_{\mathrm{tgt}}+(1-m)\theta $$<p>其�
 </span></span></code></pre></div><p>规划分支直接读取历史表征，不依赖未来预测器的输出。未来预测分支使用专家轨迹作为条件，两个分支通过共享编码器发生联系。</p>
 <h4 id="332-未来表征预测">3.3.2 未来表征预测
 </h4><p>论文公式为：</p>
-$$ Z_h=E_\theta(X_{1:T}),\qquad Z_f^{\mathrm{tgt}}=E_{\mathrm{tgt}}(X_{T+1:2T}) $$$$ \hat Z_f=P_\phi(Z_h,A) $$<p>专家轨迹先编码成动作 token (A)，再通过交叉注意力参与未来预测。</p>
+$$ Z_h=E_\theta(X_{1:T}),\qquad Z_f^{\mathrm{tgt}}=E_{\mathrm{tgt}}(X_{T+1:2T}) $$$$ \hat Z_f=P_\phi(Z_h,A) $$<p>专家轨迹先编码成动作 token \(A\)，再通过交叉注意力参与未来预测。</p>
 <p>预测和目标特征先归一化，再计算：</p>
 $$ L_{\mathrm{feat}}=\frac1N\left\|\operatorname{Norm}(\hat Z_f)-\operatorname{Norm}(Z_f^{\mathrm{tgt}})\right\|_1 $$<ul>
-<li>(\operatorname{Norm})：论文所述的特征归一化，具体实现未展开。</li>
-<li>(N)：未来表征中的元素数量，用于求平均。</li>
+<li>\(\operatorname{Norm}\)：论文所述的特征归一化，具体实现未展开。</li>
+<li>\(N\)：未来表征中的元素数量，用于求平均。</li>
 <li>目标表征停止梯度。</li>
 </ul>
-<p>**梯度更新 (E_\theta) 与 (P_\phi)，不更新轨迹生成器。**这迫使历史表征保留有助于预测自车动作条件下场景变化的信息。</p>
+<p>**梯度更新 \(E_\theta\) 与 \(P_\phi\)，不更新轨迹生成器。**这迫使历史表征保留有助于预测自车动作条件下场景变化的信息。</p>
 <h4 id="333-轨迹生成action-dit-与-flow-matching">3.3.3 轨迹生成：Action DiT 与 flow matching
 </h4><p>Action DiT（用于动作生成的 Diffusion Transformer，扩散 Transformer）接收带噪轨迹、噪声时间、自车状态和历史视觉特征，学习轨迹生成方向。</p>
 <p>训练时构造：</p>
 $$ \tau_t=(1-t)\tau+t\epsilon,\qquad \epsilon\sim\mathcal N(0,I) $$<ul>
-<li>(\tau)：专家轨迹。</li>
-<li>(\epsilon)：与轨迹同形状的标准高斯噪声。</li>
-<li>(t)：生成过程的噪声时间。(t=0) 对应真实轨迹，(t=1) 对应纯噪声。</li>
+<li>\(\tau\)：专家轨迹。</li>
+<li>\(\epsilon\)：与轨迹同形状的标准高斯噪声。</li>
+<li>\(t\)：生成过程的噪声时间。\(t=0\) 对应真实轨迹，\(t=1\) 对应纯噪声。</li>
 </ul>
-<p><strong>这里的 (t) 不是车辆未来行驶的物理时间。</strong></p>
+<p><strong>这里的 \(t\) 不是车辆未来行驶的物理时间。</strong></p>
 <p>轨迹生成器输出：</p>
-$$ \hat v_t=G_\psi(\tau_t,t,c,Z_h) $$<p>其中噪声时间 (t) 和自车状态 (c) 通过 AdaLN（Adaptive Layer Normalization，自适应层归一化）注入，历史表征通过交叉注意力提供视觉条件。</p>
+$$ \hat v_t=G_\psi(\tau_t,t,c,Z_h) $$<p>其中噪声时间 \(t\) 和自车状态 \(c\) 通过 AdaLN（Adaptive Layer Normalization，自适应层归一化）注入，历史表征通过交叉注意力提供视觉条件。</p>
 <p>线性加噪路径的目标变化方向为：</p>
 $$ v_t=\frac{d\tau_t}{dt}=\epsilon-\tau $$<p>损失为：</p>
-$$ L_{\mathrm{plan}}=\|\hat v_t-v_t\|_2^2 $$<p>这属于 flow matching（流匹配）：学习样本在生成空间中的速度场。(v_t) 不是车辆物理速度，而是整条轨迹样本如何随噪声时间变化。</p>
-<p>推理时从高斯噪声开始，沿 (t=1) 到 (t=0) 的方向求解，逐步得到轨迹。论文采用 5 步生成；具体数值求解器未在正文与配置表中展开。</p>
-<p><strong>规划损失更新 (E_\theta) 与 (G_\psi)，不更新未来预测器。</strong></p>
+$$ L_{\mathrm{plan}}=\|\hat v_t-v_t\|_2^2 $$<p>这属于 flow matching（流匹配）：学习样本在生成空间中的速度场。\(v_t\) 不是车辆物理速度，而是整条轨迹样本如何随噪声时间变化。</p>
+<p>推理时从高斯噪声开始，沿 \(t=1\) 到 \(t=0\) 的方向求解，逐步得到轨迹。论文采用 5 步生成；具体数值求解器未在正文与配置表中展开。</p>
+<p><strong>规划损失更新 \(E_\theta\) 与 \(G_\psi\)，不更新未来预测器。</strong></p>
 <h4 id="334-联合目标与梯度分工">3.3.4 联合目标与梯度分工
 </h4>$$ L_{\mathrm{joint}}=L_{\mathrm{plan}}+\lambda L_{\mathrm{feat}},\qquad \lambda=0.1 $$<div class="table-wrapper"><table>
   <thead>
       <tr>
           <th>损失</th>
-          <th>在线编码器 (E)</th>
-          <th>未来预测器 (P)</th>
-          <th>轨迹生成器 (G)</th>
+          <th>在线编码器 \(E\)</th>
+          <th>未来预测器 \(P\)</th>
+          <th>轨迹生成器 \(G\)</th>
       </tr>
   </thead>
   <tbody>
@@ -735,14 +735,14 @@ $$ L_{\mathrm{plan}}=\|\hat v_t-v_t\|_2^2 $$<p>这属于 flow matching（流匹�
 <h3 id="34-第三阶段planner-adaptation">3.4 第三阶段：Planner Adaptation
 </h3><h4 id="341-从专家轨迹条件换成生成轨迹条件">3.4.1 从专家轨迹条件换成生成轨迹条件
 </h4><p>从高斯噪声开始，Action DiT 执行多步轨迹生成：</p>
-$$ \hat\tau=\operatorname{Rollout}(G_\psi;Z_h,c,\epsilon) $$<p>这里 (\operatorname{Rollout}) 表示多步生成过程；生成轨迹编码为动作 token 后：</p>
-$$ \hat A=\operatorname{Encode}(\hat\tau),\qquad \hat Z_f=P_\phi(Z_h,\hat A) $$<p>未来特征目标仍来自该样本真实记录的未来视频。原来输入 (P) 的专家轨迹，被替换为 (G) 自己生成的轨迹。</p>
+$$ \hat\tau=\operatorname{Rollout}(G_\psi;Z_h,c,\epsilon) $$<p>这里 \(\operatorname{Rollout}\) 表示多步生成过程；生成轨迹编码为动作 token 后：</p>
+$$ \hat A=\operatorname{Encode}(\hat\tau),\qquad \hat Z_f=P_\phi(Z_h,\hat A) $$<p>未来特征目标仍来自该样本真实记录的未来视频。原来输入 \(P\) 的专家轨迹，被替换为 \(G\) 自己生成的轨迹。</p>
 <h4 id="342-冻结与梯度传递">3.4.2 冻结与梯度传递
 </h4><ul>
-<li>视频编码器 (E)：固定。</li>
-<li>未来预测器 (P)：固定。</li>
+<li>视频编码器 \(E\)：固定。</li>
+<li>未来预测器 \(P\)：固定。</li>
 <li>目标编码器：固定。</li>
-<li>Action DiT (G)：训练。</li>
+<li>Action DiT \(G\)：训练。</li>
 </ul>
 <p>**固定参数不代表阻断对输入的梯度。**未来预测器参数不变，但仍可计算它的输出对输入轨迹的导数：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>未来特征损失 → 经过固定预测器对轨迹求导 → 生成轨迹 → 更新 Action DiT
@@ -758,19 +758,19 @@ $$ \hat A=\operatorname{Encode}(\hat\tau),\qquad \hat Z_f=P_\phi(Z_h,\hat A) $$<
   </thead>
   <tbody>
       <tr>
-          <td>(L_{\mathrm{fm}})</td>
+          <td>\(L_{\mathrm{fm}}\)</td>
           <td>在多步生成的每个去噪步骤施加 flow-matching 监督，约束生成过程</td>
       </tr>
       <tr>
-          <td>(L_{\mathrm{traj}})</td>
+          <td>\(L_{\mathrm{traj}}\)</td>
           <td>最终生成轨迹与专家轨迹的 L1，约束生成结果</td>
       </tr>
       <tr>
-          <td>(L_{\mathrm{feat}})</td>
+          <td>\(L_{\mathrm{feat}}\)</td>
           <td>生成轨迹条件下的预测未来特征，与真实未来目标特征之间的归一化 L1</td>
       </tr>
       <tr>
-          <td>(\lambda_{\mathrm{traj}},\lambda_{\mathrm{feat}})</td>
+          <td>\(\lambda_{\mathrm{traj}},\lambda_{\mathrm{feat}}\)</td>
           <td>两个辅助项的权重，论文未列出第三阶段的具体取值</td>
       </tr>
   </tbody>
@@ -783,7 +783,7 @@ $$ L_{\mathrm{traj}}\propto\|\hat\tau-\tau\|_1 $$<p>具体求和/平均方式，
 </h5><p>论文明确采用 L1 特征监督、最终轨迹 L1 和 flow-matching MSE，但<strong>没有报告 L1/L2 对照实验，也没有明确给出选择 L1 的因果解释</strong>。以下是损失函数性质带来的合理解释，不能写成作者已验证结论。</p>
 <p>第一阶段还沿用了 V-JEPA2 预训练方案，使用 L1 有延续既有配方的背景。</p>
 <h5 id="352-l1-与平方-l2-的差别">3.5.2 L1 与平方 L2 的差别
-</h5><p>令单个预测误差 (e=\hat y-y)，其中 (\hat y) 为预测值，(y) 为目标值。这里讨论的 L2 是常见的平方 L2/MSE，而不是未平方的欧氏范数。</p>
+</h5><p>令单个预测误差 \(e=\hat y-y\)，其中 \(\hat y\) 为预测值，\(y\) 为目标值。这里讨论的 L2 是常见的平方 L2/MSE，而不是未平方的欧氏范数。</p>
 <div class="table-wrapper"><table>
   <thead>
       <tr>
@@ -795,13 +795,13 @@ $$ L_{\mathrm{traj}}\propto\|\hat\tau-\tau\|_1 $$<p>具体求和/平均方式，
   <tbody>
       <tr>
           <td>损失</td>
-          <td>(\lvert e\rvert)</td>
-          <td>(e^2)</td>
+          <td>\(\lvert e\rvert\)</td>
+          <td>\(e^2\)</td>
       </tr>
       <tr>
           <td>对预测值的梯度</td>
-          <td>非零误差处为 (\operatorname{sign}(e))</td>
-          <td>(2e)</td>
+          <td>非零误差处为 \(\operatorname{sign}(e)\)</td>
+          <td>\(2e\)</td>
       </tr>
       <tr>
           <td>大误差的影响</td>
@@ -833,18 +833,18 @@ $$ L_{\mathrm{traj}}\propto\|\hat\tau-\tau\|_1 $$<p>具体求和/平均方式，
 <p>&ldquo;规划器输入没有变化&quot;不代表损失不能改善模型。训练时可以增加监督信息或改变误差度量，但这不意味着部署时凭空获得历史观测中没有的未来信息。</p>
 <h5 id="362-潜在收益学习场景相关的误差度量">3.6.2 潜在收益：学习场景相关的误差度量
 </h5><p>即使专家轨迹完全准确，普通坐标 L1 也不等同于驾驶任务最合适的误差度量。例如，在宽阔直路与贴近障碍物处横向偏差 20 cm，坐标 L1 可以相同，驾驶后果却不同。</p>
-<p>固定场景条件 (s)，把动作编码、冻结预测器和输出归一化合并记为 (F_s)。令专家轨迹为 (\tau^<em>)，生成轨迹为 (\hat\tau)，真实未来目标特征为 (z_f^</em>)，暂略平均系数：</p>
-$$ L_{\mathrm{traj}}=\|\hat\tau-\tau^*\|_1,\qquad L_{\mathrm{feat}}=\|F_s(\hat\tau)-z_f^*\|_1 $$<p>如果预测器满足 (F_s(\tau^<em>)\approx z_f^</em>)，那么特征损失近似比较生成轨迹与专家轨迹各自对应的未来特征。</p>
-<p>在专家轨迹附近，定义轨迹误差 (e=\hat\tau-\tau^*)，一阶展开为：</p>
-$$ F_s(\hat\tau)-F_s(\tau^*)\approx J_s e $$<p>其中 (J_s) 是预测特征对轨迹的雅可比矩阵，表示&quot;轨迹各部分略微改变时，特征如何变化&rdquo;。于是：</p>
+<p>固定场景条件 \(s\)，把动作编码、冻结预测器和输出归一化合并记为 \(F_s\)。令专家轨迹为 \(\tau^*\)，生成轨迹为 \(\hat\tau\)，真实未来目标特征为 \(z_f^*\)，暂略平均系数：</p>
+$$ L_{\mathrm{traj}}=\|\hat\tau-\tau^*\|_1,\qquad L_{\mathrm{feat}}=\|F_s(\hat\tau)-z_f^*\|_1 $$<p>如果预测器满足 \(F_s(\tau^*)\approx z_f^*\)，那么特征损失近似比较生成轨迹与专家轨迹各自对应的未来特征。</p>
+<p>在专家轨迹附近，定义轨迹误差 \(e=\hat\tau-\tau^*\)，一阶展开为：</p>
+$$ F_s(\hat\tau)-F_s(\tau^*)\approx J_s e $$<p>其中 \(J_s\) 是预测特征对轨迹的雅可比矩阵，表示&quot;轨迹各部分略微改变时，特征如何变化&rdquo;。于是：</p>
 $$ L_{\mathrm{feat}}\approx\|J_s e\|_1 $$<p>它相当于先对轨迹误差做与场景有关的变换与组合，再施加惩罚，可能强调某些时间点、横纵向偏差及点间关联。这是解释性推断，并非论文证明的安全度量。</p>
 <p>视觉特征变化较大可能只是自车运动引起的图像位移，并不必然对应更大的驾驶风险。该损失也没有直接定义碰撞、舒适性或通行效率。</p>
 <h5 id="363-主要风险让规划器补偿预测器误差">3.6.3 主要风险：让规划器补偿预测器误差
 </h5><p>定义预测器在专家轨迹上的残差：</p>
 $$ b_s=F_s(\tau^*)-z_f^* $$<p>则真实的局部特征误差近似为：</p>
-$$ F_s(\hat\tau)-z_f^*\approx J_s e+b_s $$<p>这里 (J_s e) 来自轨迹偏差，(b_s) 来自预测器本身。第三阶段让规划器同时降低这两部分，因此可能通过改变本来正确的轨迹，去抵消预测器的系统性误差。</p>
-<p>用一个标量例子说明。设 (a) 是横向轨迹参数，专家值为 (a^<em>)，目标特征为 (z^</em>)，预测器在局部为：</p>
-$$ F(a)=z^*+k(a-a^*)+b $$<p>其中 (k\neq0) 是预测器的局部敏感度，(b) 是预测偏差。仅最小化特征损失时，它偏好的位置是：</p>
+$$ F_s(\hat\tau)-z_f^*\approx J_s e+b_s $$<p>这里 \(J_s e\) 来自轨迹偏差，\(b_s\) 来自预测器本身。第三阶段让规划器同时降低这两部分，因此可能通过改变本来正确的轨迹，去抵消预测器的系统性误差。</p>
+<p>用一个标量例子说明。设 \(a\) 是横向轨迹参数，专家值为 \(a^*\)，目标特征为 \(z^*\)，预测器在局部为：</p>
+$$ F(a)=z^*+k(a-a^*)+b $$<p>其中 \(k\neq0\) 是预测器的局部敏感度，\(b\) 是预测偏差。仅最小化特征损失时，它偏好的位置是：</p>
 $$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍可能施加偏离专家的拉力。最终结果取决于辅助损失权重及其他监督的约束。</p>
 <p>其他重要风险包括：</p>
 <ol>
@@ -879,7 +879,7 @@ $$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍
   <tbody>
       <tr>
           <td>A</td>
-          <td>完整第三阶段流程，但令 (\lambda_{\mathrm{feat}}=0)</td>
+          <td>完整第三阶段流程，但令 \(\lambda_{\mathrm{feat}}=0\)</td>
           <td>测量生成适配、轨迹监督和额外训练本身的收益</td>
       </tr>
       <tr>
@@ -889,7 +889,7 @@ $$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍
       </tr>
       <tr>
           <td>C</td>
-          <td>改为比较 (F_s(\hat\tau)) 与 (F_s(\tau^*))</td>
+          <td>改为比较 \(F_s(\hat\tau)\) 与 \(F_s(\tau^*)\)</td>
           <td>去掉专家轨迹处的预测残差，检验预测器提供的误差度量本身是否有效</td>
       </tr>
   </tbody>
@@ -1451,11 +1451,11 @@ $$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍
   </tbody>
 </table></div>
 <p>编码器固定、规划器重新训练后，第二阶段编码器仍能支持 90.2，接近原联合训练结果 90.4。这是&quot;提升确实保留在视觉表征中&quot;的重要证据。</p>
-<p>论文所述的 <strong>3.5 分表征收益对应 (90.2-86.7)</strong>，不能与表 5 或主结果任意相减。</p>
+<p>论文所述的 <strong>3.5 分表征收益对应 \(90.2-86.7\)</strong>，不能与表 5 或主结果任意相减。</p>
 <h4 id="442-轨迹可视化">4.4.2 轨迹可视化
 </h4><p>图 3 与附录图 6 用前视画面和 BEV 展示人工轨迹、Drive-JEPA 与 ReDrive。它们提供道路几何和交通交互层面的定性参考，但部分例子仍有与人工路线明显分歧的情况，不能据此断言每个场景都更接近专家。</p>
 <h4 id="443-未来预测器是否使用了动作条件">4.4.3 未来预测器是否使用了动作条件？
-</h4><p>作者固定历史表征，对专家轨迹施加 15 个均匀分布的横向偏移，范围为<strong>归一化动作空间</strong>中的 ([-0.8,0.8])，再比较各条件下预测未来特征的余弦相似度。</p>
+</h4><p>作者固定历史表征，对专家轨迹施加 15 个均匀分布的横向偏移，范围为<strong>归一化动作空间</strong>中的 \([-0.8,0.8]\)，再比较各条件下预测未来特征的余弦相似度。</p>
 <p>余弦相似度衡量两个特征方向的一致程度。图 4 与附录图 7 中，轨迹条件差异越大，特征相似度通常越低。</p>
 <p>这支持未来预测器确实使用动作条件，但不能证明：</p>
 <ul>
@@ -1806,7 +1806,7 @@ $$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍
 <p>一个 epoch 通常按训练集规模定义一轮学习。随机视频裁剪、数据源均匀采样等机制下，具体一轮如何定义依赖实现，不能保证每条原始视频都恰好访问一次。</p>
 <p>一个训练 step 通常是&quot;取一批数据、前向计算、计算损失、反向传播、更新参数&rdquo;。Batch 是一批样本，batch size 是样本数；有梯度累积时，若干微批次才进行一次优化器更新，日志的计步口径应以实现为准。</p>
 <h3 id="c2-换算与多-gpu">C.2 换算与多 GPU
-</h3><p>令训练集样本数为 (N_{\mathrm{data}})，每次参数更新合计使用的样本数为 (B_{\mathrm{global}})，则近似有：</p>
+</h3><p>令训练集样本数为 \(N_{\mathrm{data}}\)，每次参数更新合计使用的样本数为 \(B_{\mathrm{global}}\)，则近似有：</p>
 $$ \text{steps per epoch}\approx\frac{N_{\mathrm{data}}}{B_{\mathrm{global}}} $$$$ \text{等效 epochs}\approx \frac{\text{更新步数}\times B_{\mathrm{global}}}{N_{\mathrm{data}}} $$<p>在常见数据并行且各卡批大小一致时，global batch size 是各卡批大小与梯度累积次数共同决定的。16 张 GPU 一起完成一次同步参数更新，通常仍算 1 step。</p>
 <p><strong>纯示例，不是论文配置</strong>：若有 103,000 个场景，global batch size 为 128，则一轮约 805 steps；35,000 steps 累计约 448 万次样本使用，相当于 43.5 轮，包含重复使用的数据。</p>
 <p>论文没有明确 global batch size，因此不能确定 35K steps 实际相当于多少轮。第一阶段 100 epochs 使用的混合驾驶视频也不是直接按这 103K 个规划场景计算，不能直接换算比较。</p>

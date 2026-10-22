@@ -307,7 +307,8 @@ std::cin &gt;&gt; x;
 int b[x];  // C语言从C99开始支持variable length array，但C++标准不支持
 // 虽然C++标准不支持，但clang++或g++的部分版本的编译器实现中还是支持该方法，但不建议使用，在代码跨平台移植的时候会出问题
 </code></pre></li>
-<li>int和int[1]是两个不同的类型</li>
+<li>int和int
+\[1\]是两个不同的类型</li>
 <li>字符串数组的特殊性
 <pre tabindex="0"><code>int main() {
   char str[] = &#34;Hello&#34;;  // 类型是char[6]，隐式地在字符串最后加一个&#39;\0&#39;
