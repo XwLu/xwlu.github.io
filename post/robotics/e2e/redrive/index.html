@@ -1,0 +1,2066 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="训练时用自车轨迹条件下的未来特征预测塑造服务规划的视觉表征，部署时仅保留视频编码器与轨迹生成器。">
+<title>ReDrive 论文阅读笔记</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/e2e/redrive/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="ReDrive 论文阅读笔记">
+<meta property='og:description' content="训练时用自车轨迹条件下的未来特征预测塑造服务规划的视觉表征，部署时仅保留视频编码器与轨迹生成器。">
+<meta property='og:url' content='https://example.org/post/robotics/e2e/redrive/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='自动驾驶' /><meta property='article:tag' content='端到端' /><meta property='article:tag' content='表征学习' /><meta property='article:tag' content='世界模型' /><meta property='article:tag' content='视频JEPA' /><meta property='article:tag' content='流匹配' /><meta property='article:tag' content='NAVSIM' /><meta property='article:published_time' content='2026-09-27T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-09-27T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="ReDrive 论文阅读笔记">
+<meta name="twitter:description" content="训练时用自车轨迹条件下的未来特征预测塑造服务规划的视觉表征，部署时仅保留视频编码器与轨迹生成器。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#0-先建立整体认识">0. 先建立整体认识</a>
+      <ul>
+        <li><a href="#01-redrive-在解决什么问题">0.1 ReDrive 在解决什么问题？</a></li>
+        <li><a href="#02-训练与部署的区别">0.2 训练与部署的区别</a></li>
+        <li><a href="#03-三个阶段速查">0.3 三个阶段速查</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-introduction背景与动机">1. Introduction：背景与动机</a>
+      <ul>
+        <li><a href="#11-显式感知与-bev-表征">1.1 显式感知与 BEV 表征</a></li>
+        <li><a href="#12-通用视觉预训练的机会与不足">1.2 通用视觉预训练的机会与不足</a></li>
+        <li><a href="#13-像素世界模型与表征世界模型">1.3 像素世界模型与表征世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work研究位置">2. Related Work：研究位置</a>
+      <ul>
+        <li><a href="#21-端到端自动驾驶">2.1 端到端自动驾驶</a></li>
+        <li><a href="#22-驾驶表征学习">2.2 驾驶表征学习</a></li>
+        <li><a href="#23-世界动作模型">2.3 世界动作模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-method模型结构数据流与训练目标">3. Method：模型结构、数据流与训练目标</a>
+      <ul>
+        <li><a href="#31-模块符号与张量理解">3.1 模块、符号与张量理解</a></li>
+        <li><a href="#32-第一阶段driving-domain-pretraining">3.2 第一阶段：Driving-Domain Pretraining</a></li>
+        <li><a href="#33-第二阶段joint-training">3.3 第二阶段：Joint Training</a></li>
+        <li><a href="#34-第三阶段planner-adaptation">3.4 第三阶段：Planner Adaptation</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-experiments数据结果与证据强度">4. Experiments：数据、结果与证据强度</a>
+      <ul>
+        <li><a href="#41-数据集与评价指标">4.1 数据集与评价指标</a></li>
+        <li><a href="#42-与其他方法的主要比较">4.2 与其他方法的主要比较</a></li>
+        <li><a href="#43-消融实验">4.3 消融实验</a></li>
+        <li><a href="#44-实验分析">4.4 实验分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-conclusion论文结论与证据边界">5. Conclusion：论文结论与证据边界</a></li>
+    <li><a href="#6-核心贡献适用条件局限与开放问题">6. 核心贡献、适用条件、局限与开放问题</a>
+      <ul>
+        <li><a href="#61-最值得记住的贡献">6.1 最值得记住的贡献</a></li>
+        <li><a href="#62-方法成立需要的条件">6.2 方法成立需要的条件</a></li>
+        <li><a href="#63-主要局限">6.3 主要局限</a></li>
+        <li><a href="#64-仍值得验证的问题">6.4 仍值得验证的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-a-相机对齐与丢弃视野不足的片段">附录 A. 相机对齐与&quot;丢弃视野不足的片段&rdquo;</a>
+      <ul>
+        <li><a href="#a1-为什么要对齐">A.1 为什么要对齐？</a></li>
+        <li><a href="#a2-实际映射过程">A.2 实际映射过程</a></li>
+        <li><a href="#a3-什么是视野不足以覆盖目标画面">A.3 什么是&quot;视野不足以覆盖目标画面&rdquo;？</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-b-模型和超参数">附录 B. 模型和超参数</a>
+      <ul>
+        <li><a href="#b1-模型规模">B.1 模型规模</a></li>
+        <li><a href="#b2-第一阶段配置论文表-8">B.2 第一阶段配置：论文表 8</a></li>
+        <li><a href="#b3-第二阶段配置论文表-910">B.3 第二阶段配置：论文表 9、10</a></li>
+        <li><a href="#b4-第三阶段和硬件">B.4 第三阶段和硬件</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-c-epochstep数据规模与训练量选择">附录 C. Epoch、step、数据规模与训练量选择</a>
+      <ul>
+        <li><a href="#c1-三个概念分别回答什么">C.1 三个概念分别回答什么？</a></li>
+        <li><a href="#c2-换算与多-gpu">C.2 换算与多 GPU</a></li>
+        <li><a href="#c3-不同阶段训练多少步通常如何决定">C.3 不同阶段训练多少步，通常如何决定？</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-核心贡献适用条件局限与开放问题阅读定位">7. 核心贡献、适用条件、局限与开放问题（阅读定位）</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/e2e/redrive/">ReDrive 论文阅读笔记</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-09-27T00:00:00Z'>Sunday, September 27, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        9 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#0-先建立整体认识">0. 先建立整体认识</a>
+      <ul>
+        <li><a href="#01-redrive-在解决什么问题">0.1 ReDrive 在解决什么问题？</a></li>
+        <li><a href="#02-训练与部署的区别">0.2 训练与部署的区别</a></li>
+        <li><a href="#03-三个阶段速查">0.3 三个阶段速查</a></li>
+      </ul>
+    </li>
+    <li><a href="#1-introduction背景与动机">1. Introduction：背景与动机</a>
+      <ul>
+        <li><a href="#11-显式感知与-bev-表征">1.1 显式感知与 BEV 表征</a></li>
+        <li><a href="#12-通用视觉预训练的机会与不足">1.2 通用视觉预训练的机会与不足</a></li>
+        <li><a href="#13-像素世界模型与表征世界模型">1.3 像素世界模型与表征世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work研究位置">2. Related Work：研究位置</a>
+      <ul>
+        <li><a href="#21-端到端自动驾驶">2.1 端到端自动驾驶</a></li>
+        <li><a href="#22-驾驶表征学习">2.2 驾驶表征学习</a></li>
+        <li><a href="#23-世界动作模型">2.3 世界动作模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-method模型结构数据流与训练目标">3. Method：模型结构、数据流与训练目标</a>
+      <ul>
+        <li><a href="#31-模块符号与张量理解">3.1 模块、符号与张量理解</a></li>
+        <li><a href="#32-第一阶段driving-domain-pretraining">3.2 第一阶段：Driving-Domain Pretraining</a></li>
+        <li><a href="#33-第二阶段joint-training">3.3 第二阶段：Joint Training</a></li>
+        <li><a href="#34-第三阶段planner-adaptation">3.4 第三阶段：Planner Adaptation</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-experiments数据结果与证据强度">4. Experiments：数据、结果与证据强度</a>
+      <ul>
+        <li><a href="#41-数据集与评价指标">4.1 数据集与评价指标</a></li>
+        <li><a href="#42-与其他方法的主要比较">4.2 与其他方法的主要比较</a></li>
+        <li><a href="#43-消融实验">4.3 消融实验</a></li>
+        <li><a href="#44-实验分析">4.4 实验分析</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-conclusion论文结论与证据边界">5. Conclusion：论文结论与证据边界</a></li>
+    <li><a href="#6-核心贡献适用条件局限与开放问题">6. 核心贡献、适用条件、局限与开放问题</a>
+      <ul>
+        <li><a href="#61-最值得记住的贡献">6.1 最值得记住的贡献</a></li>
+        <li><a href="#62-方法成立需要的条件">6.2 方法成立需要的条件</a></li>
+        <li><a href="#63-主要局限">6.3 主要局限</a></li>
+        <li><a href="#64-仍值得验证的问题">6.4 仍值得验证的问题</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-a-相机对齐与丢弃视野不足的片段">附录 A. 相机对齐与&quot;丢弃视野不足的片段&rdquo;</a>
+      <ul>
+        <li><a href="#a1-为什么要对齐">A.1 为什么要对齐？</a></li>
+        <li><a href="#a2-实际映射过程">A.2 实际映射过程</a></li>
+        <li><a href="#a3-什么是视野不足以覆盖目标画面">A.3 什么是&quot;视野不足以覆盖目标画面&rdquo;？</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-b-模型和超参数">附录 B. 模型和超参数</a>
+      <ul>
+        <li><a href="#b1-模型规模">B.1 模型规模</a></li>
+        <li><a href="#b2-第一阶段配置论文表-8">B.2 第一阶段配置：论文表 8</a></li>
+        <li><a href="#b3-第二阶段配置论文表-910">B.3 第二阶段配置：论文表 9、10</a></li>
+        <li><a href="#b4-第三阶段和硬件">B.4 第三阶段和硬件</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-c-epochstep数据规模与训练量选择">附录 C. Epoch、step、数据规模与训练量选择</a>
+      <ul>
+        <li><a href="#c1-三个概念分别回答什么">C.1 三个概念分别回答什么？</a></li>
+        <li><a href="#c2-换算与多-gpu">C.2 换算与多 GPU</a></li>
+        <li><a href="#c3-不同阶段训练多少步通常如何决定">C.3 不同阶段训练多少步，通常如何决定？</a></li>
+      </ul>
+    </li>
+    <li><a href="#7-核心贡献适用条件局限与开放问题阅读定位">7. 核心贡献、适用条件、局限与开放问题（阅读定位）</a></li>
+    <li><a href="#相关笔记">相关笔记</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    <h1 id="redrive-论文阅读笔记">ReDrive 论文阅读笔记
+</h1>
+    <blockquote>
+        <p>核心思想：训练时利用自车轨迹条件下的未来特征预测，塑造更适合规划的视觉表征；部署时仅保留视频编码器与轨迹生成器。</p>
+<p>核心评价：ReDrive 最有说服力的部分，是用未来预测塑造能够直接服务规划的视觉表征。第三阶段提供了一个有合理机制但仍需更严格消融的辅助监督方案，不能把它直接理解成已经验证可靠的世界模型安全优化。</p>
+<p>阅读约定：&ldquo;论文报告&quot;表示原文事实；&ldquo;分析&quot;表示由公式或实验得出的判断；&ldquo;解释性推断&quot;表示合理机制，但论文尚未直接验证。</p>
+
+    </blockquote>
+<h2 id="0-先建立整体认识">0. 先建立整体认识
+</h2><h3 id="01-redrive-在解决什么问题">0.1 ReDrive 在解决什么问题？
+</h3><p>传统 PNC（Prediction、Planning and Control，预测、规划与控制）系统通常显式组织目标、道路、障碍物预测和行为决策等信息，再生成轨迹。端到端模型把很多中间处理放进神经网络，关键问题随之变为：</p>
+
+    <blockquote>
+        <p>图像编码后的内部特征，是否保留了规划需要的道路结构、运动趋势与未来变化信息？</p>
+
+    </blockquote>
+<p>**表征（representation）**是模型将图像或视频压缩成的一组高维特征。它可能有助于区分前车正在远离还是接近，但通常不能直接把某个特征维度解释成&quot;前车速度&rdquo;。</p>
+<p>ReDrive 希望同时获得两种能力：</p>
+<ol>
+<li>理解当前场景的语义与结构。</li>
+<li>捕捉与自车运动有关的未来场景演化。</li>
+</ol>
+<p>其做法是先训练一个较强的视频编码器，再通过规划与未来预测共同塑造表征，最后进一步适配轨迹生成器。</p>
+<h3 id="02-训练与部署的区别">0.2 训练与部署的区别
+</h3><p>训练期间存在视频编码器、轨迹生成器、未来预测器，以及读取真实未来视频的目标编码器。</p>
+<p>部署流程则是：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>历史视频 → 视频编码器 → 历史视觉特征 → 轨迹生成器 → 未来轨迹
+</span></span><span style="display:flex;"><span>                                         ↑
+</span></span><span style="display:flex;"><span>                                       自车状态
+</span></span></code></pre></div><p>真实未来视频只提供训练监督。未来预测器、目标编码器均不进入最终推理流程，也不需要额外输出检测框、分割结果或生成视频。</p>
+<p>&ldquo;没有显式感知模块&quot;表示没有部署相应辅助头，不表示模型不需要理解道路和交通参与者。</p>
+<h3 id="03-三个阶段速查">0.3 三个阶段速查
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>主要任务</th>
+          <th>通过梯度更新</th>
+          <th>不通过梯度更新的模块</th>
+          <th>损失</th>
+          <th>训练量</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>1. 驾驶领域预训练</td>
+          <td>根据可见视频预测遮挡区域特征</td>
+          <td>视频编码器、遮挡预测器</td>
+          <td>目标编码器采用 EMA 更新</td>
+          <td>遮挡特征 L1</td>
+          <td>100 epochs</td>
+      </tr>
+      <tr>
+          <td>2. 联合训练</td>
+          <td>同时生成轨迹和预测未来特征</td>
+          <td>视频编码器、未来预测器、轨迹生成器</td>
+          <td>目标编码器采用 EMA 更新</td>
+          <td>Flow-matching MSE＋未来特征 L1</td>
+          <td>35K steps</td>
+      </tr>
+      <tr>
+          <td>3. 规划器适配</td>
+          <td>在自身生成的轨迹上优化规划器</td>
+          <td>仅轨迹生成器</td>
+          <td>视频编码器、未来预测器、目标编码器均固定</td>
+          <td>多步 flow matching＋最终轨迹 L1＋未来特征 L1</td>
+          <td>5K steps</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>EMA 更新与完全冻结不同</strong>：前两个阶段的目标编码器不接收梯度，但参数仍然变化；第三阶段才固定。</p>
+<h2 id="1-introduction背景与动机">1. Introduction：背景与动机
+</h2><h3 id="11-显式感知与-bev-表征">1.1 显式感知与 BEV 表征
+</h3><p>BEV（Bird&rsquo;s-Eye View，鸟瞰视角）方法利用目标检测、地图分割等任务，学习具有明确空间结构的特征，再用于规划。</p>
+<p>这种路线与传统系统的联系比较直观：先整理车辆、道路和可行驶空间，再做决策规划。代价是相应的任务标注、辅助模块和系统复杂度。</p>
+<h3 id="12-通用视觉预训练的机会与不足">1.2 通用视觉预训练的机会与不足
+</h3><p>通用图片或视频模型通过大规模数据学习视觉规律，再迁移到驾驶任务。例如：</p>
+<ul>
+<li>DINOv2：通用自监督图片表征模型。</li>
+<li>MAE（Masked Autoencoder，掩码自编码器）：通过遮挡重建学习视觉特征。</li>
+<li>V-JEPA2：通过视频特征预测学习表征的预训练模型，是 ReDrive 的初始化来源。</li>
+</ul>
+<p>通用视觉模型可以提供强先验，但&quot;见过很多视频&quot;不自动等于&quot;适合驾驶规划&rdquo;。作者指出，在没有辅助感知任务时，通用表征仍可能落后于专门为驾驶训练的 BEV 表征。</p>
+<h3 id="13-像素世界模型与表征世界模型">1.3 像素世界模型与表征世界模型
+</h3><p>**世界模型（world model）**学习场景随时间和动作如何变化。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>路线</th>
+          <th>预测对象</th>
+          <th>特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>像素空间预测</td>
+          <td>未来图片或视频</td>
+          <td>需要处理纹理、光照等大量细节</td>
+      </tr>
+      <tr>
+          <td>表征空间预测</td>
+          <td>未来视频编码后的高维特征</td>
+          <td>绕开显式视频生成，直接学习特征层面的演化</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>例如，规划可能更关注前车的相对运动，而不需要精确重建车漆反光。表征预测有机会将学习重点放在较高层的变化上，但这种&quot;关注规划相关信息&quot;的倾向仍需任务训练与实验支持。</p>
+<p>已有方法会在推理时调用世界模型进行轨迹生成、候选选择或评价。ReDrive 将未来预测主要用于训练，最终部署编码器和轨迹生成器。</p>
+<h2 id="2-related-work研究位置">2. Related Work：研究位置
+</h2><h3 id="21-端到端自动驾驶">2.1 端到端自动驾驶
+</h3><p>相关工作包括联合感知、预测和规划的系统，直接建模轨迹分布的生成式规划器，以及引入强化学习或视觉语言模型知识的方法。</p>
+<p>ReDrive 使用生成式规划器，但主要贡献集中在视觉表征及训练流程。</p>
+<h3 id="22-驾驶表征学习">2.2 驾驶表征学习
+</h3><p>研究路线包括显式 BEV、通用图片表征和视频表征。视频相较单张图片能够提供运动信息：一张图说明车在哪里，多张连续图才有机会说明它正在怎样运动。</p>
+<h3 id="23-世界动作模型">2.3 世界动作模型
+</h3><p>未来观测既与外部环境有关，也与自车动作有关。例如前车保持相同运动时，自车加速、减速或变道，会形成不同的相对位置和视觉变化。</p>
+<p>因此，ReDrive 的未来预测器将自车轨迹作为条件。其预测对象是自车动作条件下的未来视觉表征，不是独立于自车运动的环境描述。</p>
+<h2 id="3-method模型结构数据流与训练目标">3. Method：模型结构、数据流与训练目标
+</h2><h3 id="31-模块符号与张量理解">3.1 模块、符号与张量理解
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>符号</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>(E_\theta)</td>
+          <td>在线视频编码器，参数为 (\theta)</td>
+      </tr>
+      <tr>
+          <td>(E_{\mathrm{tgt}})</td>
+          <td>目标编码器，提供监督特征</td>
+      </tr>
+      <tr>
+          <td>(M_\omega)</td>
+          <td>第一阶段的遮挡预测器；这里用 (\omega) 表示其参数，便于与未来预测器区分</td>
+      </tr>
+      <tr>
+          <td>(P_\phi)</td>
+          <td>第二、三阶段的未来预测器，参数为 (\phi)</td>
+      </tr>
+      <tr>
+          <td>(G_\psi)</td>
+          <td>轨迹生成器 Action DiT，参数为 (\psi)</td>
+      </tr>
+      <tr>
+          <td>(X_{1:T})</td>
+          <td>历史视频，包含 (T) 帧</td>
+      </tr>
+      <tr>
+          <td>(X_{T+1:2T})</td>
+          <td>与历史不重叠的后续视频，包含 (T) 帧</td>
+      </tr>
+      <tr>
+          <td>(Z_h)</td>
+          <td>历史视觉表征</td>
+      </tr>
+      <tr>
+          <td>(Z_f^{\mathrm{tgt}})</td>
+          <td>真实未来视频对应的目标表征</td>
+      </tr>
+      <tr>
+          <td>(\hat Z_f)</td>
+          <td>预测未来表征；&ldquo;帽子&quot;表示模型预测值</td>
+      </tr>
+      <tr>
+          <td>(\tau)、(\hat\tau)</td>
+          <td>专家轨迹、生成轨迹</td>
+      </tr>
+      <tr>
+          <td>(A)、(\hat A)</td>
+          <td>专家轨迹、生成轨迹编码成的动作 token</td>
+      </tr>
+      <tr>
+          <td>(c)</td>
+          <td>自车状态条件</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Token</strong> 是模型内部使用的特征向量单元；<strong>Transformer</strong> 通过注意力机制处理这些向量间的关系。交叉注意力（cross-attention）让一组特征有选择地读取另一组特征中的信息。</p>
+<p>概念上的张量可以写为：</p>
+<ul>
+<li>视频：(X\in\mathbb R^{B\times T\times H\times W\times3})，其中 (B) 是批大小，(H,W) 是图像高、宽。这只是说明维度的记法，不代表代码实际排列顺序。</li>
+<li>编码器 token 特征：(Z_h\in\mathbb R^{B\times N_h\times d_E})，其中 (N_h) 为历史 token 数，编码器隐藏维度 (d_E=1024)。具体输出重排、筛选方式原文未展开。</li>
+<li>轨迹：(\tau\in\mathbb R^{B\times8\times d_\tau})，8 表示未来 4 秒内、2 Hz 采样的 8 个轨迹点。每点的具体参数维度 (d_\tau) 原文未明确，不能擅自认定为仅 ((x,y)) 或 ((x,y,\mathrm{yaw}))。</li>
+</ul>
+<p>未来预测器隐藏维度为 768，Action DiT 隐藏维度为 512，均不能直接当作轨迹参数维度。动作 token 数量、状态向量维度及具体特征归一化方式，原文未展开。</p>
+<h3 id="32-第一阶段driving-domain-pretraining">3.2 第一阶段：Driving-Domain Pretraining
+</h3><h4 id="321-目标与流程">3.2.1 目标与流程
+</h4><p>从公开 V-JEPA2 ViT-L 权重初始化编码器，再用驾驶视频继续自监督预训练。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>遮挡后的视频 → 在线编码器 E → 遮挡预测器 M → 遮挡位置的预测特征
+</span></span><span style="display:flex;"><span>                                                   ↓ L1 比较
+</span></span><span style="display:flex;"><span>完整视频 → EMA 目标编码器 → 相同位置的目标特征
+</span></span></code></pre></div><p>它预测的是被遮挡区域的特征，不需要重建像素，也不需要检测框、地图分割或轨迹标注。</p>
+<p>这一阶段是<strong>时空遮挡补全</strong>。遮挡位置的上下文可能来自视频中的不同空间和时间位置，不能把它直接等同于后续阶段的因果未来预测。</p>
+<h4 id="322-损失函数">3.2.2 损失函数
+</h4>$$ L_{\mathrm{ssl}}=\frac{1}{|\mathcal M|}\sum_{i\in\mathcal M}\left\|\hat z_i-z_i^{\mathrm{tgt}}\right\|_1 $$<ul>
+<li>(\mathcal M)：被遮挡的位置集合。</li>
+<li>(\hat z_i)：遮挡预测器输出的位置 (i) 的预测特征。</li>
+<li>(z_i^{\mathrm{tgt}})：完整视频经过目标编码器得到的对应特征。</li>
+<li>(L_1)：对应数值的绝对差；原文说明还在特征维度上取平均。</li>
+</ul>
+<p>该损失更新在线编码器和遮挡预测器。目标特征停止梯度，不通过反向传播更新目标编码器。</p>
+<h4 id="323-ema-与模块保留">3.2.3 EMA 与模块保留
+</h4><p>EMA（Exponential Moving Average，指数滑动平均）更新为：</p>
+$$ \theta_{\mathrm{tgt}}\leftarrow m\theta_{\mathrm{tgt}}+(1-m)\theta $$<p>其中 (m) 是衰减系数，第一阶段为 0.99925。目标编码器缓慢跟随在线编码器，提供变化相对平缓的监督目标。</p>
+<p>EMA 不等于完全冻结，也不能单独据此证明模型不会发生表征退化。论文沿用完整的 V-JEPA2 训练方案。</p>
+<p>第一阶段结束后，<strong>只保留视频编码器</strong>，遮挡预测器和该阶段的目标编码器均丢弃。第二阶段重新初始化未来预测器和 Action DiT，并维护新的 EMA 目标分支。</p>
+<h3 id="33-第二阶段joint-training">3.3 第二阶段：Joint Training
+</h3><h4 id="331-共享编码器两个并行任务">3.3.1 共享编码器，两个并行任务
+</h4><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>                                      → Action DiT → 轨迹生成监督
+</span></span><span style="display:flex;"><span>历史视频 → 在线编码器 E → 历史表征 Zh
+</span></span><span style="display:flex;"><span>                                      → Future Predictor P → 未来特征监督
+</span></span><span style="display:flex;"><span>                                                ↑
+</span></span><span style="display:flex;"><span>                                            专家轨迹 token
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>真实未来视频 → EMA 目标编码器 → 未来目标特征
+</span></span></code></pre></div><p>规划分支直接读取历史表征，不依赖未来预测器的输出。未来预测分支使用专家轨迹作为条件，两个分支通过共享编码器发生联系。</p>
+<h4 id="332-未来表征预测">3.3.2 未来表征预测
+</h4><p>论文公式为：</p>
+$$ Z_h=E_\theta(X_{1:T}),\qquad Z_f^{\mathrm{tgt}}=E_{\mathrm{tgt}}(X_{T+1:2T}) $$$$ \hat Z_f=P_\phi(Z_h,A) $$<p>专家轨迹先编码成动作 token (A)，再通过交叉注意力参与未来预测。</p>
+<p>预测和目标特征先归一化，再计算：</p>
+$$ L_{\mathrm{feat}}=\frac1N\left\|\operatorname{Norm}(\hat Z_f)-\operatorname{Norm}(Z_f^{\mathrm{tgt}})\right\|_1 $$<ul>
+<li>(\operatorname{Norm})：论文所述的特征归一化，具体实现未展开。</li>
+<li>(N)：未来表征中的元素数量，用于求平均。</li>
+<li>目标表征停止梯度。</li>
+</ul>
+<p>**梯度更新 (E_\theta) 与 (P_\phi)，不更新轨迹生成器。**这迫使历史表征保留有助于预测自车动作条件下场景变化的信息。</p>
+<h4 id="333-轨迹生成action-dit-与-flow-matching">3.3.3 轨迹生成：Action DiT 与 flow matching
+</h4><p>Action DiT（用于动作生成的 Diffusion Transformer，扩散 Transformer）接收带噪轨迹、噪声时间、自车状态和历史视觉特征，学习轨迹生成方向。</p>
+<p>训练时构造：</p>
+$$ \tau_t=(1-t)\tau+t\epsilon,\qquad \epsilon\sim\mathcal N(0,I) $$<ul>
+<li>(\tau)：专家轨迹。</li>
+<li>(\epsilon)：与轨迹同形状的标准高斯噪声。</li>
+<li>(t)：生成过程的噪声时间。(t=0) 对应真实轨迹，(t=1) 对应纯噪声。</li>
+</ul>
+<p><strong>这里的 (t) 不是车辆未来行驶的物理时间。</strong></p>
+<p>轨迹生成器输出：</p>
+$$ \hat v_t=G_\psi(\tau_t,t,c,Z_h) $$<p>其中噪声时间 (t) 和自车状态 (c) 通过 AdaLN（Adaptive Layer Normalization，自适应层归一化）注入，历史表征通过交叉注意力提供视觉条件。</p>
+<p>线性加噪路径的目标变化方向为：</p>
+$$ v_t=\frac{d\tau_t}{dt}=\epsilon-\tau $$<p>损失为：</p>
+$$ L_{\mathrm{plan}}=\|\hat v_t-v_t\|_2^2 $$<p>这属于 flow matching（流匹配）：学习样本在生成空间中的速度场。(v_t) 不是车辆物理速度，而是整条轨迹样本如何随噪声时间变化。</p>
+<p>推理时从高斯噪声开始，沿 (t=1) 到 (t=0) 的方向求解，逐步得到轨迹。论文采用 5 步生成；具体数值求解器未在正文与配置表中展开。</p>
+<p><strong>规划损失更新 (E_\theta) 与 (G_\psi)，不更新未来预测器。</strong></p>
+<h4 id="334-联合目标与梯度分工">3.3.4 联合目标与梯度分工
+</h4>$$ L_{\mathrm{joint}}=L_{\mathrm{plan}}+\lambda L_{\mathrm{feat}},\qquad \lambda=0.1 $$<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>损失</th>
+          <th>在线编码器 (E)</th>
+          <th>未来预测器 (P)</th>
+          <th>轨迹生成器 (G)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>轨迹生成损失</td>
+          <td>更新</td>
+          <td>不更新</td>
+          <td>更新</td>
+      </tr>
+      <tr>
+          <td>未来特征损失</td>
+          <td>更新</td>
+          <td>更新</td>
+          <td>不更新</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>目标编码器通过 EMA 跟随在线编码器，系数为 0.9999。</p>
+<p>作者希望先让未来预测建立在专家动作上，避免预测目标过早直接影响轨迹生成器，使策略偏向&quot;更容易预测&quot;的动作。未来预测此时主要通过改善共享表征间接帮助规划。</p>
+<h3 id="34-第三阶段planner-adaptation">3.4 第三阶段：Planner Adaptation
+</h3><h4 id="341-从专家轨迹条件换成生成轨迹条件">3.4.1 从专家轨迹条件换成生成轨迹条件
+</h4><p>从高斯噪声开始，Action DiT 执行多步轨迹生成：</p>
+$$ \hat\tau=\operatorname{Rollout}(G_\psi;Z_h,c,\epsilon) $$<p>这里 (\operatorname{Rollout}) 表示多步生成过程；生成轨迹编码为动作 token 后：</p>
+$$ \hat A=\operatorname{Encode}(\hat\tau),\qquad \hat Z_f=P_\phi(Z_h,\hat A) $$<p>未来特征目标仍来自该样本真实记录的未来视频。原来输入 (P) 的专家轨迹，被替换为 (G) 自己生成的轨迹。</p>
+<h4 id="342-冻结与梯度传递">3.4.2 冻结与梯度传递
+</h4><ul>
+<li>视频编码器 (E)：固定。</li>
+<li>未来预测器 (P)：固定。</li>
+<li>目标编码器：固定。</li>
+<li>Action DiT (G)：训练。</li>
+</ul>
+<p>**固定参数不代表阻断对输入的梯度。**未来预测器参数不变，但仍可计算它的输出对输入轨迹的导数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>未来特征损失 → 经过固定预测器对轨迹求导 → 生成轨迹 → 更新 Action DiT
+</span></span></code></pre></div><p>类比传统轨迹优化：车辆运动学模型的参数保持固定，仍可通过模型求出控制量变化对结果的影响。类比边界是：这里的模型是学到的高维视觉预测器，其梯度是否可靠需要额外验证。</p>
+<p>作者固定预测器，是为了保留专家轨迹条件下学到的对应关系，避免它随不准确的生成轨迹一起变化。<strong>固定可以限制共同漂移，但不会自动消除预测器已有误差。</strong></p>
+<h4 id="343-三项损失">3.4.3 三项损失
+</h4>$$ L_{\mathrm{plan}}=L_{\mathrm{fm}}+\lambda_{\mathrm{traj}}L_{\mathrm{traj}} $$$$ L_{\mathrm{adapt}}=L_{\mathrm{fm}}+\lambda_{\mathrm{traj}}L_{\mathrm{traj}}+\lambda_{\mathrm{feat}}L_{\mathrm{feat}} $$<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>定义与作用</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>(L_{\mathrm{fm}})</td>
+          <td>在多步生成的每个去噪步骤施加 flow-matching 监督，约束生成过程</td>
+      </tr>
+      <tr>
+          <td>(L_{\mathrm{traj}})</td>
+          <td>最终生成轨迹与专家轨迹的 L1，约束生成结果</td>
+      </tr>
+      <tr>
+          <td>(L_{\mathrm{feat}})</td>
+          <td>生成轨迹条件下的预测未来特征，与真实未来目标特征之间的归一化 L1</td>
+      </tr>
+      <tr>
+          <td>(\lambda_{\mathrm{traj}},\lambda_{\mathrm{feat}})</td>
+          <td>两个辅助项的权重，论文未列出第三阶段的具体取值</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>最终轨迹监督可以概括为：</p>
+$$ L_{\mathrm{traj}}\propto\|\hat\tau-\tau\|_1 $$<p>具体求和/平均方式，以及第三阶段每个 rollout 步的 flow-matching 目标构造和聚合方式，原文未充分展开，不能直接补写成已知实现。</p>
+<p>这里的 on-policy rollout 指使用当前规划器自身的生成结果。论文没有描述在这一阶段与环境持续交互、领取奖励的强化学习过程，也没有因此获得偏离专家后的真实环境反馈。</p>
+<h4 id="35-为什么特征预测与最终轨迹使用-l1">3.5 为什么特征预测与最终轨迹使用 L1？
+</h4><h5 id="351-论文事实与解释边界">3.5.1 论文事实与解释边界
+</h5><p>论文明确采用 L1 特征监督、最终轨迹 L1 和 flow-matching MSE，但<strong>没有报告 L1/L2 对照实验，也没有明确给出选择 L1 的因果解释</strong>。以下是损失函数性质带来的合理解释，不能写成作者已验证结论。</p>
+<p>第一阶段还沿用了 V-JEPA2 预训练方案，使用 L1 有延续既有配方的背景。</p>
+<h5 id="352-l1-与平方-l2-的差别">3.5.2 L1 与平方 L2 的差别
+</h5><p>令单个预测误差 (e=\hat y-y)，其中 (\hat y) 为预测值，(y) 为目标值。这里讨论的 L2 是常见的平方 L2/MSE，而不是未平方的欧氏范数。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>L1</th>
+          <th>平方 L2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>损失</td>
+          <td>(\lvert e\rvert)</td>
+          <td>(e^2)</td>
+      </tr>
+      <tr>
+          <td>对预测值的梯度</td>
+          <td>非零误差处为 (\operatorname{sign}(e))</td>
+          <td>(2e)</td>
+      </tr>
+      <tr>
+          <td>大误差的影响</td>
+          <td>线性增加</td>
+          <td>平方增加</td>
+      </tr>
+      <tr>
+          <td>接近零误差</td>
+          <td>梯度幅值不会随误差缩小；零点使用次梯度</td>
+          <td>梯度逐渐减小，局部更平滑</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>例如两个轨迹坐标误差为 0.1 m、2 m，L1 对应损失相差 20 倍，平方 L2 相差 400 倍。不同损失的数值尺度和单位也不同，不能替换后默认沿用相同权重仍然公平。</p>
+<h5 id="353-对特征预测与轨迹监督的可能作用">3.5.3 对特征预测与轨迹监督的可能作用
+</h5><ul>
+<li><strong>特征预测</strong>：少数难预测的位置或维度可能误差很大，L1 可减轻这些部分对总梯度的支配。大误差也可能包含重要信息，因此这不是普遍优于 L2 的证明。</li>
+<li><strong>最终轨迹</strong>：L1 可减轻少数大偏差样本或较远轨迹点对优化的支配，也会持续推动小误差修正；平方 L2 则更强调消除大偏差。</li>
+<li><strong>安全含义</strong>：与专家轨迹的坐标距离不等于碰撞风险，不能据此宣称 L1 或 L2 天然更安全。</li>
+<li><strong>多模态含义</strong>：L1 本身不能保证在多条合理路线中选中一条合理路线。把 L1 当作多模态问题的解决方案不成立。</li>
+</ul>
+<p>背景知识：在普通标量回归中，平方误差对应条件均值，绝对误差对应条件中位数；二者都不自动解决合理动作存在多个模态的问题。</p>
+<h5 id="354-为什么-flow-matching-使用-mse">3.5.4 为什么 flow matching 使用 MSE？
+</h5><p>Flow matching 回归的是生成过程的目标速度场，而最终轨迹 L1 比较的是结果。标准条件 flow-matching 构造使用平方误差，使最优回归对应给定带噪状态与条件下的目标平均速度；换成 L1 会改变这一回归目标。</p>
+<p>因此，不同监督对象采用不同损失有合理依据，但具体组合的优势仍需要实验验证。</p>
+<h4 id="36-第三阶段未来特征-loss-的价值与风险">3.6 第三阶段未来特征 loss 的价值与风险
+</h4><h5 id="361-最终判断">3.6.1 最终判断
+</h5><p>第三阶段可以看作在未来特征空间中增加一种辅助模仿约束。它存在合理收益机制，也存在预测器偏差污染轨迹梯度的风险。<strong>论文尚未充分隔离未来特征 loss 的独立收益；对第二阶段改善表征的证据，强于对第三阶段该项 loss 的证据。</strong></p>
+<p>&ldquo;规划器输入没有变化&quot;不代表损失不能改善模型。训练时可以增加监督信息或改变误差度量，但这不意味着部署时凭空获得历史观测中没有的未来信息。</p>
+<h5 id="362-潜在收益学习场景相关的误差度量">3.6.2 潜在收益：学习场景相关的误差度量
+</h5><p>即使专家轨迹完全准确，普通坐标 L1 也不等同于驾驶任务最合适的误差度量。例如，在宽阔直路与贴近障碍物处横向偏差 20 cm，坐标 L1 可以相同，驾驶后果却不同。</p>
+<p>固定场景条件 (s)，把动作编码、冻结预测器和输出归一化合并记为 (F_s)。令专家轨迹为 (\tau^<em>)，生成轨迹为 (\hat\tau)，真实未来目标特征为 (z_f^</em>)，暂略平均系数：</p>
+$$ L_{\mathrm{traj}}=\|\hat\tau-\tau^*\|_1,\qquad L_{\mathrm{feat}}=\|F_s(\hat\tau)-z_f^*\|_1 $$<p>如果预测器满足 (F_s(\tau^<em>)\approx z_f^</em>)，那么特征损失近似比较生成轨迹与专家轨迹各自对应的未来特征。</p>
+<p>在专家轨迹附近，定义轨迹误差 (e=\hat\tau-\tau^*)，一阶展开为：</p>
+$$ F_s(\hat\tau)-F_s(\tau^*)\approx J_s e $$<p>其中 (J_s) 是预测特征对轨迹的雅可比矩阵，表示&quot;轨迹各部分略微改变时，特征如何变化&rdquo;。于是：</p>
+$$ L_{\mathrm{feat}}\approx\|J_s e\|_1 $$<p>它相当于先对轨迹误差做与场景有关的变换与组合，再施加惩罚，可能强调某些时间点、横纵向偏差及点间关联。这是解释性推断，并非论文证明的安全度量。</p>
+<p>视觉特征变化较大可能只是自车运动引起的图像位移，并不必然对应更大的驾驶风险。该损失也没有直接定义碰撞、舒适性或通行效率。</p>
+<h5 id="363-主要风险让规划器补偿预测器误差">3.6.3 主要风险：让规划器补偿预测器误差
+</h5><p>定义预测器在专家轨迹上的残差：</p>
+$$ b_s=F_s(\tau^*)-z_f^* $$<p>则真实的局部特征误差近似为：</p>
+$$ F_s(\hat\tau)-z_f^*\approx J_s e+b_s $$<p>这里 (J_s e) 来自轨迹偏差，(b_s) 来自预测器本身。第三阶段让规划器同时降低这两部分，因此可能通过改变本来正确的轨迹，去抵消预测器的系统性误差。</p>
+<p>用一个标量例子说明。设 (a) 是横向轨迹参数，专家值为 (a^<em>)，目标特征为 (z^</em>)，预测器在局部为：</p>
+$$ F(a)=z^*+k(a-a^*)+b $$<p>其中 (k\neq0) 是预测器的局部敏感度，(b) 是预测偏差。仅最小化特征损失时，它偏好的位置是：</p>
+$$ a=a^*-\frac{b}{k} $$<p>因此，即使专家轨迹监督干净，额外项仍可能施加偏离专家的拉力。最终结果取决于辅助损失权重及其他监督的约束。</p>
+<p>其他重要风险包括：</p>
+<ol>
+<li><strong>动作分布变化</strong>：第二阶段用专家轨迹训练预测器，第三阶段输入生成轨迹。偏离专家后是否仍然准确，论文没有充分验证。</li>
+<li><strong>导数可靠性</strong>：训练样本上的预测值准确，不保证对轨迹扰动的响应也正确。第三阶段依赖的恰恰是这种响应。</li>
+<li><strong>外部未来的不确定性</strong>：其他交通参与者的行为未必能从历史与自车轨迹唯一确定，记录到的一次真实未来可能含有难以预测的变化。</li>
+<li><strong>冻结不能纠错</strong>：固定预测器能限制共同漂移，但其既有偏差仍会进入规划器梯度。</li>
+</ol>
+<p>反过来，第三阶段也不要求预测器成为完美物理模拟器；只要局部梯度能稳定帮助规划即可。问题在于论文对此缺少直接证据。</p>
+<h5 id="364-第三阶段整体收益不能直接归因于特征-loss">3.6.4 第三阶段整体收益不能直接归因于特征 loss
+</h5><p>相较第二阶段，第三阶段同时引入或改变了：</p>
+<ul>
+<li>从噪声开始的实际多步生成流程。</li>
+<li>在生成步骤上的 flow-matching 监督。</li>
+<li>最终生成轨迹 L1。</li>
+<li>编码器冻结、仅适配规划器。</li>
+<li>额外 5K 次训练更新。</li>
+<li>生成轨迹条件下的未来特征监督。</li>
+</ul>
+<p>前几项本身就可能改善有限步采样的最终轨迹。因此，加入整个第三阶段有效，不等于未来特征 loss 已被单独证明有效。</p>
+<p>论文表 6 的 89.9→90.2 PDMS 是整体第三阶段的结果，没有同预算的&quot;仅去掉特征 loss&quot;对照，也没有给出该结果的多随机种子波动，无法判断独立贡献及其稳定性。</p>
+<h5 id="365-最有价值的补充实验">3.6.5 最有价值的补充实验
+</h5><p>以下为分析建议，不是论文已完成的实验。应保持训练步数、初始化、冻结方式、采样器和其他损失相同。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>实验</th>
+          <th>设置</th>
+          <th>目的</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>A</td>
+          <td>完整第三阶段流程，但令 (\lambda_{\mathrm{feat}}=0)</td>
+          <td>测量生成适配、轨迹监督和额外训练本身的收益</td>
+      </tr>
+      <tr>
+          <td>B</td>
+          <td>在 A 上加入论文的真实未来特征目标</td>
+          <td>测量未来特征 loss 的独立收益</td>
+      </tr>
+      <tr>
+          <td>C</td>
+          <td>改为比较 (F_s(\hat\tau)) 与 (F_s(\tau^*))</td>
+          <td>去掉专家轨迹处的预测残差，检验预测器提供的误差度量本身是否有效</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>C 在专家轨迹处特征误差严格为零，但也放弃了直接对齐真实未来的部分信息，不能事先认定优于 B。还应报告多随机种子结果、不同权重的敏感性，以及辅助梯度与轨迹监督梯度的方向关系。</p>
+<h2 id="4-experiments数据结果与证据强度">4. Experiments：数据、结果与证据强度
+</h2><h3 id="41-数据集与评价指标">4.1 数据集与评价指标
+</h3><h4 id="411-驾驶视频预训练数据">4.1.1 驾驶视频预训练数据
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>数据集</th>
+          <th>论文附录给出的背景</th>
+          <th>ReDrive 使用部分</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>nuPlan</td>
+          <td>约 1,200 小时，覆盖 Boston、Pittsburgh、Las Vegas、Singapore；其中约 120 小时有完整传感器数据，涵盖 30 多类场景</td>
+          <td>NAVTRAIN 对应的前视相机序列</td>
+      </tr>
+      <tr>
+          <td>nuScenes</td>
+          <td>1,000 个约 20 秒场景，140 万张相机图像、39 万次 LiDAR 扫描；700/150/150 个训练/验证/测试场景</td>
+          <td>700 个训练场景的 CAM_FRONT</td>
+      </tr>
+      <tr>
+          <td>PhysicalAI-Autonomous-Vehicles</td>
+          <td>约 1,700 小时、306,152 个 20 秒片段，覆盖 25 个国家、2,500 多座城市</td>
+          <td>一个 80 小时子集的 120° 前视广角相机</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>附录背景中，nuPlan 完整传感器套件包含 8 个相机、5 个 LiDAR、IMU（惯性测量单元）和 GPS（全球定位系统）；nuScenes 包含 6 个相机、1 个 LiDAR、5 个雷达、IMU 和 GPS。<strong>这些是源数据集配置，不代表 ReDrive 将这些传感器全部作为输入。</strong></p>
+<p>预训练时三个数据源均匀采样。nuPlan、nuScenes 只使用训练划分；论文说明来源时长是在数据划分过滤前统计，不能将其直接等同于最终可用视频总时长。</p>
+<h4 id="412-下游规划数据与-103k-的单位">4.1.2 下游规划数据与 103K 的单位
+</h4><p>规划训练与评测使用 NAVSIM，包含 v1、v2 和 v2 的困难划分 NavHard。论文报告约 103K 个训练场景、12K 个测试场景，其中 K 表示千。</p>
+<p><strong>103K 的单位是 scene，即约 103,000 个驾驶场景样本，不是图像帧数、秒数或公里数。</strong></p>
+<p>可以把一个样本理解为以某个驾驶时刻为参照组织的数据。训练时取出历史图像、自车状态、未来视频与专家轨迹。不同样本可能来自相近时刻或相似情境，不能理解为 103,000 种互不相同的交通事件。</p>
+<p>NAVSIM 评测结果反映相应基准协议下的规划能力，不能直接等同于真实道路上长时间闭环部署的安全保证。</p>
+<h4 id="413-评价指标">4.1.3 评价指标
+</h4><p>NAVSIM v1 主指标为 PDMS（Predictive Driver Model Score），v2 为 EPDMS（Extended Predictive Driver Model Score）。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>缩写</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>NC</td>
+          <td>No-at-fault Collision，无自车责任碰撞</td>
+      </tr>
+      <tr>
+          <td>DAC</td>
+          <td>Drivable Area Compliance，可行驶区域合规</td>
+      </tr>
+      <tr>
+          <td>EP</td>
+          <td>Ego Progress，自车行驶进度</td>
+      </tr>
+      <tr>
+          <td>C</td>
+          <td>Comfort，舒适性</td>
+      </tr>
+      <tr>
+          <td>TTC</td>
+          <td>Time-to-Collision，碰撞时间相关安全指标</td>
+      </tr>
+      <tr>
+          <td>DDC</td>
+          <td>Driving Direction Compliance，行驶方向合规</td>
+      </tr>
+      <tr>
+          <td>TLC</td>
+          <td>Traffic Light Compliance，交通灯合规</td>
+      </tr>
+      <tr>
+          <td>LK</td>
+          <td>Lane Keeping，车道保持</td>
+      </tr>
+      <tr>
+          <td>HC、EC</td>
+          <td>v2 表中列出的舒适性相关分项；论文未展开其具体定义与计算式，这里保留原缩写</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>表中各项均为越高越好。综合分按照官方协议计算，不能把各列简单取平均。v2 表 2 的 NC 至 EC 分项统一采用 corrected evaluator，即修正后的评估器结果。</p>
+<p>NavHard 表中的 S1、S2 是两个<strong>评测阶段</strong>，与模型的三个训练阶段无关。</p>
+<h3 id="42-与其他方法的主要比较">4.2 与其他方法的主要比较
+</h3><h4 id="421-navsim-v1">4.2.1 NAVSIM v1
+</h4><p>以下摘录论文表 1 的主要对比，C＋L 表示 Camera＋LiDAR，相机与激光雷达输入。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>输入</th>
+          <th>NC</th>
+          <th>DAC</th>
+          <th>EP</th>
+          <th>C</th>
+          <th>TTC</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>UniAD</td>
+          <td>Camera</td>
+          <td>97.8</td>
+          <td>91.9</td>
+          <td>92.9</td>
+          <td>100</td>
+          <td>78.8</td>
+          <td>83.4</td>
+      </tr>
+      <tr>
+          <td>Hydra-MDP</td>
+          <td>C＋L</td>
+          <td>98.4</td>
+          <td>97.7</td>
+          <td>85.0</td>
+          <td>100</td>
+          <td>94.5</td>
+          <td>89.9</td>
+      </tr>
+      <tr>
+          <td>DiffusionDrive</td>
+          <td>C＋L</td>
+          <td>98.2</td>
+          <td>96.2</td>
+          <td>82.2</td>
+          <td>100</td>
+          <td>94.7</td>
+          <td>88.1</td>
+      </tr>
+      <tr>
+          <td>GoalFlow</td>
+          <td>C＋L</td>
+          <td>98.4</td>
+          <td>98.3</td>
+          <td>85.0</td>
+          <td>100</td>
+          <td>94.6</td>
+          <td>90.3</td>
+      </tr>
+      <tr>
+          <td>DriveDPO</td>
+          <td>C＋L</td>
+          <td>98.5</td>
+          <td>98.1</td>
+          <td>84.3</td>
+          <td>100</td>
+          <td>94.8</td>
+          <td>90.0</td>
+      </tr>
+      <tr>
+          <td>Drive-JEPA</td>
+          <td>Camera</td>
+          <td>98.7</td>
+          <td>96.2</td>
+          <td>82.9</td>
+          <td>100</td>
+          <td>95.5</td>
+          <td>89.0</td>
+      </tr>
+      <tr>
+          <td>DriveLaW</td>
+          <td>Camera</td>
+          <td>99.0</td>
+          <td>97.1</td>
+          <td>81.3</td>
+          <td>100</td>
+          <td>96.7</td>
+          <td>89.1</td>
+      </tr>
+      <tr>
+          <td>ReWorld</td>
+          <td>Camera</td>
+          <td>99.1</td>
+          <td>98.2</td>
+          <td>82.0</td>
+          <td>99.8</td>
+          <td>97.7</td>
+          <td>90.4</td>
+      </tr>
+      <tr>
+          <td>DAWN</td>
+          <td>Camera</td>
+          <td>98.7</td>
+          <td>95.9</td>
+          <td>84.3</td>
+          <td>100</td>
+          <td>96.0</td>
+          <td>89.1</td>
+      </tr>
+      <tr>
+          <td><strong>ReDrive</strong></td>
+          <td><strong>Camera</strong></td>
+          <td><strong>99.1</strong></td>
+          <td><strong>97.9</strong></td>
+          <td><strong>84.3</strong></td>
+          <td><strong>100</strong></td>
+          <td><strong>97.2</strong></td>
+          <td><strong>91.0</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>ReDrive 的综合分比 ReWorld 高 0.6，但并非每个分项都最高。不同方法的输入、预训练和训练方案不完全相同，因此该比较证明的是基准上的竞争力，不能隔离每项设计的因果贡献。</p>
+<h4 id="422-navsim-v2">4.2.2 NAVSIM v2
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DiffusionDrive</td>
+          <td>84.5</td>
+      </tr>
+      <tr>
+          <td>DiffusionDriveV2</td>
+          <td>87.5</td>
+      </tr>
+      <tr>
+          <td>WAM-Diff</td>
+          <td>89.7</td>
+      </tr>
+      <tr>
+          <td>DreamerAD</td>
+          <td>87.7</td>
+      </tr>
+      <tr>
+          <td>Latent-WAM</td>
+          <td>89.3</td>
+      </tr>
+      <tr>
+          <td>DriveFuture</td>
+          <td>89.9</td>
+      </tr>
+      <tr>
+          <td>CoWorld-VLA</td>
+          <td>90.0</td>
+      </tr>
+      <tr>
+          <td>SparseDriveV2</td>
+          <td>90.1</td>
+      </tr>
+      <tr>
+          <td><strong>ReDrive</strong></td>
+          <td><strong>90.8</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>ReDrive 各分项为：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>NC</th>
+          <th>DAC</th>
+          <th>DDC</th>
+          <th>TLC</th>
+          <th>EP</th>
+          <th>TTC</th>
+          <th>LK</th>
+          <th>HC</th>
+          <th>EC</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>99.1</td>
+          <td>97.8</td>
+          <td>99.6</td>
+          <td>99.9</td>
+          <td>87.6</td>
+          <td>98.7</td>
+          <td>98.2</td>
+          <td>98.3</td>
+          <td>86.4</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>其综合分高于表中的次优方法 0.7，但不代表所有分项均最优。</p>
+<h4 id="423-navsim-v2-navhard">4.2.3 NAVSIM v2 NavHard
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>S1 分数</th>
+          <th>S2 分数</th>
+          <th>综合 EPDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>LTF</td>
+          <td>61.3</td>
+          <td>39.2</td>
+          <td>24.4</td>
+      </tr>
+      <tr>
+          <td>DiffusionDrive</td>
+          <td>66.7</td>
+          <td>40.5</td>
+          <td>27.5</td>
+      </tr>
+      <tr>
+          <td>GTRS-DP</td>
+          <td>未列出</td>
+          <td>未列出</td>
+          <td>23.8</td>
+      </tr>
+      <tr>
+          <td>GuideFlow</td>
+          <td>未列出</td>
+          <td>未列出</td>
+          <td>27.1</td>
+      </tr>
+      <tr>
+          <td>ReCogDrive</td>
+          <td>67.7</td>
+          <td>37.6</td>
+          <td>25.7</td>
+      </tr>
+      <tr>
+          <td>SGDrive</td>
+          <td>71.1</td>
+          <td>35.2</td>
+          <td>25.5</td>
+      </tr>
+      <tr>
+          <td>Metis</td>
+          <td>75.8</td>
+          <td>41.7</td>
+          <td>32.2</td>
+      </tr>
+      <tr>
+          <td><strong>ReDrive</strong></td>
+          <td><strong>82.3</strong></td>
+          <td><strong>42.3</strong></td>
+          <td><strong>34.4</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>与 Metis 的分项比较：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法/阶段</th>
+          <th>NC</th>
+          <th>DAC</th>
+          <th>DDC</th>
+          <th>TLC</th>
+          <th>EP</th>
+          <th>TTC</th>
+          <th>LK</th>
+          <th>HC</th>
+          <th>EC</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>Metis S1</td>
+          <td>96.6</td>
+          <td>87.8</td>
+          <td>99.0</td>
+          <td>99.3</td>
+          <td>84.5</td>
+          <td>95.6</td>
+          <td>97.8</td>
+          <td>97.8</td>
+          <td>77.8</td>
+      </tr>
+      <tr>
+          <td>ReDrive S1</td>
+          <td>97.9</td>
+          <td>93.6</td>
+          <td>99.4</td>
+          <td>99.6</td>
+          <td>84.2</td>
+          <td>96.9</td>
+          <td>97.8</td>
+          <td>97.8</td>
+          <td>73.3</td>
+      </tr>
+      <tr>
+          <td>Metis S2</td>
+          <td>79.6</td>
+          <td>73.3</td>
+          <td>84.9</td>
+          <td>97.8</td>
+          <td>85.8</td>
+          <td>76.6</td>
+          <td>47.7</td>
+          <td>95.4</td>
+          <td>75.3</td>
+      </tr>
+      <tr>
+          <td>ReDrive S2</td>
+          <td>82.2</td>
+          <td>75.8</td>
+          <td>84.3</td>
+          <td>98.2</td>
+          <td>87.3</td>
+          <td>77.9</td>
+          <td>47.8</td>
+          <td>95.9</td>
+          <td>54.2</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>ReDrive 的优势主要体现在 S1；困难条件下仍有明显薄弱项，例如 S2 的 EC 只有 54.2，低于 Metis 的 75.3。不能将较高综合分概括成各项能力全面更强。</p>
+<h3 id="43-消融实验">4.3 消融实验
+</h3><h4 id="431-视觉预训练方式与时间长度表-4">4.3.1 视觉预训练方式与时间长度：表 4
+</h4><p>所有结果都在第二阶段训练后评估，各编码器规模可比，从各自预训练权重初始化，再使用相同驾驶数据与相同预训练轮数。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>预训练方式</th>
+          <th>驾驶视频预训练帧数</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DINOv2</td>
+          <td>图片预训练对照</td>
+          <td>84.4</td>
+      </tr>
+      <tr>
+          <td>MAE</td>
+          <td>图片预训练对照</td>
+          <td>83.9</td>
+      </tr>
+      <tr>
+          <td>V-JEPA2</td>
+          <td>4</td>
+          <td>89.9</td>
+      </tr>
+      <tr>
+          <td>V-JEPA2</td>
+          <td>8</td>
+          <td>90.4</td>
+      </tr>
+      <tr>
+          <td>V-JEPA2</td>
+          <td>12</td>
+          <td>90.7</td>
+      </tr>
+      <tr>
+          <td>V-JEPA2</td>
+          <td>16</td>
+          <td>90.8</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>论文结果支持视频表征与较长预训练时间上下文的价值。这里改变的是<strong>预训练时使用的帧数</strong>，不是把部署输入同步增加到 16 帧。</p>
+<h4 id="432-编码器微调与未来预测表-5">4.3.2 编码器微调与未来预测：表 5
+</h4><p>采用同一个经过 4 帧驾驶视频预训练的编码器：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>编码器</th>
+          <th>未来预测器</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>固定</td>
+          <td>无</td>
+          <td>85.7</td>
+      </tr>
+      <tr>
+          <td>可训练，仅规划监督</td>
+          <td>无</td>
+          <td>89.2</td>
+      </tr>
+      <tr>
+          <td>可训练，规划与未来预测联合监督</td>
+          <td>有</td>
+          <td>89.9</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>规划任务适配本身贡献较大，未来预测再提供 0.7 分的补充收益。不能把所有增益都归因于世界模型。</p>
+<h4 id="433-三阶段贡献表-6">4.3.3 三阶段贡献：表 6
+</h4><p>此表采用 4 帧驾驶视频预训练设置：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>驾驶预训练</th>
+          <th>联合未来预测</th>
+          <th>规划器适配</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>无</td>
+          <td>无</td>
+          <td>无</td>
+          <td>88.9</td>
+      </tr>
+      <tr>
+          <td>有</td>
+          <td>无</td>
+          <td>无</td>
+          <td>89.2</td>
+      </tr>
+      <tr>
+          <td>有</td>
+          <td>有</td>
+          <td>无</td>
+          <td>89.9</td>
+      </tr>
+      <tr>
+          <td>有</td>
+          <td>有</td>
+          <td>有</td>
+          <td>90.2</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>第一行仍进行了用于评估的规划训练，&ldquo;无三个阶段&quot;不代表未经轨迹训练便直接测试。</p>
+<p>该表完整流程得分为 90.2，主结果为 91.0，预训练帧数等设置不同，不能混为同一套实验。第三阶段的 0.3 分提升也不等同于特征 loss 的独立增益。</p>
+<h3 id="44-实验分析">4.4 实验分析
+</h3><h4 id="441-重新训练规划器检验提升是否保留在表征中表-7">4.4.1 重新训练规划器，检验提升是否保留在表征中：表 7
+</h4><p>这组实验采用 8 帧驾驶视频预训练：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>编码器</th>
+          <th>规划器</th>
+          <th>PDMS</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>仅 8 帧驾驶视频预训练后固定</td>
+          <td>重新初始化并训练</td>
+          <td>86.7</td>
+      </tr>
+      <tr>
+          <td>第二阶段联合训练后固定</td>
+          <td>重新初始化并训练</td>
+          <td>90.2</td>
+      </tr>
+      <tr>
+          <td>第二阶段联合训练参考结果</td>
+          <td>原本联合训练的规划器</td>
+          <td>90.4</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>编码器固定、规划器重新训练后，第二阶段编码器仍能支持 90.2，接近原联合训练结果 90.4。这是&quot;提升确实保留在视觉表征中&quot;的重要证据。</p>
+<p>论文所述的 <strong>3.5 分表征收益对应 (90.2-86.7)</strong>，不能与表 5 或主结果任意相减。</p>
+<h4 id="442-轨迹可视化">4.4.2 轨迹可视化
+</h4><p>图 3 与附录图 6 用前视画面和 BEV 展示人工轨迹、Drive-JEPA 与 ReDrive。它们提供道路几何和交通交互层面的定性参考，但部分例子仍有与人工路线明显分歧的情况，不能据此断言每个场景都更接近专家。</p>
+<h4 id="443-未来预测器是否使用了动作条件">4.4.3 未来预测器是否使用了动作条件？
+</h4><p>作者固定历史表征，对专家轨迹施加 15 个均匀分布的横向偏移，范围为<strong>归一化动作空间</strong>中的 ([-0.8,0.8])，再比较各条件下预测未来特征的余弦相似度。</p>
+<p>余弦相似度衡量两个特征方向的一致程度。图 4 与附录图 7 中，轨迹条件差异越大，特征相似度通常越低。</p>
+<p>这支持未来预测器确实使用动作条件，但不能证明：</p>
+<ul>
+<li>偏离专家轨迹后的未来预测符合真实物理演化。</li>
+<li>动作敏感性对应驾驶风险。</li>
+<li>对轨迹的梯度能够正确指导规划器。</li>
+</ul>
+<p>偏移单位也不能直接解释成米。</p>
+<h2 id="5-conclusion论文结论与证据边界">5. Conclusion：论文结论与证据边界
+</h2><p>论文证明了在所评测的 NAVSIM 设置中，通过驾驶视频预训练、联合未来特征预测及规划器适配，可以得到表现较强的直接规划系统。世界模型可以作为训练监督来源，部署不必保留显式未来预测模块。</p>
+<p>证据需要分层理解：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>结论</th>
+          <th>证据与边界</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>整体系统具有较强基准表现</td>
+          <td>v1、v2、NavHard 主结果支持</td>
+      </tr>
+      <tr>
+          <td>第二阶段改善了视觉表征</td>
+          <td>冻结编码器、重新训练规划器的实验提供直接支持</td>
+      </tr>
+      <tr>
+          <td>第三阶段整体可能带来补充收益</td>
+          <td>表 6 提供初步支持，但缺少随机波动报告</td>
+      </tr>
+      <tr>
+          <td>第三阶段未来特征 loss 独立有效</td>
+          <td>缺少同预算移除该项的消融，尚未隔离证明</td>
+      </tr>
+      <tr>
+          <td>学到了正确的反事实世界模型</td>
+          <td>动作敏感性图不足以支持</td>
+      </tr>
+      <tr>
+          <td>推理模块更少</td>
+          <td>架构支持；不等于已经证明延迟、吞吐或实际部署收益</td>
+      </tr>
+  </tbody>
+</table></div>
+<h2 id="6-核心贡献适用条件局限与开放问题">6. 核心贡献、适用条件、局限与开放问题
+</h2><h3 id="61-最值得记住的贡献">6.1 最值得记住的贡献
+</h3><ol>
+<li>将强视频预训练与动作条件未来特征预测结合，学习规划导向的视觉表征。</li>
+<li>第二阶段让规划与未来预测通过共享编码器协作，同时保留直接轨迹生成路径。</li>
+<li>固定编码器并重训规划器的实验，支持提升已保留在表征中。</li>
+<li>部署仅需视频编码器与轨迹生成器，未来预测可以作为训练工具。</li>
+</ol>
+<h3 id="62-方法成立需要的条件">6.2 方法成立需要的条件
+</h3><ul>
+<li>有足够的驾驶视频与可靠的相机几何处理。</li>
+<li>下游训练包含同步的历史观测、专家轨迹及真实未来观测。</li>
+<li>预训练、未来预测与规划监督之间的权重和训练量匹配。</li>
+<li>若使用第三阶段特征监督，预测器在生成轨迹附近的响应需要足够可靠，辅助梯度不能压倒轨迹监督。</li>
+</ul>
+<h3 id="63-主要局限">6.3 主要局限
+</h3><ul>
+<li>第三阶段未来特征 loss 的独立贡献没有被同预算消融隔离。</li>
+<li>缺少预测器反事实准确性和轨迹梯度可靠性的直接验证。</li>
+<li>特征距离未被证明对应安全风险或驾驶任务代价。</li>
+<li>困难场景仍有舒适性与后续阶段表现不足。</li>
+<li>训练使用较大模型与 16 张 H20；模块减少不等于已验证整体部署效率。</li>
+<li>多项实现细节未展开，包括轨迹参数化、动作 token、部分时间配置、第三阶段权重及完整优化细节。</li>
+<li>现有结果属于 NAVSIM 协议下的表现，不能直接外推为真实道路安全保证。</li>
+</ul>
+<h3 id="64-仍值得验证的问题">6.4 仍值得验证的问题
+</h3><ol>
+<li>相同训练预算下，第三阶段去掉未来特征 loss 后还有多少差距？</li>
+<li>以预测器对专家轨迹的输出作为特征目标，能否减少系统性偏差？</li>
+<li>哪些轨迹方向被未来特征显著放大，它们对应安全相关变化，还是主要对应视角和外观变化？</li>
+<li>对偏离专家的轨迹，预测误差、特征梯度与实际驾驶后果之间是什么关系？</li>
+<li>步数、辅助权重和随机种子变化后，小幅收益是否稳定？</li>
+<li>编码器与规划器能否进一步缩小，在部署成本下降的同时保留主要收益？</li>
+</ol>
+<h2 id="附录-a-相机对齐与丢弃视野不足的片段">附录 A. 相机对齐与&quot;丢弃视野不足的片段&rdquo;
+</h2><h3 id="a1-为什么要对齐">A.1 为什么要对齐？
+</h3><p>PhysicalAI 的前视广角相机与 nuPlan 相机在视野和投影模型上存在差异。直接混合可能增加数据分布差异，因此作者将 PhysicalAI 视频几何变换到近似 nuPlan 前视相机的几何分布。</p>
+<h3 id="a2-实际映射过程">A.2 实际映射过程
+</h3><p>使用每个片段的 f-theta 相机标定，逐个目标像素执行反向映射：</p>
+<ol>
+<li>根据目标 nuPlan 相机模型，确定该像素对应的观察射线。</li>
+<li>根据源相机的 f-theta 标定，将该方向映射到原始图片位置。</li>
+<li>从源图像做双线性采样，填入目标像素。</li>
+</ol>
+<p>双线性采样是在原图相邻像素之间插值，不能生成原相机未观测到的方向。</p>
+<h3 id="a3-什么是视野不足以覆盖目标画面">A.3 什么是&quot;视野不足以覆盖目标画面&rdquo;？
+</h3><p>如果某些目标像素需要的观察方向，在原相机中没有有效图像内容，就无法完成完整映射。论文丢弃这类视频片段，避免对视野外内容做外推。</p>
+<p>以下角度仅为示意，<strong>不是 nuPlan 实际相机参数</strong>，并假设相机朝向相同：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>相机</th>
+          <th>水平视野</th>
+          <th>覆盖方向</th>
+          <th>能否生成示例目标画面</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>目标相机</td>
+          <td>100°</td>
+          <td>左右各 50°</td>
+          <td>—</td>
+      </tr>
+      <tr>
+          <td>源相机 A</td>
+          <td>120°</td>
+          <td>左右各 60°</td>
+          <td>能覆盖</td>
+      </tr>
+      <tr>
+          <td>源相机 B</td>
+          <td>90°</td>
+          <td>左右各 45°</td>
+          <td>两侧各缺 5°，无法完整覆盖</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>实际覆盖判断依赖标定后的射线映射与有效图像区域，不只是比较标称水平视野大小。</p>
+<p>拉伸图片只会改变已有内容的形状，不会补出没拍到的车辆或道路，还会破坏像素与观察方向的几何对应关系。因此，这种情况选择丢弃片段，而不是直接拉宽画面。</p>
+<h2 id="附录-b-模型和超参数">附录 B. 模型和超参数
+</h2><h3 id="b1-模型规模">B.1 模型规模
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段/模块</th>
+          <th>层数</th>
+          <th>隐藏维度</th>
+          <th>注意力头数</th>
+          <th>参数量</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>视频编码器 ViT-L</td>
+          <td>24</td>
+          <td>1024</td>
+          <td>16</td>
+          <td>304M</td>
+      </tr>
+      <tr>
+          <td>第一阶段遮挡预测器</td>
+          <td>12</td>
+          <td>384</td>
+          <td>12</td>
+          <td>22M</td>
+      </tr>
+      <tr>
+          <td>第二、三阶段未来预测器</td>
+          <td>12</td>
+          <td>768</td>
+          <td>12</td>
+          <td>153M</td>
+      </tr>
+      <tr>
+          <td>Action DiT</td>
+          <td>28</td>
+          <td>512</td>
+          <td>16</td>
+          <td>103M</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>M 表示百万。ViT-L 是大型 Vision Transformer（视觉 Transformer）。未来预测器 MLP（多层感知机）扩张比例为 4。</p>
+<p>编码器与 Action DiT 参数量相加约为 407M，可作为部署主体规模的粗略估计；论文没有给出完整延迟和吞吐对比。</p>
+<h3 id="b2-第一阶段配置论文表-8">B.2 第一阶段配置：论文表 8
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>视频长度</td>
+          <td>主配置 16 帧</td>
+      </tr>
+      <tr>
+          <td>采样率</td>
+          <td>10 Hz</td>
+      </tr>
+      <tr>
+          <td>图像分辨率</td>
+          <td>256×512</td>
+      </tr>
+      <tr>
+          <td>空间 patch / 时间 tubelet</td>
+          <td>16×16 / 2 帧</td>
+      </tr>
+      <tr>
+          <td>小遮挡块</td>
+          <td>8 个，scale 0.15</td>
+      </tr>
+      <tr>
+          <td>大遮挡块</td>
+          <td>2 个，scale 0.70</td>
+      </tr>
+      <tr>
+          <td>遮挡时间范围</td>
+          <td>使用覆盖完整时间范围的多块遮挡策略</td>
+      </tr>
+      <tr>
+          <td>优化器</td>
+          <td>AdamW，自适应优化器，采用解耦权重衰减</td>
+      </tr>
+      <tr>
+          <td>学习率</td>
+          <td>5.25×10⁻⁴</td>
+      </tr>
+      <tr>
+          <td>权重衰减</td>
+          <td>0.04</td>
+      </tr>
+      <tr>
+          <td>数值精度</td>
+          <td>bfloat16，16 位浮点格式</td>
+      </tr>
+      <tr>
+          <td>训练量</td>
+          <td>100 epochs</td>
+      </tr>
+      <tr>
+          <td>目标编码器 EMA</td>
+          <td>0.99925</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>空间 patch 是划分图像的局部块，tubelet 还将连续若干帧组合成时空单元。scale 数值按原表保留，具体采样几何未展开。</p>
+<h3 id="b3-第二阶段配置论文表-910">B.3 第二阶段配置：论文表 9、10
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>历史 / 未来视频</td>
+          <td>4 帧 / 后续 4 帧，不重叠</td>
+      </tr>
+      <tr>
+          <td>图像分辨率</td>
+          <td>256×512</td>
+      </tr>
+      <tr>
+          <td>优化器</td>
+          <td>AdamW</td>
+      </tr>
+      <tr>
+          <td>学习率</td>
+          <td>3×10⁻⁵</td>
+      </tr>
+      <tr>
+          <td>AdamW 的 β₁、β₂</td>
+          <td>0.9、0.95</td>
+      </tr>
+      <tr>
+          <td>权重衰减</td>
+          <td>1×10⁻⁵</td>
+      </tr>
+      <tr>
+          <td>学习率调度</td>
+          <td>1,000 steps warmup 后保持常数</td>
+      </tr>
+      <tr>
+          <td>梯度裁剪阈值</td>
+          <td>1.0</td>
+      </tr>
+      <tr>
+          <td>规划损失</td>
+          <td>Flow-matching MSE，均方误差</td>
+      </tr>
+      <tr>
+          <td>未来预测损失</td>
+          <td>L1</td>
+      </tr>
+      <tr>
+          <td>未来预测权重</td>
+          <td>0.1</td>
+      </tr>
+      <tr>
+          <td>配置表中的 diffusion timesteps</td>
+          <td>1,000</td>
+      </tr>
+      <tr>
+          <td>推理生成步数</td>
+          <td>5</td>
+      </tr>
+      <tr>
+          <td>目标编码器 EMA</td>
+          <td>0.9999</td>
+      </tr>
+      <tr>
+          <td>数值精度</td>
+          <td>bfloat16</td>
+      </tr>
+      <tr>
+          <td>训练量</td>
+          <td>35K steps</td>
+      </tr>
+      <tr>
+          <td>轨迹输出</td>
+          <td>未来 4 秒，2 Hz，共 8 点</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Warmup 指训练初期逐步提升学习率；权重衰减用于限制参数增长；梯度裁剪用于限制过大的更新梯度。</p>
+<p>配置表中的 1,000 timesteps 与 5 次推理生成不是同一个概念，不能理解为推理要执行 1,000 次网络前向。</p>
+<p>**4 帧未来视频与 4 秒规划轨迹也不能等同。**明确给出的 10 Hz 是预训练视频采样率，原文没有明确第二、三阶段视频采样间隔，不能据此推算其未来视频的实际时间跨度。</p>
+<h3 id="b4-第三阶段和硬件">B.4 第三阶段和硬件
+</h3><p>第三阶段为 5K steps，使用 5 步生成，只训练 Action DiT。正文未独立列出该阶段完整优化配置，也未报告两个辅助损失权重的具体数值。</p>
+<p>论文报告所有实验运行在 16 张 NVIDIA H20 GPU 上。GPU 是图形处理器，这里用于神经网络计算。GPU 数量不等于 global batch size，不能从 16 张卡推出每步样本数。</p>
+<h2 id="附录-c-epochstep数据规模与训练量选择">附录 C. Epoch、step、数据规模与训练量选择
+</h2><h3 id="c1-三个概念分别回答什么">C.1 三个概念分别回答什么？
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>概念</th>
+          <th>回答的问题</th>
+          <th>ReDrive 示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>数据规模</td>
+          <td>有多少训练样本?</td>
+          <td>约 103K 个 NAVSIM 场景</td>
+      </tr>
+      <tr>
+          <td>Epoch</td>
+          <td>相当于学习了多少轮数据？</td>
+          <td>第一阶段 100 epochs</td>
+      </tr>
+      <tr>
+          <td>Step</td>
+          <td>进行了多少次训练更新？</td>
+          <td>第二阶段 35K、第三阶段 5K</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>一个 epoch 通常按训练集规模定义一轮学习。随机视频裁剪、数据源均匀采样等机制下，具体一轮如何定义依赖实现，不能保证每条原始视频都恰好访问一次。</p>
+<p>一个训练 step 通常是&quot;取一批数据、前向计算、计算损失、反向传播、更新参数&rdquo;。Batch 是一批样本，batch size 是样本数；有梯度累积时，若干微批次才进行一次优化器更新，日志的计步口径应以实现为准。</p>
+<h3 id="c2-换算与多-gpu">C.2 换算与多 GPU
+</h3><p>令训练集样本数为 (N_{\mathrm{data}})，每次参数更新合计使用的样本数为 (B_{\mathrm{global}})，则近似有：</p>
+$$ \text{steps per epoch}\approx\frac{N_{\mathrm{data}}}{B_{\mathrm{global}}} $$$$ \text{等效 epochs}\approx \frac{\text{更新步数}\times B_{\mathrm{global}}}{N_{\mathrm{data}}} $$<p>在常见数据并行且各卡批大小一致时，global batch size 是各卡批大小与梯度累积次数共同决定的。16 张 GPU 一起完成一次同步参数更新，通常仍算 1 step。</p>
+<p><strong>纯示例，不是论文配置</strong>：若有 103,000 个场景，global batch size 为 128，则一轮约 805 steps；35,000 steps 累计约 448 万次样本使用，相当于 43.5 轮，包含重复使用的数据。</p>
+<p>论文没有明确 global batch size，因此不能确定 35K steps 实际相当于多少轮。第一阶段 100 epochs 使用的混合驾驶视频也不是直接按这 103K 个规划场景计算，不能直接换算比较。</p>
+<h3 id="c3-不同阶段训练多少步通常如何决定">C.3 不同阶段训练多少步，通常如何决定？
+</h3><p>训练量是需要实验选择的超参数，通常由验证表现、收益饱和情况与计算预算共同决定，不能仅从数据规模直接算出。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>观察</th>
+          <th>判断与处理</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>训练 loss 下降，验证表现提高</td>
+          <td>训练仍可能有收益</td>
+      </tr>
+      <tr>
+          <td>训练 loss 下降，验证表现持平</td>
+          <td>更多拟合未转化为目标能力，考虑停止或调整配置</td>
+      </tr>
+      <tr>
+          <td>训练 loss 下降，验证表现变差</td>
+          <td>可能过拟合，或目标与评测能力不一致，考虑更早 checkpoint</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Checkpoint 是保存的模型参数状态。选训练量应使用验证集，测试集留作最终评估。</p>
+<p>各阶段的具体依据不同：</p>
+<ul>
+<li><strong>第一阶段</strong>：遮挡预测 loss 仅是代理指标。更可靠的是比较不同预训练时长的编码器，在统一下游方案下能否继续提高规划能力；EMA 目标还在变化，不能凭某个绝对 loss 值判断已学好。</li>
+<li><strong>第二阶段</strong>：定期看验证集 PDMS 及碰撞、道路合规等分项，同时观察两项训练损失。暂时不涨分也可能与学习率等配置有关。</li>
+<li><strong>第三阶段</strong>：已有较强初始化，短期适配值得尝试；但这不能推导出 5K 最优。应特别警惕未来特征 loss 降低、实际规划表现却变差。</li>
+</ul>
+<p>实用流程是先设预算上限，定期验证和保存，找到收益趋于饱和的范围，再细化训练量，并对小幅收益检查随机波动。多阶段系统还应看前一阶段的额外计算能否转化为后一阶段的收益。</p>
+<p><strong>论文没有给出训练曲线或步数选择实验。100 epochs、35K steps、5K steps 是取得所报告结果的一套配置，尚未被证明分别是最优训练量。</strong></p>
+<h2 id="7-核心贡献适用条件局限与开放问题阅读定位">7. 核心贡献、适用条件、局限与开放问题（阅读定位）
+</h2><p>ReDrive 最有说服力的部分，是用未来预测塑造能够直接服务规划的视觉表征。第三阶段提供了一个有合理机制但仍需更严格消融的辅助监督方案，不能把它直接理解成已经验证可靠的世界模型安全优化。</p>
+<h2 id="相关笔记">相关笔记
+</h2><ul>
+<li>[[Drive-JEPA]] 与 [[WA-JEPA - 视频JEPA改造为自动驾驶世界动作模型]] 同为基于 JEPA 思路的驾驶表征学习工作</li>
+<li>[[LAW - Latent World Model for E2E Driving]]、[[DrivoR]] 同为表征空间世界模型与端到端规划结合的道路</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/%E8%87%AA%E5%8A%A8%E9%A9%BE%E9%A9%B6/">自动驾驶</a>
+        
+            <a href="/tags/%E7%AB%AF%E5%88%B0%E7%AB%AF/">端到端</a>
+        
+            <a href="/tags/%E8%A1%A8%E5%BE%81%E5%AD%A6%E4%B9%A0/">表征学习</a>
+        
+            <a href="/tags/%E4%B8%96%E7%95%8C%E6%A8%A1%E5%9E%8B/">世界模型</a>
+        
+            <a href="/tags/%E8%A7%86%E9%A2%91jepa/">视频JEPA</a>
+        
+            <a href="/tags/%E6%B5%81%E5%8C%B9%E9%85%8D/">流匹配</a>
+        
+            <a href="/tags/navsim/">NAVSIM</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/mom-world/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">MomWorld 论文阅读笔记</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/wa-jepa/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/epona-v2/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">EponaV2: Driving World Model with Comprehensive Future Reasoning</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/drive-zero/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DriveZero: End-to-End Driving Beyond Human Demonstrations</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/anchor-vla/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">AnchorVLA: Bridging Discrete Decisions and Continuous Trajectories for Vision-Language-Action Planning</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>
