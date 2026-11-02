@@ -398,6 +398,18 @@
     <loc>https://example.org/tags/%E8%BD%A8%E8%BF%B9%E9%A2%84%E6%B5%8B/</loc>
     <lastmod>2025-10-09T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://example.org/tags/bev/</loc>
+    <lastmod>2025-09-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/post/robotics/e2e/birddriver/</loc>
+    <lastmod>2025-09-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/interplan/</loc>
+    <lastmod>2025-09-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://example.org/tags/%E5%85%B3%E9%94%AE%E7%82%B9%E6%8E%A5%E5%8F%A3/</loc>
+    <lastmod>2025-09-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://example.org/post/robotics/e2e/world4-drive/</loc>
     <lastmod>2025-07-01T00:00:00+00:00</lastmod>
   </url><url>
@@ -820,9 +832,6 @@
   </url><url>
     <loc>https://example.org/post/robotics/e2e/uad/</loc>
     <lastmod>2024-06-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://example.org/tags/bev/</loc>
-    <lastmod>2024-06-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://example.org/post/robotics/e2e/law/</loc>
     <lastmod>2024-06-12T00:00:00+00:00</lastmod>
