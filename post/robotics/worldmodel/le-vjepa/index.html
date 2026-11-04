@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content="LeVJEPA 用一致性加 SIGReg 分布约束取代 EMA 教师与预测器，配合 95% 随机 token 丢弃与 block-causal 注意力，以 5.6—20.8 倍更少的预训练 FLOPs 取得接近或更好的 ImageNet 表现。">
+<title>LeVJEPA - 无启发式的高效可扩展视频预训练</title>
+
+
+<link rel="canonical" href="https://example.org/post/robotics/worldmodel/le-vjepa/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap">
+
+
+<link rel="stylesheet" href="/scss/style.min.45c20c1a8299f01c2426e8599fd09fe4cc395cbd8c702a17cdac5c4cc906c5b0.css"><meta property='og:title' content="LeVJEPA - 无启发式的高效可扩展视频预训练">
+<meta property='og:description' content="LeVJEPA 用一致性加 SIGReg 分布约束取代 EMA 教师与预测器，配合 95% 随机 token 丢弃与 block-causal 注意力，以 5.6—20.8 倍更少的预训练 FLOPs 取得接近或更好的 ImageNet 表现。">
+<meta property='og:url' content='https://example.org/post/robotics/worldmodel/le-vjepa/'>
+<meta property='og:site_name' content='朝花夕拾'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='WorldModel' /><meta property='article:tag' content='JEPA' /><meta property='article:tag' content='VideoPretraining' /><meta property='article:tag' content='SelfSupervisedLearning' /><meta property='article:tag' content='VisualRepresentation' /><meta property='article:published_time' content='2026-08-27T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2026-08-27T00:00:00&#43;00:00'/>
+<meta name="twitter:title" content="LeVJEPA - 无启发式的高效可扩展视频预训练">
+<meta name="twitter:description" content="LeVJEPA 用一致性加 SIGReg 分布约束取代 EMA 教师与预测器，配合 95% 随机 token 丢弃与 block-causal 注意力，以 5.6—20.8 倍更少的预训练 FLOPs 取得接近或更好的 ImageNet 表现。">
+    </head>
+    <body class="
+    article-page
+    ">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.documentElement.dataset.scheme = 'dark';
+        } else {
+            document.documentElement.dataset.scheme = 'light';
+        }
+    })();
+</script>
+<div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky ">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="Toggle Menu">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header>
+        <figure class="site-avatar">
+                <a href="/">
+                    <img src="/images/avatar.png" 
+                        width=""
+                        height=""
+                        class="site-logo"
+                        loading="lazy"
+                        alt="Avatar">
+                </a>
+                
+            </figure>
+        
+        
+        <div class="site-meta">
+            <h1 class="site-name"><a href="/">朝花夕拾</a></h1>
+            <h2 class="site-description">不讲条件，不找借口，坚定信念，完美执行！</h2>
+        </div>
+    </header><ol class="menu" id="main-menu">
+        
+        
+        
+        <li >
+            <a href='/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>Home</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/about/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>About</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/archives/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>Archives</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/search/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>Search</span>
+            </a>
+        </li>
+        
+        
+        <li >
+            <a href='/page/links/' >
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-link" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" />
+  <path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" />
+</svg>
+
+
+
+                
+                <span>Links</span>
+            </a>
+        </li>
+        
+        <li class="menu-bottom-section">
+            <ol class="menu">
+
+                
+                    <li id="dark-mode-toggle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                        <span>Dark Mode</span>
+                    </li>
+                
+            </ol>
+        </li>
+    </ol>
+</aside>
+
+    <aside class="sidebar right-sidebar sticky">
+        
+            
+                
+    <section class="widget archives">
+        <div class="widget-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <line x1="5" y1="9" x2="19" y2="9" />
+  <line x1="5" y1="15" x2="19" y2="15" />
+  <line x1="11" y1="4" x2="7" y2="20" />
+  <line x1="17" y1="4" x2="13" y2="20" />
+</svg>
+
+
+
+        </div>
+        <h2 class="widget-title section-title">Table of contents</h2>
+        
+        <div class="widget--toc">
+            <nav class="toc-nav" id="TableOfContents">
+                
+  <ul>
+    <li><a href="#阅读导览这篇论文解决了什么问题">阅读导览：这篇论文解决了什么问题？</a></li>
+    <li><a href="#1-introduction为什么重新设计视频预训练">1. Introduction：为什么重新设计视频预训练？</a>
+      <ul>
+        <li><a href="#11-视频提供了图片缺少的时间结构">1.1 视频提供了图片缺少的时间结构</a></li>
+        <li><a href="#12-计算成本来自视频长度和额外训练结构">1.2 计算成本来自视频长度和额外训练结构</a></li>
+        <li><a href="#13-表征塌缩是需要处理的核心问题">1.3 表征塌缩是需要处理的核心问题</a></li>
+        <li><a href="#14-作者希望获得的三个性质">1.4 作者希望获得的三个性质</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work相关工作的四条路线">2. Related Work：相关工作的四条路线</a>
+      <ul>
+        <li><a href="#21-图片自监督匹配同一输入的不同视图">2.1 图片自监督：匹配同一输入的不同视图</a></li>
+        <li><a href="#22-显式特征统计约束从二阶统计到完整分布目标">2.2 显式特征统计约束：从二阶统计到完整分布目标</a></li>
+        <li><a href="#23-像素重建videomae-与-tube-masking">2.3 像素重建：VideoMAE 与 tube masking</a></li>
+        <li><a href="#24-特征预测与视频世界模型">2.4 特征预测与视频世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-methodology训练方法结构与关键机制">3. Methodology：训练方法、结构与关键机制</a>
+      <ul>
+        <li><a href="#31-符号与数据流">3.1 符号与数据流</a></li>
+        <li><a href="#32-一致性损失匹配同一视频的不同观察">3.2 一致性损失：匹配同一视频的不同观察</a></li>
+        <li><a href="#33-sigreg约束一批特征的分布">3.3 SIGReg：约束一批特征的分布</a></li>
+        <li><a href="#34-总损失与两个目标的配合">3.4 总损失与两个目标的配合</a></li>
+        <li><a href="#35-cls-token共享的汇总员如何随视频变化">3.5 CLS token：共享的&quot;汇总员&quot;如何随视频变化？</a></li>
+        <li><a href="#36-为什么末端-layernorm-后还需要投影头">3.6 为什么末端 LayerNorm 后还需要投影头？</a></li>
+        <li><a href="#37-高斯是否唯一球面目标与删除末端-ln-的结论">3.7 高斯是否唯一？球面目标与删除末端 LN 的结论</a></li>
+        <li><a href="#38-编码器稀疏观察和位置编码">3.8 编码器、稀疏观察和位置编码</a></li>
+        <li><a href="#39-block-causal-attention-与在线推理">3.9 Block-causal attention 与在线推理</a></li>
+        <li><a href="#310-polyak-平均仅用于评估的平滑参数">3.10 Polyak 平均：仅用于评估的平滑参数</a></li>
+        <li><a href="#311-预训练数据和评估协议">3.11 预训练数据和评估协议</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-what-matters-for-efficient-video-pretraining设计消融">4. What Matters for Efficient Video Pretraining：设计消融</a>
+      <ul>
+        <li><a href="#41-token-dropping对外观和运动产生不同影响">4.1 Token dropping：对外观和运动产生不同影响</a></li>
+        <li><a href="#42-局部视图数量">4.2 局部视图数量</a></li>
+        <li><a href="#43-时间-patch-聚合并非必需">4.3 时间 patch 聚合并非必需</a></li>
+        <li><a href="#44-block-causal-attention-没有表现出精度代价">4.4 Block-causal attention 没有表现出精度代价</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-comparison-with-prior-work对照实验">5. Comparison with Prior Work：对照实验</a>
+      <ul>
+        <li><a href="#51-视频模型相同训练次数和相同计算预算">5.1 视频模型：相同训练次数和相同计算预算</a></li>
+        <li><a href="#52-与图像预训练-dinov2-比较">5.2 与图像预训练 DINOv2 比较</a></li>
+        <li><a href="#53-消费级硬件训练">5.3 消费级硬件训练</a></li>
+        <li><a href="#54-扩大预训练数据">5.4 扩大预训练数据</a></li>
+        <li><a href="#55-自发形成的-patch-语义结构">5.5 自发形成的 patch 语义结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-discussion贡献pnc-对应关系与局限">6. Discussion：贡献、PNC 对应关系与局限</a>
+      <ul>
+        <li><a href="#61-最重要的方法逻辑">6.1 最重要的方法逻辑</a></li>
+        <li><a href="#62-与规则-pnc-背景的对应关系">6.2 与规则 PNC 背景的对应关系</a></li>
+        <li><a href="#63-作者明确保留的局限">6.3 作者明确保留的局限</a></li>
+        <li><a href="#64-本地-v1-的记录问题与复现缺口">6.4 本地 v1 的记录问题与复现缺口</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-a-sigreg-实现与多卡通信">附录 A. SIGReg 实现与多卡通信</a></li>
+    <li><a href="#附录-b-架构与默认参数速查">附录 B. 架构与默认参数速查</a></li>
+    <li><a href="#附录-c-下游读出模块">附录 C. 下游读出模块</a>
+      <ul>
+        <li><a href="#c1-attentive-probing">C.1 Attentive probing</a></li>
+        <li><a href="#c2-k400-linear-probing">C.2 K400 linear probing</a></li>
+      </ul>
+    </li>
+    <li><a href="#最终结论与仍待讨论的问题">最终结论与仍待讨论的问题</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#理解和应用的条件">理解和应用的条件</a></li>
+        <li><a href="#主要局限">主要局限</a></li>
+        <li><a href="#仍值得进一步讨论">仍值得进一步讨论</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考依据">参考依据</a></li>
+  </ul>
+
+            </nav>
+        </div>
+    </section>
+
+            
+        
+    </aside>
+
+
+            <main class="main full-width">
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            
+            
+            
+            <a href="/categories/robotics/" style="background-color: hsl(336, 60%, 84%); color: hsl(336, 60%, 15%);">
+                Robotics
+            </a>
+        
+    </header>
+    
+
+    <div class="article-title-wrapper">
+        <h2 class="article-title">
+            <a href="/post/robotics/worldmodel/le-vjepa/">LeVJEPA - 无启发式的高效可扩展视频预训练</a>
+        </h2>
+    
+        
+    </div>
+
+    
+    
+    
+    
+    
+    
+    
+    <footer class="article-meta">
+        
+            <div class="inline-meta">
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4" />
+  <circle cx="18" cy="18" r="4" />
+  <path d="M15 3v4" />
+  <path d="M7 3v4" />
+  <path d="M3 11h16" />
+  <path d="M18 16.496v1.504l1 1" />
+</svg>
+                    <time class="article-time--published" datetime='2026-08-27T00:00:00Z'>Thursday, August 27, 2026</time>
+                
+
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+                    <time class="article-time--reading">
+                        9 minutes read
+                    </time>
+                
+            </div>
+        
+
+        
+
+        
+    </footer>
+    
+</div>
+
+</header>
+
+    
+    <aside class="article-toc">
+        <details>
+            <summary>
+                <div class="article-toc-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-chevron-right"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 6l6 6l-6 6" /></svg>
+                    <span>Table of contents</span>
+                </div>
+            </summary>
+            <nav class="toc-nav">
+                
+  <ul>
+    <li><a href="#阅读导览这篇论文解决了什么问题">阅读导览：这篇论文解决了什么问题？</a></li>
+    <li><a href="#1-introduction为什么重新设计视频预训练">1. Introduction：为什么重新设计视频预训练？</a>
+      <ul>
+        <li><a href="#11-视频提供了图片缺少的时间结构">1.1 视频提供了图片缺少的时间结构</a></li>
+        <li><a href="#12-计算成本来自视频长度和额外训练结构">1.2 计算成本来自视频长度和额外训练结构</a></li>
+        <li><a href="#13-表征塌缩是需要处理的核心问题">1.3 表征塌缩是需要处理的核心问题</a></li>
+        <li><a href="#14-作者希望获得的三个性质">1.4 作者希望获得的三个性质</a></li>
+      </ul>
+    </li>
+    <li><a href="#2-related-work相关工作的四条路线">2. Related Work：相关工作的四条路线</a>
+      <ul>
+        <li><a href="#21-图片自监督匹配同一输入的不同视图">2.1 图片自监督：匹配同一输入的不同视图</a></li>
+        <li><a href="#22-显式特征统计约束从二阶统计到完整分布目标">2.2 显式特征统计约束：从二阶统计到完整分布目标</a></li>
+        <li><a href="#23-像素重建videomae-与-tube-masking">2.3 像素重建：VideoMAE 与 tube masking</a></li>
+        <li><a href="#24-特征预测与视频世界模型">2.4 特征预测与视频世界模型</a></li>
+      </ul>
+    </li>
+    <li><a href="#3-methodology训练方法结构与关键机制">3. Methodology：训练方法、结构与关键机制</a>
+      <ul>
+        <li><a href="#31-符号与数据流">3.1 符号与数据流</a></li>
+        <li><a href="#32-一致性损失匹配同一视频的不同观察">3.2 一致性损失：匹配同一视频的不同观察</a></li>
+        <li><a href="#33-sigreg约束一批特征的分布">3.3 SIGReg：约束一批特征的分布</a></li>
+        <li><a href="#34-总损失与两个目标的配合">3.4 总损失与两个目标的配合</a></li>
+        <li><a href="#35-cls-token共享的汇总员如何随视频变化">3.5 CLS token：共享的&quot;汇总员&quot;如何随视频变化？</a></li>
+        <li><a href="#36-为什么末端-layernorm-后还需要投影头">3.6 为什么末端 LayerNorm 后还需要投影头？</a></li>
+        <li><a href="#37-高斯是否唯一球面目标与删除末端-ln-的结论">3.7 高斯是否唯一？球面目标与删除末端 LN 的结论</a></li>
+        <li><a href="#38-编码器稀疏观察和位置编码">3.8 编码器、稀疏观察和位置编码</a></li>
+        <li><a href="#39-block-causal-attention-与在线推理">3.9 Block-causal attention 与在线推理</a></li>
+        <li><a href="#310-polyak-平均仅用于评估的平滑参数">3.10 Polyak 平均：仅用于评估的平滑参数</a></li>
+        <li><a href="#311-预训练数据和评估协议">3.11 预训练数据和评估协议</a></li>
+      </ul>
+    </li>
+    <li><a href="#4-what-matters-for-efficient-video-pretraining设计消融">4. What Matters for Efficient Video Pretraining：设计消融</a>
+      <ul>
+        <li><a href="#41-token-dropping对外观和运动产生不同影响">4.1 Token dropping：对外观和运动产生不同影响</a></li>
+        <li><a href="#42-局部视图数量">4.2 局部视图数量</a></li>
+        <li><a href="#43-时间-patch-聚合并非必需">4.3 时间 patch 聚合并非必需</a></li>
+        <li><a href="#44-block-causal-attention-没有表现出精度代价">4.4 Block-causal attention 没有表现出精度代价</a></li>
+      </ul>
+    </li>
+    <li><a href="#5-comparison-with-prior-work对照实验">5. Comparison with Prior Work：对照实验</a>
+      <ul>
+        <li><a href="#51-视频模型相同训练次数和相同计算预算">5.1 视频模型：相同训练次数和相同计算预算</a></li>
+        <li><a href="#52-与图像预训练-dinov2-比较">5.2 与图像预训练 DINOv2 比较</a></li>
+        <li><a href="#53-消费级硬件训练">5.3 消费级硬件训练</a></li>
+        <li><a href="#54-扩大预训练数据">5.4 扩大预训练数据</a></li>
+        <li><a href="#55-自发形成的-patch-语义结构">5.5 自发形成的 patch 语义结构</a></li>
+      </ul>
+    </li>
+    <li><a href="#6-discussion贡献pnc-对应关系与局限">6. Discussion：贡献、PNC 对应关系与局限</a>
+      <ul>
+        <li><a href="#61-最重要的方法逻辑">6.1 最重要的方法逻辑</a></li>
+        <li><a href="#62-与规则-pnc-背景的对应关系">6.2 与规则 PNC 背景的对应关系</a></li>
+        <li><a href="#63-作者明确保留的局限">6.3 作者明确保留的局限</a></li>
+        <li><a href="#64-本地-v1-的记录问题与复现缺口">6.4 本地 v1 的记录问题与复现缺口</a></li>
+      </ul>
+    </li>
+    <li><a href="#附录-a-sigreg-实现与多卡通信">附录 A. SIGReg 实现与多卡通信</a></li>
+    <li><a href="#附录-b-架构与默认参数速查">附录 B. 架构与默认参数速查</a></li>
+    <li><a href="#附录-c-下游读出模块">附录 C. 下游读出模块</a>
+      <ul>
+        <li><a href="#c1-attentive-probing">C.1 Attentive probing</a></li>
+        <li><a href="#c2-k400-linear-probing">C.2 K400 linear probing</a></li>
+      </ul>
+    </li>
+    <li><a href="#最终结论与仍待讨论的问题">最终结论与仍待讨论的问题</a>
+      <ul>
+        <li><a href="#核心贡献">核心贡献</a></li>
+        <li><a href="#理解和应用的条件">理解和应用的条件</a></li>
+        <li><a href="#主要局限">主要局限</a></li>
+        <li><a href="#仍值得进一步讨论">仍值得进一步讨论</a></li>
+      </ul>
+    </li>
+    <li><a href="#参考依据">参考依据</a></li>
+  </ul>
+
+            </nav>
+        </details>
+    </aside>
+    
+
+    <section class="article-content">
+    
+    
+    
+    <blockquote>
+        <p><strong>论文标题：</strong> LeVJEPA: Efficient &amp; Scalable Video Pretraining without the Heuristics
+<strong>论文链接：</strong> <a class="link" href="https://arxiv.org/abs/2608.27395"  target="_blank" rel="noopener"
+    >https://arxiv.org/abs/2608.27395</a>
+<strong>作者：</strong> Lukas Kuhn、Lucas Maes、Giuseppe Serra、Quentin Le Lidec、Yann LeCun、Randall Balestriero、Florian Buettner
+<strong>版本：</strong> arXiv:2608.27395v1，2026-08-27，共 12 页
+<strong>阅读日期：</strong> 2026-11-04
+<strong>主题：</strong> 视频自监督预训练、JEPA、SIGReg 防塌缩、block-causal attention、token dropping
+<strong>核心问题：</strong> 如何用大量无标签视频、以较低计算成本训练出既保留静态外观识别又理解运动的通用视觉编码器？</p>
+
+    </blockquote>
+<p>相关笔记：<a class="link" href="/post/robotics/worldmodel/h_jepa/" >H-JEPA</a>（同团队的分层 JEPA 世界模型）、<a class="link" href="/post/robotics/worldmodel/le_world_model/" >LeWorldModel</a></p>
+<p>本笔记按论文正文第 1—6 章及附录 A—C 组织，并将讨论后的最终结论并入相应位置。文中&quot;作者报告&quot;表示论文给出的结果；&ldquo;推导&quot;表示由公式直接得到的结论；&ldquo;理解&quot;或&quot;工程推断&quot;表示帮助解释机制的判断。类比和数值示例不属于论文实验。</p>
+<h2 id="阅读导览这篇论文解决了什么问题">阅读导览：这篇论文解决了什么问题？
+</h2><p>LeVJEPA 希望用大量无标签视频，以较低计算成本训练出通用视觉编码器，同时保留静态外观识别和运动理解能力。</p>
+<p>核心方法可以记成两句话：</p>
+<ol>
+<li><strong>同一视频的不同视图，应该产生接近的特征。</strong></li>
+<li><strong>不同视频的特征作为一个整体，应该形成接近标准高斯的分布。</strong></li>
+</ol>
+<p>第一条负责学习视图之间的稳定信息，第二条防止所有输入都被映射成同一个向量。这样，训练结构可以简化为共享编码器和小型投影头，不再依靠教师目标编码器、预测器和 stop-gradient 来避免塌缩。</p>
+<p>在这个目标下，作者发现：训练时随机丢掉 95% 的 patch token，既节省计算，又能提高 ImageNet 识别效果；编码器还可以使用遵守时间顺序的注意力，而在所报告的 ImageNet 消融中没有损失精度。</p>
+<p><strong>本文最重要的贡献是视频自监督预训练的简化与计算效率。</strong> 它训练的是视觉表征基础；动作条件动力学、未来状态预测和车辆规划还需要对应的模型与训练目标。</p>
+<h2 id="1-introduction为什么重新设计视频预训练">1. Introduction：为什么重新设计视频预训练？
+</h2><h3 id="11-视频提供了图片缺少的时间结构">1.1 视频提供了图片缺少的时间结构
+</h3><p>图片主要提供物体、场景和外观信息。视频还包含运动方向、动作过程、跨帧身份一致性和物体持续存在等信息。</p>
+<p>以自动驾驶为例：单帧可以识别路边有一辆车；连续观察才更容易判断它正在停车、驶出车位，还是准备切入本车道。</p>
+<p>这些时间线索使视频适合用于视觉预训练。不过，视频中含有时间结构，不等于某个训练目标一定会充分学到它；运动评估仍然是必要证据。</p>
+<h3 id="12-计算成本来自视频长度和额外训练结构">1.2 计算成本来自视频长度和额外训练结构
+</h3><p><strong>Patch</strong> 是图像中的小块；<strong>token</strong> 是小块经过嵌入层后得到、供 Transformer 处理的向量。</p>
+<p>一帧 $224\times224$ 图片按 $16\times16$ 切块，得到 </p>
+$$14\times14=196$$<p> 个 patch。16 帧就有 </p>
+$$16\times196=3136$$<p> 个 patch token。视频本身已经比单张图片昂贵。</p>
+<p>此外，V-JEPA 一类方法还使用提供训练目标的编码器副本和预测器。教师的完整输入前向、预测器计算以及相关训练配置进一步增加成本。</p>
+<h3 id="13-表征塌缩是需要处理的核心问题">1.3 表征塌缩是需要处理的核心问题
+</h3><p><strong>表征或 embedding</strong>：模型将输入映射成的特征向量。</p>
+<p>如果只要求同一视频的两个视图输出一致，模型可以对所有视频都输出零向量。这满足一致性，却丢失了区分输入的能力，称为<strong>完全塌缩</strong>。</p>
+<p>还有一种情况：输出看似有变化，但只沿少数方向变化，其他方向完全没有信息，称为<strong>维度塌缩</strong>。</p>
+<p>LeVJEPA 采用显式分布约束处理这个问题，并据此重新考察 token 丢弃方式、时间 patch 聚合和注意力结构。</p>
+<h3 id="14-作者希望获得的三个性质">1.4 作者希望获得的三个性质
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>性质</th>
+          <th>实际含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>训练计算效率</td>
+          <td>Transformer 只处理很少的保留 token，也不需要目标教师和预测器前向</td>
+      </tr>
+      <tr>
+          <td>时间顺序约束</td>
+          <td>每帧的 patch 表征只依赖当前和过去观测</td>
+      </tr>
+      <tr>
+          <td>简单训练目标</td>
+          <td>一致性损失加 SIGReg，损失权重固定使用已有默认值</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>论文中的&quot;一个超参数&quot;指损失中的一个权衡系数。学习率、batch size、模型规模、视图数量和丢弃率等训练设置仍然存在。</p>
+<h2 id="2-related-work相关工作的四条路线">2. Related Work：相关工作的四条路线
+</h2><h3 id="21-图片自监督匹配同一输入的不同视图">2.1 图片自监督：匹配同一输入的不同视图
+</h3><p><strong>自监督学习</strong>指训练信号从数据自身的结构中构造，不需要给每个预训练样本人工标注类别。</p>
+<p>**联合嵌入（joint embedding）**方法将同一输入的不同视图映射到特征空间，并要求它们表达一致。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th>与本文相关的特点</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>BYOL</td>
+          <td>在线网络匹配缓慢更新的目标网络，通过分支不对称设计训练</td>
+      </tr>
+      <tr>
+          <td>DINO</td>
+          <td>教师—学生结构，配合中心化、锐化和全局—局部多裁剪</td>
+      </tr>
+      <tr>
+          <td>DINOv2</td>
+          <td>延续这一体系，结合掩码图像建模并扩大训练规模</td>
+      </tr>
+      <tr>
+          <td>I-JEPA</td>
+          <td>在特征空间预测被遮挡区域，而不是恢复其像素</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>相关术语：</p>
+<ul>
+<li><strong>EMA（指数移动平均）目标编码器</strong>：使用在线模型参数的平滑平均，生成训练目标。</li>
+<li><strong>Stop-gradient（停止梯度）</strong>：目标分支参与数值计算，但损失不沿该分支反向传播。</li>
+<li><strong>Predictor（预测器）</strong>：将可见信息的特征转换成需要预测的目标特征。</li>
+</ul>
+<p>LeVJEPA 采用全局—局部视图构造，但用 SIGReg 承担防塌缩约束。</p>
+<h3 id="22-显式特征统计约束从二阶统计到完整分布目标">2.2 显式特征统计约束：从二阶统计到完整分布目标
+</h3><p>VICReg 将一致性、方差和协方差约束结合起来；Barlow Twins 通过跨视图相关性约束减少冗余。这类方法不必使用教师网络和 stop-gradient。</p>
+<p>LeJEPA 进一步提出一个分布目标：在其采用的下游 probing 风险模型及假设下，各向同性高斯具有理论依据，并给出 SIGReg 来近似约束这一分布。</p>
+<p><strong>Probing</strong> 是冻结预训练编码器，仅训练一个较小的读取或分类模块，以考察表征中包含多少下游任务信息。</p>
+<p>LeVJEPA 使用的 SIGReg 来自 LeJEPA，本文的工作是将这一配方用于视频，并研究由此获得的简化和效率收益。</p>
+<h3 id="23-像素重建videomae-与-tube-masking">2.3 像素重建：VideoMAE 与 tube masking
+</h3><p>VideoMAE 遮挡大量视频 patch，再恢复被遮挡的像素。</p>
+<p>视频的相邻帧高度相似。如果每帧独立遮挡，当前帧缺失的内容可能直接从邻帧复制，重建任务就过于容易。</p>
+<p><strong>Tube masking</strong> 在连续帧中遮挡相同的空间位置，减少这种捷径，支持 90%—95% 的高遮挡率。VideoMAEv2 进一步引入解码器侧的掩码以扩大训练规模。</p>
+<p>本文强调：遮挡方式应服务于训练目标。适合像素重建的 tube 结构，在不进行内容重建的 LeVJEPA 中未必合适。</p>
+<h3 id="24-特征预测与视频世界模型">2.4 特征预测与视频世界模型
+</h3><p>V-JEPA 根据可见部分预测被遮挡部分的特征，目标由 EMA 编码器生成。V-JEPA 2 扩展了训练数据、模型大小、训练长度及分辨率。</p>
+<p>用于规划的 V-JEPA 2-AC 还会冻结视觉编码器，在机器人交互数据上训练动作条件、block-causal 的预测模型，输入包含动作和机器人状态等信息。</p>
+<p>论文也讨论了像素空间的动态生成路线，以及基于预训练特征的世界模型。</p>
+<p>LeVJEPA 将时间顺序约束放入视觉编码器预训练。它提供了符合在线观测条件的状态表征基础，但没有在本文中训练动作条件状态转移模型。</p>
+<h2 id="3-methodology训练方法结构与关键机制">3. Methodology：训练方法、结构与关键机制
+</h2><h3 id="31-符号与数据流">3.1 符号与数据流
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>符号</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$B$</td>
+          <td>一个 batch 的视频片段数</td>
+      </tr>
+      <tr>
+          <td>$T$</td>
+          <td>视频帧数，预训练默认 16</td>
+      </tr>
+      <tr>
+          <td>$H,W$</td>
+          <td>视图的空间高、宽</td>
+      </tr>
+      <tr>
+          <td>$V$</td>
+          <td>局部视图数量，默认 4</td>
+      </tr>
+      <tr>
+          <td>$\tau$</td>
+          <td>patch embedding 覆盖的时间长度，默认 1 帧</td>
+      </tr>
+      <tr>
+          <td>$\rho$</td>
+          <td>丢弃的 patch token 比例，默认 0.95</td>
+      </tr>
+      <tr>
+          <td>$d$</td>
+          <td>编码器 token 的特征维度</td>
+      </tr>
+      <tr>
+          <td>$K$</td>
+          <td>投影后特征维度，默认 256</td>
+      </tr>
+      <tr>
+          <td>$E_\theta$</td>
+          <td>参数为 $\theta$ 的共享视频编码器</td>
+      </tr>
+      <tr>
+          <td>$h_\phi$</td>
+          <td>参数为 $\phi$ 的共享投影头</td>
+      </tr>
+      <tr>
+          <td>$z_v$</td>
+          <td>第 $v$ 个视图投影后的特征</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>每个训练视频采样 16 帧，构造 1 个全局视图和 $V$ 个局部视图。<strong>所有视图共享完全相同的时间窗口</strong>，仅在空间裁剪及外观增强上不同。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>全局视图 $x_0$</th>
+          <th>局部视图 $x_1,\ldots,x_V$</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>默认数量</td>
+          <td>1</td>
+          <td>4</td>
+      </tr>
+      <tr>
+          <td>默认分辨率</td>
+          <td>$224\times224$</td>
+          <td>$96\times96$</td>
+      </tr>
+      <tr>
+          <td>时间窗口</td>
+          <td>16 帧</td>
+          <td>同一组 16 帧</td>
+      </tr>
+      <tr>
+          <td>空间处理</td>
+          <td>较完整的观察</td>
+          <td>激进空间裁剪</td>
+      </tr>
+      <tr>
+          <td>光度处理</td>
+          <td>保持光度不变</td>
+          <td>进行光度增强</td>
+      </tr>
+      <tr>
+          <td>Patch 丢弃率</td>
+          <td>95%</td>
+          <td>95%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>光度增强改变亮度、颜色等外观属性；具体参数在本地版本中未完整列出。</p>
+<p>每个视图执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>视频视图
+</span></span><span style="display:flex;"><span>  → patch embedding
+</span></span><span style="display:flex;"><span>  → 均匀随机丢弃 patch token
+</span></span><span style="display:flex;"><span>  → 加入可学习 CLS token
+</span></span><span style="display:flex;"><span>  → 共享视频 Transformer
+</span></span><span style="display:flex;"><span>  → 读取输出 CLS
+</span></span><span style="display:flex;"><span>  → 共享投影头
+</span></span><span style="display:flex;"><span>  → 用于计算损失的 z
+</span></span></code></pre></div><p>数学表达为：</p>
+$$z_v=h_\phi\!\left(E_\theta(x_v)_{[\mathrm{CLS}]}\right)\in\mathbb R^K.$$<p>这里 $E_\theta(x_v)$ 隐含了 patch embedding、丢弃及注意力处理。所有视图共享同一组 $\theta,\phi$。</p>
+<h4 id="概念张量形状">概念张量形状
+</h4><p>下面使用常见的维度顺序帮助理解，实际代码的维度排列可以不同：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>阶段</th>
+          <th>单个视图对应的 batch 形状</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>RGB 视频输入</td>
+          <td>$B\times T\times3\times H\times W$</td>
+      </tr>
+      <tr>
+          <td>Patch embedding 后</td>
+          <td>$B\times N_v\times d$</td>
+      </tr>
+      <tr>
+          <td>丢弃后并加入 CLS</td>
+          <td>$B\times(L_v+1)\times d$</td>
+      </tr>
+      <tr>
+          <td>编码器输出</td>
+          <td>$B\times(L_v+1)\times d$</td>
+      </tr>
+      <tr>
+          <td>CLS 输出</td>
+          <td>$B\times d$</td>
+      </tr>
+      <tr>
+          <td>投影后</td>
+          <td>$B\times256$</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>其中 RGB 表示三个颜色通道；$N_v$ 是原始 patch 数，$L_v$ 是保留 patch 数。对于可整除的默认尺寸：</p>
+$$N_v=\frac{T}{\tau}\frac{H}{16}\frac{W}{16},\qquad L_v\approx(1-\rho)N_v.$$<p>具体整数取整方式正文未说明，因此下文保留 token 数使用近似值。</p>
+<h3 id="32-一致性损失匹配同一视频的不同观察">3.2 一致性损失：匹配同一视频的不同观察
+</h3><p>论文原式为：</p>
+$$\mathcal L_{\mathrm{inv}}=\frac{1}{V+1}\sum_{v=0}^{V}\|z_0-z_v\|_2^2.$$<p>$z_0$ 是全局特征，$z_v$ 是局部特征；$\|\cdot\|_2^2$ 表示各特征分量差值的平方和。$v=0$ 的一项为零。实际训练还会在 batch 上归约，具体实现细节正文未完整说明。</p>
+<p>全局视图覆盖范围最大、没有光度增强，因此通过视图构造自然成为匹配参考。</p>
+<p><strong>全局与局部分支都接收梯度。</strong> 全局特征由同一个正在学习的编码器生成，没有停止梯度，也没有单独的目标教师。</p>
+<p>以&quot;汽车通过路口&quot;的视频为例，全局观察看到路口，局部观察可能只看到汽车与附近道路。为了输出接近的特征，模型需要从不同残缺观察中提取共同内容。</p>
+<p>不过，这个解释是训练的归纳偏置，不是对具体语义的硬性保证。相同输出也可以通过全部变成常量实现，因此还需要防塌缩约束。</p>
+<h3 id="33-sigreg约束一批特征的分布">3.3 SIGReg：约束一批特征的分布
+</h3><p>SIGReg 通过随机投影约束各向同性高斯分布：对高维特征沿随机方向投影，约束这些一维投影匹配标准高斯。</p>
+<p>其整体目标是：</p>
+$$z\sim\mathcal N(0,I_K).$$<p>$\mathcal N$ 表示高斯分布，$0$ 是零均值向量，$I_K$ 是 $K$ 维单位矩阵。</p>
+<p><strong>这个目标描述的是很多视频特征共同形成的分布。</strong> 它没有为每个视频随机分配一个必须拟合的高斯标签，也没有要求单个向量内部的 256 个数独立服从高斯。</p>
+<h4 id="331-各向同性各向异性与塌缩">3.3.1 各向同性、各向异性与塌缩
+</h4><p><strong>各向异性</strong>表示沿不同方向观察，统计性质不同。对于高斯点云，主要表现为不同方向的方差不同。<strong>各向同性</strong>表示任意方向上的分布性质相同。</p>
+<p>直观类比：车辆定位误差如果纵向大、横向小，误差点云呈椭圆；若各方向误差分布相同，则呈圆形。这个例子解释的是统计形状，与模型特征每个维度的具体语义无关。</p>
+<p>二维高斯例子：</p>
+$$\Sigma=\begin{bmatrix}9&0\\0&1\end{bmatrix}$$<p>表示两个坐标方向的方差分别为 9 和 1，点云沿第一个方向拉长。标准高斯 $\Sigma=I$ 则满足：对任意单位向量 $a$，</p>
+$$\operatorname{Var}(a^\top z)=a^\top I a=1.$$<p>本文的&quot;方向&quot;是 <strong>embedding 特征空间的方向</strong>，可以对应单个维度，也可以是多个维度的线性组合，与图像里的前后左右没有直接对应关系。</p>
+<p>三种情况需要区分：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>点云状态</th>
+          <th>含义</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>椭圆形，但协方差满秩</td>
+          <td>各向异性，仍可保留全部维度的变化</td>
+      </tr>
+      <tr>
+          <td>被压到直线或更低维仿射子空间</td>
+          <td>某些方向方差为零，出现维度塌缩</td>
+      </tr>
+      <tr>
+          <td>所有样本挤在同一点</td>
+          <td>完全塌缩</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>因此，普通各向异性不能直接等同于塌缩。</p>
+<h4 id="332-用随机投影检查高维分布">3.3.2 用随机投影检查高维分布
+</h4><p>Cramér–Wold 定理给出如下刻画：</p>
+$$z\sim\mathcal N(0,I_K)\quad\Longleftrightarrow\quad a^\top z\sim\mathcal N(0,1)\quad\text{对所有单位方向 }a.$$<p>直觉是从很多方向观察点云的&quot;影子&rdquo;。如果点云被压成一条线，从垂直方向看，所有投影值就会挤在一起。</p>
+<p>作者在每个训练步骤采样 $M=1024$ 个单位方向 $a_m\in\mathbb R^K$。对每个视图分别形成 batch 特征矩阵 $Z_v\in\mathbb R^{B\times K}$，再得到 $B\times M$ 的投影值。</p>
+<p>理论要求所有方向；实际采用有限 batch、有限随机方向和数值积分近似优化。不能将其理解为每一步都精确满足标准高斯，也不能将防塌缩的分布目标扩大成对所有实际训练过程的无条件收敛保证。</p>
+<h4 id="333-特征函数与-eppspulley-统计量">3.3.3 特征函数与 Epps–Pulley 统计量
+</h4><p>对于某个随机方向 $a_m$，设投影值：</p>
+$$u_i=\langle z_i,a_m\rangle,\qquad i=1,\ldots,n.$$<p>$n$ 是该视图参与统计的全局 batch 样本数。经验特征函数为：</p>
+$$\widehat\varphi_m(t)=\frac1n\sum_{i=1}^{n}e^{\mathrm i t u_i}.$$<p>其中 $\mathrm i$ 是虚数单位，$t$ 是频率变量，且：</p>
+$$e^{\mathrm i t u}=\cos(tu)+\mathrm i\sin(tu).$$<p>&ldquo;特征函数&quot;是统计学术语，指描述概率分布的函数，与神经网络的 feature 名称不同。可以将其理解为：用不同频率扫描这批投影值，形成描述分布的响应。</p>
+<p>标准高斯的一维特征函数为：</p>
+$$\varphi_G(t)=e^{-t^2/2}.$$<p>SIGReg 比较经验响应和目标响应，论文公式为：</p>
+$$\mathcal L_{\mathrm{SIGReg}}=\frac1M\sum_{m=1}^{M}\int\left|\widehat\varphi_m(t)-e^{-t^2/2}\right|^2e^{-t^2/2}\,dt.$$<p>竖线表示复数模长；积分外的 $e^{-t^2/2}$ 是频率权重。公式对应基于经验特征函数的 Epps–Pulley 正态性统计量。</p>
+<p>附录 A 的实现采用 $t\in[0,3]$ 上的 17 个节点，用梯形求积近似积分。每个视图单独计算统计量；视图间具体归约细节正文未展开。</p>
+<h4 id="334-为什么对异常特征值比较稳健">3.3.4 为什么对异常特征值比较稳健？
+</h4><p><strong>核心直觉：异常值变得再大，也只会让单位圆上的箭头改变方向，箭头长度始终为 1。</strong></p>
+<p>相比之下，二阶矩中有 $u^2$，极大的 $u$ 会带来极大的统计贡献。</p>
+<p>推导如下。每个复指数的模长满足：</p>
+$$|e^{\mathrm i t u_i}|=1,\qquad |\widehat\varphi_m(t)|\le1.$$<p>在固定其他投影值的前提下，单个样本对经验均值的贡献模长为 $1/n$；任意替换这个投影值，经验特征函数最多改变 $2/n$，与异常值的数值大小无关。</p>
+<p>对样本投影值 $u_j$ 求导：</p>
+$$\frac{\partial\widehat\varphi_m(t)}{\partial u_j}=\frac{\mathrm i t}{n}e^{\mathrm i t u_j},\qquad\left|\frac{\partial\widehat\varphi_m(t)}{\partial u_j}\right|=\frac{|t|}{n}.$$<p>这里明确是对 <strong>投影输入 $u_j$</strong> 求导。这个导数不会随 $u_j$ 的幅度增加。</p>
+<p>令单频率平方误差为：</p>
+$$\ell_m(t)=|\widehat\varphi_m(t)-\varphi_G(t)|^2.$$<p>由于经验特征函数和目标特征函数模长都不超过 1，残差模长不超过 2，因而：</p>
+$$0\le\ell_m(t)\le4,\qquad\left|\frac{\partial\ell_m(t)}{\partial u_j}\right|\le\frac{4|t|}{n}.$$<p>采用权重 $w(t)$ 积分，只要 $\int |t|w(t)\,dt$ 有限，就能控制这项损失对投影值的梯度。本文使用高斯权重，实际又只采用有限范围的 17 个积分节点，满足这一要求。投影方向 $a_m$ 为单位向量，因此通过 $u_j=a_m^\top z_j$ 也可以控制该项损失对 embedding 的梯度。</p>
+<p>对照二阶矩：</p>
+$$m_2=\frac1n\sum_i u_i^2,\qquad \frac{\partial m_2}{\partial u_j}=\frac{2u_j}{n}.$$<p>$u=1000$ 的平方贡献是 $u=1$ 的一百万倍，梯度也随 $u$ 线性增大。</p>
+<p>因此，稳健性的准确含义是：<strong>极端特征值不会仅凭幅度巨大，就无限放大它对 SIGReg 统计量及相应输出特征梯度的影响。</strong></p>
+<p>这不表示异常样本完全无影响，也不保证整个网络的参数梯度全局有界，因为参数梯度还要经过网络 Jacobian。另一个一致性 MSE 项同样不自动获得 SIGReg 的有界性保证。</p>
+<h4 id="335-为什么-sigreg-本身不需要中心化或白化">3.3.5 为什么 SIGReg 本身不需要中心化或白化？
+</h4><p><strong>中心化</strong>是将特征减去均值；<strong>白化</strong>进一步变换特征，使协方差成为单位矩阵。白化主要规范二阶统计，通常不会让任意非高斯分布变成高斯。</p>
+<p>SIGReg 直接比较当前特征投影的分布与 $\mathcal N(0,1)$。均值偏移、尺度偏差、方向间的相关结构及更完整的分布形状差异，都受这个目标约束。</p>
+<p>例如某方向：</p>
+$$u\sim\mathcal N(5,9).$$<p>它的特征函数为：</p>
+$$\varphi_u(t)=e^{5\mathrm i t}e^{-9t^2/2},$$<p>与目标 $e^{-t^2/2}$ 不同，直接计算 SIGReg 会产生惩罚。如果先做 $(u-5)/3$，这个高斯例子就已经被变换成标准高斯，原始输出的均值和尺度偏差被预处理消除了，损失不再直接看到这些偏差。</p>
+<p>这个例子限定在高斯情形；不能据此认为任何分布标准化后都会变成高斯。</p>
+<p>可以这样记忆：<strong>中心化、白化直接移动和拉伸当前点云；SIGReg 比较点云与目标分布的差距，再训练网络自己调整输出。</strong></p>
+<p>有限 batch 和数值近似下，每一步输出不必精确具有零均值、单位协方差。并且，SIGReg 本身无需这些预处理，不等于整个模型没有归一化：LeVJEPA 投影头明确包含 BatchNorm。</p>
+<h3 id="34-总损失与两个目标的配合">3.4 总损失与两个目标的配合
+</h3>$$\boxed{\mathcal L=\mathcal L_{\mathrm{inv}}+\lambda\mathcal L_{\mathrm{SIGReg}}},\qquad\lambda=0.02.$$<p>作者沿用 LeJEPA 的默认权重，在本文所有实验中固定使用，没有逐实验调节。</p>
+<p>一致性项使同视频的多个观察对齐，SIGReg 使整个视频集合的输出保持分布上的丰富变化。完全塌缩的输出不满足标准高斯目标；某个方向方差为零的维度塌缩同样不满足目标。</p>
+<p>两者结合产生学习有用表征的倾向，最终表征质量由下游实验检验。仅有一个非塌缩、分布形状良好的点云，并不能单独证明它一定包含任务所需语义。</p>
+<h3 id="35-cls-token共享的汇总员如何随视频变化">3.5 CLS token：共享的&quot;汇总员&quot;如何随视频变化？
+</h3><p><strong>CLS 是 Classification Token 的缩写。</strong> 它是模型额外添加的可学习向量，没有对应的图像区域。</p>
+<p>输入可以写成：</p>
+$$[c,p_1,\ldots,p_{L_v}],$$<p>其中 $c\in\mathbb R^d$ 为可学习的 CLS 初始参数，$p_j$ 为保留的 patch token。</p>
+<p>不同视频、不同视图使用同一个初始 CLS 参数；经过 Transformer 后，CLS 读取的 patch 内容不同，因此输出特征 $h_{\mathrm{CLS}}$ 也随输入内容变化。</p>
+<p>可以类比同一位汇总员：开始时使用相同的工作模板，读完不同视频的记录，写出的总结自然不同。共享的是初始参数，不是最终总结。</p>
+<p>每个视图得到自己的 CLS 输出，再经过共享投影头得到 $z_v$。一致性损失和 SIGReg <strong>直接作用在投影后的 $z_v$ 上</strong>，不是直接在每个 patch 上设置目标。</p>
+<p>不过，CLS 的汇总依赖 patch，所以损失仍会通过注意力路径反向传播至 patch 处理过程。<strong>没有直接 patch 损失，不代表 patch 不学习。</strong></p>
+<h3 id="36-为什么末端-layernorm-后还需要投影头">3.6 为什么末端 LayerNorm 后还需要投影头？
+</h3><h4 id="361-layernorm-与-sigreg-的统计轴不同">3.6.1 LayerNorm 与 SIGReg 的统计轴不同
+</h4><p>**LayerNorm（层归一化，简称 LN）**对单个 token 的特征维度计算均值和方差；SIGReg 则约束很多样本形成的 embedding 分布。</p>
+<p>所以，&ldquo;每个向量内部均值为零、方差为一&quot;不能推出&quot;很多向量整体服从标准高斯&rdquo;。前者是逐向量约束，后者是跨样本分布约束。</p>
+<h4 id="362-球面约束的推导及适用条件">3.6.2 球面约束的推导及适用条件
+</h4><p>对于 $x\in\mathbb R^d$，忽略数值稳定项 $\epsilon$ 和可学习仿射参数，定义：</p>
+$$\mu=\frac1d\sum_{j=1}^d x_j,\qquad\sigma^2=\frac1d\sum_{j=1}^d(x_j-\mu)^2,\qquad y_j=\frac{x_j-\mu}{\sigma}.$$<p>对于 $\sigma>0$ 的输入：</p>
+$$\sum_jy_j=0,\qquad \sum_jy_j^2=d,\qquad\|y\|_2=\sqrt d.$$<p>也就是所有输出位于固定半径球面与零和子空间的交集。直观上，原来长短不同的向量被整理到同一个球壳，并且受到零和约束。</p>
+<p>沿单位方向：</p>
+$$a=\frac{(1,\ldots,1)}{\sqrt d}$$<p>投影时，$a^\top y=0$ 恒成立；这一方向的方差为零，无法满足标准高斯要求的单位投影方差。</p>
+<p>实际 LayerNorm 包含 $\epsilon$ 和逐维可学习的 $\gamma,\beta$：</p>
+$$\operatorname{LN}(x)_j=\gamma_j\frac{x_j-\mu}{\sqrt{\sigma^2+\epsilon}}+\beta_j.$$<p>$\epsilon$ 使固定范数不再严格成立，仿射参数会拉伸、平移几何形状。论文的&quot;球面约束&quot;描述的是归一化核心，不能字面理解为实际 LN 仿射输出永远位于一个标准球面。</p>
+<h4 id="363-投影头的作用">3.6.3 投影头的作用
+</h4><p>在保留编码器末端 LayerNorm 的原架构中，作者通过小型 MLP 将 CLS 输出映射到另一个空间。这个空间的最终输出不再被同一个末端 LN 强制成上述固定形式，便于近似优化高斯分布目标。</p>
+<p>预训练后丢弃投影头，下游使用编码器表征。</p>
+<p>&ldquo;需要投影头&quot;应理解为本文既定结构和目标下的选择，不能扩大为所有可行网络都必须有投影头。</p>
+<h3 id="37-高斯是否唯一球面目标与删除末端-ln-的结论">3.7 高斯是否唯一？球面目标与删除末端 LN 的结论
+</h3><h4 id="371-球面均匀分布也可以非塌缩且各向同性">3.7.1 球面均匀分布也可以非塌缩且各向同性
+</h4><p>只要求向量位于球面，仍然允许所有向量挤在球面同一点；若采用球面目标，还需要推动样本在球面上均匀铺开。</p>
+<p>均匀圆周分布提供了一个例子：二维半径为 $\sqrt2$ 的均匀圆周点云，其均值为零、协方差为 $I_2$，但它不是二维高斯。</p>
+<p>它虽然位于一条曲线上，协方差仍可满秩。<strong>不能因为分布支撑位于曲面上，就认定发生了协方差意义上的维度塌缩。</strong> 圆周与直线不同，圆周没有某个非零方向的投影恒定不变。</p>
+<h4 id="372-为什么-lejepa-仍然选择高斯">3.7.2 为什么 LeJEPA 仍然选择高斯？
+</h4><p>LeJEPA 在采用的下游 probing 风险模型及假设下，为各向同性高斯给出理论支持。线性分析主要支持各向同性，进一步的非线性风险分析支持高斯目标。</p>
+<p>这个理论依赖其假设。单凭各向同性和防塌缩，无法推出目标必须是高斯，也不能推断高斯在所有实际任务中都必然优于球面分布。</p>
+<h4 id="373-球面版分布约束可以设计但目标必须一起改变">3.7.3 球面版分布约束可以设计，但目标必须一起改变
+</h4><p>随机投影加特征函数比较的思路可以用于其他目标分布。若选择球面均匀分布，需要把 $e^{-t^2/2}$ 替换成所选球面分布的一维投影特征函数，或与从目标球面采样得到的参考特征比较。</p>
+<p>有限维球面的投影通常不是高斯，因此不能保留标准高斯的一维目标，却声称已经改成了球面目标。</p>
+<p>如果直接匹配 LN 输出，还需要让目标分布适配 LN 允许的子空间及实际仿射变换。这属于替代方案，需要重新验证效果，也不能直接继承原高斯目标的最优性结论。</p>
+<h4 id="374-能否删除编码器最后的-layernorm">3.7.4 能否删除编码器最后的 LayerNorm？
+</h4><p><strong>可以，原理上合理，但本文没有对应消融。</strong></p>
+<p>只删除最末端 LN，会解除该操作施加的输出几何约束。保留 Transformer 内部 LN 并不等于最终输出仍固定在球面上。</p>
+<p>以常见 Pre-LN 残差结构为例：</p>
+$$u_{\mathrm{next}}=u+\operatorname{Module}(\operatorname{LN}(u)).$$<p>其中 $u$ 是残差流，$\operatorname{Module}$ 表示注意力或前馈分支。内部 LN 规范分支输入，残差相加后的整体输出没有被这一式子强制归一化。</p>
+<p>因此，直接对未做末端 LN 的编码器输出优化 SIGReg，在原理上可行。不过，末端 LN 有助于尺度控制；投影头也可能通过分开下游表征空间和训练损失空间产生收益。删除后是否需要调整优化配置、精度是否保持，都需要实验。</p>
+<p>值得比较的三个方案是：原结构、只删末端 LN、同时删末端 LN 与投影头。<strong>删除末端 LN 能解除该几何冲突；投影头能否进一步省略，需要实验回答。</strong> SIGReg 的软分布损失也不等于每次前向立即完成归一化。</p>
+<h3 id="38-编码器稀疏观察和位置编码">3.8 编码器、稀疏观察和位置编码
+</h3><h4 id="381-逐帧-patch-embedding">3.8.1 逐帧 patch embedding
+</h4><p>默认使用适配视频的 Vision Transformer。ViT-B/16 表示 Base 规模的 ViT，空间 patch 边长为 16；ViT-S、ViT-L 分别表示 Small、Large 规模。</p>
+<p>时间尺寸默认 $\tau=1$，每个 token 只覆盖单帧 patch：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>视图</th>
+          <th style="text-align: right">原始 patch 数</th>
+          <th style="text-align: right">丢弃 95% 后约保留</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>全局，16 帧、$224\times224$</td>
+          <td style="text-align: right">3136</td>
+          <td style="text-align: right">157</td>
+      </tr>
+      <tr>
+          <td>局部，16 帧、$96\times96$</td>
+          <td style="text-align: right">576</td>
+          <td style="text-align: right">29</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>默认 1 个全局加 4 个局部，合计约 $157+4\times29=273$ 个 patch token，此外每个视图各保留一个 CLS。</p>
+<p>丢弃发生在 patch embedding 之后、Transformer 主体之前。被丢弃 token 不再占据主体序列中的位置，因此主体实际处理的序列变短。Patch embedding 仍需要先执行，不能把所有模块的成本都按 95% 等比例扣除。</p>
+<p>训练没有重建被丢弃 patch 的目标，也没有用于恢复这些 token 的预测器或解码器。</p>
+<h4 id="382-三维旋转位置编码">3.8.2 三维旋转位置编码
+</h4><p>**RoPE（旋转位置编码）**通过依赖坐标的旋转，在注意力计算中引入相对位置。</p>
+<p>每个 token 具有时间、纵向和横向坐标 $(t,y,x)$。注意力头的特征维度分成三组，分别按三个坐标旋转。不使用绝对位置编码。</p>
+<p>因此，同一个编码器能够处理全局和局部两种空间分辨率，无需对绝对位置编码做插值。</p>
+<h3 id="39-block-causal-attention-与在线推理">3.9 Block-causal attention 与在线推理
+</h3><p><strong>Block-causal attention</strong> 指以帧为块：帧内双向，跨帧遵守时间顺序。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>查询 token</th>
+          <th>允许读取的内容</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>第 $t$ 帧 patch</td>
+          <td>当前帧所有 patch，以及历史帧 patch</td>
+      </tr>
+      <tr>
+          <td>第 $t$ 帧 patch</td>
+          <td>不允许读取未来帧，也不允许读取 CLS</td>
+      </tr>
+      <tr>
+          <td>CLS</td>
+          <td>可以读取整个片段的 patch</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>&ldquo;读取&quot;表示该 token 在注意力中将对方作为信息来源。</p>
+<p>CLS 不允许被 patch 反向读取非常关键：如果 CLS 已经汇总未来帧，再让早期 patch 读取它，未来信息就可能绕路泄漏。</p>
+<p>因此，每帧 patch 表征满足：</p>
+$$H_t=F_\theta(x_1,\ldots,x_t).$$<p>$H_t$ 表示第 $t$ 帧的 patch 表征，$x_{1:t}$ 是当前及历史观测。整个 clip 的 CLS 则汇总整个已输入片段，不能把它误认为早期每一帧都可使用的状态。</p>
+<p>这种因果性表示信息不能跨越时间顺序，不直接等于识别了现实世界中的物理因果关系。</p>
+<h4 id="推理时如何使用">推理时如何使用？
+</h4><p>作者的下游评估使用编码器输出，投影头丢弃，且不再进行训练中的 token 丢弃。</p>
+<p>工程上，block-causal 结构允许新帧到来后复用历史 patch 的计算，而不必因新增未来观测而重新修改历史特征。可以配合 <strong>KV cache</strong>，即缓存注意力中的历史 Key、Value 张量，避免重复计算。</p>
+<p>注意两个层面：</p>
+<ul>
+<li>不必重新编码过去帧，是因果结构直接带来的性质。</li>
+<li>如果历史无限增长，新查询仍要读取越来越多历史 KV，标准注意力的计算和缓存量仍会增长；固定历史窗口更容易获得近似固定的每帧成本。</li>
+</ul>
+<p>因此，论文提及的增量成本优势不能直接理解为任意长视频、无限历史下所有注意力运算严格为常数。本文也没有给出完整在线系统的时延基准。</p>
+<h3 id="310-polyak-平均仅用于评估的平滑参数">3.10 Polyak 平均：仅用于评估的平滑参数
+</h3><h4 id="3101-平均的是同一个参数在不同训练时刻的值">3.10.1 平均的是同一个参数在不同训练时刻的值
+</h4><p>模型中每个权重、偏置，分别与自己的历史数值平均。不会把不同层或不同位置的参数混在一起平均。</p>
+<p>这与 PNC 中一阶低通滤波的递推形式相似：减少训练参数随优化产生的短期波动。这个类比解释的是平滑机制，不表示它与车辆状态滤波具有相同统计假设或最优性。</p>
+<p>术语上，经典 Polyak 平均常指历史参数的等权平均；本文称为 Polyak average 的实现使用带衰减的 <strong>EMA</strong>。</p>
+<h4 id="3102-ema-更新公式">3.10.2 EMA 更新公式
+</h4><p>为区分平均更新次数与优化器步数，设 $k$ 是平均更新索引，$s_k$ 是本次平均更新对应的优化器步骤：</p>
+$$\bar\theta_k=\beta\bar\theta_{k-1}+(1-\beta)\theta_{s_k}=\bar\theta_{k-1}+(1-\beta)(\theta_{s_k}-\bar\theta_{k-1}).$$<p>$\theta_{s_k}$ 是当前训练模型参数，$\bar\theta_k$ 是保存的平均参数，$\beta$ 是衰减系数。第二种写法说明，每次平均参数向当前模型移动一小步。</p>
+<p>示例取 $\beta=0.9$，平均参数初始为 10，当前参数依次为 14、8、12，则平均值依次为：</p>
+$$10.4,\quad10.16,\quad10.344.$$<p>历史已经累积在旧平均值中，不必保存所有历史 checkpoint；越早的历史贡献随平均更新次数指数衰减。</p>
+<h4 id="3103-本文设置与-ema-教师的区别">3.10.3 本文设置与 EMA 教师的区别
+</h4><p>附录 B 设置：</p>
+$$\beta=0.9999,\qquad\text{每 32 个优化器步骤更新一次平均参数。}$$<p>即每次平均更新保留旧平均值的 99.99%，加入当前参数的 0.01%。这个比例针对一次平均更新，不能误写为每个优化器步骤都执行。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>比较项</th>
+          <th>LeVJEPA 评估平均副本</th>
+          <th>V-JEPA 类 EMA 目标教师</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>平滑方式</td>
+          <td>参数移动平均</td>
+          <td>参数移动平均</td>
+      </tr>
+      <tr>
+          <td>训练期间是否做前向</td>
+          <td>不做</td>
+          <td>用于生成目标特征</td>
+      </tr>
+      <tr>
+          <td>是否进入训练目标</td>
+          <td>不进入</td>
+          <td>进入</td>
+      </tr>
+      <tr>
+          <td>主要用途</td>
+          <td>作为评估 checkpoint</td>
+          <td>提供学习目标、参与训练机制</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>当前编码器始终由优化器根据梯度正常训练。平均副本只定期更新并保存为评估版本。论文&quot;没有目标编码器&quot;与&quot;维护评估平均副本&quot;并不矛盾。</p>
+<h3 id="311-预训练数据和评估协议">3.11 预训练数据和评估协议
+</h3><h4 id="3111-数据来源">3.11.1 数据来源
+</h4><p>默认使用 K710 的 20% 类别均衡子集。K710 由 Kinetics-400/600/700 训练集组合而成，并移除与验证集重叠的部分。</p>
+<p>默认数据子集较小，主要方便在相同数据条件下重新训练基线，进行受控比较。</p>
+<p>扩大语料时使用 K710、Something-Something-v2、Walking Tours 和 PE Video Dataset。Walking Tours 包含较长的第一视角步行视频，PE Video 来自 Perception Encoder 发布的视频数据。</p>
+<h4 id="3112-冻结评估">3.11.2 冻结评估
+</h4><p>预训练完成后冻结编码器，仅训练下游 probe 和分类器。下游训练使用对应任务的标签。</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>评估集</th>
+          <th>缩写</th>
+          <th>主要能力</th>
+          <th>本文主要读出方式</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ImageNet-1K</td>
+          <td>IN1K</td>
+          <td>静态物体识别</td>
+          <td>Attentive probing</td>
+      </tr>
+      <tr>
+          <td>Something-Something-v2</td>
+          <td>SSv2</td>
+          <td>依赖时间关系的运动理解</td>
+          <td>Attentive probing</td>
+      </tr>
+      <tr>
+          <td>Kinetics-400</td>
+          <td>K400</td>
+          <td>视频动作识别，含较多外观和场景线索</td>
+          <td>平均池化后 linear probing</td>
+      </tr>
+  </tbody>
+</table></div>
+<p><strong>Top-1 准确率</strong>表示最高分预测类别与真实类别一致的样本比例。表中的差值按&quot;百分点&quot;计算。</p>
+<p><strong>Attentive probing</strong> 使用可学习 query，通过交叉注意力读取输出 token，再进行分类。它评估已有信息能否被一个小型非线性读取模块提取，并不只考察线性可分性。</p>
+<p><strong>Linear probing</strong> 使用线性分类器；K400 先平均池化输出 token，以降低评估成本。作者认为这一读出容量较弱，对 K400 是较保守的评估。</p>
+<p>评估配置沿用 V-JEPA 协议。具体 probe 优化参数和测试视图采样参数在本地论文中未完整重列。</p>
+<h2 id="4-what-matters-for-efficient-video-pretraining设计消融">4. What Matters for Efficient Video Pretraining：设计消融
+</h2><p>本章默认使用 ViT-B/16、K710 的 20% 子集。不同消融中的基准数值不完全一致，逐表记录，不能拼接成一条逐步累加的性能提升链。</p>
+<h3 id="41-token-dropping对外观和运动产生不同影响">4.1 Token dropping：对外观和运动产生不同影响
+</h3><h4 id="411-imagenet-随丢弃率提高而改善">4.1.1 ImageNet 随丢弃率提高而改善
+</h4><p>图 4(a) 报告：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: right">丢弃率 $\rho$</th>
+          <th style="text-align: right">ImageNet Top-1</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">0%</td>
+          <td style="text-align: right">33.9%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">30%</td>
+          <td style="text-align: right">39.6%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">60%</td>
+          <td style="text-align: right">44.8%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">90%</td>
+          <td style="text-align: right">47.4%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">95%</td>
+          <td style="text-align: right">47.6%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>作者的解释是，随机丢弃同时降低计算并形成强随机增强：模型需要从不同位置的稀疏观察中推断稳定的片段内容。</p>
+<p>对逐 token 的前馈层，相关成本大致随保留 token 数变化，95% 丢弃对应该部分约 20 倍的 token 数减少。整个训练流程还包含 patch embedding、注意力及其他开销，不能把这个局部比例直接当成总训练提速。</p>
+<p>从 90% 提高到 95% 时，保留 token 减半，准确率基本持平，因此作者选择 95% 为默认值。</p>
+<h4 id="412-运动理解需要更充分训练">4.1.2 运动理解需要更充分训练
+</h4><p>SSv2 上，短训练周期中丢弃率超过 0.3 后，准确率会下降。作者发现延长训练可以缓解，较高丢弃率能够追回较低丢弃率的表现，并保留低单步成本。</p>
+<p>理解：识别&quot;有手、有杯子&quot;可以依靠零碎外观；判断&quot;手将杯子从左移到右&quot;更依赖跨帧对应。高稀疏度使一次观察中的运动线索更不完整，额外训练可以补偿一部分信号损失。这是作者提出的合理解释，完整机制尚未定量刻画。</p>
+<h4 id="413-均匀随机丢弃优于-tube-丢弃">4.1.3 均匀随机丢弃优于 tube 丢弃
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>比较</th>
+          <th style="text-align: right">均匀随机丢弃</th>
+          <th style="text-align: right">Tube 丢弃</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>IN1K</td>
+          <td style="text-align: right">50.7%</td>
+          <td style="text-align: right">39.6%</td>
+      </tr>
+      <tr>
+          <td>SSv2，文中 $\tau=2$ 配置</td>
+          <td style="text-align: right">28.8%</td>
+          <td style="text-align: right">26.4%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>Tube 方式在每帧保留相同空间位置，大部分区域会在整个片段中持续不可见；随机丢弃则在不同时间采到不同位置，观察覆盖更分散。</p>
+<p>像素重建需要防止邻帧复制捷径，而本方法不重建缺失内容，保留 token 是其全部观察。目标不同，合适的丢弃结构也不同。</p>
+<h3 id="42-局部视图数量">4.2 局部视图数量
+</h3><p>图 4(b) 报告：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th style="text-align: right">局部视图数 $V$</th>
+          <th style="text-align: right">ImageNet Top-1</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: right">4</td>
+          <td style="text-align: right">47.6%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">6</td>
+          <td style="text-align: right">49.1%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">8</td>
+          <td style="text-align: right">49.2%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">10</td>
+          <td style="text-align: right">50.2%</td>
+      </tr>
+      <tr>
+          <td style="text-align: right">12</td>
+          <td style="text-align: right">49.8%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>更多局部视图增加同一视频的一致性约束，每增加一个局部视图只多处理约 29 个 patch token，成本相对小。收益在 10 个左右趋于饱和。</p>
+<p>本文默认比较保留 $V=4$；等算力的长训练配置使用 $V=10$。</p>
+<h3 id="43-时间-patch-聚合并非必需">4.3 时间 patch 聚合并非必需
+</h3><p>作者比较：</p>
+<ul>
+<li>$\tau=2,\rho=0.90$：输入 patch 覆盖两帧，保留 10%。</li>
+<li>$\tau=1,\rho=0.95$：逐帧 patch，保留 5%。</li>
+</ul>
+<p>预训练均从 16 帧开始，两种配置每个视图保留的 token 数相同。</p>
+<p>表 1 报告：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>Patch 时间尺寸</th>
+          <th style="text-align: right">丢弃率</th>
+          <th style="text-align: right">IN1K</th>
+          <th style="text-align: right">SSv2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>$\tau=2$</td>
+          <td style="text-align: right">90%</td>
+          <td style="text-align: right">47.4%</td>
+          <td style="text-align: right">28.8%</td>
+      </tr>
+      <tr>
+          <td>$\tau=1$</td>
+          <td style="text-align: right">95%</td>
+          <td style="text-align: right"><strong>50.7%</strong></td>
+          <td style="text-align: right"><strong>30.4%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>在评估时不丢弃 token，并匹配为 8 个时间位置：$\tau=1$ 输入 8 帧，$\tau=2$ 输入 16 帧。ImageNet 图片则沿时间轴分别重复 8 次和 16 次。</p>
+<p>这控制了评估 token 数，但两种视频输入的实际帧数不同，需要保留这个实验条件。</p>
+<p>结果支持：输入端不必预先聚合两帧，模型仍能通过后续结构学习有用时间信息。默认采用逐帧 tokenization。</p>
+<h3 id="44-block-causal-attention-没有表现出精度代价">4.4 Block-causal attention 没有表现出精度代价
+</h3><p>表 2 在 $\tau=1,\rho=0.95,V=4$、均匀随机丢弃条件下比较：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>注意力结构</th>
+          <th style="text-align: right">IN1K Top-1</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>全双向</td>
+          <td style="text-align: right">50.7%</td>
+      </tr>
+      <tr>
+          <td>Block-causal</td>
+          <td style="text-align: right"><strong>51.2%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>作者据此采用 block-causal 默认结构。</p>
+<p>这项直接消融只报告 ImageNet。可以说所报告条件下没有观察到精度下降，不能扩展成所有运动任务和规模都已验证无代价；0.5 个百分点差异也没有配套完整显著性统计。</p>
+<h2 id="5-comparison-with-prior-work对照实验">5. Comparison with Prior Work：对照实验
+</h2><h3 id="51-视频模型相同训练次数和相同计算预算">5.1 视频模型：相同训练次数和相同计算预算
+</h3><h4 id="511-比较条件">5.1.1 比较条件
+</h4><p>默认受控重训使用相同 K710 20% 子集、240 epochs、有效 batch size 3072，并采用各方法官方实现和推荐参数。</p>
+<p><strong>Epoch</strong> 是遍历一轮训练数据；<strong>FLOPs</strong> 是浮点运算次数，用于衡量计算量；1 ExaFLOPs 表示 $10^{18}$ 次浮点运算。</p>
+<p>评估使用冻结编码器并控制输入 token 数。K400 的读出方式按前述协议使用线性 probe。</p>
+<h4 id="512-相同-epoch看单样本训练效率">5.1.2 相同 epoch：看单样本训练效率
+</h4><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>编码器规模</th>
+          <th>与 V-JEPA 2 的主要比较</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>ViT-S</td>
+          <td>约 20.8 倍更少总预训练计算，ImageNet 表现相近或更好</td>
+      </tr>
+      <tr>
+          <td>ViT-B</td>
+          <td>LeVJEPA 为 4.8 ExaFLOPs，V-JEPA 2 为 36.4 ExaFLOPs，ImageNet 差距小于 1 个百分点</td>
+      </tr>
+      <tr>
+          <td>ViT-L</td>
+          <td>约 5.6 倍更少计算，ImageNet 高 1.9 个百分点</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>作者还报告 LeVJEPA ViT-L 的计算量不到 V-JEPA 2 ViT-S 的一半。VideoMAEv2 在图 2 中的准确率低于另外两种方法，计算成本位于它们之间。</p>
+<p>这类比较固定样本曝光次数，允许计算量不同，说明方法每次观察的训练效率较好。5.6—20.8 倍是总预训练 FLOPs 比较，不是推理时延倍数或实测墙钟训练提速。</p>
+<h4 id="513-相同-flops把省下的预算用于更长训练">5.1.3 相同 FLOPs：把省下的预算用于更长训练
+</h4><p>固定总计算预算，LeVJEPA ViT-B 可以训练 1085 epochs，并使用 10 个局部视图。</p>
+<p>表 3 报告：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">IN1K，attentive</th>
+          <th style="text-align: right">SSv2，attentive</th>
+          <th style="text-align: right">K400，linear</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>VideoMAEv2</td>
+          <td style="text-align: right">53.4%</td>
+          <td style="text-align: right"><strong>43.6%</strong></td>
+          <td style="text-align: right">37.4%</td>
+      </tr>
+      <tr>
+          <td>V-JEPA 2</td>
+          <td style="text-align: right">51.6%</td>
+          <td style="text-align: right">42.5%</td>
+          <td style="text-align: right">40.7%</td>
+      </tr>
+      <tr>
+          <td>LeVJEPA</td>
+          <td style="text-align: right"><strong>61.0%</strong></td>
+          <td style="text-align: right">40.4%</td>
+          <td style="text-align: right"><strong>44.6%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>直接结论：IN1K 比最强视频基线高 7.6 个百分点，K400 比最强基线高 3.9 个百分点，SSv2 比最强基线低 3.2 个百分点。</p>
+<p>因此，优势集中在计算效率、外观识别和该配置的 K400 动作识别；运动理解仍有提升空间。结论对应统一重训条件，不能直接替代各方法在完整大规模数据上的排行榜。</p>
+<h3 id="52-与图像预训练-dinov2-比较">5.2 与图像预训练 DINOv2 比较
+</h3><p>作者使用同样的视频来源，为 DINOv2 抽取单帧，并匹配 240-epoch LeVJEPA ViT-B 的总 FLOPs。DINOv2 包含约 1170 万次帧样本和 11400 个优化步骤。</p>
+<p>表 4 报告：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>方法</th>
+          <th style="text-align: right">IN1K</th>
+          <th style="text-align: right">SSv2</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>DINOv2</td>
+          <td style="text-align: right"><strong>53.8%</strong></td>
+          <td style="text-align: right">16.9%</td>
+      </tr>
+      <tr>
+          <td>LeVJEPA</td>
+          <td style="text-align: right">50.7%</td>
+          <td style="text-align: right"><strong>30.4%</strong></td>
+      </tr>
+  </tbody>
+</table></div>
+<p>DINOv2 的静态识别领先 3.1 个百分点；LeVJEPA 的 SSv2 高 13.5 个百分点，约为 DINOv2 的 1.8 倍。</p>
+<p>这一比较匹配的是来源数据和总计算，两个方法的训练输入组织不同。它说明：在该预算下，视频方法可以用较小的外观能力差距换来较大的运动理解收益。</p>
+<h3 id="53-消费级硬件训练">5.3 消费级硬件训练
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>设置或结果</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>模型</td>
+          <td>ViT-Tiny</td>
+      </tr>
+      <tr>
+          <td>显卡</td>
+          <td>RTX 5080，16GB</td>
+      </tr>
+      <tr>
+          <td>训练时间</td>
+          <td>12 小时</td>
+      </tr>
+      <tr>
+          <td>原始数据</td>
+          <td>Walking Tours 中 8 段视频，约 62 万帧</td>
+      </tr>
+      <tr>
+          <td>累计训练采样</td>
+          <td>约 500 万个 clip</td>
+      </tr>
+      <tr>
+          <td>冻结编码器 IN1K</td>
+          <td>从初始化基线 8.9% 提高至 25.2%</td>
+      </tr>
+      <tr>
+          <td>LeVJEPA 显存</td>
+          <td>Batch size 128，低于 8GB</td>
+      </tr>
+      <tr>
+          <td>对照 V-JEPA 配置</td>
+          <td>同一规模编码器，batch size 28 接近 16GB 显存上限</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>500 万 clip 是从已有视频反复采样得到的片段，不表示 500 万个独立原始视频。初始化基线也通过下游读取模块评估，8.9% 不能理解成未训练随机分类器的准确率。</p>
+<p>实验展示了较小模型的可训练性；其显存比例不能未经测量直接推广到全部模型规模。</p>
+<h3 id="54-扩大预训练数据">5.4 扩大预训练数据
+</h3><p>ViT-L/16 在 K710、SSv2、Walking Tours、PE Video 混合语料上训练 100 epochs：</p>
+<div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>评估</th>
+          <th style="text-align: right">冻结 attentive Top-1</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>IN1K</td>
+          <td style="text-align: right">69.5%</td>
+      </tr>
+      <tr>
+          <td>SSv2</td>
+          <td style="text-align: right">55.0%</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>目标函数及 $\lambda=0.02$ 保持不变。结果说明该配方能从扩大的语料中继续受益。</p>
+<p>这个实验同时改变了训练语料覆盖范围，SSv2 训练数据也进入预训练来源，不能将全部提升归因于单纯增加样本数。作者没有在这里给出互联网规模的完整受控比较。</p>
+<h3 id="55-自发形成的-patch-语义结构">5.5 自发形成的 patch 语义结构
+</h3><p>虽然损失只直接作用于投影后的 CLS，patch token 仍通过汇总路径学习。</p>
+<p>作者用两种方式展示其组织结构：</p>
+<ol>
+<li><strong>PCA（主成分分析）可视化</strong>：将 patch 特征的前三个主要变化方向映射成 RGB，动物、家具、地板和背景形成不同区域。颜色没有固定类别含义。</li>
+<li><strong>余弦相似度</strong>：以物体上的一个 query patch 为参照，高相似区域较准确地落在同一个物体上，显示一定语义一致性和空间精细度。</li>
+</ol>
+<p>论文图 3、图 5 中，LeVJEPA 出现较清晰的 patch 组织；V-JEPA 2 公开 checkpoint 的对应可视化较弱；V-JEPA 2.1 使用辅助 patch 级目标获得密集结构。</p>
+<p>这些图是定性证据，且该公开 checkpoint 对比不等同于前面同数据同计算的重训比较。分割和跟踪等密集任务还没有在本文中定量验证。</p>
+<h2 id="6-discussion贡献pnc-对应关系与局限">6. Discussion：贡献、PNC 对应关系与局限
+</h2><h3 id="61-最重要的方法逻辑">6.1 最重要的方法逻辑
+</h3>$$\text{显式分布目标承担防塌缩}\longrightarrow\text{减少额外训练结构}\longrightarrow\text{重新选择观察方式和时间注意力}.$$<p>本文并不只是在旧方法上增加一种正则项；它进一步验证了高比例随机丢弃、逐帧 token 和 block-causal 编码的组合。</p>
+<p>两项损失构成一个训练目标；&ldquo;单个编码器&quot;指共享参数与不依赖目标教师，并不意味着多个视图只需进行一次单视图编码。</p>
+<h3 id="62-与规则-pnc-背景的对应关系">6.2 与规则 PNC 背景的对应关系
+</h3><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>论文概念</th>
+          <th>便于理解的 PNC 对应</th>
+          <th>类比边界</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>视频编码器</td>
+          <td>从历史观测提取状态描述</td>
+          <td>特征通常不可直接解释成位置、速度等物理量</td>
+      </tr>
+      <tr>
+          <td>视图一致性</td>
+          <td>相同场景在不同观测条件下保持稳定描述</td>
+          <td>裁剪可能丢失局部关键事件，不能直接当成规划不变性</td>
+      </tr>
+      <tr>
+          <td>因果 patch 表征</td>
+          <td>当前状态估计只使用当前和过去输入</td>
+          <td>不代表已经完成物理因果推断或未来轨迹预测</td>
+      </tr>
+      <tr>
+          <td>各向同性</td>
+          <td>类似从不同方向看统计误差是否均衡</td>
+          <td>特征方向并不对应车辆纵向、横向</td>
+      </tr>
+      <tr>
+          <td>EMA 参数平均</td>
+          <td>一阶低通滤波式平滑</td>
+          <td>平滑的是模型参数，不是车辆状态估计</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>对自动驾驶最有启发的方向，是用大量无标注行车视频预训练编码器，再针对感知、预测或规划训练下游模块。</p>
+<p>如果要构建动作条件世界模型，还需要学习：</p>
+$$s_{t+1}=f(s_t,a_t),$$<p>其中 $s_t$ 是状态特征，$a_t$ 是动作。LeVJEPA 的视图来自同一时间窗口，一致性损失没有直接训练这一状态转移关系。</p>
+<h3 id="63-作者明确保留的局限">6.3 作者明确保留的局限
+</h3><ul>
+<li><strong>运动线索</strong>：高丢弃率会降低短训练中的 SSv2 表现，如何在高稀疏度下保留跨帧对应仍需研究。</li>
+<li><strong>训练规模</strong>：受控比较主要使用较小语料和至 ViT-L 的规模，互联网规模及更大模型尚未系统验证。</li>
+<li><strong>大 batch 交互</strong>：SIGReg 与超大 batch、大模型的交互还需要刻画。</li>
+<li><strong>密集任务</strong>：可视化显示语义 patch，但分割、跟踪等实际能力尚未量化。</li>
+</ul>
+<p>工程应用还需要额外验证行车域、罕见事件、局部小目标及端到端规划任务。这里是迁移需求，不能当成论文已报告的失败结论。</p>
+<h3 id="64-本地-v1-的记录问题与复现缺口">6.4 本地 v1 的记录问题与复现缺口
+</h3><ol>
+<li>图 4 的坐标及正文称 attentive probing，图注却写 linear probing。本笔记按正文和坐标理解为 attentive，同时保留这个不一致。</li>
+<li>各消融及后续比较出现 47.6%、50.7%、51.2% 等数值，原文没有完整交代所有基准差异，因此分别引用，不将它们当成同一配置。</li>
+<li>数据扩展节声称 IN1K 相对图 2 的 ViT-L 提升 9.5 个百分点，但对应图中点位与该表述未完全吻合。本笔记保留明确报告的 69.5%、55.0%，不反推出未明确报告的基线。</li>
+<li>优化器、学习率日程、增强参数及部分评估采样细节，本地版本没有完整重列，有些设置指向既有实现。仅凭这 12 页不足以构造完整逐项复现配置。</li>
+</ol>
+<h2 id="附录-a-sigreg-实现与多卡通信">附录 A. SIGReg 实现与多卡通信
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>参数或操作</th>
+          <th>设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>随机方向数 $M$</td>
+          <td>每步 1024</td>
+      </tr>
+      <tr>
+          <td>方向长度</td>
+          <td>单位长度</td>
+      </tr>
+      <tr>
+          <td>积分节点</td>
+          <td>17 个</td>
+      </tr>
+      <tr>
+          <td>频率范围</td>
+          <td>$[0,3]$</td>
+      </tr>
+      <tr>
+          <td>积分方法</td>
+          <td>梯形求积</td>
+      </tr>
+      <tr>
+          <td>视图统计</td>
+          <td>每个视图分别计算</td>
+      </tr>
+      <tr>
+          <td>参与统计的样本</td>
+          <td>全局 batch</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>对每个视图，各 worker 先计算本地经验特征函数，再通过一次 all-reduce 汇总，之后计算分布差异统计量。<strong>All-reduce</strong> 是把各设备的统计值进行全局汇总并返回各设备的通信操作。</p>
+<p>核心通信张量大小为：</p>
+$$2\times M\times17=2\times1024\times17.$$<p>其中 2 对应复数的实部和虚部，也就是余弦、正弦统计。该统计张量大小与 batch size 和 embedding 维度无关。这里描述的是 SIGReg 统计通信，不包含通常的模型梯度同步。</p>
+<p>在固定 $M$ 和积分节点数时，投影及统计计算随样本数和特征维度线性扩展，但仍有由方向数和节点数带来的常数开销。</p>
+<h2 id="附录-b-架构与默认参数速查">附录 B. 架构与默认参数速查
+</h2><div class="table-wrapper"><table>
+  <thead>
+      <tr>
+          <th>项目</th>
+          <th>默认设置</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>编码器</td>
+          <td>ViT-B/16</td>
+      </tr>
+      <tr>
+          <td>训练片段</td>
+          <td>16 帧</td>
+      </tr>
+      <tr>
+          <td>Patch 空间尺寸</td>
+          <td>$16\times16$</td>
+      </tr>
+      <tr>
+          <td>Patch 时间尺寸 $\tau$</td>
+          <td>1</td>
+      </tr>
+      <tr>
+          <td>全局视图</td>
+          <td>1 个，$224\times224$</td>
+      </tr>
+      <tr>
+          <td>局部视图</td>
+          <td>4 个，$96\times96$</td>
+      </tr>
+      <tr>
+          <td>Patch 丢弃率 $\rho$</td>
+          <td>0.95</td>
+      </tr>
+      <tr>
+          <td>丢弃方式</td>
+          <td>均匀随机</td>
+      </tr>
+      <tr>
+          <td>CLS</td>
+          <td>每个视图添加，始终保留</td>
+      </tr>
+      <tr>
+          <td>注意力</td>
+          <td>帧内双向，跨帧因果；patch 不读取 CLS</td>
+      </tr>
+      <tr>
+          <td>位置编码</td>
+          <td>时间、纵向、横向三组 RoPE，无绝对位置编码</td>
+      </tr>
+      <tr>
+          <td>投影头隐藏维度</td>
+          <td>2048</td>
+      </tr>
+      <tr>
+          <td>投影输出维度 $K$</td>
+          <td>256</td>
+      </tr>
+      <tr>
+          <td>损失权重 $\lambda$</td>
+          <td>0.02</td>
+      </tr>
+      <tr>
+          <td>评估 EMA 衰减</td>
+          <td>0.9999</td>
+      </tr>
+      <tr>
+          <td>评估 EMA 更新频率</td>
+          <td>每 32 个优化器步骤</td>
+      </tr>
+      <tr>
+          <td>常规受控重训</td>
+          <td>240 epochs，有效 batch size 3072</td>
+      </tr>
+  </tbody>
+</table></div>
+<p>投影头具体结构为：</p>
+$$\operatorname{Linear}(d,2048)\rightarrow\operatorname{BatchNorm}\rightarrow\operatorname{GELU}\rightarrow\operatorname{Linear}(2048,256).$$<p><strong>MLP</strong> 是多层感知机，通常由线性层与非线性激活组成；这里为两层线性层。<strong>GELU</strong> 是非线性激活函数。<strong>BatchNorm</strong> 根据批次统计进行归一化，统计轴及作用不同于编码器的逐 token LayerNorm。</p>
+<p>表中为默认或常规受控比较设置；Tiny 消费级实验、扩大语料实验及 1085-epoch 等计算预算实验使用各自说明的配置。</p>
+<h2 id="附录-c-下游读出模块">附录 C. 下游读出模块
+</h2><h3 id="c1-attentive-probing">C.1 Attentive probing
+</h3><p>一个可学习 query 通过单层交叉注意力读取冻结编码器的全部输出 token；注意力输出与 query 作残差连接，再经两层 MLP、GELU 和 LayerNorm，并由线性层分类。</p>
+<p>只有 probe 和分类器参加下游优化，编码器参数保持冻结。优化超参数沿用 V-JEPA 协议，论文没有逐项重列。</p>
+<p>&ldquo;非线性 probe 更合适&quot;的含义是：预训练目标没有保证每个任务都线性可分，注意力读出能测量表征中可被提取的信息。它也意味着不同 probe 的结果应在相同协议下比较。</p>
+<h3 id="c2-k400-linear-probing">C.2 K400 linear probing
+</h3><p>先将冻结编码器输出 token 平均池化成单个向量，再训练线性分类器。作者因 K400 训练集较大，使用这一较便宜的读出方式。</p>
+<h2 id="最终结论与仍待讨论的问题">最终结论与仍待讨论的问题
+</h2><h3 id="核心贡献">核心贡献
+</h3><ol>
+<li>将 LeJEPA 的一致性加 SIGReg 配方用于视频，使训练主体简化为共享编码器和小型投影头。</li>
+<li>在统一重训条件下，以 5.6—20.8 倍更少的总预训练 FLOPs 获得接近或更好的 ImageNet 表现；等算力时取得明显外观识别优势。</li>
+<li>验证极高比例随机丢弃可以兼具计算收益和表征收益，但运动任务需要关注训练长度。</li>
+<li>将 block-causal 约束纳入编码器，在所报告 ImageNet 消融中没有观察到精度损失，为在线表征和后续动态建模提供基础。</li>
+<li>即使只直接监督 CLS，仍出现有语义组织的 patch 特征，值得继续验证密集任务。</li>
+</ol>
+<h3 id="理解和应用的条件">理解和应用的条件
+</h3><p>高斯目标的理论依据依赖相关风险模型及假设；训练实现通过有限样本、随机方向和数值积分近似该目标。主实验优势对应本文数据、模型规模和冻结读出协议。训练计算节省不等于相同比例的推理时延收益。</p>
+<h3 id="主要局限">主要局限
+</h3><p>SSv2 运动理解仍未在等算力比较中领先；大模型、大数据和密集任务验证不足。本文没有给出删除末端 LN、删除投影头、改用球面分布目标等替代方案的消融，也没有直接评估自动驾驶规划能力。</p>
+<h3 id="仍值得进一步讨论">仍值得进一步讨论
+</h3><ul>
+<li>如何在 95% 丢弃率下提高跨帧对应信息的保留率？</li>
+<li>全局—局部对齐会怎样影响小目标、局部事件等下游需求？</li>
+<li>原架构、去末端 LN、同时去末端 LN 与投影头，如何进行公平消融？</li>
+<li>球面分布约束与高斯分布约束，在同等预算下有哪些实际差异？</li>
+<li>因果 patch 表征怎样接入动作条件预测模型，并最终服务于规划？</li>
+</ul>
+<h2 id="参考依据">参考依据
+</h2><ul>
+<li>LeVJEPA 本地 v1：正文第 1—6 章、图 1—5、表 1—4及附录 A—C。</li>
+<li>LeJEPA，arXiv:2511.08544：SIGReg、高斯目标与下游风险分析的背景依据。</li>
+<li>Understanding Contrastive Representation Learning through Alignment and Uniformity on the Hypersphere，arXiv:2005.10242：球面对齐与均匀性替代思路的讨论背景。</li>
+<li>EMA 递推、LayerNorm 几何约束及特征函数梯度界：依据本文设置及讨论中确认的数学推导；相应边界已在正文注明。</li>
+</ul>
+
+</section>
+
+
+    <footer class="article-meta article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/worldmodel/">WorldModel</a>
+        
+            <a href="/tags/jepa/">JEPA</a>
+        
+            <a href="/tags/videopretraining/">VideoPretraining</a>
+        
+            <a href="/tags/selfsupervisedlearning/">SelfSupervisedLearning</a>
+        
+            <a href="/tags/visualrepresentation/">VisualRepresentation</a>
+        
+    </section>
+
+
+    </footer>
+
+
+    
+        <link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI&#43;WdtXRGWt2kTvGFasHpSy3SV"crossorigin="anonymous"
+            ><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG&#43;vnGctmUb0ZY0l8"crossorigin="anonymous"
+                defer
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"integrity="sha384-&#43;VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4&#43;/RRE05"crossorigin="anonymous"
+                defer
+                >
+            </script><script>
+    window.addEventListener("DOMContentLoaded", () => {
+        const elementsToRender = [".main-article", ".widget--toc"];
+
+        elementsToRender.forEach(selector => {
+            const element = document.querySelector(selector);
+            if (element) {
+                renderMathInElement(element, {
+                    delimiters: [
+                        { left: "$$", right: "$$", display: true },
+                        { left: "$", right: "$", display: false },
+                        { left: "\\(", right: "\\)", display: false },
+                        { left: "\\[", right: "\\]", display: true }
+                    ],
+                    ignoredClasses: ["gist"]
+                });
+            }
+        });
+    });
+</script>
+    
+</article>
+
+    
+
+    
+
+<aside>
+    <h2 class="section-title">Related content</h2>
+    <div class="subsection-list">
+        <div class="article-list--tile">
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/le-world-model/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">LeWorldModel - 稳定的端到端联合嵌入预测架构世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/wa-jepa/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">WA-JEPA: Rethinking the Video JEPA Paradigm for World-Action Modeling in Autonomous Driving</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/worldmodel/dreamer-v3/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">DreamerV3 - 固定超参数打穿150&#43;任务的通用世界模型</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/clear/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">CLEAR: 认知与潜在评估驱动的自适应路由——端到端自动驾驶的分工哲学</h2>
+        </div>
+    </a>
+</article>
+            
+                
+<article class="">
+    <a href="/post/robotics/e2e/x-cache/">
+        
+
+        <div class="article-details">
+            <h2 class="article-title">X-Cache</h2>
+        </div>
+    </a>
+</article>
+            
+        </div>
+    </div>
+</aside>
+
+     
+    
+        
+
+        <div class="disqus-container">
+    
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (typeof DISQUS == 'object') {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+        2026 朝花夕拾
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="4.0.2">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+
+
+    
+
+
+
+<script type="module">
+    import gallery from '\/ts\/gallery.js';
+
+    const articleContent = document.querySelector('.article-content');
+    const shouldLoad = articleContent && (articleContent.querySelectorAll('figure').length > 0 || articleContent.querySelectorAll('img.gallery-image').length > 0);
+    
+    if (shouldLoad) {
+        gallery(articleContent);
+
+        const PhotoSwipeLightbox = (await import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe-lightbox.esm.min.js")).default;
+        const styleHref = "https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.css";
+
+        const styleTag = document.createElement('link');
+        styleTag.rel = 'stylesheet';
+        styleTag.href = styleHref;
+        document.head.appendChild(styleTag);
+
+        const lightbox = new PhotoSwipeLightbox({
+            gallerySelector: '.article-content',
+            childSelector: 'figure a.image-link',
+            pswpModule: () => import("https:\/\/cdn.jsdelivr.net\/npm\/photoswipe@5.4.4\/dist\/photoswipe.esm.min.js")
+        });
+        lightbox.init();
+    }
+</script>
+
+    
+
+            </main>
+        </div>
+        
+<script type="text/javascript" src="/ts/main.1ff1e5fdc4e178ed422e50aa407526dc552f26342d729343fded19416194382c.js" defer></script>
+
+
+    </body>
+</html>

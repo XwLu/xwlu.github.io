@@ -144,6 +144,24 @@
             <guid>https://example.org/tags/%E8%A7%86%E8%A7%89%E5%9F%BA%E7%A1%80%E6%A8%A1%E5%9E%8B/</guid>
             <description></description>
         </item><item>
+            <title>SelfSupervisedLearning</title>
+            <link>https://example.org/tags/selfsupervisedlearning/</link>
+            <pubDate>Thu, 27 Aug 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/selfsupervisedlearning/</guid>
+            <description></description>
+        </item><item>
+            <title>VideoPretraining</title>
+            <link>https://example.org/tags/videopretraining/</link>
+            <pubDate>Thu, 27 Aug 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/videopretraining/</guid>
+            <description></description>
+        </item><item>
+            <title>VisualRepresentation</title>
+            <link>https://example.org/tags/visualrepresentation/</link>
+            <pubDate>Thu, 27 Aug 2026 00:00:00 +0000</pubDate>
+            <guid>https://example.org/tags/visualrepresentation/</guid>
+            <description></description>
+        </item><item>
             <title>FlowMatching</title>
             <link>https://example.org/tags/flowmatching/</link>
             <pubDate>Fri, 21 Aug 2026 00:00:00 +0000</pubDate>
@@ -342,7 +360,7 @@
             <guid>https://example.org/tags/discrete-diffusion/</guid>
             <description></description>
         </item><item>
-            <title>E2e-Ad</title>
+            <title>E2E-AD</title>
             <link>https://example.org/tags/e2e-ad/</link>
             <pubDate>Wed, 06 May 2026 00:00:00 +0000</pubDate>
             <guid>https://example.org/tags/e2e-ad/</guid>
